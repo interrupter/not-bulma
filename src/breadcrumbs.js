@@ -4,16 +4,15 @@ class Breadcrumbs{
 	static ui = null;
 	static head = [];
 	static tail = [];
-	static app = null;
 
-	static render(app){
+	static render({target, root = '', navigate}){
 		if (!this.ui) {
 			this.ui = new UIBreadcrumbs({
-				target: document.querySelector(app.getOptions('breadcrumbsSelector')),
+				target,
 				props:{
 					items:  this.getBreadcrumbs(),
-					root:   app.getOptions('router.root'),
-					go:		  url => app.getWorking('router').navigate(url)
+					root:   root,
+					go:		  navigate
 				}
 			});
 		}

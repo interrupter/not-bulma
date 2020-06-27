@@ -1,5 +1,6 @@
 <script>
-  const  
+  export let YES = 'Да';
+  export let NO = 'Нет';
   export let values = [];
 </script>
 
