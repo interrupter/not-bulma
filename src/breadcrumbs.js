@@ -6,16 +6,15 @@ class Breadcrumbs{
 	static tail = [];
 
 	static render({target, root = '', navigate}){
-		if (!this.ui) {
-			this.ui = new UIBreadcrumbs({
-				target,
-				props:{
-					items:  this.getBreadcrumbs(),
-					root:   root,
-					go:		  navigate
-				}
-			});
-		}
+		this.remove();
+		this.ui = new UIBreadcrumbs({
+			target,
+			props:{
+				items:  this.getBreadcrumbs(),
+				root:   root,
+				go:		  navigate
+			}
+		});
 	}
 
 	static setHead(head){
@@ -46,6 +45,7 @@ class Breadcrumbs{
 			this.ui.$destroy();
 			this.ui = null;
 		}
+		return this;
 	}
 
 }
