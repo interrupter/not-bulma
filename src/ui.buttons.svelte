@@ -5,6 +5,6 @@
 
 <div class="buttons has-addons">
   {#each values as item (item) }
-  <UIButton props={...item} />
+  <UIButton {...item} />
   {/each}
 </div>
