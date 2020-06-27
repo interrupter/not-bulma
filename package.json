@@ -1,0 +1,71 @@
+{
+		"name": "not-bulma",
+		"version": "0.0.1",
+		"description": "not-* family UI components on Bulma CSS Framework",
+		"main": "src/index.js",
+		"svelte": "src/index.js",
+		"scripts": {
+				"lint": "./node_modules/.bin/eslint ./src --fix"
+		},
+		"repository": {
+				"type": "git",
+				"url": "git+https://github.com/interrupter/not-bulma.git"
+		},
+		"keywords": [
+				"not-framework",
+				"not-node",
+				"components",
+				"bulma"
+		],
+		"author": "interrupter <alex.repin@mail.ru> (http://github.com/interrupter)",
+		"license": "ISC",
+		"bugs": {
+				"url": "https://github.com/interrupter/not-bulma/issues"
+		},
+		"homepage": "https://github.com/interrupter/not-bulma#readme",
+		"dependencies": {
+				"svelte": "*",
+				"wolfy87-eventemitter": "^5.2.9",
+				"not-path": "*"
+		},
+		"devDependencies": {
+				"babel-eslint": "^10.1.0",
+				"eslint": "^7.2.0"
+		},
+		"nyc": {
+				"include": [
+						"index.js",
+						"src/**/**/**.js"
+				],
+				"exclude": [
+						"test/**/**/**/**.js"
+				],
+				"reporter": [
+						"html"
+				],
+				"check-coverage": true,
+				"per-file": true,
+				"lines": 95,
+				"statements": 95,
+				"functions": 95,
+				"branches": 95,
+				"watermarks": {
+						"lines": [
+								80,
+								95
+						],
+						"functions": [
+								80,
+								95
+						],
+						"branches": [
+								80,
+								95
+						],
+						"statements": [
+								80,
+								95
+						]
+				}
+		}
+}
