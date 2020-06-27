@@ -1,5 +1,5 @@
 <script>
-  import UIButton from './ui.button.js';
+  import UIButton from './ui.button.svelte';
   export let values = [];
 </script>
 

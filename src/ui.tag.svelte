@@ -33,6 +33,9 @@
     e && e.preventDefault();
     let id = parseInt(e.currentTarget.parentNode.querySelector('select').value);
     let item = variants.find(el => el.id === id);
+    if(!beforeAdd(item, items)){
+      return false;
+    }
     if(item && (items.indexOf(item) === -1)){
       items.push(item);
       items = items;
