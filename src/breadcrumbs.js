@@ -18,12 +18,12 @@ class Breadcrumbs{
 		}
 	}
 
-	static changeHead(head){
+	static setHead(head){
 		this.head.splice(0,this.head.length,...head);
 		return this;
 	}
 
-	static changeTail(tail){
+	static setTail(tail){
 		this.tail.splice(0, this.tail.length,...tail);
 		return this;
 	}
