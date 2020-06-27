@@ -9,7 +9,7 @@ import UIButtons from './ui.buttons.svelte';
 import UIImages from './ui.images.svelte';
 import UILinks from './ui.links.svelte';
 //stores
-import TableStores from './table/notTable.stores.js';
+import * as TableStores from './table/notTable.stores.js';
 //wrappers
 import Table from './table/notTable.js';
 import Breadcrumbs from './breadcrumbs.js';
