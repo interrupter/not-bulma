@@ -9,6 +9,7 @@ class SideMenu{
 			this.menu = new UISideMenu({
 				target: document.querySelector(app.getOptions('mainMenuSelector')),
 				props:{
+					title: 	app.getOptions('mainMenuTitle', 'Меню'),
 					items:  app.getOptions('menu'),
 					root:   app.getOptions('router.root'),
 					go:		   url => app.getWorking('router').navigate(url)

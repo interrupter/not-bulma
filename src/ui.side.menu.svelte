@@ -29,7 +29,7 @@
 			{/if}
 			<ul class="menu-list">
 				{#each link.items as subLink}
-				<li><a href="{root}{subLink.url}" data-href="{link.url}" on:click="{onClick}">{subLink.title}</a></li>
+				<li><a href="{root}{subLink.url}" data-href="{subLink.url}" on:click="{onClick}">{subLink.title}</a></li>
 				{/each}
 			</ul>
 		</li>
