@@ -91,6 +91,16 @@ class notTable extends EventEmitter {
 		}else{
 			this.resetSorter();
 		}
+		if(Object.prototype.hasOwnProperty.call(this.options, 'return')){
+			this.setReturn(this.options.return);
+		}else{
+			this.setReturn();
+		}
+		if(Object.prototype.hasOwnProperty.call(this.options, 'search')){
+			this.setSearch(this.options.search);
+		}else{
+			this.setSearch();
+		}
 		this.render();
 		this.updateData();
 		return this;
@@ -122,6 +132,10 @@ class notTable extends EventEmitter {
 		return val;
 	}
 
+	onSearchChange(line){
+		this.setSearch(line);
+	}
+
 	render() {
 		if (!this.ui.table) {
 			this.ui.table = new UITable({
@@ -132,9 +146,11 @@ class notTable extends EventEmitter {
 					fields: this.getOptions('fields'),
 					actions: this.getActions(),
 					links: this.getLinks(),
+					search: ''
 				}
 			});
 		}
+		this.ui.table.$on('searchChange', e => this.onSearchChange(e.detail));
 	}
 
 	getActions(){

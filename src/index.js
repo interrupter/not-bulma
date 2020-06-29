@@ -14,7 +14,7 @@ import * as TableStores from './table/notTable.stores.js';
 import Table from './table/notTable.js';
 import Breadcrumbs from './breadcrumbs.js';
 import SideMenu from './sidemenu.js';
-
+import Form from './form.js';
 
 export {
 	UIBreadcrumbs,
@@ -26,9 +26,9 @@ export {
 	UIButtons,
 	UIImages,
 	UILinks,
-
 	TableStores,
 	Table,
 	Breadcrumbs,
-	SideMenu
+	SideMenu,
+	Form
 };
