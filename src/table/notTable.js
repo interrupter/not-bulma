@@ -76,10 +76,21 @@ class notTable extends EventEmitter {
 				return val;
 			});
 		}
-
-		this.resetPager();
-		this.resetFilter();
-		this.resetSorter();
+		if(Object.prototype.hasOwnProperty.call(this.options, 'filter')){
+			this.setFilter(this.options.filter);
+		}else{
+			this.resetFilter();
+		}
+		if(Object.prototype.hasOwnProperty.call(this.options, 'pager')){
+			this.setPager(this.options.pager);
+		}else{
+			this.resetPager();
+		}
+		if(Object.prototype.hasOwnProperty.call(this.options, 'sorter')){
+			this.setSorter(this.options.sorter);
+		}else{
+			this.resetSorter();
+		}
 		this.render();
 		this.updateData();
 		return this;
