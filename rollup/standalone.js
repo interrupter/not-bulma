@@ -61,13 +61,13 @@ export default {
           ]
         ],
         exclude: ['tmpl/**', 'build/**', 'node_modules/**', 'css/**', 'js/**', 'test/**', 'bower_components/**', 'assets/*', 'dist/**']
-      })),
+      }))/*,
     (process.env.ENV === 'test' && istanbul({
       extensions: ['.js', '.svelte'],
       compact: false,
       debug: true,
       exclude: ['rollup', 'cypress', 'node_modules/**', 'node_modules/@babel/runtime/helpers/**', 'node_modules/@babel/runtime/regenerator/**', 'node_modules/regenerator-runtime/**']
-    })),
+    }))*/,
     filesize()
   ]
 };

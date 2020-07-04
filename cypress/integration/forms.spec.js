@@ -9,7 +9,9 @@ describe('notBulma', function() {
     cy.visit('http://localhost:7357/ui.forms.html');
     //existence
     cy.get('input[name="username"]').should('exist');
+    cy.get('input[name="username"]').should('have.value','username from initial data object');
     cy.get('input[name="email"]').should('exist');
+    cy.get('input[name="email"]').should('have.value','111');
     cy.get('input[name="telephone"]').should('exist');
     cy.get('input[name="beenToKerch"]').should('exist');
     cy.get('select[name="country"]').should('exist');
@@ -21,6 +23,7 @@ describe('notBulma', function() {
     cy.get('input[name="agreed"]').should('exist');
     cy.get('textarea[name="story"]').should('exist');
     //filling in
+    cy.get('input[name="username"]').clear();
     cy.get('input[name="username"]').type('mynameIs');
     cy.get('input[name="email"]').type('mynameIs@slim.sha');
     cy.get('input[name="telephone"]').type('+79876543210');
@@ -30,7 +33,7 @@ describe('notBulma', function() {
     cy.get('input[name="date"]').type('2001-01-12');
     cy.get('input[name="password"]').type('123456');
     cy.get('input[name="password2"]').type('123456');
-    cy.get('input[name="validTill"]').type('2021-01-12');    
+    cy.get('input[name="validTill"]').type('2021-01-12');
     cy.get('input[name="agreed"]').click();
     cy.get('#form button.is-primary.pull-right').should('not.be.disabled');
   });
