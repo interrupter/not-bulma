@@ -1,0 +1,75 @@
+<script>
+
+  import {CLASS_OK, CLASS_ERR } from './common.js';
+
+  import {createEventDispatcher} from 'svelte';
+	let dispatch = createEventDispatcher();
+
+  export let inputStarted = false;
+  export let validator = ()=>{ return true; }
+  export let value = '';
+  export let label = 'textfield';
+  export let placeholder = 'input some text here, please';
+  export let fieldname = 'textfield';
+  export let icon = false;
+  export let required = true;
+  export let disabled = false;
+  export let valid = true;
+  export let validated = false;
+  export let errors = false;
+  export let formErrors = false;
+  export let formLevelError = false;
+
+  $: iconClasses = (icon? ' has-icons-left ':'') + ' has-icons-right ';
+  $: allErrors = [].concat(errors?errors:[], formErrors?formErrors:[]);
+  $: helper = allErrors?allErrors.join(', '): placeholder;
+  $: invalid = ((valid===false) || (formLevelError));
+  $: validationClasses = (valid===true || !inputStarted)?CLASS_OK:CLASS_ERR;
+
+  function onBlur(ev){
+  	let data = {
+  		field: fieldname,
+  		value: ev.target.type === 'checkbox' ? ev.target.checked:ev.target.value
+  	};
+    inputStarted = true;
+    dispatch('change', data);
+    return true;
+  }
+
+  function onInput(ev){
+  	let data = {
+  		field: fieldname,
+      value
+  	};
+    inputStarted = true;
+    dispatch('change', data);
+    return true;
+  }
+
+</script>
+
+<div class="field form-field-checkbox-{fieldname}">
+  <label class="label">{label}</label>
+  <div class="control {iconClasses}">
+    <label class="checkbox" disabled={disabled}
+     for="edit-form-checkbox-{fieldname}">
+      <input type="checkbox"
+        id="edit-form-checkbox-{fieldname}"
+        bind:checked={value}
+        placeholder="{placeholder}"
+        name="{fieldname}"
+        required={required}
+        invalid="{invalid}"
+        on:change={onBlur} on:input={onInput}
+        aria-controls="input-field-helper-{fieldname}"
+        aria-describedby="input-field-helper-{fieldname}"
+        disabled={disabled}>
+        {label}
+    </label>
+  </div>
+  <p class="help {validationClasses}" id="form-field-helper-{fieldname}">
+    {#if !(validated && valid) && (inputStarted) }
+    {helper}
+    {:else}&nbsp;{/if}
+  </p>
+</div>

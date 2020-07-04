@@ -8,10 +8,9 @@
   export let inputStarted = false;
   export let validator = ()=>{ return true; }
   export let value = '';
-  export let variants = [];
-  export let label = 'select';
-  export let placeholder = 'empty select item';
-  export let fieldname = 'select';
+  export let label = 'Date and time';
+  export let placeholder = 'Date and time of event';
+  export let fieldname = 'datetime';
   export let icon = false;
   export let required = true;
   export let valid = true;
@@ -47,24 +46,16 @@
   }
 
 </script>
-
-<div class="field form-field-select-{fieldname}">
+<div class="field form-field-date-{fieldname}">
   <label class="label">{label}</label>
   <div class="control {iconClasses}">
-    <div class="select {validationClasses}">
-      <select name="{fieldname}" bind:value={value} on:blur={onBlur} on:input={onInput}>
-        {#if placeholder.length > 0 }
-        {#if value }
-        <option >{placeholder}</option>
-        {:else}
-        <option selected="selected">{placeholder}</option>
-        {/if}
-        {/if}
-        {#each variants as variant}
-        <option value="{variant.id}" selected="{variant.id==value}">{variant.title}</option>
-        {/each}
-      </select>
-    </div>
+    <input class="input {validationClasses}"
+    type="date" name="{fieldname}"
+    invalid="{invalid}" required={required}
+    placeholder="{placeholder}" bind:value={value}
+     autocomplete="{fieldname}" aria-controls="input-field-helper-{fieldname}"
+      on:change={onBlur} on:input={onInput}
+      aria-describedby="input-field-helper-{fieldname}" />
     {#if icon }
     <span class="icon is-small is-left"><i class="fas fa-{icon}"></i></span>
     {/if}

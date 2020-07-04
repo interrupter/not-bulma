@@ -1,11 +1,29 @@
 {
 		"name": "not-bulma",
-		"version": "0.0.12",
+		"version": "0.0.13",
 		"description": "not-* family UI components on Bulma CSS Framework",
 		"main": "src/index.js",
 		"svelte": "src/index.js",
 		"scripts": {
-				"lint": "./node_modules/.bin/eslint ./src --fix"
+				"build": "./bin/build.sh",
+				"buildtest": "ENV=test ./bin/build.sh && rm -rf ./test/browser/assets/bulma/* && mv dist/* ./test/browser/assets/bulma/",
+				"prelint": "npm run build",
+				"lint": "/usr/local/bin/eslint --ext svelte3 ./src/**/**",
+				"cypress:run": "NODE_ENV=test ./node_modules/.bin/cypress run",
+				"cypress:open": "NODE_ENV=test  ./node_modules/.bin/cypress open",
+				"test:open": "_ENV_NODE_='liquid' ./node_modules/.bin/mocha --reporter spec ./test/node && npm run cypress:open",
+				"test:run": "_ENV_NODE_='liquid' ./node_modules/.bin/mocha --reporter spec ./test/node && npm run cypress:run",
+				"test": "npm run test:server & npm run test:node && npm run test:run",
+				"test:server": "nyc --silent node --inspect=8357 ./test/server/index.js",
+				"debug:server": "node --inspect=8357 ./test/server/index.js",
+				"test:server:off": "wget -qO- http://localhost:7357/terminate",
+				"pretest": "./node_modules/.bin/eslint ./src/**/**",
+				"docs": "./node_modules/.bin/jsdoc -c jsdoc.json",
+				"cover": "npm run cover:run && npm run cover:report",
+				"cover:run": "nyc --silent npm run cypress:run",
+				"cover:node": "nyc --silent npm run test:node",
+				"cover:report": "npm run test:server:off && npm run test:node:clear && npm run cover:report:slim",
+				"cover:report:slim": "nyc report"
 		},
 		"repository": {
 				"type": "git",
@@ -24,18 +42,62 @@
 		},
 		"homepage": "https://github.com/interrupter/not-bulma#readme",
 		"dependencies": {
+				"bulma": "^0.9.0",
+				"bulma-switch": "^2.0.0",
+				"not-path": "*",
 				"svelte": "*",
-				"wolfy87-eventemitter": "^5.2.9",
-				"not-path": "*"
+				"validator": "^13.1.1",
+				"wolfy87-eventemitter": "^5.2.9"
 		},
 		"devDependencies": {
+				"@babel/core": "^7.10.3",
+				"@babel/plugin-proposal-class-properties": "^7.10.4",
+				"@babel/plugin-transform-arrow-functions": "^7.10.1",
+				"@babel/plugin-transform-runtime": "^7.10.3",
+				"@babel/preset-env": "^7.10.3",
+				"@cypress/code-coverage": "^3.8.1",
 				"babel-eslint": "^10.1.0",
-				"eslint": "^7.2.0"
+				"babel-plugin-istanbul": "^6.0.0",
+				"connect-mongo": "^3.2.0",
+				"cors": "^2.8.5",
+				"cypress": "*",
+				"eslint": "^7.3.1",
+				"eslint-plugin-svelte3": "^2.7.3",
+				"express": "^4.17.1",
+				"express-fileupload": "^1.1.7-alpha.3",
+				"express-session": "^1.17.1",
+				"helmet": "^3.23.3",
+				"ink-docstrap": "^1.3.2",
+				"istanbul": "^0.4.5",
+				"istanbul-lib-coverage": "^3.0.0",
+				"method-override": "^3.0.0",
+				"mongodb-memory-server": "^6.6.1",
+				"mongoose": "^5.9.20",
+				"not-error": "0.0.22",
+				"not-key": "0.0.14",
+				"not-log": "0.0.15",
+				"not-node": "^3.3.52",
+				"not-options": "^0.1.8",
+				"not-user": "^0.2.32",
+				"not-ws": "0.0.14",
+				"nyc": "^15.1.0",
+				"rollup": "^2.18.1",
+				"rollup-plugin-babel": "^4.4.0",
+				"rollup-plugin-commonjs": "^10.1.0",
+				"rollup-plugin-eslint": "^7.0.0",
+				"rollup-plugin-filesize": "^9.0.2",
+				"rollup-plugin-istanbul": "^2.0.1",
+				"rollup-plugin-node-resolve": "^5.2.0",
+				"rollup-plugin-postcss": "^3.1.2",
+				"rollup-plugin-sass": "^1.2.2",
+				"rollup-plugin-svelte": "^5.2.3"
 		},
 		"nyc": {
 				"include": [
 						"index.js",
-						"src/**/**/**.js"
+						"src",
+						"src/**/**/**/**.svelte",
+						"test/browser/assets/bulma/**.js"
 				],
 				"exclude": [
 						"test/**/**/**/**.js"

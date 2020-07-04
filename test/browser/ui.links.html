@@ -1,0 +1,61 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<title>Store UI testing</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="/assets/bulma/notBulma.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,600,700">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
+	<script type="module" src="/fetch.xhr.js"></script>
+</head>
+
+<body>
+	<section class="container mt-6">
+		<main class="container">
+			<h2 class="title is-2">Links</h2>
+			<div id="links" class="columns is-centered"></div>
+		</main>
+	</section>
+
+	<script src="/assets/bulma/notBulma.js"></script>
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			try{
+				new notBulma.UILinks({
+					target: document.getElementById('links'),
+					props: {
+						values: [{
+								type: 'info',
+								title: 'Info',
+								url: '/info',
+								action: (e)=>{
+									e.preventDefault(); e.currentTarget.textContent = 'clicked'; return false;
+								}
+							},
+							{
+								type: 'danger',
+								title: 'Danger',
+								url: '/danger.html'
+							},
+							{
+								type: 'success',
+								title: 'Success',
+								url: '/success'
+							},
+						]
+					}
+				});
+			}catch(e){
+				console.error(e);
+			}
+
+		});
+	</script>
+</body>
+
+</html>

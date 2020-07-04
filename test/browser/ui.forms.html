@@ -1,0 +1,295 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<title>Bulma UI Form builder</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="/assets/bulma/notBulma.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,600,700">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css">
+	<script type="module" src="/fetch.xhr.js"></script>
+</head>
+
+<body>
+	<section class="container mt-6">
+		<main class="container">
+			<h2 class="title is-2">Form</h2>
+			<div id="form" class="columns is-centered"></div>
+		</main>
+	</section>
+
+	<script src="/assets/bulma/notBulma.js"></script>
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			try {
+				let manifest = {
+					model: 'user',
+					url: '/api/:modelName',
+					fields: {
+						username: {
+							component: 'UITextfield',
+							label: 'Имя пользователя',
+							placeholder: 'Как к вам обращаться?',
+							icon: 'user'
+						},
+						story: {
+							component: 'UITextarea',
+							label: 'Как я провёл лето',
+							placeholder: 'кодил',
+							icon: false
+						},
+						email: {
+							component: 'UIEmail',
+							label: 'email',
+							placeholder: 'enter here your email',
+							icon: 'envelope'
+						},
+						telephone: {
+							component: 'UITelephone',
+							label: 'Номер вашего телефона',
+							icon: 'phone'
+						},
+						password: {
+							component: 'UIPassword',
+							label: 'Password',
+							placeholder: 'enter here prefered password',
+							icon: 'lock'
+						},
+						password2: {
+							component: 'UIPassword',
+							label: 'Password verification',
+							placeholder: 're-enter here prefered password',
+							icon: 'lock'
+						},
+						validTill: {
+							component: 'UIDate',
+							label: 'Date and time this should be valid',
+							placeholder: '',
+							icon: 'clock'
+						},
+						beenToKerch: {
+							component: 'UISwitch',
+							value: true,
+							label: 'Был в Керчи?'
+						},
+						favoriteColor: {
+							component: 'UIColor',
+							label: 'Любимый цвет'
+						},
+						date: {
+							component: 'UIDate',
+							label: 'Дата рождения'
+						},
+						country: {
+							component: 'UISelect',
+							placeholder: 'Какая-то страна',
+							value: 3,
+							label: 'Страна',
+							variants: [{
+									id: 1,
+									title: 'Russia'
+								},
+								{
+									id: 2,
+									title: 'China'
+								},
+								{
+									id: 3,
+									title: 'Germany'
+								},
+								{
+									id: 4,
+									title: 'Senegal'
+								}
+							]
+						},
+						agreed: {
+							component: 'UICheckbox',
+							label: 'Check this if you read and agreed on our terms of service'
+						}
+					},
+					actions: {
+						edit: {
+							method: 'post',
+							title: 'Edit title',
+							fields: [
+								'username',
+								'email',
+								'story',
+								'telephone',
+								'beenToKerch',
+								'country',
+								'date',
+								'favoriteColor',
+								'password',
+								'password2',
+								'validTill',
+								'agreed'
+							]
+						},
+						passChange: {
+							method: 'post',
+							title: 'Change pass',
+							fields: [
+								'password',
+								'password2'
+							]
+						}
+					}
+				};
+
+				function passValidator(value) {
+					let errors = [];
+					if (!notBulma.Form.validator.isLength(value, {
+							min: 6
+						})) {
+						errors.push('Минимальный размер пароля 6 знаков');
+					}
+					return errors;
+				}
+
+				let options = {
+					fields: {
+						username: {
+							validate(value) {
+								let errors = [];
+								if (!notBulma.Form.validator.isLength(value, {
+										min: 6
+									})) {
+									errors.push('Минимальная длина 6 знаков');
+								}
+								return errors;
+							}
+						},
+						password: {
+							validate: passValidator
+						},
+						password2: {
+							validate: passValidator
+						},
+						date: {
+							validate(value) {
+								let errors = [];
+								try{
+									let curDate = new Date(),
+										valueDate = new Date(value);
+									if (valueDate >= curDate) {
+										errors.push('Дата должна быть в прошлом');
+									}
+								}catch(e){
+									e && errors.push('Формат даты не верный');
+								}
+								return errors;
+							}
+						},
+						validTill: {
+							validate(value) {
+								let errors = [];
+								try{
+									let curDate = new Date(),
+										valueDate = new Date(value);
+									if (valueDate <= curDate) {
+										errors.push('Дата должна быть в будущем');
+									}
+								}catch(e){
+									e && errors.push('Формат даты не верный');
+								}
+								return errors;
+							}
+						},
+						telephone: {
+							validate(value) {
+								let errors = [];
+								if (!notBulma.Form.validator.isLength(value, {
+										min: 11
+									})) {
+									errors.push('Необходимо ввести полный номер телефона из 11 цифр');
+								}
+								return errors;
+							}
+						},
+						story: {
+							validate(value) {
+								let errors = [];
+								if (!notBulma.Form.validator.isLength(value, {
+										min: 6,
+										max: 100
+									})) {
+									errors.push('Текст должен содержать от 6 до 100 сиволов.');
+								}
+								return errors;
+							}
+						},
+						email: {
+							validate(value) {
+								let errors = [];
+								if (!notBulma.Form.validator.isEmail(value)) {
+									errors.push('Необходимо ввести email адрес');
+								}
+								return errors;
+							}
+						},
+						agreed: {
+							validate() {
+								return [];
+							}
+						},
+						favoriteColor: {
+							validate() {
+								return [];
+							}
+						},
+						beenToKerch: {
+							validate() {
+								return [];
+							}
+						},
+						country: {
+							validate(value) {
+								let errors = [];
+								if ([1, 2, 3, 4].indexOf(parseInt(value)) === -1) {
+									errors.push('Необходимо выбрать страну');
+								}
+								return errors;
+							}
+						}
+					},
+					validate(form) {
+						let errors = {
+							clean: true,
+							fields: {},
+							form: []
+						};
+						if (form.password !== form.password2) {
+							errors.clean = false;
+							errors.fields.password = ['Пароли должны совпадать'];
+							errors.fields.password2 = ['Пароли должны совпадать'];
+							errors.form.push('Некоторые поля заполнены не корректно');
+						}
+						if (form.agreed !== true) {
+							errors.clean = false;
+							errors.fields.agreed = ['Необходимо подтвердить согласие с правилами использования'];
+						}
+						if (form.beenToKerch !== true) {
+							errors.clean = false;
+							errors.fields.beenToKerch = ['Вам необходимо побывать в Керчи. Срочно.'];
+						}
+						return errors;
+					}
+				};
+				let form = notBulma.Form.build(document.getElementById('form'), manifest, 'edit', options);
+				form.$on('submit', (data) => console.log(data));
+				form.$on('reject', () => console.error('form rejected'));
+			} catch (e) {
+				console.error(e);
+			}
+		});
+	</script>
+</body>
+
+</html>

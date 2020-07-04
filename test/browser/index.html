@@ -1,0 +1,29 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mocha/2.1.0/mocha.min.css">
+        <script type="module" src="/fetch.xhr.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mocha/2.1.0/mocha.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/expect.js/0.2.0/expect.min.js"></script>
+    </head>
+    <body>
+      <div id="mocha"></div>
+    <script>
+    mocha.setup('bdd');
+    </script>
+        <script src="/assets/bulma/notBulma.js"></script>
+        <script src="/index.js"></script>
+        <script>
+    mocha.checkLeaks();
+    mocha.run();
+    document.addEventListener('DOMContentLoaded', ()=>{
+
+    });
+    </script>
+    </body>
+</html>

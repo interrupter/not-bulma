@@ -1,3 +1,4 @@
+import 'bulma';
 //raw svelte
 import UIBreadcrumbs from './ui.breadcrumbs.svelte';
 import UIError from './ui.error.svelte';
@@ -8,6 +9,8 @@ import UIButton from './ui.button.svelte';
 import UIButtons from './ui.buttons.svelte';
 import UIImages from './ui.images.svelte';
 import UILinks from './ui.links.svelte';
+//form related
+import * as FormElements from './form/index.js';
 //stores
 import * as TableStores from './table/notTable.stores.js';
 //wrappers
@@ -15,6 +18,10 @@ import Table from './table/notTable.js';
 import Breadcrumbs from './breadcrumbs.js';
 import SideMenu from './sidemenu.js';
 import Form from './form.js';
+
+Object.keys(FormElements).forEach((fieldtype)=>{
+	Form.addComponent(fieldtype, FormElements[fieldtype]);
+});
 
 export {
 	UIBreadcrumbs,
@@ -30,5 +37,6 @@ export {
 	Table,
 	Breadcrumbs,
 	SideMenu,
-	Form
+	Form,
+	FormElements
 };

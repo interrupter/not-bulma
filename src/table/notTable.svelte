@@ -34,9 +34,7 @@
 	function onSearchInput(ev){
 		try{
 			let data = ev.currentTarget.value.trim();
-			if(data.length > 3){
-				dispatch('searchChange', data);
-			}
+			dispatch('searchChange', data);
 		}catch(e){
 			return;
 		}

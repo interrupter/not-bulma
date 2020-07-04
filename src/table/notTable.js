@@ -133,7 +133,12 @@ class notTable extends EventEmitter {
 	}
 
 	onSearchChange(line){
-		this.setSearch(line);
+		if(line.length > 3){
+			this.setSearch(line);
+		}else{
+			this.setSearch();
+		}
+
 	}
 
 	render() {
