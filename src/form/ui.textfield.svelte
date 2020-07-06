@@ -13,6 +13,7 @@
   export let fieldname = 'textfield';
   export let icon = false;
   export let required = true;
+  export let readonly = false;
   export let valid = true;
   export let validated = false;
   export let errors = false;
@@ -51,7 +52,7 @@
   <div class="control {iconClasses}">
     <input class="input {validationClasses}" type="text" name="{fieldname}" invalid="{invalid}" required={required} placeholder="{placeholder}" bind:value={value} autocomplete="{fieldname}" aria-controls="input-field-helper-{fieldname}"
       on:change={onBlur} on:input={onInput}
-      aria-describedby="input-field-helper-{fieldname}" />
+      aria-describedby="input-field-helper-{fieldname}" {readonly}/>
     {#if icon }
     <span class="icon is-small is-left"><i class="fas fa-{icon}"></i></span>
     {/if}

@@ -14,6 +14,7 @@
   export let icon = false;
   export let rows = 10;
   export let required = true;
+  export let readonly = false;
   export let valid = true;
   export let validated = false;
   export let errors = false;
@@ -51,9 +52,9 @@
   <label class="label">{label}</label>
   <div class="control {iconClasses}">
     <textarea invalid="{invalid}"
-    on:blur={onBlur} 
+    on:blur={onBlur}
     class="textarea {validationClasses}"
-    required={required}
+    required={required} {readonly}
     bind:value={value}
     name="{fieldname}"
     placeholder="{placeholder}" rows="{rows}"

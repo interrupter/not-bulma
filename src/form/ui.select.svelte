@@ -14,6 +14,7 @@
   export let fieldname = 'select';
   export let icon = false;
   export let required = true;
+  export let readonly = false;
   export let valid = true;
   export let validated = false;
   export let errors = false;
@@ -52,7 +53,7 @@
   <label class="label">{label}</label>
   <div class="control {iconClasses}">
     <div class="select {validationClasses}">
-      <select name="{fieldname}" bind:value={value} on:blur={onBlur} on:input={onInput}>
+      <select name="{fieldname}" bind:value={value} on:blur={onBlur} on:input={onInput} {readonly}>
         {#if placeholder.length > 0 }
         {#if value }
         <option >{placeholder}</option>

@@ -13,6 +13,7 @@
   export let fieldname = 'datetime';
   export let icon = false;
   export let required = true;
+  export let readonly = false;
   export let valid = true;
   export let validated = false;
   export let errors = false;
@@ -52,7 +53,7 @@
     <input class="input {validationClasses}"
     type="date" name="{fieldname}"
     invalid="{invalid}" required={required}
-    placeholder="{placeholder}" bind:value={value}
+    placeholder="{placeholder}" bind:value={value} {readonly}
      autocomplete="{fieldname}" aria-controls="input-field-helper-{fieldname}"
       on:change={onBlur} on:input={onInput}
       aria-describedby="input-field-helper-{fieldname}" />

@@ -13,6 +13,7 @@
   export let fieldname = 'color';
   export let icon = false;
   export let required = true;
+  export let readonly = false;
   export let valid = true;
   export let validated = false;
   export let errors = false;
@@ -50,7 +51,7 @@
   <label class="label">{label}</label>
   <div class="control {iconClasses}">
     <input class="input {validationClasses}" type="color" name="{fieldname}" invalid="{invalid}" required={required} placeholder="{placeholder}" bind:value={value} autocomplete="{fieldname}" aria-controls="input-field-helper-{fieldname}"
-      on:change={onBlur} on:input={onInput}
+      on:change={onBlur} on:input={onInput} {readonly}
       aria-describedby="input-field-helper-{fieldname}" />
     {#if icon }
     <span class="icon is-small is-left"><i class="fas fa-{icon}"></i></span>

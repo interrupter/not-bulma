@@ -13,6 +13,7 @@
   export let fieldname = 'password';
   export let icon = false;
   export let required = true;
+  export let readonly = false;
   export let valid = true;
   export let validated = false;
   export let errors = false;
@@ -49,7 +50,7 @@
 <div class="field form-field-password-{fieldname}">
   <label class="label">{label}</label>
   <div class="control {iconClasses}">
-    <input class="input {validationClasses}"
+    <input class="input {validationClasses}" {readonly}
     type="password" name="{fieldname}" invalid="{invalid}" required={required} placeholder="{placeholder}" bind:value={value} autocomplete="{fieldname}" aria-controls="input-field-helper-{fieldname}"
       on:change={onBlur} on:input={onInput}
       aria-describedby="input-field-helper-{fieldname}" />

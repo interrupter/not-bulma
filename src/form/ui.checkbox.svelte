@@ -13,6 +13,7 @@
   export let fieldname = 'textfield';
   export let icon = false;
   export let required = true;
+  export let readonly = false;
   export let disabled = false;
   export let valid = true;
   export let validated = false;
@@ -58,7 +59,7 @@
         bind:checked={value}
         placeholder="{placeholder}"
         name="{fieldname}"
-        required={required}
+        required={required} {readonly}
         invalid="{invalid}"
         on:change={onBlur} on:input={onInput}
         aria-controls="input-field-helper-{fieldname}"

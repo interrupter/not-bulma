@@ -13,6 +13,7 @@
   export let fieldname = 'textfield';
   export let icon = false;
   export let required = true;
+	export let readonly = false;
   export let disabled = false;
   export let valid = true;
   export let styling = " is-rounded is-success "
@@ -57,7 +58,7 @@
         bind:checked={value}
         placeholder="{placeholder}"
         name="{fieldname}"
-        required={required}
+        required={required} {readonly}
         invalid="{invalid}"
         on:blur={onBlur} on:input={onInput}
         aria-controls="input-field-helper-{fieldname}"

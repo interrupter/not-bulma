@@ -9,6 +9,7 @@
   export let icon = false;
   export let rows = 10;
   export let required = true;
+  export let readonly = false;
   export let valid = true;
   export let validated = false;
   export let errors = false;
@@ -17,4 +18,4 @@
 
 </script>
 
-<input type="hidden" bind:value="{value}" name="{fieldname}"/>
+<input type="hidden" bind:value="{value}" {readonly} name="{fieldname}"/>
