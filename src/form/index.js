@@ -2,6 +2,7 @@ import UICheckbox from './ui.checkbox.svelte';
 import UIColor from './ui.color.svelte';
 import UIDate from './ui.date.svelte';
 import UIEmail from './ui.email.svelte';
+import UIHidden from './ui.hidden.svelte';
 import UIPassword from './ui.password.svelte';
 import UIRadio from './ui.radio.svelte';
 import UIRadiogroup from './ui.radiogroup.svelte';
@@ -18,6 +19,7 @@ export {
   UIColor,
   UIDate,
   UIEmail,
+  UIHidden,
   UIPassword,
   UIRadio,
   UIRadiogroup,
