@@ -129,10 +129,14 @@
 				}
 			}
 			form[fieldName] = fieldInit(fieldName, opts);
+			if(options.readonly){
+				form[fieldName].readonly = true;
+			}
 		});
 		if (Object.prototype.hasOwnProperty.call(options, 'validate') && typeof options.validate === 'function') {
 			validate = options.validate;
 		}
+
 		form = form;
 	});
 
