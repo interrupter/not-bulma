@@ -15,7 +15,7 @@
 
 	let form = {};
 	let validate = () => {
-		return [];
+		return { clean: true };
 	}
 	let overlay;
 	let stage = 'filling';
@@ -140,7 +140,7 @@
 		let data = ev.detail;
 		if (validation) {
 			//fields level validations
-			let res = form[data.field].validate(data.value);
+			let res = typeof form[data.field].validate === 'function' ? form[data.field].validate(data.value): [];
 			if (res.length === 0) {
 				setFieldValid(data.field, data.value);
 			} else {
@@ -148,7 +148,7 @@
 			}
 			//form level validations
 			let errors = validate(collectData());
-			if (errors.clean) {
+			if ((!errors) || errors.clean) {
 				formErrors.splice(0, formErrors.length);
 				formErrors = formErrors;
 				formHasErrors = false;
@@ -179,7 +179,7 @@
 					}
 					formHasErrors = true;
 				}
-			}			
+			}
 		} else {
 			dispatch('change', data);
 		}
