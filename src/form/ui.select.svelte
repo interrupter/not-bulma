@@ -65,7 +65,7 @@
   <div class="control {iconClasses}">
     <div class="select {validationClasses} {multipleClass}">
       {#if multiple }
-      <select name="{fieldname}" size="{size}" bind:value={value} on:blur={onBlur} on:input={onInput} {readonly} mutiple >
+      <select name="{fieldname}" size="{size}" on:blur={onBlur} on:input={onInput} {readonly} multiple >
         {#if placeholder.length > 0 }
         {#if value }
         <option >{placeholder}</option>
