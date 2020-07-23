@@ -36,8 +36,10 @@ class LIB{
 
 const FIELDS = new LIB();
 const COMPONENTS = new LIB();
+const VARIANTS = new LIB();
 
 export {
   FIELDS,
-  COMPONENTS
+  COMPONENTS,
+  VARIANTS
 };

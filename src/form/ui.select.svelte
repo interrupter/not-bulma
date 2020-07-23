@@ -15,6 +15,7 @@
   export let icon = false;
   export let required = true;
   export let readonly = false;
+  export let multiple = false;
   export let valid = true;
   export let validated = false;
   export let errors = false;
@@ -28,10 +29,14 @@
   $: validationClasses = (valid===true || !inputStarted)?CLASS_OK:CLASS_ERR;
 
   function onBlur(ev){
-  	let data = {
+    let data = {
   		field: fieldname,
-  		value: ev.target.type === 'checkbox' ? ev.target.checked:ev.target.value
+  		value: ev.target.value
   	};
+    if(multiple){
+      value = Array.from(ev.target.selectedOptions).map( el => el.value );
+      data.value = value;
+    }
     inputStarted = true;
     dispatch('change', data);
     return true;
@@ -42,6 +47,10 @@
   		field: fieldname,
       value
   	};
+    if(multiple){
+      value = Array.from(ev.target.selectedOptions).map( el => el.value );
+      data.value = value;
+    }
     inputStarted = true;
     dispatch('change', data);
     return true;
@@ -53,7 +62,7 @@
   <label class="label">{label}</label>
   <div class="control {iconClasses}">
     <div class="select {validationClasses}">
-      <select name="{fieldname}" bind:value={value} on:blur={onBlur} on:input={onInput} {readonly}>
+      <select name="{fieldname}" bind:value={value} on:blur={onBlur} on:input={onInput} {readonly} {multiple}>
         {#if placeholder.length > 0 }
         {#if value }
         <option >{placeholder}</option>
@@ -62,7 +71,11 @@
         {/if}
         {/if}
         {#each variants as variant}
-        <option value="{variant.id}" selected="{variant.id==value}">{variant.title}</option>
+        {#if multiple }
+        <option value="{variant.id}" selected="{value.indexOf(variant.id) > -1}">{variant.title}</option>
+        {:else}
+        <option value="{variant.id}" selected="{value == variant.id}">{variant.title}</option>
+        {/if}
         {/each}
       </select>
     </div>

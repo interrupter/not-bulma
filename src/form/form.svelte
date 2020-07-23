@@ -3,7 +3,8 @@
 
 	import {
 		FIELDS,
-		COMPONENTS
+		COMPONENTS,
+		VARIANTS
 	} from './LIB.js';
 	import {
 		onMount
@@ -35,13 +36,20 @@
 			required: true,
 			validated: false,
 			valid: false,
-			errors: false
+			errors: false,
+			variants: []
 		};
 		if (FIELDS.contain(type)) {
 			Object.assign(field, FIELDS.get(type));
 		}
 		if (mutation) {
 			Object.assign(field, mutation);
+		}
+		if(
+			Object.prototype.hasOwnProperty.call(field, 'variantsSource') &&
+			VARIANTS.contain(field.variantsSource)
+			){
+			field.variants = VARIANTS.get(field.variantsSource);
 		}
 		return field;
 	}

@@ -1,11 +1,16 @@
 import validator from 'validator';
 import UIForm from './form/form.svelte';
-import { FIELDS, COMPONENTS } from './form/LIB.js';
+import { FIELDS, COMPONENTS,  VARIANTS} from './form/LIB.js';
 
 class Form{
   static validator = validator;
-  static addComponent(name, comp){
-    COMPONENTS.add(name, comp);
+  
+  static addComponent(name, value){
+    COMPONENTS.add(name, value);
+  }
+
+  static addVariants(name, value){
+    VARIANTS.add(name, value);
   }
 
   static addField(name, field){
@@ -25,7 +30,7 @@ class Form{
         if(!Object.prototype.hasOwnProperty.call(options,'fields')){          options.fields = {};            }
         if(!Object.prototype.hasOwnProperty.call(options.fields, fieldName)){ options.fields[fieldName] = {}; }
         //copying validators
-        if(validators&& validators.fields && Object.prototype.hasOwnProperty.call(validators.fields, fieldName)){
+        if(validators && validators.fields && Object.prototype.hasOwnProperty.call(validators.fields, fieldName)){
           options.fields[fieldName].validate = validators.fields[fieldName];
         }
         //copying initial data
