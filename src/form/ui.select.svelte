@@ -1,5 +1,6 @@
 <script>
 
+  const CLEAR_MACRO = '__CLEAR__';
   import {CLASS_OK, CLASS_ERR } from './common.js';
 
   import {createEventDispatcher} from 'svelte';
@@ -37,7 +38,14 @@
   	};
     if(multiple){
       value = Array.from(ev.target.selectedOptions).map( el => el.value );
+      if(value.indexOf(CLEAR_MACRO)>-1){
+        value = [];
+      }
       data.value = value;
+    }else{
+      if (data.value === CLEAR_MACRO){
+        value = '';
+      }
     }
     inputStarted = true;
     dispatch('change', data);
@@ -51,7 +59,14 @@
   	};
     if(multiple){
       value = Array.from(ev.target.selectedOptions).map( el => el.value );
+      if(value.indexOf(CLEAR_MACRO)>-1){
+        value = [];
+      }
       data.value = value;
+    }else{
+      if (data.value === CLEAR_MACRO){
+        value = '';
+      }
     }
     inputStarted = true;
     dispatch('change', data);
@@ -68,9 +83,9 @@
       <select name="{fieldname}" size="{size}" on:blur={onBlur} on:input={onInput} {readonly} multiple >
         {#if placeholder.length > 0 }
         {#if value }
-        <option >{placeholder}</option>
+        <option value="{CLEAR_MACRO}" >{placeholder}</option>
         {:else}
-        <option selected="selected">{placeholder}</option>
+        <option value="{CLEAR_MACRO}" selected="selected">{placeholder}</option>
         {/if}
         {/if}
         {#each variants as variant}
@@ -81,9 +96,9 @@
       <select name="{fieldname}" bind:value={value} on:blur={onBlur} on:input={onInput} {readonly} >
         {#if placeholder.length > 0 }
         {#if value }
-        <option >{placeholder}</option>
+        <option value="{CLEAR_MACRO}">{placeholder}</option>
         {:else}
-        <option selected="selected">{placeholder}</option>
+        <option value="{CLEAR_MACRO}" selected="selected">{placeholder}</option>
         {/if}
         {/if}
         {#each variants as variant}
