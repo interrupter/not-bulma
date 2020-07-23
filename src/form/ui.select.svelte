@@ -16,6 +16,7 @@
   export let required = true;
   export let readonly = false;
   export let multiple = false;
+  export let size = 8;
   export let valid = true;
   export let validated = false;
   export let errors = false;
