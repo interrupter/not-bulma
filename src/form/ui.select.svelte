@@ -27,6 +27,7 @@
   $: helper = allErrors?allErrors.join(', '): placeholder;
   $: invalid = ((valid===false) || (formLevelError));
   $: validationClasses = (valid===true || !inputStarted)?CLASS_OK:CLASS_ERR;
+  $: multiClass = mutiple?' is-multiple ':'';
 
   function onBlur(ev){
     let data = {
@@ -61,9 +62,9 @@
 <div class="field form-field-select-{fieldname}">
   <label class="label">{label}</label>
   <div class="control {iconClasses}">
-    <div class="select {validationClasses}">
+    <div class="select {validationClasses} {multiClass}">
       {#if multiple }
-      <select name="{fieldname}" bind:value={value} on:blur={onBlur} on:input={onInput} {readonly} mutiple >
+      <select name="{fieldname}" size="{size}" bind:value={value} on:blur={onBlur} on:input={onInput} {readonly} mutiple >
         {#if placeholder.length > 0 }
         {#if value }
         <option >{placeholder}</option>
