@@ -62,7 +62,8 @@
   <label class="label">{label}</label>
   <div class="control {iconClasses}">
     <div class="select {validationClasses}">
-      <select name="{fieldname}" bind:value={value} on:blur={onBlur} on:input={onInput} {readonly} {multiple}>
+      {#if multiple }
+      <select name="{fieldname}" bind:value={value} on:blur={onBlur} on:input={onInput} {readonly} mutiple >
         {#if placeholder.length > 0 }
         {#if value }
         <option >{placeholder}</option>
@@ -71,13 +72,23 @@
         {/if}
         {/if}
         {#each variants as variant}
-        {#if multiple }
         <option value="{variant.id}" selected="{value.indexOf(variant.id) > -1}">{variant.title}</option>
-        {:else}
-        <option value="{variant.id}" selected="{value == variant.id}">{variant.title}</option>
-        {/if}
         {/each}
       </select>
+      {:else}
+      <select name="{fieldname}" bind:value={value} on:blur={onBlur} on:input={onInput} {readonly} >
+        {#if placeholder.length > 0 }
+        {#if value }
+        <option >{placeholder}</option>
+        {:else}
+        <option selected="selected">{placeholder}</option>
+        {/if}
+        {/if}
+        {#each variants as variant}
+        <option value="{variant.id}" selected="{value == variant.id}">{variant.title}</option>
+        {/each}
+      </select>
+      {/if}
     </div>
     {#if icon }
     <span class="icon is-small is-left"><i class="fas fa-{icon}"></i></span>
