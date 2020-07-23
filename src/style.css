@@ -1,0 +1,4 @@
+.select select[multiple]{
+  height: auto;
+  padding: 0px;
+}
