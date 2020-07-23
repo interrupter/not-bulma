@@ -1,4 +1,5 @@
 import 'bulma';
+import 'style.css';
 //raw svelte
 import UIBreadcrumbs from './ui.breadcrumbs.svelte';
 import UIError from './ui.error.svelte';
