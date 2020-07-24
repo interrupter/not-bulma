@@ -4,7 +4,7 @@ import { FIELDS, COMPONENTS,  VARIANTS} from './form/LIB.js';
 
 class Form{
 	static validator = validator;
-	
+
 	static addComponent(name, value){
 		COMPONENTS.add(name, value);
 	}
@@ -58,6 +58,12 @@ class Form{
 				options
 			}
 		});
+	}
+
+	static getVariantTitle(name, id){
+		let lib = VARIANTS.get(name);
+		let result = lib.filter(item => item.id === id );
+		return result.length === 1 ? result[0]: 'noname';
 	}
 
 }
