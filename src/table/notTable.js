@@ -510,6 +510,10 @@ class notTable extends EventEmitter {
 		}
 	}
 
+	getData(){
+		return this.data;
+	}
+
 	processData() {
 		let thatFilter = this.getFilter();
 		//this.getData('rows').__setPassive;
