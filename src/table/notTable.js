@@ -480,7 +480,11 @@ class notTable extends EventEmitter {
 				this.loadData()
 					.then((data) => {
 						this.stores.filtered.update((val) => {
-							val.push(...(data.list));
+							if(Object.prototype.hasOwnProperty.call(data, 'list') && Array.isArray(data.list)){
+								val.push(...(data.list));
+							}else if(Array.isArray(data)){
+								val.push(...data);
+							}
 							return val;
 						});
 						this.setWorking('lastCount', data.count);
