@@ -105,23 +105,21 @@
 		</tr>
 		{/each}
 	</tbody>
-	<tfoot>
-		<nav class="pagination is-centered" role="navigation" aria-label="pagination">
-			<a class="pagination-previous" on:click={goPrev}>Назад</a>
-			<a class="pagination-next" on:click={goNext}>Вперед</a>
-			<ul class="pagination-list">
-				{#if state.pagination && state.pagination.pages && state.pagination.pages.list }
-				{#each state.pagination.pages.list as page}
-				<li>
-					{#if page.active}
-					<a class="pagination-link is-current" aria-label="Страница {page.index}" aria-current="page">{page.index+1}</a>
-					{:else}
-					<a class="pagination-link" aria-label="Страница {page.index}" data-page="{page.index}" on:click={goTo}>{page.index+1}</a>
-					{/if}
-				</li>
-				{/each}
-				{/if}
-			</ul>
-		</nav>
-	</tfoot>
 </table>
+<nav class="pagination is-centered" role="navigation" aria-label="pagination">
+	<a class="pagination-previous" on:click={goPrev}>Назад</a>
+	<a class="pagination-next" on:click={goNext}>Вперед</a>
+	<ul class="pagination-list">
+		{#if state.pagination && state.pagination.pages && state.pagination.pages.list }
+		{#each state.pagination.pages.list as page}
+		<li>
+			{#if page.active}
+			<a class="pagination-link is-current" aria-label="Страница {page.index}" aria-current="page">{page.index+1}</a>
+			{:else}
+			<a class="pagination-link" aria-label="Страница {page.index}" data-page="{page.index}" on:click={goTo}>{page.index+1}</a>
+			{/if}
+		</li>
+		{/each}
+		{/if}
+	</ul>
+</nav>

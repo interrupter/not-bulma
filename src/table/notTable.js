@@ -21,6 +21,7 @@ const OPT_DEFAULT_PAGE_SIZE = 20,
 const DEFAULT_OPTIONS = {
 	links:[],
 	actions:[],
+	endless: false
 };
 
 class notTable extends EventEmitter {
