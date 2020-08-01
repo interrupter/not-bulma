@@ -55,7 +55,7 @@
 	function goTo(e){
 		e.preventDefault();
 		let el = e.target;
-		dispatch('goToPage', parseInt(e.dataset.page));
+		dispatch('goToPage', parseInt(el.dataset.page));
 		return false;
 	}
 
