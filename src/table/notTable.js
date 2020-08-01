@@ -484,6 +484,9 @@ class notTable extends EventEmitter {
 				this.loadData()
 					.then((data) => {
 						this.stores.filtered.update((val) => {
+							if (!this.getOptions('endless', false)) {
+								this.clearFilteredData();
+							}
 							if(Object.prototype.hasOwnProperty.call(data, 'list') && Array.isArray(data.list)){
 								val.push(...(data.list));
 							}else if(Array.isArray(data)){
