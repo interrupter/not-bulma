@@ -1,0 +1,118 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<title>Bulma UI testing - side menu</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="/assets/bulma/notBulma.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,600,700">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
+</head>
+
+<body>
+	<section class="section">
+		<div class="columns">
+			<div id="side-menu" class="column is-2 main-menu">
+				<div class="column is-10 main-container">
+				</div>
+			</div>
+		</div>
+	</section>
+	<script src="/assets/bulma/notBulma.js"></script>
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			try {
+				console.log(notBulma.SideMenu);
+				notBulma.SideMenu.DEFAULT.sectionTitle = 'Разное'; 
+				notBulma.SideMenu.setOptions({
+					root: '/some/sub/path',
+					sections: [{
+						id: 'user',
+						title: 'Пользователи',
+					}, {
+						id: 'user',
+						title: 'Пользователи',
+						priority: 1
+					}, {
+						id: 'user',
+						title: 'Пользователи',
+						priority: 2
+					}, {
+						id: 'archive',
+						title: 'Архив',
+						priority: 2
+					}, {
+						id: 'attributes',
+						title: 'Атрибуты',
+						priority: -100
+					}, {
+						id: 'files',
+						title: 'Файлы',
+						priority: 10
+					}, ],
+					items: [{
+						title: 'Перезагрузка',
+						url: '/reboot',
+					},{
+						title: 'Управление',
+						section: 'user',
+						items: [{
+							url: '/user/create',
+							title: 'Добавить',
+							priority: 10,
+						}, {
+							url: '/user/active',
+							title: 'Активные'
+						}]
+					}, {
+						section: 'attributes',
+						title: 'Ссылка 2',
+						url: '/link2'
+					}, {
+						section: 'archive',
+						title: 'Ссылка 3',
+						url: '/link3'
+					}, {
+						section: 'files',
+						title: 'Ссылка 4',
+						url: '/link4',
+						items: [ {
+							title: 'Серверные',
+							url: '/link4/2',
+							items: [{
+								url: '/link4/2/1',
+								title: 'Конструктор'
+							},{
+								url: '/link4/2/2',
+								title: 'Багеты'
+							},{
+								url: '/link4/2/3',
+								title: 'Рамы'
+							}]
+						}, {
+							title: 'Добавить',
+							url: '/link4/1',
+							priority: 10
+						},{
+							title: 'Клиентские',
+							url: '/link4/3',
+						}, {
+							title: 'Макеты',
+							url: '/link4/4',
+						}]
+					}]
+				});
+				console.log(notBulma.SideMenu);
+				notBulma.SideMenu.render();
+			} catch (e) {
+				console.error(e);
+			}
+		});
+	</script>
+</body>
+
+</html>
