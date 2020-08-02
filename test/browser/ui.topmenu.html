@@ -1,0 +1,80 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<title>Bulma UI testing - top menu</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css" >
+	<link rel="stylesheet" href="/assets/bulma/notBulma.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,600,700">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
+</head>
+
+<body>
+	<nav class="navbar" role="navigation" aria-label="dropdown navigation" id="top-menu"></nav>
+	<script src="/assets/bulma/notBulma.js"></script>
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			try {
+				notBulma.TopMenu.DEFAULT.sectionTitle = 'Разное';
+				notBulma.TopMenu.setOptions({
+					root: '/dashboard',
+					sections: [{
+						id: 'account',
+						title: 'Аккаунт',
+						priority: -10
+					}, {
+						id: 'admin',
+						title: 'Управление',
+						priority: 10
+					}],
+					items: [{
+						section: 'account',
+						title: 'Настройки',
+						url: '/user/options'
+					}, {
+						break: true,
+						section: 'account',
+						title: 'Выход',
+						url: '/logout',
+						priority: -100
+					},{
+						section: 'account',
+						title: 'Сообщения',
+						url: '/user/inbox',
+						tag:{
+							label: 10,
+							type: 'info'
+						}
+					}, {
+						section: 'admin',
+						title: 'Перезагрузка',
+						url: '/reboot'
+					}, {
+						section: 'admin',
+						title: 'Логи',
+						url: '/logs'
+					}, {
+						section: 'admin',
+						title: 'Ошибки',
+						url: '/errors',
+						tag:{
+							label: 13,
+							type: 'danger'
+						}
+					},]
+				});
+
+				notBulma.TopMenu.render();
+			} catch (e) {
+				console.error(e);
+			}
+		});
+	</script>
+</body>
+
+</html>

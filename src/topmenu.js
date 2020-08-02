@@ -1,71 +1,71 @@
 import Menu from './menu.js';
-import UISideMenu from './ui.side.menu.svelte';
+import UITopMenu from './ui.top.menu.svelte';
 
-class SideMenu extends Menu {
+class TopMenu extends Menu{
 	static DEFAULT = {
 		section: 'any',
 		sectionTitle: 'Меню',
 		priority: 0,
 	};
+
 	static options = {
 		items: [],
 		sections: [],
-		targetSelector: '#side-menu',
+		targetSelector: '#top-menu',
 		root: '/',
-		navigate: (urls) => {
-			if (this.app) {
+		navigate: (urls)=>{
+			if(this.app){
 				let func = this.app.getWorking('router');
-				if (func) {
+				if (func){
 					func.navigate(urls.short);
 				}
-			} else {
+			}else{
 				document.location.assign(urls.full);
 			}
 		}
 	};
 
-	static render(app) {
-		if (app) {
+	static render(app){
+		if(app){
 			this.setApp(app);
 		}
 		this.prepareData();
 		if (!this.menu) {
-			this.menu = new UISideMenu({
+			this.menu = new UITopMenu({
 				target: document.querySelector(this.getOptions().targetSelector),
-				props: {
-					items: this.items,
-					sections: this.sections,
-					root: this.getOptions().root,
-					navigate: this.getOptions().navigate
+				props:{
+					items:  			this.items,
+					sections:  		this.sections,
+					root:   			this.getOptions().root,
+					navigate:		  this.getOptions().navigate
 				}
 			});
 			this.interval = setInterval(this.updateMenuActiveItem.bind(this), 200);
 		}
 	}
 
-	static updateMenu(url) {
+	static updateMenu(url){
 		Array.from(document.querySelectorAll(this.getOptions().targetSelector + ' aside.menu a')).forEach((item) => {
-			if ((item.href == url) || (url.href && url.href.indexOf(item.href) == 0)) {
+			if( (item.href == url) || (url.href && url.href.indexOf(item.href) == 0)){
 				item.classList.add('is-active');
-			} else {
+			}else{
 				item.classList.remove('is-active');
 			}
 		});
 	}
 
-	static updateMenuActiveItem() {
-		let url = window.location.toString(),
-			lastLocation = this.location;
-		if (lastLocation) {
-			if (url !== lastLocation) {
+	static updateMenuActiveItem(){
+		let url = window.location.toString(),	lastLocation = this.location;
+		if(lastLocation){
+			if ( url !== lastLocation ){
 				this.location = url;
 				this.updateMenu(url);
 			}
-		} else {
+		}else{
 			this.location = url;
 			this.updateMenu(url);
 		}
 	}
 }
 
-export default SideMenu;
+export default TopMenu;

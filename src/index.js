@@ -16,6 +16,9 @@ import * as TableStores from './table/notTable.stores.js';
 import Table from './table/notTable.js';
 import Breadcrumbs from './breadcrumbs.js';
 import SideMenu from './sidemenu.js';
+import TopMenu from './topmenu.js';
+import Menu from './menu.js';
+
 import Form from './form.js';
 
 Object.keys(FormElements).forEach((fieldtype)=>{
@@ -36,6 +39,8 @@ export {
 	Table,
 	Breadcrumbs,
 	SideMenu,
+	TopMenu,
+	Menu,
 	Form,
 	FormElements
 };
