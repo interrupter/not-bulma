@@ -40,12 +40,13 @@ class Menu {
 
 	static getOptions() {
 		if (this.app) {
+			let router = this.app.getWorking('router', false);
 			return {
 				items: this.app.getOptions(this.getOptionsPathTo('items'), this.options.items),
 				sections: this.app.getOptions(this.getOptionsPathTo('sections'), this.options.sections),
 				targetSelector: this.app.getOptions('mainMenuSelector', this.options.targetSelector),
 				root: this.app.getOptions('router.root', this.options.root),
-				navigate: this.app.getWorking('router', this.options).navigate
+				navigate: router?router.navigate.bind(router): options.navigate.bind(this),
 			};
 		} else {
 			return this.options;
