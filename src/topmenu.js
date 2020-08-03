@@ -1,6 +1,8 @@
 import Menu from './menu.js';
 import UITopMenu from './ui.top.menu.svelte';
 
+const TYPE = 'top';
+
 class TopMenu extends Menu{
 	static DEFAULT = {
 		section: 'any',
@@ -9,9 +11,10 @@ class TopMenu extends Menu{
 	};
 
 	static options = {
+		type: TYPE,
 		items: [],
 		sections: [],
-		targetSelector: '#top-menu',
+		targetSelector: `#${TYPE}-menu`,
 		root: '/',
 		navigate: (urls)=>{
 			if(this.app){

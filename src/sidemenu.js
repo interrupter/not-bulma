@@ -1,6 +1,8 @@
 import Menu from './menu.js';
 import UISideMenu from './ui.side.menu.svelte';
 
+const TYPE = 'side';
+
 class SideMenu extends Menu {
 	static DEFAULT = {
 		section: 'any',
@@ -8,9 +10,10 @@ class SideMenu extends Menu {
 		priority: 0,
 	};
 	static options = {
+		type: TYPE,
 		items: [],
 		sections: [],
-		targetSelector: '#side-menu',
+		targetSelector: `#${TYPE}-menu`,
 		root: '/',
 		navigate: (urls) => {
 			if (this.app) {

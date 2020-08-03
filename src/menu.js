@@ -34,11 +34,15 @@ class Menu {
 		return this;
 	}
 
+	static getOptionsPathTo(what){
+		return `menu.${this.options.type}.${what}`;
+	}
+
 	static getOptions() {
 		if (this.app) {
 			return {
-				items: this.app.getOptions('menu', this.options.items),
-				sections: this.app.getOptions('sections', this.options.sections),
+				items: this.app.getOptions(this.getOptionsPathTo('items'), this.options.items),
+				sections: this.app.getOptions(this.getOptionsPathTo('sections'), this.options.sections),
 				targetSelector: this.app.getOptions('mainMenuSelector', this.options.targetSelector),
 				root: this.app.getOptions('router.root', this.options.root),
 				navigate: this.app.getWorking('router', this.options).navigate
