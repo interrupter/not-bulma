@@ -15,19 +15,19 @@ import UITextarea from './ui.textarea.svelte';
 import UITextfield from './ui.textfield.svelte';
 
 export {
-  UICheckbox,
-  UIColor,
-  UIDate,
-  UIEmail,
-  UIHidden,
-  UIPassword,
-  UIRadio,
-  UIRadiogroup,
-  UIRange,
-  UISelect,
-  UISlider,
-  UISwitch,
-  UITelephone,
-  UITextarea,
-  UITextfield
+	UICheckbox,
+	UIColor,
+	UIDate,
+	UIEmail,
+	UIHidden,
+	UIPassword,
+	UIRadio,
+	UIRadiogroup,
+	UIRange,
+	UISelect,
+	UISlider,
+	UISwitch,
+	UITelephone,
+	UITextarea,
+	UITextfield
 };
