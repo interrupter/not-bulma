@@ -2,13 +2,10 @@
 const ERROR_DEFAULT = 'Что пошло не так.';
 import Common from './common.js';
 
-import {
-	Table as notTable,
-	Breadcrumbs,
-	UIError,
-	Form
-} from 'not-bulma';
-
+import notTable from './table/notTable.js';
+import Breadcrumbs from './breadcrumbs.js';
+import UIError from './ui.error.svelte';
+import Form from './form.js';
 const BREADCRUMBS = [];
 
 class ncCRUD extends notFramework.notController {
