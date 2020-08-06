@@ -6,7 +6,6 @@
 	let dispatch = createEventDispatcher();
 
   export let inputStarted = false;
-  export let validator = ()=>{ return true; }
   export let value = '';
   export let label = 'Email';
   export let placeholder = '';

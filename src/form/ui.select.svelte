@@ -6,8 +6,7 @@
   import {createEventDispatcher} from 'svelte';
 	let dispatch = createEventDispatcher();
 
-  export let inputStarted = false;
-  export let validator = ()=>{ return true; }
+  export let inputStarted = false;  
   export let value = '';
   export let variants = [];
   export let label = 'select';

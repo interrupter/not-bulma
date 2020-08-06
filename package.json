@@ -1,6 +1,6 @@
 {
 		"name": "not-bulma",
-		"version": "0.0.44",
+		"version": "0.0.45",
 		"description": "not-* family UI components on Bulma CSS Framework",
 		"main": "src/index.js",
 		"svelte": "src/index.js",
@@ -45,6 +45,7 @@
 				"bulma": "^0.9.0",
 				"bulma-switch": "^2.0.0",
 				"not-path": "*",
+				"not-framework": "*",
 				"svelte": "*",
 				"validator": "^13.1.1",
 				"wolfy87-eventemitter": "^5.2.9"

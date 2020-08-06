@@ -6,7 +6,6 @@
 	let dispatch = createEventDispatcher();
 
   export let inputStarted = false;
-  export let validator = ()=>{ return true; }
   export let value = '';
   export let label = 'textfield';
   export let placeholder = 'input some text here, please';

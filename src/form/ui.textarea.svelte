@@ -5,8 +5,7 @@
   import {createEventDispatcher} from 'svelte';
 	let dispatch = createEventDispatcher();
 
-  export let inputStarted = false;
-  export let validator = ()=>{ return true; }
+  export let inputStarted = false;  
   export let value = '';
   export let label = 'textarea';
   export let placeholder = 'input some text here, please';

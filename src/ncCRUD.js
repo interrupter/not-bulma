@@ -6,9 +6,10 @@ import notTable from './table/notTable.js';
 import Breadcrumbs from './breadcrumbs.js';
 import UIError from './ui.error.svelte';
 import Form from './form.js';
+import {notController} from 'not-framework';
 const BREADCRUMBS = [];
 
-class ncCRUD extends notFramework.notController {
+class ncCRUD extends notController {
 	constructor(app, params) {
 		super(app);
 		this.log('CRUD Controller');
