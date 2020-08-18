@@ -1,12 +1,11 @@
 <script>
-
+  import UICommon from '../common.js';
   const CLEAR_MACRO = '__CLEAR__';
-  import {CLASS_OK, CLASS_ERR } from './common.js';
 
   import {createEventDispatcher} from 'svelte';
 	let dispatch = createEventDispatcher();
 
-  export let inputStarted = false;  
+  export let inputStarted = false;
   export let value = '';
   export let variants = [];
   export let label = 'select';
@@ -27,7 +26,7 @@
   $: allErrors = [].concat(errors?errors:[], formErrors?formErrors:[]);
   $: helper = allErrors?allErrors.join(', '): placeholder;
   $: invalid = ((valid===false) || (formLevelError));
-  $: validationClasses = (valid===true || !inputStarted)?CLASS_OK:CLASS_ERR;
+  $: validationClasses = (valid===true || !inputStarted)?UICommon.CLASS_OK:UICommon.CLASS_ERR;
   $: multipleClass = multiple?' is-multiple ':'';
 
   function onBlur(ev){
@@ -79,7 +78,7 @@
   <div class="control {iconClasses}">
     <div class="select {validationClasses} {multipleClass}">
       {#if multiple }
-      <select name="{fieldname}" size="{size}" on:blur={onBlur} on:input={onInput} {readonly} multiple >
+      <select name="{fieldname}" size="{size}" on:blur={onBlur} on:input={onInput} {readonly} {required} multiple >
         {#if placeholder.length > 0 }
         {#if value }
         <option value="{CLEAR_MACRO}" >{placeholder}</option>

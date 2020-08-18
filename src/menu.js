@@ -47,7 +47,7 @@ class Menu {
 					router.navigate.call(router, urls.short);
 				};
 			}else{
-				someNavigate = this.options.navigate.bind(this)
+				someNavigate = this.options.navigate.bind(this);
 			}
 			return {
 				items: this.app.getOptions(this.getOptionsPathTo('items'), this.options.items),

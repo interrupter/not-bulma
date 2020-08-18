@@ -1,5 +1,6 @@
 <script>
 	import UITextfield from './ui.textfield.svelte';
+	import UICommon from '../common.js';
 
 	import {
 		FIELDS,
@@ -200,8 +201,6 @@
 	export let fields = [];
 	export let options = {};
 	export let validation = true;
-	export let CLASS_OK = 'is-success';
-	export let CLASS_ERR = 'is-danger';
 	export let SUCCESS_TEXT = 'Операция завершена';
 
 	export let title = 'Форма';
@@ -216,8 +215,7 @@
 		caption: 'Назад',
 		enabled: true
 	};
-
-	export let mode = 'create';
+	
 	export let loading = false;
 
 	export let submitForm = (e) => {

@@ -1,12 +1,13 @@
-/* global notFramework */
 const ERROR_DEFAULT = 'Что пошло не так.';
-import Common from './common.js';
 
 import notTable from './table/notTable.js';
 import Breadcrumbs from './breadcrumbs.js';
 import UIError from './ui.error.svelte';
 import Form from './form.js';
-import {notController} from 'not-framework';
+
+import notController from './frame/controller.js';
+import notCommon from './frame/common.js';
+
 const BREADCRUMBS = [];
 
 class ncCRUD extends notController {
@@ -94,7 +95,7 @@ class ncCRUD extends notController {
 				let libProps = Object.keys(preload);
 				let proms = [];
 				libProps.forEach((prop)=>{
-					let modelName = notFramework.notCommon.lowerFirstLetter(preload[prop]);
+					let modelName = notCommon.lowerFirstLetter(preload[prop]);
 					let Model = this.make[modelName]({});
 					proms.push(Model.$listAll());
 				});
@@ -140,7 +141,7 @@ class ncCRUD extends notController {
 			} else if (params[1] === 'update') {
 				return this.runUpdate(params);
 			} else {
-				let routeRunnerName = 'run' + notFramework.notCommon.capitalizeFirstLetter(params[1]);
+				let routeRunnerName = 'run' + notCommon.capitalizeFirstLetter(params[1]);
 				if (this[routeRunnerName] && typeof this[routeRunnerName] === 'function') {
 					return this[routeRunnerName](params);
 				}
@@ -199,7 +200,7 @@ class ncCRUD extends notController {
 						readonly: true
 					},
 					validators: this.getOptions('Validators'),
-					data: notFramework.notCommon.stripProxy(res.result)
+					data: notCommon.stripProxy(res.result)
 				});
 			} else {
 				this.error(res);
@@ -243,7 +244,7 @@ class ncCRUD extends notController {
 					action: 'update',
 					options: {},
 					validators: this.getOptions('Validators'),
-					data: notFramework.notCommon.stripProxy(res.result)
+					data: notCommon.stripProxy(res.result)
 				});
 
 				this.ui.update.$on('submit', (ev) => {
@@ -351,7 +352,7 @@ class ncCRUD extends notController {
 			.then((res) => {
 				this.log(res);
 				this.showResult(this.ui.create, res);
-				if (!Common.isError(res) && !res.error) {
+				if (!notCommon.isError(res) && !res.error) {
 					setTimeout(() => this.goList(this.app), 3000);
 				}
 			})
@@ -365,7 +366,7 @@ class ncCRUD extends notController {
 		this.getModel()(item).$update()
 			.then((res) => {
 				this.showResult(this.ui.update, res);
-				if (!Common.isError(res) && !res.error) {
+				if (!notCommon.isError(res) && !res.error) {
 					setTimeout(() => this.goList(this.app), 3000);
 				}
 			})
@@ -376,8 +377,8 @@ class ncCRUD extends notController {
 
 	showResult(ui, res) {
 		ui.resetLoading();
-		if (Common.isError(res)) {
-			notFramework.notCommon.report(res);
+		if (notCommon.isError(res)) {
+			notCommon.report(res);
 		} else {
 			if (res.errors && Object.keys(res.errors).length > 0) {
 				if (!Array.isArray(res.error)) {

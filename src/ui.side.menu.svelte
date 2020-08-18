@@ -1,6 +1,5 @@
 <script>
 	import UISideMenuSection from './ui.side.menu.section.svelte';
-	export let title = 'Side menu';
 	export let root = '';
 	export let items = [];
 	export let sections = [];

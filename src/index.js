@@ -21,9 +21,11 @@ import Menu from './menu.js';
 
 import Form from './form.js';
 
+import * as Frame  from './frame';
+
 import ncCRUD from './ncCRUD.js';
 
-import Common from './common.js';
+import {default as UICommon} from './common.js';
 
 Object.keys(FormElements).forEach((fieldtype)=>{
 	Form.addComponent(fieldtype, FormElements[fieldtype]);
@@ -47,6 +49,7 @@ export {
 	Menu,
 	Form,
 	FormElements,
-	Common,
-	ncCRUD
+	UICommon,
+	ncCRUD,
+	Frame
 };

@@ -1,11 +1,11 @@
 <script>
 
-  import {CLASS_OK, CLASS_ERR } from './common.js';
+  import UICommon from '../common.js';
 
   import {createEventDispatcher} from 'svelte';
 	let dispatch = createEventDispatcher();
 
-  export let inputStarted = false;  
+  export let inputStarted = false;
   export let value = '';
   export let label = 'textfield';
   export let placeholder = 'input some text here, please';
@@ -24,7 +24,7 @@
   $: allErrors = [].concat(errors?errors:[], formErrors?formErrors:[]);
   $: helper = allErrors?allErrors.join(', '): placeholder;
   $: invalid = ((valid===false) || (formLevelError));
-  $: validationClasses = (valid===true || !inputStarted)?CLASS_OK:CLASS_ERR;
+  $: validationClasses = (valid===true || !inputStarted)?UICommon.CLASS_OK:UICommon.CLASS_ERR;
 
   function onBlur(ev){
   	let data = {

@@ -158,8 +158,8 @@ class notTable extends EventEmitter {
 		}
 		this.ui.table.$on('searchChange', e => this.onSearchChange(e.detail));
 		this.ui.table.$on('goToPage', e => this.goToPage(e.detail));
-		this.ui.table.$on('goToNextPage', e => this.goToNext());
-		this.ui.table.$on('goToPrevPage', e => this.goToPrev());
+		this.ui.table.$on('goToNextPage', () => this.goToNext());
+		this.ui.table.$on('goToPrevPage', () => this.goToPrev());
 	}
 
 	getActions(){
