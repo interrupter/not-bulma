@@ -27,7 +27,7 @@ class notRecord extends notBase {
 			}
 		}
 		this.setOptions({});
-		this[META_INTERFACE] = new notInterface(manifest);
+		this[META_INTERFACE] = new notInterface(manifest, {});
 		this.setData(item);
 		this.interfaceUp();
 		this.mapToInterface();

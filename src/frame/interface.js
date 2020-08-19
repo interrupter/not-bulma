@@ -111,7 +111,7 @@ class notInterface extends notBase {
 	}
 
 	getServerURL() {
-		return this.getOptions('server');
+		return notCommon.getApp() ? notCommon.getApp().getOptions('api.server.url', '') : '';
 	}
 
 	encodeRequest(data) {
