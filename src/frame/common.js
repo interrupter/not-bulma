@@ -177,6 +177,10 @@ export default class notCommon {
 		window[this.LOG].log(`[${now}]: `, ...arguments);
 	}
 
+	static log(){
+		this.logMsg(...arguments);
+	}
+
 	//Генерация метода вывода сообщений в консоль с указанием префикса.
 	static genLogMsg(prefix) {
 		return () => {
@@ -194,12 +198,24 @@ export default class notCommon {
 		return this.ENV_TYPE === this.DEV_ENV;
 	}
 
+	static debug(){
+		if (this.isDev()) {
+			return this.logMsg(...arguments);
+		} else {
+			return this.NOOP;
+		}
+	}
+
 	static genLogDebug(prefix) {
 		if (this.isDev()) {
 			return this.genLogMsg(prefix);
 		} else {
 			return this.NOOP;
 		}
+	}
+
+	static error(){
+		this.logError(...arguments);
 	}
 
 	//Функция вывода сообщения об ошибке
