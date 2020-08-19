@@ -31,6 +31,17 @@ Object.keys(FormElements).forEach((fieldtype)=>{
 	Form.addComponent(fieldtype, FormElements[fieldtype]);
 });
 
+const
+	notCommon = Frame.notCommon,
+	notPath = Frame.notPath,
+	notController = Frame.notController,
+	notBase = Frame.notBase,
+	notRouter = Frame.notRouter,
+	notRecord = Frame.notRecord,
+	notInterface = Frame.notInterface,
+	notApp = Frame.notApp,
+	notAPI = Frame.notAPI;
+
 export {
 	UIBreadcrumbs,
 	UIError,
@@ -51,5 +62,14 @@ export {
 	FormElements,
 	UICommon,
 	ncCRUD,
-	Frame
+	Frame,
+	notCommon,
+	notPath,
+	notController,
+	notBase,
+	notRouter,
+	notRecord,
+	notInterface,
+	notApp,
+	notAPI
 };
