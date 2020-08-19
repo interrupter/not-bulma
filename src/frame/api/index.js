@@ -1,9 +1,9 @@
 import notAPIQueue from './queue.js';
-import notAPICache from './cache.js';
+import notAPIOptions from './options.js';
 import notAPIConnection from './connection.js';
 
 export {
 	notAPIQueue,
-	notAPICache,
+	notAPIOptions,
 	notAPIConnection
 };
