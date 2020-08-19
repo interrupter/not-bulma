@@ -111,7 +111,7 @@ class notInterface extends notBase {
 	}
 
 	getServerURL() {
-		return this.options.server;
+		return this.getOptions('server');
 	}
 
 	encodeRequest(data) {
@@ -122,13 +122,13 @@ class notInterface extends notBase {
 			}
 		}
 		//for test purpose only, special test server needed
-		if (this.options.test) {
+		if (this.getOptions('test')) {
 			p += '&test=1';
-			if (this.options.test.session) {
-				p += ('&session=' + this.options.test.session);
+			if (this.getOptions('test.session')) {
+				p += ('&session=' + this.getOptions('test.session'));
 			}
-			if (this.options.test.session) {
-				p += ('&role=' + this.options.test.role);
+			if (this.getOptions('test.session')) {
+				p += ('&role=' + this.getOptions('test.role'));
 			}
 		}
 		return p;
