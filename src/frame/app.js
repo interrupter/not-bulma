@@ -38,7 +38,7 @@ export default class notApp extends notBase {
 		notRouter.reRouteExisted();
 	}
 
-	initRouter() {
+	execRouter() {
 		var routieInput = {};
 		for (let t = 0; t < this.getOptions('router.manifest').length; t++) {
 			let routeBlock = this.getOptions('router.manifest')[t],
@@ -73,7 +73,7 @@ export default class notApp extends notBase {
 	startApp() {
 		//создать контроллеры
 		//роутер и привязать к нему контроллеры
-		this.initRouter();
+		this.execRouter();
 	}
 
 	bindController(controllerName) {
