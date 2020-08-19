@@ -209,7 +209,7 @@ export default class notCommon {
 		window[this.LOG].error(`[${now}]: `, ...arguments);
 	}
 
-	genLogError(prefix) {
+	static genLogError(prefix) {
 		return () => {
 			let now = this.localIsoDate();
 			// eslint-disable-next-line no-console
@@ -217,7 +217,7 @@ export default class notCommon {
 		};
 	}
 
-	report(e) {
+	static report(e) {
 		if (this.getApp() && this.getApp().getOptions('services.errorReporter')) {
 			let reporter = this.getApp().getOptions('services.errorReporter');
 			if (reporter && reporter.report) {
