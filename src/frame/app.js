@@ -23,7 +23,6 @@ export default class notApp extends notBase {
 			currentController: null
 		});
 		this.initManifest();
-		this.preInitRouter();
 		return this;
 	}
 
@@ -33,7 +32,7 @@ export default class notApp extends notBase {
 			.catch(notCommon.report.bind(this));
 	}
 
-	preInitRouter() {
+	initRouter() {
 		this.setWorking('router', notRouter);
 		this.getWorking('router').setRoot(this.getOptions('router.root'));
 		notRouter.reRouteExisted();
@@ -54,6 +53,7 @@ export default class notApp extends notBase {
 
 	setInterfaceManifest(manifest) {
 		this.setOptions('interfaceManifest', manifest);
+		this.initRouter();
 		this.update();
 	}
 
