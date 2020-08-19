@@ -186,7 +186,7 @@ export default class notCommon {
 		return function(){
 			let now = notCommon.localIsoDate();
 			// eslint-disable-next-line no-console
-			window[this.LOG].log(`[${now}]: ${prefix}::`, ...arguments);
+			window[notCommon.LOG].log(`[${now}]: ${prefix}::`, ...arguments);
 		};
 	}
 
@@ -229,7 +229,7 @@ export default class notCommon {
 		return function(){
 			let now = notCommon.localIsoDate();
 			// eslint-disable-next-line no-console
-			window[this.LOG].error(`[${now}]: ${prefix}::`, ...arguments);
+			window[notCommon.LOG].error(`[${now}]: ${prefix}::`, ...arguments);
 		};
 	}
 
