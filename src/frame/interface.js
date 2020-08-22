@@ -62,12 +62,16 @@ class notInterface extends notBase {
 		} else {
 			if (['OPTIONS', 'GET'].indexOf(actionData.method.toUpperCase()) === -1) {
 				opts = {
-					body: record
+					body: JSON.stringify((record.getData && typeof record.getData === 'function')?record.getData():record),
+					headers: {
+      			'Accept': 'application/json',
+      			'Content-Type': 'application/json'
+    			},
 				};
 			}
 		}
 		opts.method = actionData.method.toUpperCase();
-		if (headers) {
+		if (headers && Object.keys(headers).length) {
 			opts.headers = headers;
 		}
 		return fetch(apiServerURL + url + requestParamsEncoded, opts).then(response => response.json());
