@@ -46,7 +46,7 @@ class notInterface extends notBase {
 	}
 
 	request(record, actionName, params, headers = {}, fileUpload = false, files) {
-		let compositeData = Object.assign({}, record, params);
+		let compositeData = Object.assign({}, ((record.getData && typeof record.getData === 'function')?record.getData():record), params);
 		let actionData = this.getActionData(actionName),
 			requestParams = this.collectRequestData(actionData),
 			requestParamsEncoded = this.encodeRequest(requestParams),
