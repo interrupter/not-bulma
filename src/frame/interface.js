@@ -6,7 +6,7 @@ const OPT_DEFAULT_INDEX_FIELD_NAME_PRIORITY = ['_id', 'id', 'ID'],
 	DEFAULT_FILTER = {},
 	DEFAULT_SEARCH = '',
 	DEFAULT_RETURN = {},
-	DEFAULT_PAGE_NUMBER = 1,
+	DEFAULT_PAGE_NUMBER = 0,
 	DEFAULT_PAGE_SIZE = 10,
 	DEFAULT_ACTION_PREFIX = '$';
 
@@ -14,7 +14,14 @@ class notInterface extends notBase {
 	constructor(manifest, options) {
 		super({
 			working:{
-				name: 'network interface for: ' + (manifest.model?manifest.model:'unknown')
+				name: 'network interface for: ' + (manifest.model?manifest.model:'unknown'),
+				filter: DEFAULT_FILTER,
+				search: DEFAULT_SEARCH,
+				return: DEFAULT_RETURN,
+				pager:{
+					size: DEFAULT_PAGE_SIZE,
+					page: DEFAULT_PAGE_NUMBER
+				}
 			},
 			options
 		});
@@ -179,7 +186,7 @@ class notInterface extends notBase {
 	}
 
 	setFilter(filterData = DEFAULT_FILTER) {
-		notPath.set('filter', this.working, filterData);
+		this.setWorking('filter', filterData);
 		return this;
 	}
 
@@ -188,11 +195,11 @@ class notInterface extends notBase {
 	}
 
 	getFilter() {
-		return notPath.get('filter', this.working);
+		return this.getWorking('filter');
 	}
 
 	setSearch(searchData = DEFAULT_SEARCH) {
-		notPath.set('search', this.working, searchData);
+		this.setWorking('search', searchData);
 		return this;
 	}
 
@@ -201,11 +208,11 @@ class notInterface extends notBase {
 	}
 
 	getSearch() {
-		return notPath.get('search', this.working);
+		return this.getWorking('search');
 	}
 
 	setSorter(sorterData) {
-		notPath.set('sorter', this.working, sorterData);
+		this.setWorking('sorter', sorterData);
 		return this;
 	}
 
@@ -214,11 +221,11 @@ class notInterface extends notBase {
 	}
 
 	getSorter() {
-		return notPath.get('sorter', this.working);
+		return this.getWorking('sorter');
 	}
 
 	setReturn(returnData = DEFAULT_RETURN) {
-		notPath.set('return', this.working, returnData);
+		this.setWorking('return', returnData);
 		return this;
 	}
 
@@ -227,27 +234,27 @@ class notInterface extends notBase {
 	}
 
 	getReturn() {
-		return notPath.get('return', this.working);
+		return this.getWorking('return');
 	}
 
 	setPageNumber(pageNumber) {
-		notPath.set('pager.page', this.working, pageNumber);
+		this.setWorking('pager.page', pageNumber);
 		return this;
 	}
 
 	setPageSize(pageSize) {
-		notPath.set('pager.size', this.working, pageSize);
+		this.setWorking('pager.size', pageSize);
 		return this;
 	}
 
 	setPager(pageSize = DEFAULT_PAGE_SIZE, pageNumber = DEFAULT_PAGE_NUMBER) {
 		if (pageSize.constructor === Number) {
-			notPath.set('pager', this.working, {
+			this.setWorking('pager', {
 				size: pageSize,
 				page: pageNumber
 			});
 		} else if (pageSize.constructor === Object) {
-			notPath.set('pager', this.working, {
+			this.setWorking('pager', {
 				size: pageSize.size || DEFAULT_PAGE_SIZE,
 				page: pageSize.page || DEFAULT_PAGE_NUMBER
 			});
@@ -260,7 +267,7 @@ class notInterface extends notBase {
 	}
 
 	getPager() {
-		return notPath.get('pager', this.working);
+		return this.getWorking('pager');
 	}
 }
 
