@@ -176,14 +176,14 @@ class notTable extends EventEmitter {
 
 	setWorking(key, value) {
 		this.stores.working.update(val => {
-			notPath.set(':' + key, val, this.getHelpers(), value);
+			notPath.set(key, val, this.getHelpers(), value);
 			return val;
 		});
 		return this;
 	}
 
 	getWorking(key, def) {
-		let res = notPath.get(':' + key, this.working, this.getHelpers());
+		let res = notPath.get(key, this.working, this.getHelpers());
 		if (res === undefined) {
 			return def;
 		} else {
@@ -193,14 +193,14 @@ class notTable extends EventEmitter {
 
 	setState(key, value) {
 		this.stores.state.update(val => {
-			notPath.set(':' + key, val, this.getHelpers(), value);
+			notPath.set(key, val, this.getHelpers(), value);
 			return val;
 		});
 		return this;
 	}
 
 	getState(key, def) {
-		let res = notPath.get(':' + key, this.state, this.getHelpers());
+		let res = notPath.get(key, this.state, this.getHelpers());
 		if (res === undefined) {
 			return def;
 		} else {
@@ -209,12 +209,12 @@ class notTable extends EventEmitter {
 	}
 
 	setOptions(key, value) {
-		notPath.set(':' + key, this.options, this.getHelpers(), value);
+		notPath.set(key, this.options, this.getHelpers(), value);
 		return this;
 	}
 
 	getOptions(key, def) {
-		let res = notPath.get(':' + key, this.options, this.getHelpers());
+		let res = notPath.get(key, this.options, this.getHelpers());
 		if (res === undefined) {
 			return def;
 		} else {
@@ -229,7 +229,7 @@ class notTable extends EventEmitter {
 	}
 
 	resetFilter() {
-		this.setState({});
+		this.setState('filter', {});
 	}
 
 	getFilter() {
