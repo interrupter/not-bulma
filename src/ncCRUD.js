@@ -304,7 +304,7 @@ class ncCRUD extends notController {
 		this.ui.list = new notTable({
 			options: {
 				targetEl: this.els.main,
-				interface: this.getOptions('interface', {
+				interface: this.getOptions('list.interface', {
 					combined: true,
 					factory: this.getModel()
 				}),
