@@ -3,304 +3,313 @@ import notCommon from './common.js';
 import notBase from './base.js';
 
 const OPT_DEFAULT_INDEX_FIELD_NAME_PRIORITY = ['_id', 'id', 'ID'],
-  DEFAULT_FILTER = {},
-  DEFAULT_SEARCH = '',
-  DEFAULT_RETURN = {},
-  DEFAULT_PAGE_NUMBER = 0,
-  DEFAULT_PAGE_SIZE = 10,
-  DEFAULT_ACTION_PREFIX = '$';
+	DEFAULT_FILTER = {},
+	DEFAULT_SEARCH = '',
+	DEFAULT_RETURN = {},
+	DEFAULT_PAGE_NUMBER = 0,
+	DEFAULT_PAGE_SIZE = 10,
+	DEFAULT_ACTION_PREFIX = '$';
 
 class notInterface extends notBase {
-  constructor(manifest, options) {
-    super({
-      working: {
-        name: 'network interface for: ' + (manifest.model ? manifest.model : 'unknown'),
-        filter: DEFAULT_FILTER,
-        search: DEFAULT_SEARCH,
-        return: DEFAULT_RETURN,
-        pager: {
-          size: DEFAULT_PAGE_SIZE,
-          page: DEFAULT_PAGE_NUMBER
-        }
-      },
-      options
-    });
-    this.manifest = manifest;
-    this.initActions();
-    return this;
-  }
+	constructor(manifest, options) {
+		super({
+			working: {
+				name: 'network interface for: ' + (manifest.model ? manifest.model : 'unknown'),
+				filter: DEFAULT_FILTER,
+				search: DEFAULT_SEARCH,
+				return: DEFAULT_RETURN,
+				pager: {
+					size: DEFAULT_PAGE_SIZE,
+					page: DEFAULT_PAGE_NUMBER
+				}
+			},
+			options
+		});
+		this.manifest = manifest;
+		this.initActions();
+		return this;
+	}
 
-  initActions() {
-    if (this.getActionsCount() > 0) {
-      let actions = this.getActions();
-      for (let actionName in actions) {
-        this.initAction(actionName, actions[actionName]);
-      }
-    }
-  }
+	initActions() {
+		if (this.getActionsCount() > 0) {
+			let actions = this.getActions();
+			for (let actionName in actions) {
+				this.initAction(actionName, actions[actionName]);
+			}
+		}
+	}
 
-  initAction(actionName) {
-    if (!Object.prototype.hasOwnProperty.call(this, [DEFAULT_ACTION_PREFIX + actionName])) {
-      this[DEFAULT_ACTION_PREFIX + actionName] = (opts, headers, fileUpload = false, files) => this.request(this, actionName, opts, headers, fileUpload, files);
-    }
-  }
+	initAction(actionName) {
+		if (!Object.prototype.hasOwnProperty.call(this, [DEFAULT_ACTION_PREFIX + actionName])) {
+			this[DEFAULT_ACTION_PREFIX + actionName] = (opts, headers, fileUpload = false, files) => this.request(this, actionName, opts, headers, fileUpload, files);
+		}
+	}
 
-  requestHTTP(record, actionName, params, headers = {}, fileUpload = false, files) {
-    try {
-      let compositeData = Object.assign({}, ((record.getData && typeof record.getData === 'function') ? record.getData() : record), params);
-      let actionData = this.getActionData(actionName),
-        requestParams = this.collectRequestData(actionData),
-        requestParamsEncoded = this.encodeRequest(requestParams),
-        //id = this.getID(compositeData, actionData, actionName),
-        apiServerURL = this.getServerURL(),
-        url = this.getURL(compositeData, actionData, actionName),
-        opts = {};
-      if (fileUpload) {
-        url = this.getURL(params, actionData, actionName);
-        const fd = new FormData();
-        fd.append('file', files);
-        opts.body = fd;
-      } else {
-        if (['OPTIONS', 'GET'].indexOf(actionData.method.toUpperCase()) === -1) {
-          opts = {
-            body: JSON.stringify((record.getData && typeof record.getData === 'function') ? record.getData() : record),
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
-          };
-        }
-      }
-      opts.method = actionData.method.toUpperCase();
-      if (headers && Object.keys(headers).length) {
-        opts.headers = headers;
-      }
-      return fetch(apiServerURL + url + requestParamsEncoded, opts).then(response => response.json());
-    } catch (e) {
-      notCommon.error(e);
-      notCOmmon.report(e);
-    }
-  }
+	requestHTTP(record, actionName, params, headers = {}, fileUpload = false, files) {
+		try {
+			let compositeData = Object.assign({}, ((record.getData && typeof record.getData === 'function') ? record.getData() : record), params);
+			let actionData = this.getActionData(actionName),
+				requestParams = this.collectRequestData(actionData),
+				requestParamsEncoded = this.encodeRequest(requestParams),
+				//id = this.getID(compositeData, actionData, actionName),
+				apiServerURL = this.getServerURL(),
+				url = this.getURL(compositeData, actionData, actionName),
+				opts = {};
+			if (fileUpload) {
+				url = this.getURL(params, actionData, actionName);
+				const fd = new FormData();
+				fd.append('file', files);
+				opts.body = fd;
+			} else {
+				if (['OPTIONS', 'GET'].indexOf(actionData.method.toUpperCase()) === -1) {
+					opts = {
+						body: JSON.stringify((record.getData && typeof record.getData === 'function') ? record.getData() : record),
+						headers: {
+							'Accept': 'application/json',
+							'Content-Type': 'application/json'
+						},
+					};
+				}
+			}
+			opts.method = actionData.method.toUpperCase();
+			if (headers && Object.keys(headers).length) {
+				opts.headers = headers;
+			}
+			return fetch(apiServerURL + url + requestParamsEncoded, opts).then(response => response.json());
+		} catch (e) {
+			notCommon.error(e);
+			notCOmmon.report(e);
+		}
+	}
 
-  requestWS() {
-    try {
-      return notCommon.getApp().getWS()
-        .sendRequest(
-          this.getWSRequestName(record, actionData, actionName),
-          Object.assign({}, requestParams, record.getData())
-        )
-        .then(response => response.payload);
-    } catch (e) {
-      notCommon.error(e);
-      notCOmmon.report(e);
-    }
-  }
+	requestWS(record, actionName, params) {
+		try {
+			let actionData = this.getActionData(actionName),
+				requestParams = this.collectRequestData(actionData);
+			return notCommon.getApp().getWS()
+				.sendRequest(
+					this.getWSRequestName(record, actionData, actionName),
+					Object.assign({}, requestParams, record.getData())
+				)
+				.then(response => response.payload);
+		} catch (e) {
+			notCommon.error(e);
+			notCOmmon.report(e);
+		}
+	}
 
-  request() {
-    let actionData = this.getActionData(arguments[1]);
-    if (actionData.ws === true) {
-      return this.requestWS(...arguments);
-    } else {
-      return this.requestHTTP(...arguments);
-    }
-  }
+	request() {
+		let actionData = this.getActionData(arguments[1]);
+		if (actionData.ws === true) {
+			return this.requestWS(...arguments);
+		} else {
+			return this.requestHTTP(...arguments);
+		}
+	}
 
-  getModelName() {
-    return this && this.manifest ? this.manifest.model : null;
-  }
+	getModelName() {
+		return this && this.manifest ? this.manifest.model : null;
+	}
 
-  getActionData(actionName) {
-    return this.getActions() && this.getActions()[actionName] ? this.getActions()[actionName] : null;
-  }
+	getActionData(actionName) {
+		return this.getActions() && this.getActions()[actionName] ? this.getActions()[actionName] : null;
+	}
 
-  getActionsCount() {
-    return this.getActions() ? Object.keys(this.getActions()).length : 0;
-  }
+	getActionsCount() {
+		return this.getActions() ? Object.keys(this.getActions()).length : 0;
+	}
 
-  getActions() {
-    return this.manifest && this.manifest.actions ? this.manifest.actions : {};
-  }
+	getActions() {
+		return this.manifest && this.manifest.actions ? this.manifest.actions : {};
+	}
 
-  parseParams(start, end, line, record) {
-    let fieldName = '';
-    let len = start.length;
-    while (line.indexOf(start) > -1) {
-      let ind = line.indexOf(start);
-      let startSlice = ind + len;
-      let endSlice = line.indexOf(end);
-      fieldName = line.slice(startSlice, endSlice);
-      if (fieldName == '') break;
-      this.log(start + fieldName + end, notPath.get(fieldName, record));
-      line = line.replace(start + fieldName + end, notPath.get(fieldName, record));
-    }
-    return line;
-  }
+	parseParams(start, end, line, record) {
+		let fieldName = '';
+		let len = start.length;
+		while (line.indexOf(start) > -1) {
+			let ind = line.indexOf(start);
+			let startSlice = ind + len;
+			let endSlice = line.indexOf(end);
+			fieldName = line.slice(startSlice, endSlice);
+			if (fieldName == '') break;
+			this.log(start + fieldName + end, notPath.get(fieldName, record));
+			line = line.replace(start + fieldName + end, notPath.get(fieldName, record));
+		}
+		return line;
+	}
 
-  parseLine(line, record, actionName) {
-    line = line.replace(':modelName', this.manifest.model);
-    line = line.replace(':actionName', actionName);
-    line = this.parseParams(':record[', ']', line, record);
-    line = this.parseParams(':', '?', line, record);
-    return line;
-  }
+	parseLine(line, record, actionName) {
+		line = line.replace(':modelName', this.manifest.model);
+		line = line.replace(':actionName', actionName);
+		line = this.parseParams(':record[', ']', line, record);
+		line = this.parseParams(':', '?', line, record);
+		return line;
+	}
 
-  getURL(record, actionData, actionName) {
-    var line = this.parseLine(this.manifest.url, record, actionName) + ((Object.prototype.hasOwnProperty.call(actionData, 'postFix')) ? this.parseLine(actionData.postFix, record, actionName) : '');
-    return line;
-  }
+	getURL(record, actionData, actionName) {
+		var line = this.parseLine(this.manifest.url, record, actionName) + ((Object.prototype.hasOwnProperty.call(actionData, 'postFix')) ? this.parseLine(actionData.postFix, record, actionName) : '');
+		return line;
+	}
 
-  getServerURL() {
-    return notCommon.getApp() ? notCommon.getApp().getOptions('api.server.url', '') : '';
-  }
+	getServerURL() {
+		return notCommon.getApp() ? notCommon.getApp().getOptions('api.server.url', '') : '';
+	}
 
-  encodeRequest(data) {
-    let p = '?';
-    for (let t in data) {
-      if (typeof data[t] !== 'undefined' && data[t] !== null) {
-        p += encodeURIComponent(t) + '=' + encodeURIComponent(data[t].constructor === Object ? JSON.stringify(data[t]) : data[t]) + '&';
-      }
-    }
-    //for test purpose only, special test server needed
-    if (this.getOptions('test')) {
-      p += '&test=1';
-      if (this.getOptions('test.session')) {
-        p += ('&session=' + this.getOptions('test.session'));
-      }
-      if (this.getOptions('test.session')) {
-        p += ('&role=' + this.getOptions('test.role'));
-      }
-    }
-    return p;
-  }
 
-  collectRequestData(actionData) {
-    let requestData = {};
-    if ((Object.prototype.hasOwnProperty.call(actionData, 'data')) && Array.isArray(actionData.data)) {
-      for (let i = 0; i < actionData.data.length; i++) {
-        let dataProviderName = 'get' + notCommon.capitalizeFirstLetter(actionData.data[i]);
-        if (this[dataProviderName] && typeof this[dataProviderName] === 'function') {
-          let data = this[dataProviderName](),
-            res = {};
-          if (['pager', 'sorter', 'filter', 'search', 'return'].indexOf(actionData.data[i]) > -1) {
-            res[actionData.data[i]] = data;
-          } else {
-            res = data;
-          }
-          requestData = Object.assign(requestData, res);
-        }
-      }
-    }
-    return requestData;
-  }
+	getWSRequestName(record, actionData, actionName) {
+		let data = ((record.getData && typeof record.getData === 'function') ? record.getData() : record);
+		let line = ((actionData.hasOwnProperty('postFix')) ? this.parseLine(actionData.postFix, data, actionName) : '');
+		return line;
+	}
 
-  getID(record, actionData) {
-    let resultId,
-      list = OPT_DEFAULT_INDEX_FIELD_NAME_PRIORITY,
-      prefixes = ['', this.manifest.model];
-    if (Object.prototype.hasOwnProperty.call(actionData, 'index') && actionData.index) {
-      list = [actionData.index].concat(OPT_DEFAULT_INDEX_FIELD_NAME_PRIORITY);
-    }
-    for (let pre of prefixes) {
-      for (let t of list) {
-        if (Object.prototype.hasOwnProperty.call(record, pre + t)) {
-          resultId = record[pre + t];
-          break;
-        }
-      }
-    }
-    return resultId;
-  }
+	encodeRequest(data) {
+		let p = '?';
+		for (let t in data) {
+			if (typeof data[t] !== 'undefined' && data[t] !== null) {
+				p += encodeURIComponent(t) + '=' + encodeURIComponent(data[t].constructor === Object ? JSON.stringify(data[t]) : data[t]) + '&';
+			}
+		}
+		//for test purpose only, special test server needed
+		if (this.getOptions('test')) {
+			p += '&test=1';
+			if (this.getOptions('test.session')) {
+				p += ('&session=' + this.getOptions('test.session'));
+			}
+			if (this.getOptions('test.session')) {
+				p += ('&role=' + this.getOptions('test.role'));
+			}
+		}
+		return p;
+	}
 
-  setFindBy(key, value) {
-    var obj = {};
-    obj[key] = value;
-    return this.setFilter(obj);
-  }
+	collectRequestData(actionData) {
+		let requestData = {};
+		if ((Object.prototype.hasOwnProperty.call(actionData, 'data')) && Array.isArray(actionData.data)) {
+			for (let i = 0; i < actionData.data.length; i++) {
+				let dataProviderName = 'get' + notCommon.capitalizeFirstLetter(actionData.data[i]);
+				if (this[dataProviderName] && typeof this[dataProviderName] === 'function') {
+					let data = this[dataProviderName](),
+						res = {};
+					if (['pager', 'sorter', 'filter', 'search', 'return'].indexOf(actionData.data[i]) > -1) {
+						res[actionData.data[i]] = data;
+					} else {
+						res = data;
+					}
+					requestData = Object.assign(requestData, res);
+				}
+			}
+		}
+		return requestData;
+	}
 
-  setFilter(filterData = DEFAULT_FILTER) {
-    this.setWorking('filter', filterData);
-    return this;
-  }
+	getID(record, actionData) {
+		let resultId,
+			list = OPT_DEFAULT_INDEX_FIELD_NAME_PRIORITY,
+			prefixes = ['', this.manifest.model];
+		if (Object.prototype.hasOwnProperty.call(actionData, 'index') && actionData.index) {
+			list = [actionData.index].concat(OPT_DEFAULT_INDEX_FIELD_NAME_PRIORITY);
+		}
+		for (let pre of prefixes) {
+			for (let t of list) {
+				if (Object.prototype.hasOwnProperty.call(record, pre + t)) {
+					resultId = record[pre + t];
+					break;
+				}
+			}
+		}
+		return resultId;
+	}
 
-  resetFilter() {
-    return this.setFilter();
-  }
+	setFindBy(key, value) {
+		var obj = {};
+		obj[key] = value;
+		return this.setFilter(obj);
+	}
 
-  getFilter() {
-    return this.getWorking('filter');
-  }
+	setFilter(filterData = DEFAULT_FILTER) {
+		this.setWorking('filter', filterData);
+		return this;
+	}
 
-  setSearch(searchData = DEFAULT_SEARCH) {
-    this.setWorking('search', searchData);
-    return this;
-  }
+	resetFilter() {
+		return this.setFilter();
+	}
 
-  resetSearch() {
-    return this.setSearch();
-  }
+	getFilter() {
+		return this.getWorking('filter');
+	}
 
-  getSearch() {
-    return this.getWorking('search');
-  }
+	setSearch(searchData = DEFAULT_SEARCH) {
+		this.setWorking('search', searchData);
+		return this;
+	}
 
-  setSorter(sorterData) {
-    this.setWorking('sorter', sorterData);
-    return this;
-  }
+	resetSearch() {
+		return this.setSearch();
+	}
 
-  resetSorter() {
-    return this.setSorter({});
-  }
+	getSearch() {
+		return this.getWorking('search');
+	}
 
-  getSorter() {
-    return this.getWorking('sorter');
-  }
+	setSorter(sorterData) {
+		this.setWorking('sorter', sorterData);
+		return this;
+	}
 
-  setReturn(returnData = DEFAULT_RETURN) {
-    this.setWorking('return', returnData);
-    return this;
-  }
+	resetSorter() {
+		return this.setSorter({});
+	}
 
-  resetReturn() {
-    return this.setReturn({});
-  }
+	getSorter() {
+		return this.getWorking('sorter');
+	}
 
-  getReturn() {
-    return this.getWorking('return');
-  }
+	setReturn(returnData = DEFAULT_RETURN) {
+		this.setWorking('return', returnData);
+		return this;
+	}
 
-  setPageNumber(pageNumber) {
-    this.setWorking('pager.page', pageNumber);
-    return this;
-  }
+	resetReturn() {
+		return this.setReturn({});
+	}
 
-  setPageSize(pageSize) {
-    this.setWorking('pager.size', pageSize);
-    return this;
-  }
+	getReturn() {
+		return this.getWorking('return');
+	}
 
-  setPager(pageSize = DEFAULT_PAGE_SIZE, pageNumber = DEFAULT_PAGE_NUMBER) {
-    if (pageSize.constructor === Number) {
-      this.setWorking('pager', {
-        size: pageSize,
-        page: pageNumber
-      });
-    } else if (pageSize.constructor === Object) {
-      this.setWorking('pager', {
-        size: pageSize.size || DEFAULT_PAGE_SIZE,
-        page: pageSize.page || DEFAULT_PAGE_NUMBER
-      });
-    }
-    return this;
-  }
+	setPageNumber(pageNumber) {
+		this.setWorking('pager.page', pageNumber);
+		return this;
+	}
 
-  resetPager() {
-    return this.setPager();
-  }
+	setPageSize(pageSize) {
+		this.setWorking('pager.size', pageSize);
+		return this;
+	}
 
-  getPager() {
-    return this.getWorking('pager');
-  }
+	setPager(pageSize = DEFAULT_PAGE_SIZE, pageNumber = DEFAULT_PAGE_NUMBER) {
+		if (pageSize.constructor === Number) {
+			this.setWorking('pager', {
+				size: pageSize,
+				page: pageNumber
+			});
+		} else if (pageSize.constructor === Object) {
+			this.setWorking('pager', {
+				size: pageSize.size || DEFAULT_PAGE_SIZE,
+				page: pageSize.page || DEFAULT_PAGE_NUMBER
+			});
+		}
+		return this;
+	}
+
+	resetPager() {
+		return this.setPager();
+	}
+
+	getPager() {
+		return this.getWorking('pager');
+	}
 }
 
 export default notInterface;
