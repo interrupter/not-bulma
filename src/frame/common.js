@@ -292,8 +292,6 @@ export default class notCommon {
 		return defaultConf;
 	}
 
-
-
 	static defineIfNotExists(obj, key, defaultValue) {
 		if (!Object.prototype.hasOwnProperty.call(obj, key)) {
 			obj[key] = defaultValue;

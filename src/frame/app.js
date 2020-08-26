@@ -130,5 +130,13 @@ export default class notApp extends notBase {
 		return this;
 	}
 
+	setWS(WS_CLIENT){
+		return this.setWorking('WS_CLIENT', WS_CLIENT);
+	}
+
+	getWS(){
+		return this.getWorking('WS_CLIENT');
+	}
+
 
 }

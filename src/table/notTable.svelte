@@ -4,6 +4,7 @@
 	import TableLinks from '../ui.links.svelte';
 	import TableButtons from '../ui.buttons.svelte';
 	import TableBooleans from '../ui.booleans.svelte';
+	import TableCheckbox from '../ui.checkbox.svelte';
 
 	import notPath from 'not-path';
 	import { onMount } from 'svelte';
