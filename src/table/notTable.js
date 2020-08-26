@@ -339,6 +339,7 @@ class notTable extends EventEmitter {
 		this.resetPager();
 	}
 
+
 	isLive() {
 		return this.getOptions('interface') && this.getOptions('interface.factory');
 	}

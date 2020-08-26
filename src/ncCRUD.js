@@ -304,10 +304,10 @@ class ncCRUD extends notController {
 		this.ui.list = new notTable({
 			options: {
 				targetEl: this.els.main,
-				interface: {
+				interface: this.getOptions('interface', {
 					combined: true,
 					factory: this.getModel()
-				},
+				}),
 				endless: false,
 				preload: {},
 				pager: {
