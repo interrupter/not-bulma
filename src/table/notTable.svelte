@@ -28,6 +28,7 @@
 	}
 
 	onMount(() => {
+
 		if(showSelect){
 			TableStores.get(id).selected.subscribe(value => {
 				selected = value;
@@ -38,8 +39,12 @@
 			items = value;
 			if(showSelect){
 				for(let itemId in selected){
-					if(! items.some(item=> getItemId(item) === itemId)){
+					if(! items.some(item => getItemId(item) === itemId)){
 						delete selected[itemId];
+					}else{
+						if(!Object.prototype.hasOwnProperty.call(selected, itemId)){
+							selected[itemId] = false;
+						}
 					}
 				}
 			}
@@ -48,6 +53,7 @@
 		TableStores.get(id).state.subscribe(value => {
 			state = value;
 		});
+
 	});
 
 	function getActivePageIndex(){
