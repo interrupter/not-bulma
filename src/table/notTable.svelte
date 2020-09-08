@@ -82,9 +82,9 @@
 		let itemId = e.target.dataset.id;
 		TableStores.get(id).selected.update((value)=>{
 			if(Object.prototype.hasOwnProperty.call(value, itemId)){
-				value[itemId] = true;
-			}else{
 				value[itemId] = !value[itemId];
+			}else{
+				value[itemId] = true;
 			}
 			return value;
 		});
