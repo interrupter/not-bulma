@@ -21,7 +21,8 @@ const OPT_DEFAULT_PAGE_SIZE = 20,
 const DEFAULT_OPTIONS = {
 	links:[],
 	actions:[],
-	endless: false
+	endless: false,
+	idField: '_id'
 };
 
 class notTable extends EventEmitter {
@@ -184,6 +185,7 @@ class notTable extends EventEmitter {
 					search: '',
 					showSelect: this.getOptions('showSelect'),
 					showSearch: this.getOptions('showSearch'),
+					idField: this.getOptions('idField'),
 				}
 			});
 		}
@@ -614,6 +616,9 @@ class notTable extends EventEmitter {
 		let result = [];
 		this.data.filtered.forEach((item, index) => {
 			let refined = {};
+			if(this.getOptions('idField')){
+				refined[this.getOptions('idField')] = item[this.getOptions('idField')];
+			}
 			this.getOptions('fields').forEach((field) => {
 				let preprocessed = null,
 					val = notPath.get(field.path, item, this.getOptions('helpers'));
