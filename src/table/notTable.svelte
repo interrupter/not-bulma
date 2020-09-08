@@ -4,7 +4,7 @@
 	import TableLinks from '../ui.links.svelte';
 	import TableButtons from '../ui.buttons.svelte';
 	import TableBooleans from '../ui.booleans.svelte';
-	
+
 	import notPath from 'not-path';
 	import { onMount } from 'svelte';
 	import {createEventDispatcher} from 'svelte';
@@ -15,15 +15,34 @@
 	export let helpers = {};
 	export let state = {};
 	export let fields = [];
+	export let selected = {};
 	export let items = [];
 	export let actions = [];
 	export let links = [];
 	export let search = '';
 	export let showSearch = true;
+	export let showSelect = true;
+
+	export function getItemId(item){
+		return item._id;
+	}
 
 	onMount(() => {
+		if(showSelect){
+			TableStores.get(id).selected.subscribe(value => {
+				selected = value;
+			});
+		}
+
 		TableStores.get(id).refined.subscribe(value => {
 			items = value;
+			if(showSelect){
+				for(let itemId in selected){
+					if(! items.some(item=> getItemId(item) === itemId)){
+						delete selected[itemId];
+					}
+				}
+			}
 		});
 
 		TableStores.get(id).state.subscribe(value => {
@@ -59,6 +78,18 @@
 		return false;
 	}
 
+	function onRowSelect(e){
+		let itemId = e.target.dataset.id;
+		TableStores.get(id).selected.update((value)=>{
+			if(Object.prototype.hasOwnProperty.call(value, itemId)){
+				value[itemId] = true;
+			}else{
+				value[itemId] = !value[itemId];
+			}
+			return value;
+		});
+	}
+
 </script>
 
 {#if links.length}
@@ -80,6 +111,9 @@
 {/if}
 <table class="table">
 	<thead>
+		{#if showSelect }
+		<th>#</th>
+		{/if}
 		{#each fields as field}
 		<th>{field.title}</th>
 		{/each}
@@ -87,6 +121,11 @@
 	<tbody>
 		{#each items as item (item._id)}
 		<tr>
+			{#if showSelect }
+			<td>
+				<input type="checkbox" id="table-row-select-{item._id}" data-id="{item._id}" bind:checked={selected[item._id]} placeholder="" name="row_selected_{item._id}" on:change={onRowSelect} on:input={onRowSelect} />
+			</td>
+			{/if}
 			{#each fields as field}
 			<td>
 				{#if field.type === 'link' }

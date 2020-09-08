@@ -3051,6 +3051,7 @@ var notBulma = (function (exports) {
 		let img;
 		let img_alt_value;
 		let img_src_value;
+		let img_crossorigin_value;
 		let t;
 
 		return {
@@ -3063,6 +3064,7 @@ var notBulma = (function (exports) {
 				attr(img, "class", "is-rounded");
 				attr(img, "alt", img_alt_value = /*item*/ ctx[1].title);
 				if (img.src !== (img_src_value = /*item*/ ctx[1].url)) attr(img, "src", img_src_value);
+				attr(img, "crossorigin", img_crossorigin_value = /*item*/ ctx[1].cors);
 				attr(figure, "class", "image is-64x64");
 				this.first = figure;
 			},
@@ -3078,6 +3080,10 @@ var notBulma = (function (exports) {
 
 				if (dirty & /*values*/ 1 && img.src !== (img_src_value = /*item*/ ctx[1].url)) {
 					attr(img, "src", img_src_value);
+				}
+
+				if (dirty & /*values*/ 1 && img_crossorigin_value !== (img_crossorigin_value = /*item*/ ctx[1].cors)) {
+					attr(img, "crossorigin", img_crossorigin_value);
 				}
 			},
 			d(detaching) {
@@ -8644,7 +8650,8 @@ var notBulma = (function (exports) {
 	function create(key) {
 	  var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
 	    'raw': [],
-	    'filtered': []
+	    'filtered': [],
+	    'selected': {}
 	  };
 
 	  if (!exist(key)) {
@@ -8774,6 +8781,131 @@ var notBulma = (function (exports) {
 	  }
 	});
 
+	// `Object.defineProperties` method
+	// https://tc39.github.io/ecma262/#sec-object.defineproperties
+	var objectDefineProperties = descriptors ? Object.defineProperties : function defineProperties(O, Properties) {
+	  anObject(O);
+	  var keys = objectKeys(Properties);
+	  var length = keys.length;
+	  var index = 0;
+	  var key;
+	  while (length > index) objectDefineProperty.f(O, key = keys[index++], Properties[key]);
+	  return O;
+	};
+
+	var html = getBuiltIn('document', 'documentElement');
+
+	var GT = '>';
+	var LT = '<';
+	var PROTOTYPE = 'prototype';
+	var SCRIPT = 'script';
+	var IE_PROTO = sharedKey('IE_PROTO');
+
+	var EmptyConstructor = function () { /* empty */ };
+
+	var scriptTag = function (content) {
+	  return LT + SCRIPT + GT + content + LT + '/' + SCRIPT + GT;
+	};
+
+	// Create object with fake `null` prototype: use ActiveX Object with cleared prototype
+	var NullProtoObjectViaActiveX = function (activeXDocument) {
+	  activeXDocument.write(scriptTag(''));
+	  activeXDocument.close();
+	  var temp = activeXDocument.parentWindow.Object;
+	  activeXDocument = null; // avoid memory leak
+	  return temp;
+	};
+
+	// Create object with fake `null` prototype: use iframe Object with cleared prototype
+	var NullProtoObjectViaIFrame = function () {
+	  // Thrash, waste and sodomy: IE GC bug
+	  var iframe = documentCreateElement('iframe');
+	  var JS = 'java' + SCRIPT + ':';
+	  var iframeDocument;
+	  iframe.style.display = 'none';
+	  html.appendChild(iframe);
+	  // https://github.com/zloirock/core-js/issues/475
+	  iframe.src = String(JS);
+	  iframeDocument = iframe.contentWindow.document;
+	  iframeDocument.open();
+	  iframeDocument.write(scriptTag('document.F=Object'));
+	  iframeDocument.close();
+	  return iframeDocument.F;
+	};
+
+	// Check for document.domain and active x support
+	// No need to use active x approach when document.domain is not set
+	// see https://github.com/es-shims/es5-shim/issues/150
+	// variation of https://github.com/kitcambridge/es5-shim/commit/4f738ac066346
+	// avoid IE GC bug
+	var activeXDocument;
+	var NullProtoObject = function () {
+	  try {
+	    /* global ActiveXObject */
+	    activeXDocument = document.domain && new ActiveXObject('htmlfile');
+	  } catch (error) { /* ignore */ }
+	  NullProtoObject = activeXDocument ? NullProtoObjectViaActiveX(activeXDocument) : NullProtoObjectViaIFrame();
+	  var length = enumBugKeys.length;
+	  while (length--) delete NullProtoObject[PROTOTYPE][enumBugKeys[length]];
+	  return NullProtoObject();
+	};
+
+	hiddenKeys[IE_PROTO] = true;
+
+	// `Object.create` method
+	// https://tc39.github.io/ecma262/#sec-object.create
+	var objectCreate = Object.create || function create(O, Properties) {
+	  var result;
+	  if (O !== null) {
+	    EmptyConstructor[PROTOTYPE] = anObject(O);
+	    result = new EmptyConstructor();
+	    EmptyConstructor[PROTOTYPE] = null;
+	    // add "__proto__" for Object.getPrototypeOf polyfill
+	    result[IE_PROTO] = O;
+	  } else result = NullProtoObject();
+	  return Properties === undefined ? result : objectDefineProperties(result, Properties);
+	};
+
+	var UNSCOPABLES = wellKnownSymbol('unscopables');
+	var ArrayPrototype = Array.prototype;
+
+	// Array.prototype[@@unscopables]
+	// https://tc39.github.io/ecma262/#sec-array.prototype-@@unscopables
+	if (ArrayPrototype[UNSCOPABLES] == undefined) {
+	  objectDefineProperty.f(ArrayPrototype, UNSCOPABLES, {
+	    configurable: true,
+	    value: objectCreate(null)
+	  });
+	}
+
+	// add a key to Array.prototype[@@unscopables]
+	var addToUnscopables = function (key) {
+	  ArrayPrototype[UNSCOPABLES][key] = true;
+	};
+
+	var $findIndex = arrayIteration.findIndex;
+
+
+
+	var FIND_INDEX = 'findIndex';
+	var SKIPS_HOLES = true;
+
+	var USES_TO_LENGTH$2 = arrayMethodUsesToLength(FIND_INDEX);
+
+	// Shouldn't skip holes
+	if (FIND_INDEX in []) Array(1)[FIND_INDEX](function () { SKIPS_HOLES = false; });
+
+	// `Array.prototype.findIndex` method
+	// https://tc39.github.io/ecma262/#sec-array.prototype.findindex
+	_export({ target: 'Array', proto: true, forced: SKIPS_HOLES || !USES_TO_LENGTH$2 }, {
+	  findIndex: function findIndex(callbackfn /* , that = undefined */) {
+	    return $findIndex(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);
+	  }
+	});
+
+	// https://tc39.github.io/ecma262/#sec-array.prototype-@@unscopables
+	addToUnscopables(FIND_INDEX);
+
 	var $indexOf = arrayIncludes.indexOf;
 
 
@@ -8782,11 +8914,11 @@ var notBulma = (function (exports) {
 
 	var NEGATIVE_ZERO = !!nativeIndexOf && 1 / [1].indexOf(1, -0) < 0;
 	var STRICT_METHOD$1 = arrayMethodIsStrict('indexOf');
-	var USES_TO_LENGTH$2 = arrayMethodUsesToLength('indexOf', { ACCESSORS: true, 1: 0 });
+	var USES_TO_LENGTH$3 = arrayMethodUsesToLength('indexOf', { ACCESSORS: true, 1: 0 });
 
 	// `Array.prototype.indexOf` method
 	// https://tc39.github.io/ecma262/#sec-array.prototype.indexof
-	_export({ target: 'Array', proto: true, forced: NEGATIVE_ZERO || !STRICT_METHOD$1 || !USES_TO_LENGTH$2 }, {
+	_export({ target: 'Array', proto: true, forced: NEGATIVE_ZERO || !STRICT_METHOD$1 || !USES_TO_LENGTH$3 }, {
 	  indexOf: function indexOf(searchElement /* , fromIndex = 0 */) {
 	    return NEGATIVE_ZERO
 	      // convert -0 to +0
@@ -8796,7 +8928,7 @@ var notBulma = (function (exports) {
 	});
 
 	var HAS_SPECIES_SUPPORT$1 = arrayMethodHasSpeciesSupport('splice');
-	var USES_TO_LENGTH$3 = arrayMethodUsesToLength('splice', { ACCESSORS: true, 0: 0, 1: 2 });
+	var USES_TO_LENGTH$4 = arrayMethodUsesToLength('splice', { ACCESSORS: true, 0: 0, 1: 2 });
 
 	var max$1 = Math.max;
 	var min$2 = Math.min;
@@ -8806,7 +8938,7 @@ var notBulma = (function (exports) {
 	// `Array.prototype.splice` method
 	// https://tc39.github.io/ecma262/#sec-array.prototype.splice
 	// with adding support of @@species
-	_export({ target: 'Array', proto: true, forced: !HAS_SPECIES_SUPPORT$1 || !USES_TO_LENGTH$3 }, {
+	_export({ target: 'Array', proto: true, forced: !HAS_SPECIES_SUPPORT$1 || !USES_TO_LENGTH$4 }, {
 	  splice: function splice(start, deleteCount /* , ...items */) {
 	    var O = toObject(this);
 	    var len = toLength(O.length);
@@ -8946,91 +9078,6 @@ var notBulma = (function (exports) {
 	if (!toStringTagSupport) {
 	  redefine(Object.prototype, 'toString', objectToString, { unsafe: true });
 	}
-
-	// `Object.defineProperties` method
-	// https://tc39.github.io/ecma262/#sec-object.defineproperties
-	var objectDefineProperties = descriptors ? Object.defineProperties : function defineProperties(O, Properties) {
-	  anObject(O);
-	  var keys = objectKeys(Properties);
-	  var length = keys.length;
-	  var index = 0;
-	  var key;
-	  while (length > index) objectDefineProperty.f(O, key = keys[index++], Properties[key]);
-	  return O;
-	};
-
-	var html = getBuiltIn('document', 'documentElement');
-
-	var GT = '>';
-	var LT = '<';
-	var PROTOTYPE = 'prototype';
-	var SCRIPT = 'script';
-	var IE_PROTO = sharedKey('IE_PROTO');
-
-	var EmptyConstructor = function () { /* empty */ };
-
-	var scriptTag = function (content) {
-	  return LT + SCRIPT + GT + content + LT + '/' + SCRIPT + GT;
-	};
-
-	// Create object with fake `null` prototype: use ActiveX Object with cleared prototype
-	var NullProtoObjectViaActiveX = function (activeXDocument) {
-	  activeXDocument.write(scriptTag(''));
-	  activeXDocument.close();
-	  var temp = activeXDocument.parentWindow.Object;
-	  activeXDocument = null; // avoid memory leak
-	  return temp;
-	};
-
-	// Create object with fake `null` prototype: use iframe Object with cleared prototype
-	var NullProtoObjectViaIFrame = function () {
-	  // Thrash, waste and sodomy: IE GC bug
-	  var iframe = documentCreateElement('iframe');
-	  var JS = 'java' + SCRIPT + ':';
-	  var iframeDocument;
-	  iframe.style.display = 'none';
-	  html.appendChild(iframe);
-	  // https://github.com/zloirock/core-js/issues/475
-	  iframe.src = String(JS);
-	  iframeDocument = iframe.contentWindow.document;
-	  iframeDocument.open();
-	  iframeDocument.write(scriptTag('document.F=Object'));
-	  iframeDocument.close();
-	  return iframeDocument.F;
-	};
-
-	// Check for document.domain and active x support
-	// No need to use active x approach when document.domain is not set
-	// see https://github.com/es-shims/es5-shim/issues/150
-	// variation of https://github.com/kitcambridge/es5-shim/commit/4f738ac066346
-	// avoid IE GC bug
-	var activeXDocument;
-	var NullProtoObject = function () {
-	  try {
-	    /* global ActiveXObject */
-	    activeXDocument = document.domain && new ActiveXObject('htmlfile');
-	  } catch (error) { /* ignore */ }
-	  NullProtoObject = activeXDocument ? NullProtoObjectViaActiveX(activeXDocument) : NullProtoObjectViaIFrame();
-	  var length = enumBugKeys.length;
-	  while (length--) delete NullProtoObject[PROTOTYPE][enumBugKeys[length]];
-	  return NullProtoObject();
-	};
-
-	hiddenKeys[IE_PROTO] = true;
-
-	// `Object.create` method
-	// https://tc39.github.io/ecma262/#sec-object.create
-	var objectCreate = Object.create || function create(O, Properties) {
-	  var result;
-	  if (O !== null) {
-	    EmptyConstructor[PROTOTYPE] = anObject(O);
-	    result = new EmptyConstructor();
-	    EmptyConstructor[PROTOTYPE] = null;
-	    // add "__proto__" for Object.getPrototypeOf polyfill
-	    result[IE_PROTO] = O;
-	  } else result = NullProtoObject();
-	  return Properties === undefined ? result : objectDefineProperties(result, Properties);
-	};
 
 	var slice = [].slice;
 	var factories = {};
@@ -10387,34 +10434,34 @@ var notBulma = (function (exports) {
 
 	function get_each_context$9(ctx, list, i) {
 		const child_ctx = ctx.slice();
-		child_ctx[16] = list[i];
+		child_ctx[21] = list[i];
 		return child_ctx;
 	}
 
 	function get_each_context_2(ctx, list, i) {
 		const child_ctx = ctx.slice();
-		child_ctx[22] = list[i];
+		child_ctx[27] = list[i];
 		return child_ctx;
 	}
 
 	function get_each_context_1$2(ctx, list, i) {
 		const child_ctx = ctx.slice();
-		child_ctx[19] = list[i];
+		child_ctx[24] = list[i];
 		return child_ctx;
 	}
 
 	function get_each_context_3(ctx, list, i) {
 		const child_ctx = ctx.slice();
-		child_ctx[22] = list[i];
+		child_ctx[27] = list[i];
 		return child_ctx;
 	}
 
-	// (64:0) {#if links.length}
-	function create_if_block_8$1(ctx) {
+	// (95:0) {#if links.length}
+	function create_if_block_10(ctx) {
 		let div;
 		let tablelinks;
 		let current;
-		tablelinks = new Ui_links({ props: { values: /*links*/ ctx[6] } });
+		tablelinks = new Ui_links({ props: { values: /*links*/ ctx[7] } });
 
 		return {
 			c() {
@@ -10429,7 +10476,7 @@ var notBulma = (function (exports) {
 			},
 			p(ctx, dirty) {
 				const tablelinks_changes = {};
-				if (dirty & /*links*/ 64) tablelinks_changes.values = /*links*/ ctx[6];
+				if (dirty[0] & /*links*/ 128) tablelinks_changes.values = /*links*/ ctx[7];
 				tablelinks.$set(tablelinks_changes);
 			},
 			i(local) {
@@ -10448,12 +10495,12 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (69:0) {#if actions.length}
-	function create_if_block_7$1(ctx) {
+	// (100:0) {#if actions.length}
+	function create_if_block_9$1(ctx) {
 		let div;
 		let tablebuttons;
 		let current;
-		tablebuttons = new Ui_buttons({ props: { values: /*actions*/ ctx[5] } });
+		tablebuttons = new Ui_buttons({ props: { values: /*actions*/ ctx[6] } });
 
 		return {
 			c() {
@@ -10468,7 +10515,7 @@ var notBulma = (function (exports) {
 			},
 			p(ctx, dirty) {
 				const tablebuttons_changes = {};
-				if (dirty & /*actions*/ 32) tablebuttons_changes.values = /*actions*/ ctx[5];
+				if (dirty[0] & /*actions*/ 64) tablebuttons_changes.values = /*actions*/ ctx[6];
 				tablebuttons.$set(tablebuttons_changes);
 			},
 			i(local) {
@@ -10487,8 +10534,8 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (74:0) {#if showSearch }
-	function create_if_block_6$1(ctx) {
+	// (105:0) {#if showSearch }
+	function create_if_block_8$1(ctx) {
 		let div1;
 		let div0;
 		let input;
@@ -10510,20 +10557,20 @@ var notBulma = (function (exports) {
 				insert(target, div1, anchor);
 				append(div1, div0);
 				append(div0, input);
-				set_input_value(input, /*search*/ ctx[2]);
+				set_input_value(input, /*search*/ ctx[3]);
 
 				if (!mounted) {
 					dispose = [
-						listen(input, "input", /*input_input_handler*/ ctx[13]),
-						listen(input, "input", /*onSearchInput*/ ctx[8])
+						listen(input, "input", /*input_input_handler*/ ctx[17]),
+						listen(input, "input", /*onSearchInput*/ ctx[10])
 					];
 
 					mounted = true;
 				}
 			},
 			p(ctx, dirty) {
-				if (dirty & /*search*/ 4 && input.value !== /*search*/ ctx[2]) {
-					set_input_value(input, /*search*/ ctx[2]);
+				if (dirty[0] & /*search*/ 8 && input.value !== /*search*/ ctx[3]) {
+					set_input_value(input, /*search*/ ctx[3]);
 				}
 			},
 			d(detaching) {
@@ -10534,10 +10581,28 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (83:2) {#each fields as field}
+	// (114:2) {#if showSelect }
+	function create_if_block_7$1(ctx) {
+		let th;
+
+		return {
+			c() {
+				th = element("th");
+				th.textContent = "#";
+			},
+			m(target, anchor) {
+				insert(target, th, anchor);
+			},
+			d(detaching) {
+				if (detaching) detach(th);
+			}
+		};
+	}
+
+	// (117:2) {#each fields as field}
 	function create_each_block_3(ctx) {
 		let th;
-		let t_value = /*field*/ ctx[22].title + "";
+		let t_value = /*field*/ ctx[27].title + "";
 		let t;
 
 		return {
@@ -10550,7 +10615,7 @@ var notBulma = (function (exports) {
 				append(th, t);
 			},
 			p(ctx, dirty) {
-				if (dirty & /*fields*/ 16 && t_value !== (t_value = /*field*/ ctx[22].title + "")) set_data(t, t_value);
+				if (dirty[0] & /*fields*/ 32 && t_value !== (t_value = /*field*/ ctx[27].title + "")) set_data(t, t_value);
 			},
 			d(detaching) {
 				if (detaching) detach(th);
@@ -10558,9 +10623,75 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (100:4) {:else}
+	// (124:3) {#if showSelect }
+	function create_if_block_6$1(ctx) {
+		let td;
+		let input;
+		let input_id_value;
+		let input_data_id_value;
+		let input_name_value;
+		let mounted;
+		let dispose;
+
+		function input_change_handler() {
+			/*input_change_handler*/ ctx[18].call(input, /*item*/ ctx[24]);
+		}
+
+		return {
+			c() {
+				td = element("td");
+				input = element("input");
+				attr(input, "type", "checkbox");
+				attr(input, "id", input_id_value = "table-row-select-" + /*item*/ ctx[24]._id);
+				attr(input, "data-id", input_data_id_value = /*item*/ ctx[24]._id);
+				attr(input, "placeholder", "");
+				attr(input, "name", input_name_value = "row_selected_" + /*item*/ ctx[24]._id);
+			},
+			m(target, anchor) {
+				insert(target, td, anchor);
+				append(td, input);
+				input.checked = /*selected*/ ctx[1][/*item*/ ctx[24]._id];
+
+				if (!mounted) {
+					dispose = [
+						listen(input, "change", input_change_handler),
+						listen(input, "change", /*onRowSelect*/ ctx[14]),
+						listen(input, "input", /*onRowSelect*/ ctx[14])
+					];
+
+					mounted = true;
+				}
+			},
+			p(new_ctx, dirty) {
+				ctx = new_ctx;
+
+				if (dirty[0] & /*items*/ 4 && input_id_value !== (input_id_value = "table-row-select-" + /*item*/ ctx[24]._id)) {
+					attr(input, "id", input_id_value);
+				}
+
+				if (dirty[0] & /*items*/ 4 && input_data_id_value !== (input_data_id_value = /*item*/ ctx[24]._id)) {
+					attr(input, "data-id", input_data_id_value);
+				}
+
+				if (dirty[0] & /*items*/ 4 && input_name_value !== (input_name_value = "row_selected_" + /*item*/ ctx[24]._id)) {
+					attr(input, "name", input_name_value);
+				}
+
+				if (dirty[0] & /*selected, items*/ 6) {
+					input.checked = /*selected*/ ctx[1][/*item*/ ctx[24]._id];
+				}
+			},
+			d(detaching) {
+				if (detaching) detach(td);
+				mounted = false;
+				run_all(dispose);
+			}
+		};
+	}
+
+	// (139:4) {:else}
 	function create_else_block_1$2(ctx) {
-		let t_value = notPath$1.get(/*field*/ ctx[22].path, /*item*/ ctx[19], /*helpers*/ ctx[3]) + "";
+		let t_value = notPath$1.get(/*field*/ ctx[27].path, /*item*/ ctx[24], /*helpers*/ ctx[4]) + "";
 		let t;
 
 		return {
@@ -10571,7 +10702,7 @@ var notBulma = (function (exports) {
 				insert(target, t, anchor);
 			},
 			p(ctx, dirty) {
-				if (dirty & /*fields, items, helpers*/ 26 && t_value !== (t_value = notPath$1.get(/*field*/ ctx[22].path, /*item*/ ctx[19], /*helpers*/ ctx[3]) + "")) set_data(t, t_value);
+				if (dirty[0] & /*fields, items, helpers*/ 52 && t_value !== (t_value = notPath$1.get(/*field*/ ctx[27].path, /*item*/ ctx[24], /*helpers*/ ctx[4]) + "")) set_data(t, t_value);
 			},
 			i: noop,
 			o: noop,
@@ -10581,14 +10712,14 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (98:40) 
+	// (137:40) 
 	function create_if_block_5$1(ctx) {
 		let tablebooleans;
 		let current;
 
 		tablebooleans = new Ui_booleans({
 				props: {
-					values: notPath$1.get(/*field*/ ctx[22].path, /*item*/ ctx[19], /*helpers*/ ctx[3])
+					values: notPath$1.get(/*field*/ ctx[27].path, /*item*/ ctx[24], /*helpers*/ ctx[4])
 				}
 			});
 
@@ -10602,7 +10733,7 @@ var notBulma = (function (exports) {
 			},
 			p(ctx, dirty) {
 				const tablebooleans_changes = {};
-				if (dirty & /*fields, items, helpers*/ 26) tablebooleans_changes.values = notPath$1.get(/*field*/ ctx[22].path, /*item*/ ctx[19], /*helpers*/ ctx[3]);
+				if (dirty[0] & /*fields, items, helpers*/ 52) tablebooleans_changes.values = notPath$1.get(/*field*/ ctx[27].path, /*item*/ ctx[24], /*helpers*/ ctx[4]);
 				tablebooleans.$set(tablebooleans_changes);
 			},
 			i(local) {
@@ -10620,14 +10751,14 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (96:38) 
+	// (135:38) 
 	function create_if_block_4$8(ctx) {
 		let tableimages;
 		let current;
 
 		tableimages = new Ui_images({
 				props: {
-					values: notPath$1.get(/*field*/ ctx[22].path, /*item*/ ctx[19], /*helpers*/ ctx[3])
+					values: notPath$1.get(/*field*/ ctx[27].path, /*item*/ ctx[24], /*helpers*/ ctx[4])
 				}
 			});
 
@@ -10641,7 +10772,7 @@ var notBulma = (function (exports) {
 			},
 			p(ctx, dirty) {
 				const tableimages_changes = {};
-				if (dirty & /*fields, items, helpers*/ 26) tableimages_changes.values = notPath$1.get(/*field*/ ctx[22].path, /*item*/ ctx[19], /*helpers*/ ctx[3]);
+				if (dirty[0] & /*fields, items, helpers*/ 52) tableimages_changes.values = notPath$1.get(/*field*/ ctx[27].path, /*item*/ ctx[24], /*helpers*/ ctx[4]);
 				tableimages.$set(tableimages_changes);
 			},
 			i(local) {
@@ -10659,14 +10790,14 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (94:39) 
+	// (133:39) 
 	function create_if_block_3$8(ctx) {
 		let tablebuttons;
 		let current;
 
 		tablebuttons = new Ui_buttons({
 				props: {
-					values: notPath$1.get(/*field*/ ctx[22].path, /*item*/ ctx[19], /*helpers*/ ctx[3])
+					values: notPath$1.get(/*field*/ ctx[27].path, /*item*/ ctx[24], /*helpers*/ ctx[4])
 				}
 			});
 
@@ -10680,7 +10811,7 @@ var notBulma = (function (exports) {
 			},
 			p(ctx, dirty) {
 				const tablebuttons_changes = {};
-				if (dirty & /*fields, items, helpers*/ 26) tablebuttons_changes.values = notPath$1.get(/*field*/ ctx[22].path, /*item*/ ctx[19], /*helpers*/ ctx[3]);
+				if (dirty[0] & /*fields, items, helpers*/ 52) tablebuttons_changes.values = notPath$1.get(/*field*/ ctx[27].path, /*item*/ ctx[24], /*helpers*/ ctx[4]);
 				tablebuttons.$set(tablebuttons_changes);
 			},
 			i(local) {
@@ -10698,14 +10829,14 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (92:4) {#if field.type === 'link' }
+	// (131:4) {#if field.type === 'link' }
 	function create_if_block_2$9(ctx) {
 		let tablelinks;
 		let current;
 
 		tablelinks = new Ui_links({
 				props: {
-					values: notPath$1.get(/*field*/ ctx[22].path, /*item*/ ctx[19], /*helpers*/ ctx[3])
+					values: notPath$1.get(/*field*/ ctx[27].path, /*item*/ ctx[24], /*helpers*/ ctx[4])
 				}
 			});
 
@@ -10719,7 +10850,7 @@ var notBulma = (function (exports) {
 			},
 			p(ctx, dirty) {
 				const tablelinks_changes = {};
-				if (dirty & /*fields, items, helpers*/ 26) tablelinks_changes.values = notPath$1.get(/*field*/ ctx[22].path, /*item*/ ctx[19], /*helpers*/ ctx[3]);
+				if (dirty[0] & /*fields, items, helpers*/ 52) tablelinks_changes.values = notPath$1.get(/*field*/ ctx[27].path, /*item*/ ctx[24], /*helpers*/ ctx[4]);
 				tablelinks.$set(tablelinks_changes);
 			},
 			i(local) {
@@ -10737,7 +10868,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (90:3) {#each fields as field}
+	// (129:3) {#each fields as field}
 	function create_each_block_2(ctx) {
 		let td;
 		let current_block_type_index;
@@ -10755,10 +10886,10 @@ var notBulma = (function (exports) {
 		const if_blocks = [];
 
 		function select_block_type(ctx, dirty) {
-			if (/*field*/ ctx[22].type === "link") return 0;
-			if (/*field*/ ctx[22].type === "button") return 1;
-			if (/*field*/ ctx[22].type === "image") return 2;
-			if (/*field*/ ctx[22].type === "boolean") return 3;
+			if (/*field*/ ctx[27].type === "link") return 0;
+			if (/*field*/ ctx[27].type === "button") return 1;
+			if (/*field*/ ctx[27].type === "image") return 2;
+			if (/*field*/ ctx[27].type === "boolean") return 3;
 			return 4;
 		}
 
@@ -10816,12 +10947,14 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (88:2) {#each items as item (item._id)}
+	// (122:2) {#each items as item (item._id)}
 	function create_each_block_1$2(key_1, ctx) {
 		let tr;
-		let t;
+		let t0;
+		let t1;
 		let current;
-		let each_value_2 = /*fields*/ ctx[4];
+		let if_block = /*showSelect*/ ctx[9] && create_if_block_6$1(ctx);
+		let each_value_2 = /*fields*/ ctx[5];
 		let each_blocks = [];
 
 		for (let i = 0; i < each_value_2.length; i += 1) {
@@ -10837,27 +10970,44 @@ var notBulma = (function (exports) {
 			first: null,
 			c() {
 				tr = element("tr");
+				if (if_block) if_block.c();
+				t0 = space();
 
 				for (let i = 0; i < each_blocks.length; i += 1) {
 					each_blocks[i].c();
 				}
 
-				t = space();
+				t1 = space();
 				this.first = tr;
 			},
 			m(target, anchor) {
 				insert(target, tr, anchor);
+				if (if_block) if_block.m(tr, null);
+				append(tr, t0);
 
 				for (let i = 0; i < each_blocks.length; i += 1) {
 					each_blocks[i].m(tr, null);
 				}
 
-				append(tr, t);
+				append(tr, t1);
 				current = true;
 			},
 			p(ctx, dirty) {
-				if (dirty & /*notPath, fields, items, helpers*/ 26) {
-					each_value_2 = /*fields*/ ctx[4];
+				if (/*showSelect*/ ctx[9]) {
+					if (if_block) {
+						if_block.p(ctx, dirty);
+					} else {
+						if_block = create_if_block_6$1(ctx);
+						if_block.c();
+						if_block.m(tr, t0);
+					}
+				} else if (if_block) {
+					if_block.d(1);
+					if_block = null;
+				}
+
+				if (dirty[0] & /*fields, items, helpers*/ 52) {
+					each_value_2 = /*fields*/ ctx[5];
 					let i;
 
 					for (i = 0; i < each_value_2.length; i += 1) {
@@ -10870,7 +11020,7 @@ var notBulma = (function (exports) {
 							each_blocks[i] = create_each_block_2(child_ctx);
 							each_blocks[i].c();
 							transition_in(each_blocks[i], 1);
-							each_blocks[i].m(tr, t);
+							each_blocks[i].m(tr, t1);
 						}
 					}
 
@@ -10903,12 +11053,13 @@ var notBulma = (function (exports) {
 			},
 			d(detaching) {
 				if (detaching) detach(tr);
+				if (if_block) if_block.d();
 				destroy_each(each_blocks, detaching);
 			}
 		};
 	}
 
-	// (113:2) {#if state.pagination && state.pagination.pages && state.pagination.pages.list }
+	// (152:2) {#if state.pagination && state.pagination.pages && state.pagination.pages.list }
 	function create_if_block$e(ctx) {
 		let each_1_anchor;
 		let each_value = /*state*/ ctx[0].pagination.pages.list;
@@ -10934,7 +11085,7 @@ var notBulma = (function (exports) {
 				insert(target, each_1_anchor, anchor);
 			},
 			p(ctx, dirty) {
-				if (dirty & /*state, goTo*/ 2049) {
+				if (dirty[0] & /*state, goTo*/ 8193) {
 					each_value = /*state*/ ctx[0].pagination.pages.list;
 					let i;
 
@@ -10964,10 +11115,10 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (118:3) {:else}
+	// (157:3) {:else}
 	function create_else_block$d(ctx) {
 		let a;
-		let t_value = /*page*/ ctx[16].index + 1 + "";
+		let t_value = /*page*/ ctx[21].index + 1 + "";
 		let t;
 		let a_aria_label_value;
 		let a_data_page_value;
@@ -10979,26 +11130,26 @@ var notBulma = (function (exports) {
 				a = element("a");
 				t = text(t_value);
 				attr(a, "class", "pagination-link");
-				attr(a, "aria-label", a_aria_label_value = "Страница " + /*page*/ ctx[16].index);
-				attr(a, "data-page", a_data_page_value = /*page*/ ctx[16].index);
+				attr(a, "aria-label", a_aria_label_value = "Страница " + /*page*/ ctx[21].index);
+				attr(a, "data-page", a_data_page_value = /*page*/ ctx[21].index);
 			},
 			m(target, anchor) {
 				insert(target, a, anchor);
 				append(a, t);
 
 				if (!mounted) {
-					dispose = listen(a, "click", /*goTo*/ ctx[11]);
+					dispose = listen(a, "click", /*goTo*/ ctx[13]);
 					mounted = true;
 				}
 			},
 			p(ctx, dirty) {
-				if (dirty & /*state*/ 1 && t_value !== (t_value = /*page*/ ctx[16].index + 1 + "")) set_data(t, t_value);
+				if (dirty[0] & /*state*/ 1 && t_value !== (t_value = /*page*/ ctx[21].index + 1 + "")) set_data(t, t_value);
 
-				if (dirty & /*state*/ 1 && a_aria_label_value !== (a_aria_label_value = "Страница " + /*page*/ ctx[16].index)) {
+				if (dirty[0] & /*state*/ 1 && a_aria_label_value !== (a_aria_label_value = "Страница " + /*page*/ ctx[21].index)) {
 					attr(a, "aria-label", a_aria_label_value);
 				}
 
-				if (dirty & /*state*/ 1 && a_data_page_value !== (a_data_page_value = /*page*/ ctx[16].index)) {
+				if (dirty[0] & /*state*/ 1 && a_data_page_value !== (a_data_page_value = /*page*/ ctx[21].index)) {
 					attr(a, "data-page", a_data_page_value);
 				}
 			},
@@ -11010,10 +11161,10 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (116:3) {#if page.active}
+	// (155:3) {#if page.active}
 	function create_if_block_1$a(ctx) {
 		let a;
-		let t_value = /*page*/ ctx[16].index + 1 + "";
+		let t_value = /*page*/ ctx[21].index + 1 + "";
 		let t;
 		let a_aria_label_value;
 
@@ -11022,7 +11173,7 @@ var notBulma = (function (exports) {
 				a = element("a");
 				t = text(t_value);
 				attr(a, "class", "pagination-link is-current");
-				attr(a, "aria-label", a_aria_label_value = "Страница " + /*page*/ ctx[16].index);
+				attr(a, "aria-label", a_aria_label_value = "Страница " + /*page*/ ctx[21].index);
 				attr(a, "aria-current", "page");
 			},
 			m(target, anchor) {
@@ -11030,9 +11181,9 @@ var notBulma = (function (exports) {
 				append(a, t);
 			},
 			p(ctx, dirty) {
-				if (dirty & /*state*/ 1 && t_value !== (t_value = /*page*/ ctx[16].index + 1 + "")) set_data(t, t_value);
+				if (dirty[0] & /*state*/ 1 && t_value !== (t_value = /*page*/ ctx[21].index + 1 + "")) set_data(t, t_value);
 
-				if (dirty & /*state*/ 1 && a_aria_label_value !== (a_aria_label_value = "Страница " + /*page*/ ctx[16].index)) {
+				if (dirty[0] & /*state*/ 1 && a_aria_label_value !== (a_aria_label_value = "Страница " + /*page*/ ctx[21].index)) {
 					attr(a, "aria-label", a_aria_label_value);
 				}
 			},
@@ -11042,13 +11193,13 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (114:2) {#each state.pagination.pages.list as page}
+	// (153:2) {#each state.pagination.pages.list as page}
 	function create_each_block$9(ctx) {
 		let li;
 		let t;
 
 		function select_block_type_1(ctx, dirty) {
-			if (/*page*/ ctx[16].active) return create_if_block_1$a;
+			if (/*page*/ ctx[21].active) return create_if_block_1$a;
 			return create_else_block$d;
 		}
 
@@ -11093,31 +11244,33 @@ var notBulma = (function (exports) {
 		let table;
 		let thead;
 		let t3;
+		let t4;
 		let tbody;
 		let each_blocks = [];
 		let each1_lookup = new Map();
-		let t4;
+		let t5;
 		let nav;
 		let a0;
-		let t6;
+		let t7;
 		let a1;
-		let t8;
+		let t9;
 		let ul;
 		let current;
 		let mounted;
 		let dispose;
-		let if_block0 = /*links*/ ctx[6].length && create_if_block_8$1(ctx);
-		let if_block1 = /*actions*/ ctx[5].length && create_if_block_7$1(ctx);
-		let if_block2 = /*showSearch*/ ctx[7] && create_if_block_6$1(ctx);
-		let each_value_3 = /*fields*/ ctx[4];
+		let if_block0 = /*links*/ ctx[7].length && create_if_block_10(ctx);
+		let if_block1 = /*actions*/ ctx[6].length && create_if_block_9$1(ctx);
+		let if_block2 = /*showSearch*/ ctx[8] && create_if_block_8$1(ctx);
+		let if_block3 = /*showSelect*/ ctx[9] && create_if_block_7$1();
+		let each_value_3 = /*fields*/ ctx[5];
 		let each_blocks_1 = [];
 
 		for (let i = 0; i < each_value_3.length; i += 1) {
 			each_blocks_1[i] = create_each_block_3(get_each_context_3(ctx, each_value_3, i));
 		}
 
-		let each_value_1 = /*items*/ ctx[1];
-		const get_key = ctx => /*item*/ ctx[19]._id;
+		let each_value_1 = /*items*/ ctx[2];
+		const get_key = ctx => /*item*/ ctx[24]._id;
 
 		for (let i = 0; i < each_value_1.length; i += 1) {
 			let child_ctx = get_each_context_1$2(ctx, each_value_1, i);
@@ -11125,7 +11278,7 @@ var notBulma = (function (exports) {
 			each1_lookup.set(key, each_blocks[i] = create_each_block_1$2(key, child_ctx));
 		}
 
-		let if_block3 = /*state*/ ctx[0].pagination && /*state*/ ctx[0].pagination.pages && /*state*/ ctx[0].pagination.pages.list && create_if_block$e(ctx);
+		let if_block4 = /*state*/ ctx[0].pagination && /*state*/ ctx[0].pagination.pages && /*state*/ ctx[0].pagination.pages.list && create_if_block$e(ctx);
 
 		return {
 			c() {
@@ -11137,28 +11290,30 @@ var notBulma = (function (exports) {
 				t2 = space();
 				table = element("table");
 				thead = element("thead");
+				if (if_block3) if_block3.c();
+				t3 = space();
 
 				for (let i = 0; i < each_blocks_1.length; i += 1) {
 					each_blocks_1[i].c();
 				}
 
-				t3 = space();
+				t4 = space();
 				tbody = element("tbody");
 
 				for (let i = 0; i < each_blocks.length; i += 1) {
 					each_blocks[i].c();
 				}
 
-				t4 = space();
+				t5 = space();
 				nav = element("nav");
 				a0 = element("a");
 				a0.textContent = "Назад";
-				t6 = space();
+				t7 = space();
 				a1 = element("a");
 				a1.textContent = "Вперед";
-				t8 = space();
+				t9 = space();
 				ul = element("ul");
-				if (if_block3) if_block3.c();
+				if (if_block4) if_block4.c();
 				attr(table, "class", "table");
 				attr(a0, "class", "pagination-previous");
 				attr(a1, "class", "pagination-next");
@@ -11176,47 +11331,49 @@ var notBulma = (function (exports) {
 				insert(target, t2, anchor);
 				insert(target, table, anchor);
 				append(table, thead);
+				if (if_block3) if_block3.m(thead, null);
+				append(thead, t3);
 
 				for (let i = 0; i < each_blocks_1.length; i += 1) {
 					each_blocks_1[i].m(thead, null);
 				}
 
-				append(table, t3);
+				append(table, t4);
 				append(table, tbody);
 
 				for (let i = 0; i < each_blocks.length; i += 1) {
 					each_blocks[i].m(tbody, null);
 				}
 
-				insert(target, t4, anchor);
+				insert(target, t5, anchor);
 				insert(target, nav, anchor);
 				append(nav, a0);
-				append(nav, t6);
+				append(nav, t7);
 				append(nav, a1);
-				append(nav, t8);
+				append(nav, t9);
 				append(nav, ul);
-				if (if_block3) if_block3.m(ul, null);
+				if (if_block4) if_block4.m(ul, null);
 				current = true;
 
 				if (!mounted) {
 					dispose = [
-						listen(a0, "click", /*goPrev*/ ctx[9]),
-						listen(a1, "click", /*goNext*/ ctx[10])
+						listen(a0, "click", /*goPrev*/ ctx[11]),
+						listen(a1, "click", /*goNext*/ ctx[12])
 					];
 
 					mounted = true;
 				}
 			},
-			p(ctx, [dirty]) {
-				if (/*links*/ ctx[6].length) {
+			p(ctx, dirty) {
+				if (/*links*/ ctx[7].length) {
 					if (if_block0) {
 						if_block0.p(ctx, dirty);
 
-						if (dirty & /*links*/ 64) {
+						if (dirty[0] & /*links*/ 128) {
 							transition_in(if_block0, 1);
 						}
 					} else {
-						if_block0 = create_if_block_8$1(ctx);
+						if_block0 = create_if_block_10(ctx);
 						if_block0.c();
 						transition_in(if_block0, 1);
 						if_block0.m(t0.parentNode, t0);
@@ -11231,15 +11388,15 @@ var notBulma = (function (exports) {
 					check_outros();
 				}
 
-				if (/*actions*/ ctx[5].length) {
+				if (/*actions*/ ctx[6].length) {
 					if (if_block1) {
 						if_block1.p(ctx, dirty);
 
-						if (dirty & /*actions*/ 32) {
+						if (dirty[0] & /*actions*/ 64) {
 							transition_in(if_block1, 1);
 						}
 					} else {
-						if_block1 = create_if_block_7$1(ctx);
+						if_block1 = create_if_block_9$1(ctx);
 						if_block1.c();
 						transition_in(if_block1, 1);
 						if_block1.m(t1.parentNode, t1);
@@ -11254,11 +11411,11 @@ var notBulma = (function (exports) {
 					check_outros();
 				}
 
-				if (/*showSearch*/ ctx[7]) {
+				if (/*showSearch*/ ctx[8]) {
 					if (if_block2) {
 						if_block2.p(ctx, dirty);
 					} else {
-						if_block2 = create_if_block_6$1(ctx);
+						if_block2 = create_if_block_8$1(ctx);
 						if_block2.c();
 						if_block2.m(t2.parentNode, t2);
 					}
@@ -11267,8 +11424,19 @@ var notBulma = (function (exports) {
 					if_block2 = null;
 				}
 
-				if (dirty & /*fields*/ 16) {
-					each_value_3 = /*fields*/ ctx[4];
+				if (/*showSelect*/ ctx[9]) {
+					if (if_block3) ; else {
+						if_block3 = create_if_block_7$1();
+						if_block3.c();
+						if_block3.m(thead, t3);
+					}
+				} else if (if_block3) {
+					if_block3.d(1);
+					if_block3 = null;
+				}
+
+				if (dirty[0] & /*fields*/ 32) {
+					each_value_3 = /*fields*/ ctx[5];
 					let i;
 
 					for (i = 0; i < each_value_3.length; i += 1) {
@@ -11290,24 +11458,24 @@ var notBulma = (function (exports) {
 					each_blocks_1.length = each_value_3.length;
 				}
 
-				if (dirty & /*fields, notPath, items, helpers*/ 26) {
-					const each_value_1 = /*items*/ ctx[1];
+				if (dirty[0] & /*fields, items, helpers, selected, onRowSelect, showSelect*/ 16950) {
+					const each_value_1 = /*items*/ ctx[2];
 					group_outros();
 					each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value_1, each1_lookup, tbody, outro_and_destroy_block, create_each_block_1$2, null, get_each_context_1$2);
 					check_outros();
 				}
 
 				if (/*state*/ ctx[0].pagination && /*state*/ ctx[0].pagination.pages && /*state*/ ctx[0].pagination.pages.list) {
-					if (if_block3) {
-						if_block3.p(ctx, dirty);
+					if (if_block4) {
+						if_block4.p(ctx, dirty);
 					} else {
-						if_block3 = create_if_block$e(ctx);
-						if_block3.c();
-						if_block3.m(ul, null);
+						if_block4 = create_if_block$e(ctx);
+						if_block4.c();
+						if_block4.m(ul, null);
 					}
-				} else if (if_block3) {
-					if_block3.d(1);
-					if_block3 = null;
+				} else if (if_block4) {
+					if_block4.d(1);
+					if_block4 = null;
 				}
 			},
 			i(local) {
@@ -11339,19 +11507,24 @@ var notBulma = (function (exports) {
 				if (if_block2) if_block2.d(detaching);
 				if (detaching) detach(t2);
 				if (detaching) detach(table);
+				if (if_block3) if_block3.d();
 				destroy_each(each_blocks_1, detaching);
 
 				for (let i = 0; i < each_blocks.length; i += 1) {
 					each_blocks[i].d();
 				}
 
-				if (detaching) detach(t4);
+				if (detaching) detach(t5);
 				if (detaching) detach(nav);
-				if (if_block3) if_block3.d();
+				if (if_block4) if_block4.d();
 				mounted = false;
 				run_all(dispose);
 			}
 		};
+	}
+
+	function getItemId(item) {
+		return item._id;
 	}
 
 	function instance$n($$self, $$props, $$invalidate) {
@@ -11360,15 +11533,31 @@ var notBulma = (function (exports) {
 		let { helpers = {} } = $$props;
 		let { state = {} } = $$props;
 		let { fields = [] } = $$props;
+		let { selected = {} } = $$props;
 		let { items = [] } = $$props;
 		let { actions = [] } = $$props;
 		let { links = [] } = $$props;
 		let { search = "" } = $$props;
 		let { showSearch = true } = $$props;
+		let { showSelect = true } = $$props;
 
 		onMount(() => {
+			if (showSelect) {
+				get$1(id).selected.subscribe(value => {
+					$$invalidate(1, selected = value);
+				});
+			}
+
 			get$1(id).refined.subscribe(value => {
-				$$invalidate(1, items = value);
+				$$invalidate(2, items = value);
+
+				if (showSelect) {
+					for (let itemId in selected) {
+						if (!items.some(item => getItemId(item) === itemId)) {
+							delete selected[itemId];
+						}
+					}
+				}
 			});
 
 			get$1(id).state.subscribe(value => {
@@ -11400,25 +11589,48 @@ var notBulma = (function (exports) {
 			return false;
 		}
 
+		function onRowSelect(e) {
+			let itemId = e.target.dataset.id;
+
+			get$1(id).selected.update(value => {
+				if (Object.prototype.hasOwnProperty.call(value, itemId)) {
+					value[itemId] = true;
+				} else {
+					value[itemId] = !value[itemId];
+				}
+
+				return value;
+			});
+		}
+
 		function input_input_handler() {
 			search = this.value;
-			$$invalidate(2, search);
+			$$invalidate(3, search);
+		}
+
+		function input_change_handler(item) {
+			selected[item._id] = this.checked;
+			$$invalidate(1, selected);
+			$$invalidate(2, items);
 		}
 
 		$$self.$set = $$props => {
-			if ("id" in $$props) $$invalidate(12, id = $$props.id);
-			if ("helpers" in $$props) $$invalidate(3, helpers = $$props.helpers);
+			if ("id" in $$props) $$invalidate(15, id = $$props.id);
+			if ("helpers" in $$props) $$invalidate(4, helpers = $$props.helpers);
 			if ("state" in $$props) $$invalidate(0, state = $$props.state);
-			if ("fields" in $$props) $$invalidate(4, fields = $$props.fields);
-			if ("items" in $$props) $$invalidate(1, items = $$props.items);
-			if ("actions" in $$props) $$invalidate(5, actions = $$props.actions);
-			if ("links" in $$props) $$invalidate(6, links = $$props.links);
-			if ("search" in $$props) $$invalidate(2, search = $$props.search);
-			if ("showSearch" in $$props) $$invalidate(7, showSearch = $$props.showSearch);
+			if ("fields" in $$props) $$invalidate(5, fields = $$props.fields);
+			if ("selected" in $$props) $$invalidate(1, selected = $$props.selected);
+			if ("items" in $$props) $$invalidate(2, items = $$props.items);
+			if ("actions" in $$props) $$invalidate(6, actions = $$props.actions);
+			if ("links" in $$props) $$invalidate(7, links = $$props.links);
+			if ("search" in $$props) $$invalidate(3, search = $$props.search);
+			if ("showSearch" in $$props) $$invalidate(8, showSearch = $$props.showSearch);
+			if ("showSelect" in $$props) $$invalidate(9, showSelect = $$props.showSelect);
 		};
 
 		return [
 			state,
+			selected,
 			items,
 			search,
 			helpers,
@@ -11426,12 +11638,16 @@ var notBulma = (function (exports) {
 			actions,
 			links,
 			showSearch,
+			showSelect,
 			onSearchInput,
 			goPrev,
 			goNext,
 			goTo,
+			onRowSelect,
 			id,
-			input_input_handler
+			getItemId,
+			input_input_handler,
+			input_change_handler
 		];
 	}
 
@@ -11439,17 +11655,32 @@ var notBulma = (function (exports) {
 		constructor(options) {
 			super();
 
-			init(this, options, instance$n, create_fragment$n, safe_not_equal, {
-				id: 12,
-				helpers: 3,
-				state: 0,
-				fields: 4,
-				items: 1,
-				actions: 5,
-				links: 6,
-				search: 2,
-				showSearch: 7
-			});
+			init(
+				this,
+				options,
+				instance$n,
+				create_fragment$n,
+				safe_not_equal,
+				{
+					id: 15,
+					helpers: 4,
+					state: 0,
+					fields: 5,
+					selected: 1,
+					items: 2,
+					actions: 6,
+					links: 7,
+					search: 3,
+					showSearch: 8,
+					showSelect: 9,
+					getItemId: 16
+				},
+				[-1, -1]
+			);
+		}
+
+		get getItemId() {
+			return getItemId;
 		}
 	}
 
@@ -11493,7 +11724,8 @@ var notBulma = (function (exports) {
 	    _this.data = {
 	      raw: [],
 	      filtered: [],
-	      refined: []
+	      refined: [],
+	      slectyed: {}
 	    };
 	    _this.state = {
 	      pagination: {
@@ -11516,6 +11748,7 @@ var notBulma = (function (exports) {
 	      'raw': [],
 	      'filtered': [],
 	      'refined': [],
+	      'selected': {},
 	      'state': _this.state,
 	      'working': _this.working
 	    });
@@ -11529,7 +11762,10 @@ var notBulma = (function (exports) {
 	    _this.stores.filtered.subscribe(_this.onFilteredUpdate.bind(assertThisInitialized(_this))); //урезаны до минимального набора, точно соотвествующего табличному формату
 
 
-	    _this.stores.refined.subscribe(_this.onRefinedUpdate.bind(assertThisInitialized(_this))); //pagination, items information
+	    _this.stores.refined.subscribe(_this.onRefinedUpdate.bind(assertThisInitialized(_this))); //словарь с идентификаторами выбранных строк
+
+
+	    _this.stores.selected.subscribe(_this.onSelectedUpdate.bind(assertThisInitialized(_this))); //pagination, items information
 
 
 	    _this.stores.state.subscribe(_this.onStateUpdate.bind(assertThisInitialized(_this)));
@@ -11601,6 +11837,7 @@ var notBulma = (function (exports) {
 	    key: "onRefinedUpdate",
 	    value: function onRefinedUpdate(val) {
 	      this.data.refined = val;
+	      this.clearSelected();
 	      return val;
 	    }
 	  }, {
@@ -11619,9 +11856,49 @@ var notBulma = (function (exports) {
 	      }
 	    }
 	  }, {
+	    key: "onSelectedUpdate",
+	    value: function onSelectedUpdate(val) {
+	      this.data.selected = val;
+	    }
+	  }, {
+	    key: "clearSelected",
+	    value: function clearSelected() {
+	      this.data.selected = {};
+	    }
+	  }, {
+	    key: "getSelected",
+	    value: function getSelected() {
+	      var _this2 = this;
+
+	      var object = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+	      var res = [];
+
+	      var _loop = function _loop(id) {
+	        if (_this2.data.selected[id]) {
+	          if (object) {
+	            var indx = _this2.data.refined.findIndex(function (item) {
+	              return item._id === id;
+	            });
+
+	            if (indx > -1) {
+	              res.push(_this2.data.refined(indx));
+	            }
+	          } else {
+	            res.push(id);
+	          }
+	        }
+	      };
+
+	      for (var id in this.data.selected) {
+	        _loop(id);
+	      }
+
+	      return res;
+	    }
+	  }, {
 	    key: "render",
 	    value: function render() {
-	      var _this2 = this;
+	      var _this3 = this;
 
 	      if (!this.ui.table) {
 	        this.ui.table = new NotTable({
@@ -11632,22 +11909,24 @@ var notBulma = (function (exports) {
 	            fields: this.getOptions('fields'),
 	            actions: this.getActions(),
 	            links: this.getLinks(),
-	            search: ''
+	            search: '',
+	            showSelect: this.getOptions('showSelect'),
+	            showSearch: this.getOptions('showSearch')
 	          }
 	        });
 	      }
 
 	      this.ui.table.$on('searchChange', function (e) {
-	        return _this2.onSearchChange(e.detail);
+	        return _this3.onSearchChange(e.detail);
 	      });
 	      this.ui.table.$on('goToPage', function (e) {
-	        return _this2.goToPage(e.detail);
+	        return _this3.goToPage(e.detail);
 	      });
 	      this.ui.table.$on('goToNextPage', function () {
-	        return _this2.goToNext();
+	        return _this3.goToNext();
 	      });
 	      this.ui.table.$on('goToPrevPage', function () {
-	        return _this2.goToPrev();
+	        return _this3.goToPrev();
 	      });
 	    }
 	  }, {
@@ -11668,10 +11947,10 @@ var notBulma = (function (exports) {
 	  }, {
 	    key: "setWorking",
 	    value: function setWorking(key, value) {
-	      var _this3 = this;
+	      var _this4 = this;
 
 	      this.stores.working.update(function (val) {
-	        notPath$1.set(':' + key, val, _this3.getHelpers(), value);
+	        notPath$1.set(key, val, _this4.getHelpers(), value);
 	        return val;
 	      });
 	      return this;
@@ -11679,7 +11958,7 @@ var notBulma = (function (exports) {
 	  }, {
 	    key: "getWorking",
 	    value: function getWorking(key, def) {
-	      var res = notPath$1.get(':' + key, this.working, this.getHelpers());
+	      var res = notPath$1.get(key, this.working, this.getHelpers());
 
 	      if (res === undefined) {
 	        return def;
@@ -11690,10 +11969,10 @@ var notBulma = (function (exports) {
 	  }, {
 	    key: "setState",
 	    value: function setState(key, value) {
-	      var _this4 = this;
+	      var _this5 = this;
 
 	      this.stores.state.update(function (val) {
-	        notPath$1.set(':' + key, val, _this4.getHelpers(), value);
+	        notPath$1.set(key, val, _this5.getHelpers(), value);
 	        return val;
 	      });
 	      return this;
@@ -11701,7 +11980,7 @@ var notBulma = (function (exports) {
 	  }, {
 	    key: "getState",
 	    value: function getState(key, def) {
-	      var res = notPath$1.get(':' + key, this.state, this.getHelpers());
+	      var res = notPath$1.get(key, this.state, this.getHelpers());
 
 	      if (res === undefined) {
 	        return def;
@@ -11712,13 +11991,13 @@ var notBulma = (function (exports) {
 	  }, {
 	    key: "setOptions",
 	    value: function setOptions(key, value) {
-	      notPath$1.set(':' + key, this.options, this.getHelpers(), value);
+	      notPath$1.set(key, this.options, this.getHelpers(), value);
 	      return this;
 	    }
 	  }, {
 	    key: "getOptions",
 	    value: function getOptions(key, def) {
-	      var res = notPath$1.get(':' + key, this.options, this.getHelpers());
+	      var res = notPath$1.get(key, this.options, this.getHelpers());
 
 	      if (res === undefined) {
 	        return def;
@@ -11736,7 +12015,7 @@ var notBulma = (function (exports) {
 	  }, {
 	    key: "resetFilter",
 	    value: function resetFilter() {
-	      this.setState({});
+	      this.setState('filter', {});
 	    }
 	  }, {
 	    key: "getFilter",
@@ -11971,19 +12250,19 @@ var notBulma = (function (exports) {
 	  }, {
 	    key: "getRowsCount",
 	    value: function getRowsCount() {
-	      var _this5 = this;
+	      var _this6 = this;
 
 	      var query = this.getDataInterface().setFilter(this.getFilter());
 	      return query['$' + this.getCountActionName()]().then(function (data) {
-	        _this5.updatePagination(data.count);
+	        _this6.updatePagination(data.count);
 	      }).catch(function (e) {
-	        _this5.error(e);
+	        _this6.error(e);
 	      });
 	    }
 	  }, {
 	    key: "updatePagination",
 	    value: function updatePagination(itemsCount) {
-	      var _this6 = this;
+	      var _this7 = this;
 
 	      this.log('update pagination', itemsCount);
 	      this.state.pagination.pages.list.splice(0, this.state.pagination.pages.list.length);
@@ -12004,7 +12283,7 @@ var notBulma = (function (exports) {
 	      this.stores.state.update(function (val) {
 	        var _val$pagination$pages;
 
-	        _this6.log('update pagination', val);
+	        _this7.log('update pagination', val);
 
 	        val.pagination.items.count = itemsCount;
 	        val.pagination.items.from = itemsFrom;
@@ -12012,7 +12291,7 @@ var notBulma = (function (exports) {
 	        val.pagination.pages.count = pagesCount;
 	        val.pagination.pages.from = pagesFrom;
 	        val.pagination.pages.to = pagesTo;
-	        val.pagination.pages.current = _this6.getPager().page;
+	        val.pagination.pages.current = _this7.getPager().page;
 
 	        (_val$pagination$pages = val.pagination.pages.list).splice.apply(_val$pagination$pages, [0, val.pagination.pages.list.length].concat(list));
 
@@ -12022,7 +12301,7 @@ var notBulma = (function (exports) {
 	  }, {
 	    key: "updateData",
 	    value: function updateData() {
-	      var _this7 = this;
+	      var _this8 = this;
 
 	      if (this.isLive()) {
 	        if (this.ifUpdating()) {
@@ -12037,9 +12316,9 @@ var notBulma = (function (exports) {
 
 	        if (this.getOptions('interface.combined', OPT_DEFAULT_COMBINED)) {
 	          this.loadData().then(function (data) {
-	            _this7.stores.filtered.update(function (val) {
-	              if (!_this7.getOptions('endless', false)) {
-	                _this7.clearFilteredData();
+	            _this8.stores.filtered.update(function (val) {
+	              if (!_this8.getOptions('endless', false)) {
+	                _this8.clearFilteredData();
 	              }
 
 	              if (Object.prototype.hasOwnProperty.call(data, 'list') && Array.isArray(data.list)) {
@@ -12051,13 +12330,13 @@ var notBulma = (function (exports) {
 	              return val;
 	            });
 
-	            _this7.setWorking('lastCount', data.count);
+	            _this8.setWorking('lastCount', data.count);
 	          }).then(function () {
-	            _this7.updatePagination(_this7.getWorking('lastCount'));
+	            _this8.updatePagination(_this8.getWorking('lastCount'));
 	          }).catch(this.error.bind(this)).then(this.setUpdated.bind(this));
 	        } else {
 	          this.loadData().then(function (data) {
-	            _this7.stores.filtered.update(function (val) {
+	            _this8.stores.filtered.update(function (val) {
 	              val.push.apply(val, toConsumableArray(data));
 	              return val;
 	            });
@@ -12078,7 +12357,7 @@ var notBulma = (function (exports) {
 	  }, {
 	    key: "processData",
 	    value: function processData() {
-	      var _this8 = this;
+	      var _this9 = this;
 
 	      var thatFilter = this.getFilter(); //this.getData('rows').__setPassive;
 
@@ -12086,12 +12365,12 @@ var notBulma = (function (exports) {
 
 	      if (typeof thatFilter !== 'undefined' && thatFilter !== null && typeof thatFilter.filterSearch !== 'undefined' && thatFilter.filterSearch !== null && thatFilter.filterSearch.length > 0) {
 	        this.stores.filtered.update(function (val) {
-	          val.splice.apply(val, [0, val.length].concat(toConsumableArray(_this8.data.raw.filter(_this8.testDataItem.bind(_this8)))));
+	          val.splice.apply(val, [0, val.length].concat(toConsumableArray(_this9.data.raw.filter(_this9.testDataItem.bind(_this9)))));
 	          return val;
 	        });
 	      } else {
 	        this.stores.filtered.update(function (val) {
-	          val.splice.apply(val, [0, val.length].concat(toConsumableArray(_this8.data.raw)));
+	          val.splice.apply(val, [0, val.length].concat(toConsumableArray(_this9.data.raw)));
 	          return val;
 	        });
 	      } ////sorter
@@ -12140,15 +12419,15 @@ var notBulma = (function (exports) {
 	  }, {
 	    key: "refineFiltered",
 	    value: function refineFiltered() {
-	      var _this9 = this;
+	      var _this10 = this;
 
 	      var result = [];
 	      this.data.filtered.forEach(function (item, index) {
 	        var refined = {};
 
-	        _this9.getOptions('fields').forEach(function (field) {
+	        _this10.getOptions('fields').forEach(function (field) {
 	          var preprocessed = null,
-	              val = notPath$1.get(field.path, item, _this9.getOptions('helpers'));
+	              val = notPath$1.get(field.path, item, _this10.getOptions('helpers'));
 
 	          if (Object.prototype.hasOwnProperty.call(field, OPT_FIELD_NAME_PRE_PROC)) {
 	            preprocessed = field[OPT_FIELD_NAME_PRE_PROC](val, item, index);
@@ -12271,11 +12550,11 @@ var notBulma = (function (exports) {
 	var iterators = {};
 
 	var ITERATOR = wellKnownSymbol('iterator');
-	var ArrayPrototype = Array.prototype;
+	var ArrayPrototype$1 = Array.prototype;
 
 	// check on default Array iterator
 	var isArrayIteratorMethod = function (it) {
-	  return it !== undefined && (iterators.Array === it || ArrayPrototype[ITERATOR] === it);
+	  return it !== undefined && (iterators.Array === it || ArrayPrototype$1[ITERATOR] === it);
 	};
 
 	var ITERATOR$1 = wellKnownSymbol('iterator');
@@ -19723,22 +20002,9 @@ var notBulma = (function (exports) {
 
 	defineProperty$1(Form$1, "validator", validator);
 
-	var UNSCOPABLES = wellKnownSymbol('unscopables');
-	var ArrayPrototype$1 = Array.prototype;
-
-	// Array.prototype[@@unscopables]
-	// https://tc39.github.io/ecma262/#sec-array.prototype-@@unscopables
-	if (ArrayPrototype$1[UNSCOPABLES] == undefined) {
-	  objectDefineProperty.f(ArrayPrototype$1, UNSCOPABLES, {
-	    configurable: true,
-	    value: objectCreate(null)
-	  });
-	}
-
-	// add a key to Array.prototype[@@unscopables]
-	var addToUnscopables = function (key) {
-	  ArrayPrototype$1[UNSCOPABLES][key] = true;
-	};
+	// `Symbol.iterator` well-known symbol
+	// https://tc39.github.io/ecma262/#sec-symbol.iterator
+	defineWellKnownSymbol('iterator');
 
 	var ARRAY_ITERATOR = 'Array Iterator';
 	var setInternalState$2 = internalState.set;
@@ -19787,35 +20053,133 @@ var notBulma = (function (exports) {
 	addToUnscopables('values');
 	addToUnscopables('entries');
 
-	var nativeJoin = [].join;
-
-	var ES3_STRINGS = indexedObject != Object;
-	var STRICT_METHOD$2 = arrayMethodIsStrict('join', ',');
-
-	// `Array.prototype.join` method
-	// https://tc39.github.io/ecma262/#sec-array.prototype.join
-	_export({ target: 'Array', proto: true, forced: ES3_STRINGS || !STRICT_METHOD$2 }, {
-	  join: function join(separator) {
-	    return nativeJoin.call(toIndexedObject(this), separator === undefined ? ',' : separator);
-	  }
-	});
-
 	var $map = arrayIteration.map;
 
 
 
 	var HAS_SPECIES_SUPPORT$2 = arrayMethodHasSpeciesSupport('map');
 	// FF49- issue
-	var USES_TO_LENGTH$4 = arrayMethodUsesToLength('map');
+	var USES_TO_LENGTH$5 = arrayMethodUsesToLength('map');
 
 	// `Array.prototype.map` method
 	// https://tc39.github.io/ecma262/#sec-array.prototype.map
 	// with adding support of @@species
-	_export({ target: 'Array', proto: true, forced: !HAS_SPECIES_SUPPORT$2 || !USES_TO_LENGTH$4 }, {
+	_export({ target: 'Array', proto: true, forced: !HAS_SPECIES_SUPPORT$2 || !USES_TO_LENGTH$5 }, {
 	  map: function map(callbackfn /* , thisArg */) {
 	    return $map(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);
 	  }
 	});
+
+	// `Array.prototype.{ reduce, reduceRight }` methods implementation
+	var createMethod$3 = function (IS_RIGHT) {
+	  return function (that, callbackfn, argumentsLength, memo) {
+	    aFunction$1(callbackfn);
+	    var O = toObject(that);
+	    var self = indexedObject(O);
+	    var length = toLength(O.length);
+	    var index = IS_RIGHT ? length - 1 : 0;
+	    var i = IS_RIGHT ? -1 : 1;
+	    if (argumentsLength < 2) while (true) {
+	      if (index in self) {
+	        memo = self[index];
+	        index += i;
+	        break;
+	      }
+	      index += i;
+	      if (IS_RIGHT ? index < 0 : length <= index) {
+	        throw TypeError('Reduce of empty array with no initial value');
+	      }
+	    }
+	    for (;IS_RIGHT ? index >= 0 : length > index; index += i) if (index in self) {
+	      memo = callbackfn(memo, self[index], index, O);
+	    }
+	    return memo;
+	  };
+	};
+
+	var arrayReduce = {
+	  // `Array.prototype.reduce` method
+	  // https://tc39.github.io/ecma262/#sec-array.prototype.reduce
+	  left: createMethod$3(false),
+	  // `Array.prototype.reduceRight` method
+	  // https://tc39.github.io/ecma262/#sec-array.prototype.reduceright
+	  right: createMethod$3(true)
+	};
+
+	var $reduce = arrayReduce.left;
+
+
+
+	var STRICT_METHOD$2 = arrayMethodIsStrict('reduce');
+	var USES_TO_LENGTH$6 = arrayMethodUsesToLength('reduce', { 1: 0 });
+
+	// `Array.prototype.reduce` method
+	// https://tc39.github.io/ecma262/#sec-array.prototype.reduce
+	_export({ target: 'Array', proto: true, forced: !STRICT_METHOD$2 || !USES_TO_LENGTH$6 }, {
+	  reduce: function reduce(callbackfn /* , initialValue */) {
+	    return $reduce(this, callbackfn, arguments.length, arguments.length > 1 ? arguments[1] : undefined);
+	  }
+	});
+
+	var HAS_SPECIES_SUPPORT$3 = arrayMethodHasSpeciesSupport('slice');
+	var USES_TO_LENGTH$7 = arrayMethodUsesToLength('slice', { ACCESSORS: true, 0: 0, 1: 2 });
+
+	var SPECIES$3 = wellKnownSymbol('species');
+	var nativeSlice = [].slice;
+	var max$2 = Math.max;
+
+	// `Array.prototype.slice` method
+	// https://tc39.github.io/ecma262/#sec-array.prototype.slice
+	// fallback for not array-like ES3 strings and DOM objects
+	_export({ target: 'Array', proto: true, forced: !HAS_SPECIES_SUPPORT$3 || !USES_TO_LENGTH$7 }, {
+	  slice: function slice(start, end) {
+	    var O = toIndexedObject(this);
+	    var length = toLength(O.length);
+	    var k = toAbsoluteIndex(start, length);
+	    var fin = toAbsoluteIndex(end === undefined ? length : end, length);
+	    // inline `ArraySpeciesCreate` for usage native `Array#slice` where it's possible
+	    var Constructor, result, n;
+	    if (isArray(O)) {
+	      Constructor = O.constructor;
+	      // cross-realm fallback
+	      if (typeof Constructor == 'function' && (Constructor === Array || isArray(Constructor.prototype))) {
+	        Constructor = undefined;
+	      } else if (isObject(Constructor)) {
+	        Constructor = Constructor[SPECIES$3];
+	        if (Constructor === null) Constructor = undefined;
+	      }
+	      if (Constructor === Array || Constructor === undefined) {
+	        return nativeSlice.call(O, k, fin);
+	      }
+	    }
+	    result = new (Constructor === undefined ? Array : Constructor)(max$2(fin - k, 0));
+	    for (n = 0; k < fin; k++, n++) if (k in O) createProperty(result, n, O[k]);
+	    result.length = n;
+	    return result;
+	  }
+	});
+
+	var defineProperty$6 = objectDefineProperty.f;
+
+	var FunctionPrototype = Function.prototype;
+	var FunctionPrototypeToString = FunctionPrototype.toString;
+	var nameRE = /^\s*function ([^ (]*)/;
+	var NAME = 'name';
+
+	// Function instances `.name` property
+	// https://tc39.github.io/ecma262/#sec-function-instances-name
+	if (descriptors && !(NAME in FunctionPrototype)) {
+	  defineProperty$6(FunctionPrototype, NAME, {
+	    configurable: true,
+	    get: function () {
+	      try {
+	        return FunctionPrototypeToString.call(this).match(nameRE)[1];
+	      } catch (error) {
+	        return '';
+	      }
+	    }
+	  });
+	}
 
 	var nativePromiseConstructor = global_1.Promise;
 
@@ -19824,14 +20188,14 @@ var notBulma = (function (exports) {
 	  return target;
 	};
 
-	var SPECIES$3 = wellKnownSymbol('species');
+	var SPECIES$4 = wellKnownSymbol('species');
 
 	var setSpecies = function (CONSTRUCTOR_NAME) {
 	  var Constructor = getBuiltIn(CONSTRUCTOR_NAME);
 	  var defineProperty = objectDefineProperty.f;
 
-	  if (descriptors && Constructor && !Constructor[SPECIES$3]) {
-	    defineProperty(Constructor, SPECIES$3, {
+	  if (descriptors && Constructor && !Constructor[SPECIES$4]) {
+	    defineProperty(Constructor, SPECIES$4, {
 	      configurable: true,
 	      get: function () { return this; }
 	    });
@@ -19883,19 +20247,19 @@ var notBulma = (function (exports) {
 	};
 	});
 
-	var SPECIES$4 = wellKnownSymbol('species');
+	var SPECIES$5 = wellKnownSymbol('species');
 
 	// `SpeciesConstructor` abstract operation
 	// https://tc39.github.io/ecma262/#sec-speciesconstructor
 	var speciesConstructor = function (O, defaultConstructor) {
 	  var C = anObject(O).constructor;
 	  var S;
-	  return C === undefined || (S = anObject(C)[SPECIES$4]) == undefined ? defaultConstructor : aFunction$1(S);
+	  return C === undefined || (S = anObject(C)[SPECIES$5]) == undefined ? defaultConstructor : aFunction$1(S);
 	};
 
 	var engineIsIos = /(iphone|ipod|ipad).*applewebkit/i.test(engineUserAgent);
 
-	var location = global_1.location;
+	var location$1 = global_1.location;
 	var set$1 = global_1.setImmediate;
 	var clear = global_1.clearImmediate;
 	var process$1 = global_1.process;
@@ -19927,7 +20291,7 @@ var notBulma = (function (exports) {
 
 	var post = function (id) {
 	  // old engines have not location.origin
-	  global_1.postMessage(id + '', location.protocol + '//' + location.host);
+	  global_1.postMessage(id + '', location$1.protocol + '//' + location$1.host);
 	};
 
 	// Node.js 0.9+ & IE10+ has setImmediate, otherwise:
@@ -19970,7 +20334,7 @@ var notBulma = (function (exports) {
 	    typeof postMessage == 'function' &&
 	    !global_1.importScripts &&
 	    !fails(post) &&
-	    location.protocol !== 'file:'
+	    location$1.protocol !== 'file:'
 	  ) {
 	    defer = post;
 	    global_1.addEventListener('message', listener, false);
@@ -20128,7 +20492,7 @@ var notBulma = (function (exports) {
 
 
 
-	var SPECIES$5 = wellKnownSymbol('species');
+	var SPECIES$6 = wellKnownSymbol('species');
 	var PROMISE = 'Promise';
 	var getInternalState$3 = internalState.get;
 	var setInternalState$3 = internalState.set;
@@ -20171,7 +20535,7 @@ var notBulma = (function (exports) {
 	    exec(function () { /* empty */ }, function () { /* empty */ });
 	  };
 	  var constructor = promise.constructor = {};
-	  constructor[SPECIES$5] = FakePromise;
+	  constructor[SPECIES$6] = FakePromise;
 	  return !(promise.then(function () { /* empty */ }) instanceof FakePromise);
 	});
 
@@ -20477,6 +20841,140 @@ var notBulma = (function (exports) {
 	  }
 	});
 
+	var charAt$1 = stringMultibyte.charAt;
+
+	// `AdvanceStringIndex` abstract operation
+	// https://tc39.github.io/ecma262/#sec-advancestringindex
+	var advanceStringIndex = function (S, index, unicode) {
+	  return index + (unicode ? charAt$1(S, index).length : 1);
+	};
+
+	var max$3 = Math.max;
+	var min$3 = Math.min;
+	var floor$1 = Math.floor;
+	var SUBSTITUTION_SYMBOLS = /\$([$&'`]|\d\d?|<[^>]*>)/g;
+	var SUBSTITUTION_SYMBOLS_NO_NAMED = /\$([$&'`]|\d\d?)/g;
+
+	var maybeToString = function (it) {
+	  return it === undefined ? it : String(it);
+	};
+
+	// @@replace logic
+	fixRegexpWellKnownSymbolLogic('replace', 2, function (REPLACE, nativeReplace, maybeCallNative, reason) {
+	  var REGEXP_REPLACE_SUBSTITUTES_UNDEFINED_CAPTURE = reason.REGEXP_REPLACE_SUBSTITUTES_UNDEFINED_CAPTURE;
+	  var REPLACE_KEEPS_$0 = reason.REPLACE_KEEPS_$0;
+	  var UNSAFE_SUBSTITUTE = REGEXP_REPLACE_SUBSTITUTES_UNDEFINED_CAPTURE ? '$' : '$0';
+
+	  return [
+	    // `String.prototype.replace` method
+	    // https://tc39.github.io/ecma262/#sec-string.prototype.replace
+	    function replace(searchValue, replaceValue) {
+	      var O = requireObjectCoercible(this);
+	      var replacer = searchValue == undefined ? undefined : searchValue[REPLACE];
+	      return replacer !== undefined
+	        ? replacer.call(searchValue, O, replaceValue)
+	        : nativeReplace.call(String(O), searchValue, replaceValue);
+	    },
+	    // `RegExp.prototype[@@replace]` method
+	    // https://tc39.github.io/ecma262/#sec-regexp.prototype-@@replace
+	    function (regexp, replaceValue) {
+	      if (
+	        (!REGEXP_REPLACE_SUBSTITUTES_UNDEFINED_CAPTURE && REPLACE_KEEPS_$0) ||
+	        (typeof replaceValue === 'string' && replaceValue.indexOf(UNSAFE_SUBSTITUTE) === -1)
+	      ) {
+	        var res = maybeCallNative(nativeReplace, regexp, this, replaceValue);
+	        if (res.done) return res.value;
+	      }
+
+	      var rx = anObject(regexp);
+	      var S = String(this);
+
+	      var functionalReplace = typeof replaceValue === 'function';
+	      if (!functionalReplace) replaceValue = String(replaceValue);
+
+	      var global = rx.global;
+	      if (global) {
+	        var fullUnicode = rx.unicode;
+	        rx.lastIndex = 0;
+	      }
+	      var results = [];
+	      while (true) {
+	        var result = regexpExecAbstract(rx, S);
+	        if (result === null) break;
+
+	        results.push(result);
+	        if (!global) break;
+
+	        var matchStr = String(result[0]);
+	        if (matchStr === '') rx.lastIndex = advanceStringIndex(S, toLength(rx.lastIndex), fullUnicode);
+	      }
+
+	      var accumulatedResult = '';
+	      var nextSourcePosition = 0;
+	      for (var i = 0; i < results.length; i++) {
+	        result = results[i];
+
+	        var matched = String(result[0]);
+	        var position = max$3(min$3(toInteger(result.index), S.length), 0);
+	        var captures = [];
+	        // NOTE: This is equivalent to
+	        //   captures = result.slice(1).map(maybeToString)
+	        // but for some reason `nativeSlice.call(result, 1, result.length)` (called in
+	        // the slice polyfill when slicing native arrays) "doesn't work" in safari 9 and
+	        // causes a crash (https://pastebin.com/N21QzeQA) when trying to debug it.
+	        for (var j = 1; j < result.length; j++) captures.push(maybeToString(result[j]));
+	        var namedCaptures = result.groups;
+	        if (functionalReplace) {
+	          var replacerArgs = [matched].concat(captures, position, S);
+	          if (namedCaptures !== undefined) replacerArgs.push(namedCaptures);
+	          var replacement = String(replaceValue.apply(undefined, replacerArgs));
+	        } else {
+	          replacement = getSubstitution(matched, S, position, captures, namedCaptures, replaceValue);
+	        }
+	        if (position >= nextSourcePosition) {
+	          accumulatedResult += S.slice(nextSourcePosition, position) + replacement;
+	          nextSourcePosition = position + matched.length;
+	        }
+	      }
+	      return accumulatedResult + S.slice(nextSourcePosition);
+	    }
+	  ];
+
+	  // https://tc39.github.io/ecma262/#sec-getsubstitution
+	  function getSubstitution(matched, str, position, captures, namedCaptures, replacement) {
+	    var tailPos = position + matched.length;
+	    var m = captures.length;
+	    var symbols = SUBSTITUTION_SYMBOLS_NO_NAMED;
+	    if (namedCaptures !== undefined) {
+	      namedCaptures = toObject(namedCaptures);
+	      symbols = SUBSTITUTION_SYMBOLS;
+	    }
+	    return nativeReplace.call(replacement, symbols, function (match, ch) {
+	      var capture;
+	      switch (ch.charAt(0)) {
+	        case '$': return '$';
+	        case '&': return matched;
+	        case '`': return str.slice(0, position);
+	        case "'": return str.slice(tailPos);
+	        case '<':
+	          capture = namedCaptures[ch.slice(1, -1)];
+	          break;
+	        default: // \d\d?
+	          var n = +ch;
+	          if (n === 0) return match;
+	          if (n > m) {
+	            var f = floor$1(n / 10);
+	            if (f === 0) return match;
+	            if (f <= m) return captures[f - 1] === undefined ? ch.charAt(1) : captures[f - 1] + ch.charAt(1);
+	            return match;
+	          }
+	          capture = captures[n - 1];
+	      }
+	      return capture === undefined ? '' : capture;
+	    });
+	  }
+	});
+
 	var ITERATOR$5 = wellKnownSymbol('iterator');
 	var TO_STRING_TAG$3 = wellKnownSymbol('toStringTag');
 	var ArrayValues = es_array_iterator.values;
@@ -20504,6 +21002,2673 @@ var notBulma = (function (exports) {
 	    }
 	  }
 	}
+
+	function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray$1(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+	function _unsupportedIterableToArray$1(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray$1(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$1(o, minLen); }
+
+	function _arrayLikeToArray$1(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+	/*
+	https://github.com/TehShrike/is-mergeable-object
+
+	Included for convinience only. All rights belongs to their authors and etc.
+	start of my code marked.
+
+	*/
+	var isMergeableObject = function isMergeableObject(value) {
+	  return isNonNullObject(value) && !isSpecial(value);
+	};
+
+	function isNonNullObject(value) {
+	  return !!value && _typeof_1(value) === 'object';
+	}
+
+	function isSpecial(value) {
+	  var stringValue = Object.prototype.toString.call(value);
+	  return stringValue === '[object RegExp]' || stringValue === '[object Date]' || isReactElement(value);
+	} // see https://github.com/facebook/react/blob/b5ac963fb791d1298e7f396236383bc955f916c1/src/isomorphic/classic/element/ReactElement.js#L21-L25
+
+
+	var canUseSymbol = typeof Symbol === 'function' && Symbol.for;
+	var REACT_ELEMENT_TYPE = canUseSymbol ? Symbol.for('react.element') : 0xeac7;
+
+	function isReactElement(value) {
+	  return value.$$typeof === REACT_ELEMENT_TYPE;
+	}
+	/*
+	https://github.com/KyleAMathews/deepmerge
+
+	The MIT License (MIT)
+
+	Copyright (c) 2012 Nicholas Fisher
+
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in
+	all copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	THE SOFTWARE.
+	*/
+
+
+	function emptyTarget(val) {
+	  return Array.isArray(val) ? [] : {};
+	}
+
+	function cloneUnlessOtherwiseSpecified(value, optionsArgument) {
+	  var clone = !optionsArgument || optionsArgument.clone !== false;
+	  return clone && isMergeableObject(value) ? deepmerge(emptyTarget(value), value, optionsArgument) : value;
+	}
+
+	function defaultArrayMerge(target, source, optionsArgument) {
+	  return target.concat(source).map(function (element) {
+	    return cloneUnlessOtherwiseSpecified(element, optionsArgument);
+	  });
+	}
+
+	function mergeObject(target, source, optionsArgument) {
+	  var destination = {};
+
+	  if (isMergeableObject(target)) {
+	    Object.keys(target).forEach(function (key) {
+	      destination[key] = cloneUnlessOtherwiseSpecified(target[key], optionsArgument);
+	    });
+	  }
+
+	  Object.keys(source).forEach(function (key) {
+	    if (!isMergeableObject(source[key]) || !target[key]) {
+	      destination[key] = cloneUnlessOtherwiseSpecified(source[key], optionsArgument);
+	    } else {
+	      destination[key] = deepmerge(target[key], source[key], optionsArgument);
+	    }
+	  });
+	  return destination;
+	}
+
+	function deepmerge(target, source, optionsArgument) {
+	  var sourceIsArray = Array.isArray(source);
+	  var targetIsArray = Array.isArray(target);
+	  var options = optionsArgument || {
+	    arrayMerge: defaultArrayMerge
+	  };
+	  var sourceAndTargetTypesMatch = sourceIsArray === targetIsArray;
+
+	  if (!sourceAndTargetTypesMatch) {
+	    return cloneUnlessOtherwiseSpecified(source, optionsArgument);
+	  } else if (sourceIsArray) {
+	    var arrayMerge = options.arrayMerge || defaultArrayMerge;
+	    return arrayMerge(target, source, optionsArgument);
+	  } else {
+	    return mergeObject(target, source, optionsArgument);
+	  }
+	}
+
+	deepmerge.all = function deepmergeAll(array, optionsArgument) {
+	  if (!Array.isArray(array)) {
+	    throw new Error('first argument should be an array');
+	  }
+
+	  return array.reduce(function (prev, next) {
+	    return deepmerge(prev, next, optionsArgument);
+	  }, {});
+	};
+
+	var notCommon = /*#__PURE__*/function () {
+	  function notCommon() {
+	    classCallCheck(this, notCommon);
+	  }
+
+	  createClass(notCommon, null, [{
+	    key: "isError",
+	    value: function isError(e) {
+	      return e instanceof Error;
+	    }
+	  }, {
+	    key: "mute",
+	    value: function mute() {
+	      this.ENV_TYPE = 'production';
+	    }
+	  }, {
+	    key: "pad",
+	    value: function pad(n) {
+	      return n < 10 ? '0' + n : n;
+	    } //Проверка является ли переменная функцией.
+
+	  }, {
+	    key: "isFunc",
+	    value: function isFunc(func) {
+	      return typeof func === 'function';
+	    } //Проверка является ли переменная массивом
+
+	  }, {
+	    key: "isArray",
+	    value: function isArray(data) {
+	      return _typeof_1(data) == "object" && data instanceof Array;
+	    }
+	  }, {
+	    key: "localIsoDate",
+	    value: function localIsoDate(date) {
+	      date = date || new Date();
+	      var localIsoString = date.getFullYear() + '-' + this.pad(date.getMonth() + 1) + '-' + this.pad(date.getDate()) + 'T' + this.pad(date.getHours()) + ':' + this.pad(date.getMinutes()) + ':' + this.pad(date.getSeconds());
+	      return localIsoString;
+	    }
+	  }, {
+	    key: "getToday",
+	    value: function getToday() {
+	      var today = new Date();
+	      var date = today.getFullYear() + '-' + this.pad(today.getMonth() + 1) + '-' + this.pad(today.getDate());
+	      return date;
+	    }
+	  }, {
+	    key: "logMsg",
+	    value: function logMsg() {
+	      var _window$this$LOG;
+
+	      var now = this.localIsoDate(); // eslint-disable-next-line no-console
+
+	      (_window$this$LOG = window[this.LOG]).log.apply(_window$this$LOG, ["[".concat(now, "]: ")].concat(Array.prototype.slice.call(arguments)));
+	    }
+	  }, {
+	    key: "log",
+	    value: function log() {
+	      this.logMsg.apply(this, arguments);
+	    } //Генерация метода вывода сообщений в консоль с указанием префикса.
+
+	  }, {
+	    key: "genLogMsg",
+	    value: function genLogMsg(prefix) {
+	      return function () {
+	        var _window$notCommon$LOG;
+
+	        var now = notCommon.localIsoDate(); // eslint-disable-next-line no-console
+
+	        (_window$notCommon$LOG = window[notCommon.LOG]).log.apply(_window$notCommon$LOG, ["[".concat(now, "]: ").concat(prefix, "::")].concat(Array.prototype.slice.call(arguments)));
+	      };
+	    }
+	    /**
+	     * Определяет является ли окружение окружением разработки
+	     * @returns  {boolean} true если это запущено в окружении разработки
+	     **/
+
+	  }, {
+	    key: "isDev",
+	    value: function isDev() {
+	      return this.ENV_TYPE === this.DEV_ENV;
+	    }
+	  }, {
+	    key: "debug",
+	    value: function debug() {
+	      if (this.isDev()) {
+	        return this.logMsg.apply(this, arguments);
+	      } else {
+	        return this.NOOP;
+	      }
+	    }
+	  }, {
+	    key: "genLogDebug",
+	    value: function genLogDebug(prefix) {
+	      if (this.isDev()) {
+	        return this.genLogMsg(prefix);
+	      } else {
+	        return this.NOOP;
+	      }
+	    }
+	  }, {
+	    key: "error",
+	    value: function error() {
+	      this.logError.apply(this, arguments);
+	    } //Функция вывода сообщения об ошибке
+
+	  }, {
+	    key: "logError",
+	    value: function logError() {
+	      var _window$this$LOG2;
+
+	      var now = this.localIsoDate(); // eslint-disable-next-line no-console
+
+	      (_window$this$LOG2 = window[this.LOG]).error.apply(_window$this$LOG2, ["[".concat(now, "]: ")].concat(Array.prototype.slice.call(arguments)));
+	    }
+	  }, {
+	    key: "genLogError",
+	    value: function genLogError(prefix) {
+	      return function () {
+	        var _window$notCommon$LOG2;
+
+	        var now = notCommon.localIsoDate(); // eslint-disable-next-line no-console
+
+	        (_window$notCommon$LOG2 = window[notCommon.LOG]).error.apply(_window$notCommon$LOG2, ["[".concat(now, "]: ").concat(prefix, "::")].concat(Array.prototype.slice.call(arguments)));
+	      };
+	    }
+	  }, {
+	    key: "report",
+	    value: function report(e) {
+	      if (this.getApp() && this.getApp().getOptions('services.errorReporter')) {
+	        var reporter = this.getApp().getOptions('services.errorReporter');
+
+	        if (reporter && reporter.report) {
+	          reporter.report(e);
+	        }
+	      } else {
+	        if (!this.get('production')) {
+	          this.error.apply(this, arguments);
+	        }
+	      }
+	    }
+	  }, {
+	    key: "trace",
+	    value: function trace() {
+	      if (!this.get('production')) {
+	        this.trace.apply(this, arguments);
+	      }
+	    }
+	  }, {
+	    key: "capitalizeFirstLetter",
+	    value: function capitalizeFirstLetter(name) {
+	      return name.charAt(0).toUpperCase() + name.slice(1);
+	    }
+	  }, {
+	    key: "lowerFirstLetter",
+	    value: function lowerFirstLetter(string) {
+	      return string.charAt(0).toLowerCase() + string.slice(1);
+	    }
+	  }, {
+	    key: "escapeHtml",
+	    value: function escapeHtml(unsafe) {
+	      return unsafe.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+	    }
+	  }, {
+	    key: "startApp",
+	    value: function startApp(starter) {
+	      document.addEventListener('DOMContentLoaded', starter);
+	    }
+	  }, {
+	    key: "getApp",
+	    value: function getApp() {
+	      return this.get('app');
+	    }
+	  }, {
+	    key: "extendAppConfig",
+	    value: function extendAppConfig(conf, conf2) {
+	      return this.deepMerge(conf, conf2);
+	    }
+	  }, {
+	    key: "absorbModule",
+	    value: function absorbModule(defaultConf, mod) {
+	      for (var prop in mod) {
+	        if (prop === 'manifest') {
+	          defaultConf = this.extendAppConfig(defaultConf, mod.manifest);
+	        } else {
+	          window[prop] = mod[prop];
+	        }
+	      }
+
+	      return defaultConf;
+	    }
+	  }, {
+	    key: "defineIfNotExists",
+	    value: function defineIfNotExists(obj, key, defaultValue) {
+	      if (!Object.prototype.hasOwnProperty.call(obj, key)) {
+	        obj[key] = defaultValue;
+	      }
+	    }
+	  }, {
+	    key: "register",
+	    value: function register(key, val) {
+	      this.registry[key] = val;
+	    }
+	  }, {
+	    key: "get",
+	    value: function get(key) {
+	      return Object.prototype.hasOwnProperty.call(this.registry, key) ? this.registry[key] : null;
+	    }
+	  }, {
+	    key: "moveItem",
+	    value: function moveItem(array, old_index, new_index) {
+	      if (new_index >= array.length) {
+	        var k = new_index - array.length;
+
+	        while (k-- + 1) {
+	          array.push(undefined);
+	        }
+	      }
+
+	      array.splice(new_index, 0, array.splice(old_index, 1)[0]);
+	    }
+	  }, {
+	    key: "stripProxy",
+	    value: function stripProxy(obj) {
+	      if (typeof obj !== 'undefined' && obj !== null) {
+	        if (obj.isProxy) {
+	          if (Array.isArray(obj)) {
+	            obj = Array.from(obj);
+	          } else {
+	            obj = Object.assign({}, obj);
+	          }
+
+	          for (var t in obj) {
+	            if (Object.prototype.hasOwnProperty.call(obj, t)) {
+	              obj[t] = this.stripProxy(obj[t]);
+	            }
+	          }
+	        }
+	      }
+
+	      return obj;
+	    }
+	  }, {
+	    key: "pipe",
+	    value: function pipe(data
+	    /* feed data */
+	    , funcs
+	    /* functions array */
+	    ) {
+	      var result;
+
+	      var _iterator = _createForOfIteratorHelper(funcs),
+	          _step;
+
+	      try {
+	        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+	          var func = _step.value;
+	          result = func(result || data);
+	        }
+	      } catch (err) {
+	        _iterator.e(err);
+	      } finally {
+	        _iterator.f();
+	      }
+
+	      return result;
+	    }
+	  }, {
+	    key: "getAPI",
+	    value: function getAPI(type) {
+	      return this.getManager() ? this.getManager().getAPI(type) : null;
+	    }
+	  }, {
+	    key: "setManager",
+	    value: function setManager(v) {
+	      this.MANAGER = v;
+	    }
+	  }, {
+	    key: "getManager",
+	    value: function getManager() {
+	      return this.MANAGER;
+	    }
+	  }, {
+	    key: "getJSON",
+	    value: function getJSON(url) {
+	      return fetch(url).then(function (response) {
+	        return response.json();
+	      });
+	    }
+	  }]);
+
+	  return notCommon;
+	}();
+
+	defineProperty$1(notCommon, "MANAGER", null);
+
+	defineProperty$1(notCommon, "LOG", 'console');
+
+	defineProperty$1(notCommon, "deepMerge", deepmerge);
+
+	defineProperty$1(notCommon, "TZ_OFFSET", new Date().getTimezoneOffset() / 60 * -1);
+
+	defineProperty$1(notCommon, "DEV_ENV", 'production');
+
+	defineProperty$1(notCommon, "ENV_TYPE", window.NOT_ENV_TYPE ? window.NOT_ENV_TYPE : notCommon.DEV_ENV);
+
+	defineProperty$1(notCommon, "NOOP", function () {});
+
+	defineProperty$1(notCommon, "registry", {});
+
+	// @@match logic
+	fixRegexpWellKnownSymbolLogic('match', 1, function (MATCH, nativeMatch, maybeCallNative) {
+	  return [
+	    // `String.prototype.match` method
+	    // https://tc39.github.io/ecma262/#sec-string.prototype.match
+	    function match(regexp) {
+	      var O = requireObjectCoercible(this);
+	      var matcher = regexp == undefined ? undefined : regexp[MATCH];
+	      return matcher !== undefined ? matcher.call(regexp, O) : new RegExp(regexp)[MATCH](String(O));
+	    },
+	    // `RegExp.prototype[@@match]` method
+	    // https://tc39.github.io/ecma262/#sec-regexp.prototype-@@match
+	    function (regexp) {
+	      var res = maybeCallNative(nativeMatch, regexp, this);
+	      if (res.done) return res.value;
+
+	      var rx = anObject(regexp);
+	      var S = String(this);
+
+	      if (!rx.global) return regexpExecAbstract(rx, S);
+
+	      var fullUnicode = rx.unicode;
+	      rx.lastIndex = 0;
+	      var A = [];
+	      var n = 0;
+	      var result;
+	      while ((result = regexpExecAbstract(rx, S)) !== null) {
+	        var matchStr = String(result[0]);
+	        A[n] = matchStr;
+	        if (matchStr === '') rx.lastIndex = advanceStringIndex(S, toLength(rx.lastIndex), fullUnicode);
+	        n++;
+	      }
+	      return n === 0 ? null : A;
+	    }
+	  ];
+	});
+
+	function _createSuper$3(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$3(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+
+	function _isNativeReflectConstruct$3() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+	var META_METHOD_INIT = Symbol('init'),
+	    META_DATA = Symbol('data'),
+	    META_WORKING = Symbol('working'),
+	    META_OPTIONS = Symbol('options');
+
+	var notBase = /*#__PURE__*/function (_EventEmitter) {
+	  inherits(notBase, _EventEmitter);
+
+	  var _super = _createSuper$3(notBase);
+
+	  function notBase(input) {
+	    var _this;
+
+	    classCallCheck(this, notBase);
+
+	    _this = _super.call(this);
+	    _this[META_DATA] = {};
+	    _this[META_WORKING] = {};
+	    _this[META_OPTIONS] = {};
+
+	    _this[META_METHOD_INIT](input);
+
+	    return possibleConstructorReturn(_this, assertThisInitialized(_this));
+	  }
+
+	  createClass(notBase, [{
+	    key: META_METHOD_INIT,
+	    value: function value(input) {
+	      if (!input) {
+	        input = {};
+	      }
+
+	      if (Object.prototype.hasOwnProperty.call(input, 'data')) {
+	        this.setData(input.data);
+	      }
+
+	      if (Object.prototype.hasOwnProperty.call(input, 'working')) {
+	        this.setWorking(input.working);
+	      }
+
+	      if (Object.prototype.hasOwnProperty.call(input, 'options')) {
+	        this.setOptions(input.options);
+	      }
+
+	      this.log = notCommon.genLogMsg(this.getWorking('name'));
+	      this.info = this.log;
+	      this.debug = notCommon.genLogDebug(this.getWorking('name'));
+	      this.error = notCommon.genLogError(this.getWorking('name'));
+	    }
+	  }, {
+	    key: "setCommon",
+	    value: function setCommon(what, args) {
+	      switch (args.length) {
+	        case 1:
+	          {
+	            /* set collection */
+	            what = args[0];
+	            break;
+	          }
+
+	        case 2:
+	          {
+	            /* set collection element */
+	            notPath$1.set(args[0]
+	            /* path */
+	            , what
+	            /* collection */
+	            , undefined
+	            /* helpers */
+	            , args[1]
+	            /* value */
+	            );
+	            break;
+	          }
+	      }
+
+	      return this;
+	    }
+	  }, {
+	    key: "getCommon",
+	    value: function getCommon(what, args) {
+	      switch (args.length) {
+	        /* if we want get data by path */
+	        case 1:
+	          {
+	            return notPath$1.get(args[0], what);
+	          }
+
+	        /* if we want get data by path with default value */
+
+	        case 2:
+	          {
+	            var res = notPath$1.get(args[0], what);
+
+	            if (res === undefined) {
+	              /* no data, return default value */
+	              return args[1];
+	            } else {
+	              /* data, return it */
+	              return res;
+	            }
+	          }
+
+	        /* return full collection */
+
+	        default:
+	          {
+	            return what;
+	          }
+	      }
+	    }
+	    /*
+	    	CORE OBJECT
+	    		DATA - information
+	    		OPTIONS - how to work
+	    		WORKING - temporarily generated in proccess
+	    */
+
+	  }, {
+	    key: "setData",
+	    value: function setData() {
+	      if (arguments.length === 1) {
+	        this[META_DATA] = arguments[0];
+	      } else {
+	        this.setCommon(this.getData(), arguments);
+	      }
+
+	      this.emit('change');
+	      return this;
+	    }
+	  }, {
+	    key: "getData",
+	    value: function getData() {
+	      return this.getCommon(this[META_DATA], arguments);
+	    }
+	  }, {
+	    key: "setOptions",
+	    value: function setOptions() {
+	      if (arguments.length === 1) {
+	        this[META_OPTIONS] = arguments[0];
+	      } else {
+	        this.setCommon(this.getOptions(), arguments);
+	      }
+
+	      return this;
+	    }
+	  }, {
+	    key: "getOptions",
+	    value: function getOptions() {
+	      return this.getCommon(this[META_OPTIONS], arguments);
+	    }
+	  }, {
+	    key: "setWorking",
+	    value: function setWorking() {
+	      if (arguments.length === 1) {
+	        this[META_WORKING] = arguments[0];
+	      } else {
+	        this.setCommon(this.getWorking(), arguments);
+	      }
+
+	      return this;
+	    }
+	  }, {
+	    key: "getWorking",
+	    value: function getWorking() {
+	      return this.getCommon(this[META_WORKING], arguments);
+	    }
+	  }, {
+	    key: "report",
+	    value: function report() {
+	      if (notCommon.report) {
+	        notCommon.report.apply(notCommon, [this.getWorking('name')].concat(Array.prototype.slice.call(arguments)));
+	      }
+	    }
+	  }, {
+	    key: "getApp",
+	    value: function getApp() {
+	      return notCommon.getApp();
+	    }
+	  }]);
+
+	  return notBase;
+	}(EventEmitter);
+
+	function _createSuper$4(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$4(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+
+	function _isNativeReflectConstruct$4() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+	var OPT_MODE_HISTORY = Symbol('history'),
+	    OPT_MODE_HASH = Symbol('hash'),
+	    OPT_DEFAULT_CHECK_INTERVAL = 50;
+
+	var notRouter = /*#__PURE__*/function (_notBase) {
+	  inherits(notRouter, _notBase);
+
+	  var _super = _createSuper$4(notRouter);
+
+	  function notRouter() {
+	    var _this;
+
+	    classCallCheck(this, notRouter);
+
+	    _this = _super.call(this, {
+	      working: {
+	        routes: [],
+	        mode: OPT_MODE_HISTORY,
+	        root: '/',
+	        //always in slashes /user/, /, /input/. and no /user or input/level
+	        initialized: false
+	      }
+	    });
+	    return possibleConstructorReturn(_this, assertThisInitialized(_this));
+	  }
+
+	  createClass(notRouter, [{
+	    key: "history",
+	    value: function history() {
+	      this.setWorking('mode', OPT_MODE_HISTORY);
+	    }
+	  }, {
+	    key: "hash",
+	    value: function hash() {
+	      this.setWorking('mode', OPT_MODE_HASH);
+	    }
+	  }, {
+	    key: "setRoot",
+	    value: function setRoot(root) {
+	      this.setWorking('root', root && root !== '/' ? '/' + this.clearSlashes(root) + '/' : '/');
+	      return this;
+	    }
+	  }, {
+	    key: "clearSlashes",
+	    value: function clearSlashes(path) {
+	      //first and last slashes removal
+	      return path.toString().replace(/\/$/, '').replace(/^\//, '');
+	    }
+	  }, {
+	    key: "add",
+	    value: function add(re, handler) {
+	      if (typeof re == 'function') {
+	        handler = re;
+	        re = '';
+	      }
+
+	      var rule = {
+	        re: re,
+	        handler: handler
+	      };
+	      this.getWorking('routes').push(rule);
+	      return this;
+	    }
+	  }, {
+	    key: "addList",
+	    value: function addList(list) {
+	      for (var t in list) {
+	        this.add(t, list[t]);
+	      }
+
+	      return this;
+	    }
+	  }, {
+	    key: "remove",
+	    value: function remove(param) {
+	      for (var i = 0, r; i < this.getWorking('routes').length, r = this.getWorking('routes')[i]; i++) {
+	        if (r.handler === param || r.re === param) {
+	          this.getWorking('routes').splice(i, 1);
+	          return this;
+	        }
+	      }
+
+	      return this;
+	    }
+	  }, {
+	    key: "flush",
+	    value: function flush() {
+	      this.setWorking({
+	        routes: [],
+	        mode: OPT_MODE_HISTORY,
+	        root: '/'
+	      });
+	      return this;
+	    }
+	  }, {
+	    key: "isInitialized",
+	    value: function isInitialized() {
+	      return this.getWorking('initialized');
+	    }
+	  }, {
+	    key: "setInitialized",
+	    value: function setInitialized() {
+	      var val = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+	      return this.setWorking('initialized', val);
+	    }
+	  }, {
+	    key: "getFragment",
+	    value: function getFragment() {
+	      var fragment = '';
+
+	      if (this.getWorking('mode') === OPT_MODE_HISTORY) {
+	        if (!location) return '';
+	        fragment = this.clearSlashes(decodeURI(location.pathname + location.search));
+	        fragment = fragment.replace(/\?(.*)$/, '');
+	        fragment = this.getWorking('root') != '/' ? fragment.replace(this.getWorking('root'), '') : fragment;
+	      } else {
+	        if (!window) return '';
+	        var match = window.location.href.match(/#(.*)$/);
+	        fragment = match ? match[1] : '';
+	      }
+
+	      return this.clearSlashes(fragment);
+	    }
+	  }, {
+	    key: "checkLocation",
+	    value: function checkLocation() {
+	      var current = this.getWorking('current'),
+	          fragment = this.getFragment(),
+	          init = this.isInitialized();
+
+	      if (current !== fragment || !init) {
+	        this.setWorking('current', fragment);
+	        this.check(fragment);
+	        this.setInitialized(true);
+	      }
+	    }
+	  }, {
+	    key: "hrefClick",
+	    value: function hrefClick() {//console.log(...arguments);
+	    }
+	  }, {
+	    key: "getRoot",
+	    value: function getRoot() {
+	      return this.getWorking('root');
+	    }
+	  }, {
+	    key: "listen",
+	    value: function listen() {
+	      var loopInterval = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : OPT_DEFAULT_CHECK_INTERVAL;
+	      this.setWorking('current', 'notInitialized');
+	      clearInterval(this.getWorking('interval'));
+	      this.setWorking('interval', setInterval(this.checkLocation.bind(this), loopInterval));
+	      window.addEventListener('popstate', this.hrefClick.bind(this));
+	      return this;
+	    }
+	  }, {
+	    key: "check",
+	    value: function check(f) {
+	      var fragment = f || this.getFragment(),
+	          failBack = null;
+
+	      for (var i = 0; i < this.getWorking('routes').length; i++) {
+	        var path = this.getWorking('root') + this.getWorking('routes')[i].re,
+	            fullRE = this.clearSlashes(decodeURI(path)),
+	            match = fragment.match(fullRE);
+
+	        if (match && match.length) {
+	          if (fullRE === '') {
+	            match.shift();
+	            failBack = {
+	              route: this.getWorking('routes')[i],
+	              match: match
+	            };
+	          } else {
+	            match.shift();
+	            this.getWorking('routes')[i].handler.apply(this.host || {}, match);
+	            this.emit('afterRoute', this.getWorking('routes')[i]);
+	            return this;
+	          }
+	        }
+	      }
+
+	      if (failBack) {
+	        failBack.route.handler.apply(this.host || {}, failBack.match);
+	        this.emit('afterRoute', failBack.route);
+	      }
+
+	      return this;
+	    }
+	  }, {
+	    key: "navigate",
+	    value: function navigate(path) {
+	      path = path ? path : '';
+
+	      switch (this.getWorking('mode')) {
+	        case OPT_MODE_HISTORY:
+	          {
+	            //console.log('push state', this.getFullRoute(path));
+	            history.pushState(null, null, this.getFullRoute(path));
+	            break;
+	          }
+
+	        case OPT_MODE_HASH:
+	          {
+	            window.location.href.match(/#(.*)$/);
+	            window.location.href = window.location.href.replace(/#(.*)$/, '') + '#' + path;
+	            break;
+	          }
+	      }
+
+	      return this;
+	    }
+	  }, {
+	    key: "getFullRoute",
+	    value: function getFullRoute() {
+	      var path = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+	      return this.getWorking('root') + this.clearSlashes(path);
+	    }
+	  }, {
+	    key: "getAllLinks",
+	    value: function getAllLinks() {
+	      var allElements = document.body.querySelectorAll('a');
+	      var list = [];
+
+	      for (var j = 0; j < allElements.length; j++) {
+	        for (var i = 0, atts = allElements[j].attributes, n = atts.length; i < n; i++) {
+	          if (atts[i].nodeName.indexOf('n-href') === 0) {
+	            list.push(allElements[j]);
+	            break;
+	          }
+	        }
+	      }
+
+	      return list;
+	    }
+	  }, {
+	    key: "reRouteExisted",
+	    value: function reRouteExisted() {
+	      var list = this.getAllLinks();
+
+	      for (var t = 0; t < list.length; t++) {
+	        this.initRerouting(list[t], list[t].getAttribute('n-href'));
+	      }
+
+	      return this;
+	    }
+	  }, {
+	    key: "initRerouting",
+	    value: function initRerouting(el, link) {
+	      var _this2 = this;
+
+	      if (!el.notRouterInitialized) {
+	        var fullLink = this.getFullRoute(link);
+	        el.setAttribute('href', fullLink);
+	        el.addEventListener('click', function (e) {
+	          e.preventDefault();
+
+	          _this2.navigate(link);
+
+	          return false;
+	        });
+	        el.notRouterInitialized = true;
+	      }
+
+	      return this;
+	    }
+	  }]);
+
+	  return notRouter;
+	}(notBase);
+
+	var notRouter$1 = new notRouter();
+
+	var nativeJoin = [].join;
+
+	var ES3_STRINGS = indexedObject != Object;
+	var STRICT_METHOD$3 = arrayMethodIsStrict('join', ',');
+
+	// `Array.prototype.join` method
+	// https://tc39.github.io/ecma262/#sec-array.prototype.join
+	_export({ target: 'Array', proto: true, forced: ES3_STRINGS || !STRICT_METHOD$3 }, {
+	  join: function join(separator) {
+	    return nativeJoin.call(toIndexedObject(this), separator === undefined ? ',' : separator);
+	  }
+	});
+
+	var $some = arrayIteration.some;
+
+
+
+	var STRICT_METHOD$4 = arrayMethodIsStrict('some');
+	var USES_TO_LENGTH$8 = arrayMethodUsesToLength('some');
+
+	// `Array.prototype.some` method
+	// https://tc39.github.io/ecma262/#sec-array.prototype.some
+	_export({ target: 'Array', proto: true, forced: !STRICT_METHOD$4 || !USES_TO_LENGTH$8 }, {
+	  some: function some(callbackfn /* , thisArg */) {
+	    return $some(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);
+	  }
+	});
+
+	function _createSuper$5(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$5(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+
+	function _isNativeReflectConstruct$5() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+	var LOG_PREFIX = 'APIQuee';
+
+	var notAPIQueue = /*#__PURE__*/function (_notBase) {
+	  inherits(notAPIQueue, _notBase);
+
+	  var _super = _createSuper$5(notAPIQueue);
+
+	  function notAPIQueue() {
+	    var _this;
+
+	    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+	    classCallCheck(this, notAPIQueue);
+
+	    _this = _super.call(this, {
+	      working: {
+	        name: options.name ? options.name : LOG_PREFIX
+	      },
+	      options: options
+	    });
+	    _this.busy = false;
+	    _this.queue = [];
+	    _this.busySince = false;
+	    _this.afterEmpty = null;
+
+	    _this.start();
+
+	    return possibleConstructorReturn(_this, assertThisInitialized(_this));
+	  }
+
+	  createClass(notAPIQueue, [{
+	    key: "stop",
+	    value: function stop() {
+	      if (this.interval) {
+	        clearInterval(this.interval);
+	        this.interval = undefined;
+	        this.busy = false;
+	        this.busySince = false;
+	      }
+	    }
+	  }, {
+	    key: "start",
+	    value: function start() {
+	      this.stop();
+	      this.interval = setInterval(this.checkQueue.bind(this), this.QUEUE_CHECK_INTERVAL);
+	    }
+	  }, {
+	    key: "checkQueue",
+	    value: function checkQueue() {
+	      var _this2 = this;
+
+	      if (!this.isEmpty() && !this.isBusy()) {
+	        this.setBusy().runNext().then(this.setFree.bind(this)).catch(function (e) {
+	          _this2.error(e);
+
+	          _this2.setFree();
+	        });
+	      } else {
+	        if (!this.isBusy()) {
+	          if (this.afterEmpty) {
+	            var t = this.afterEmpty;
+	            this.afterEmpty = null;
+	            t();
+	          }
+	        }
+	      }
+	    }
+	  }, {
+	    key: "addToQueue",
+	    value: function addToQueue(task) {
+	      this.queue.push(task);
+	    }
+	  }, {
+	    key: "runNext",
+	    value: function runNext() {
+	      var list = this.queue.map(function (action) {
+	        return action.title;
+	      }).join(', ');
+	      this.debug("tasks [".concat(list, "]"));
+	      var task = this.queue.shift();
+
+	      if (!notCommon.isFunc(task.action)) {
+	        this.error('В задании нет исполнимой части, action не функция', task.title);
+	        return Promise.resolve();
+	      }
+
+	      if (!notCommon.isFunc(task.resolve)) {
+	        this.error('В задании нет возвратной части, resolve не функция', task.title);
+	        return task.action();
+	      }
+
+	      return task.action().then(task.resolve);
+	    }
+	  }, {
+	    key: "isBusy",
+	    value: function isBusy() {
+	      var busy = !!this.busy,
+	          now = Date.now() / 1000;
+
+	      if (busy) {
+	        if (now - this.busySince > this.MAX_BUSY_TIME) {
+	          this.setFree();
+	          return false;
+	        } else {
+	          return true;
+	        }
+	      } else {
+	        return false;
+	      }
+	    }
+	  }, {
+	    key: "setBusy",
+	    value: function setBusy() {
+	      this.busy = true;
+	      this.busySince = Date.now() / 1000;
+	      return this;
+	    }
+	  }, {
+	    key: "setFree",
+	    value: function setFree() {
+	      this.busy = false;
+	      this.busySince = false;
+	      return this;
+	    }
+	  }, {
+	    key: "isEmpty",
+	    value: function isEmpty() {
+	      return this.queue.length === 0;
+	    }
+	    /**
+	     * Исполнитель запросов
+	     * @param      {function}   action      должна возвращать Promise
+	     * @param      {function}   afterEmpty  будет выполнена когда очурудь опустеет и будет свободна. полезна при пачке однотипных заданий
+	     * @returns    {Promise}  результат функции
+	     **/
+
+	  }, {
+	    key: "run",
+	    value: function run(action) {
+	      var _this3 = this;
+
+	      var afterEmpty = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+	      var title = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
+
+	      if (afterEmpty && this.afterEmpty === null) {
+	        this.afterEmpty = afterEmpty;
+	      }
+
+	      return new Promise(function (resolve, reject) {
+	        try {
+	          _this3.addToQueue({
+	            action: action,
+	            resolve: resolve,
+	            title: title
+	          });
+	        } catch (e) {
+	          _this3.error(e);
+
+	          reject(e);
+	        }
+	      });
+	    }
+	  }, {
+	    key: "actionIsQueued",
+	    value: function actionIsQueued(title) {
+	      return this.queue.some(function (queued) {
+	        return queued.title == title;
+	      });
+	    }
+	  }, {
+	    key: "runIfNotQueued",
+	    value: function runIfNotQueued(action) {
+	      var afterEmpty = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+	      var title = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
+
+	      if (this.actionIsQueued(title)) {
+	        return Promise.resolve();
+	      } else {
+	        this.run(action, afterEmpty, title);
+	      }
+	    }
+	  }]);
+
+	  return notAPIQueue;
+	}(notBase);
+
+	defineProperty$1(notAPIQueue, "QUEUE_CHECK_INTERVAL", 100);
+
+	defineProperty$1(notAPIQueue, "MAX_BUSY_TIME", 300);
+
+	var notAPIOptions = {
+	  rps: 50,
+	  protocol: 'http',
+	  host: 'localhost',
+	  port: 9000
+	};
+
+	function _createSuper$6(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$6(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+
+	function _isNativeReflectConstruct$6() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+	var LOG_PREFIX$1 = 'APIConnection';
+
+	var notAPIConnection = /*#__PURE__*/function (_notBase) {
+	  inherits(notAPIConnection, _notBase);
+
+	  var _super = _createSuper$6(notAPIConnection);
+
+	  function notAPIConnection(options) {
+	    var _this;
+
+	    classCallCheck(this, notAPIConnection);
+
+	    _this = _super.call(this, {
+	      options: options,
+	      working: {
+	        name: options.name ? options.name : LOG_PREFIX$1
+	      }
+	    });
+	    _this.online = null;
+
+	    _this.run();
+
+	    return possibleConstructorReturn(_this, assertThisInitialized(_this));
+	  }
+
+	  createClass(notAPIConnection, [{
+	    key: "run",
+	    value: function run() {
+	      this.int = window.setInterval(this.check.bind(this), 1000);
+	    }
+	  }, {
+	    key: "pause",
+	    value: function pause() {
+	      window.clearInterval(this.int);
+	    }
+	  }, {
+	    key: "resume",
+	    value: function resume() {
+	      this.run();
+	    }
+	  }, {
+	    key: "isOnline",
+	    value: function isOnline() {
+	      return window.navigator.onLine;
+	    }
+	  }, {
+	    key: "check",
+	    value: function check() {
+	      var t = this.isOnline();
+
+	      if (this.online !== null) {
+	        if (this.online !== t) {
+	          this.changeState(t);
+	        }
+	      }
+
+	      this.online = t;
+	    }
+	  }, {
+	    key: "changeState",
+	    value: function changeState() {
+	      var online = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+	      if (online) {
+	        this.emit('online');
+	      } else {
+	        this.emit('offline');
+	      }
+	    }
+	  }]);
+
+	  return notAPIConnection;
+	}(notBase);
+
+	defineProperty$1(notAPIConnection, "int", void 0);
+
+	defineProperty$1(notAPIConnection, "online", void 0);
+
+	var index = /*#__PURE__*/Object.freeze({
+		__proto__: null,
+		notAPIQueue: notAPIQueue,
+		notAPIOptions: notAPIOptions,
+		notAPIConnection: notAPIConnection
+	});
+
+	var  //interface
+	//record
+	META_INTERFACE = Symbol('interface'),
+	    META_MAP_TO_INTERFACE = ['getActionsCount', 'getActions', 'setFindBy', 'resetFilter', 'setFilter', 'getFilter', 'setSorter', 'getSorter', 'resetSorter', 'setPageNumber', 'setPageSize', 'setPager', 'setReturn', 'setSearch', 'getSearch', 'resetSearch', 'resetPager', 'getPager', 'addFormFieldType', 'addFormField', 'getFieldTypes', 'getActionFormFields'],
+	    DEFAULT_ACTION_PREFIX = '$';
+
+	// makes subclassing work correct for wrapped built-ins
+	var inheritIfRequired = function ($this, dummy, Wrapper) {
+	  var NewTarget, NewTargetPrototype;
+	  if (
+	    // it can work only with native `setPrototypeOf`
+	    objectSetPrototypeOf &&
+	    // we haven't completely correct pre-ES6 way for getting `new.target`, so use this
+	    typeof (NewTarget = dummy.constructor) == 'function' &&
+	    NewTarget !== Wrapper &&
+	    isObject(NewTargetPrototype = NewTarget.prototype) &&
+	    NewTargetPrototype !== Wrapper.prototype
+	  ) objectSetPrototypeOf($this, NewTargetPrototype);
+	  return $this;
+	};
+
+	// a string of all valid unicode whitespaces
+	// eslint-disable-next-line max-len
+	var whitespaces = '\u0009\u000A\u000B\u000C\u000D\u0020\u00A0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF';
+
+	var whitespace = '[' + whitespaces + ']';
+	var ltrim = RegExp('^' + whitespace + whitespace + '*');
+	var rtrim = RegExp(whitespace + whitespace + '*$');
+
+	// `String.prototype.{ trim, trimStart, trimEnd, trimLeft, trimRight }` methods implementation
+	var createMethod$4 = function (TYPE) {
+	  return function ($this) {
+	    var string = String(requireObjectCoercible($this));
+	    if (TYPE & 1) string = string.replace(ltrim, '');
+	    if (TYPE & 2) string = string.replace(rtrim, '');
+	    return string;
+	  };
+	};
+
+	var stringTrim = {
+	  // `String.prototype.{ trimLeft, trimStart }` methods
+	  // https://tc39.github.io/ecma262/#sec-string.prototype.trimstart
+	  start: createMethod$4(1),
+	  // `String.prototype.{ trimRight, trimEnd }` methods
+	  // https://tc39.github.io/ecma262/#sec-string.prototype.trimend
+	  end: createMethod$4(2),
+	  // `String.prototype.trim` method
+	  // https://tc39.github.io/ecma262/#sec-string.prototype.trim
+	  trim: createMethod$4(3)
+	};
+
+	var getOwnPropertyNames = objectGetOwnPropertyNames.f;
+	var getOwnPropertyDescriptor$3 = objectGetOwnPropertyDescriptor.f;
+	var defineProperty$7 = objectDefineProperty.f;
+	var trim = stringTrim.trim;
+
+	var NUMBER = 'Number';
+	var NativeNumber = global_1[NUMBER];
+	var NumberPrototype = NativeNumber.prototype;
+
+	// Opera ~12 has broken Object#toString
+	var BROKEN_CLASSOF = classofRaw(objectCreate(NumberPrototype)) == NUMBER;
+
+	// `ToNumber` abstract operation
+	// https://tc39.github.io/ecma262/#sec-tonumber
+	var toNumber = function (argument) {
+	  var it = toPrimitive(argument, false);
+	  var first, third, radix, maxCode, digits, length, index, code;
+	  if (typeof it == 'string' && it.length > 2) {
+	    it = trim(it);
+	    first = it.charCodeAt(0);
+	    if (first === 43 || first === 45) {
+	      third = it.charCodeAt(2);
+	      if (third === 88 || third === 120) return NaN; // Number('+0x1') should be NaN, old V8 fix
+	    } else if (first === 48) {
+	      switch (it.charCodeAt(1)) {
+	        case 66: case 98: radix = 2; maxCode = 49; break; // fast equal of /^0b[01]+$/i
+	        case 79: case 111: radix = 8; maxCode = 55; break; // fast equal of /^0o[0-7]+$/i
+	        default: return +it;
+	      }
+	      digits = it.slice(2);
+	      length = digits.length;
+	      for (index = 0; index < length; index++) {
+	        code = digits.charCodeAt(index);
+	        // parseInt parses a string to a first unavailable symbol
+	        // but ToNumber should return NaN if a string contains unavailable symbols
+	        if (code < 48 || code > maxCode) return NaN;
+	      } return parseInt(digits, radix);
+	    }
+	  } return +it;
+	};
+
+	// `Number` constructor
+	// https://tc39.github.io/ecma262/#sec-number-constructor
+	if (isForced_1(NUMBER, !NativeNumber(' 0o1') || !NativeNumber('0b1') || NativeNumber('+0x1'))) {
+	  var NumberWrapper = function Number(value) {
+	    var it = arguments.length < 1 ? 0 : value;
+	    var dummy = this;
+	    return dummy instanceof NumberWrapper
+	      // check on 1..constructor(foo) case
+	      && (BROKEN_CLASSOF ? fails(function () { NumberPrototype.valueOf.call(dummy); }) : classofRaw(dummy) != NUMBER)
+	        ? inheritIfRequired(new NativeNumber(toNumber(it)), dummy, NumberWrapper) : toNumber(it);
+	  };
+	  for (var keys$1 = descriptors ? getOwnPropertyNames(NativeNumber) : (
+	    // ES3:
+	    'MAX_VALUE,MIN_VALUE,NaN,NEGATIVE_INFINITY,POSITIVE_INFINITY,' +
+	    // ES2015 (in case, if modules with ES2015 Number statics required before):
+	    'EPSILON,isFinite,isInteger,isNaN,isSafeInteger,MAX_SAFE_INTEGER,' +
+	    'MIN_SAFE_INTEGER,parseFloat,parseInt,isInteger'
+	  ).split(','), j = 0, key; keys$1.length > j; j++) {
+	    if (has(NativeNumber, key = keys$1[j]) && !has(NumberWrapper, key)) {
+	      defineProperty$7(NumberWrapper, key, getOwnPropertyDescriptor$3(NativeNumber, key));
+	    }
+	  }
+	  NumberWrapper.prototype = NumberPrototype;
+	  NumberPrototype.constructor = NumberWrapper;
+	  redefine(global_1, NUMBER, NumberWrapper);
+	}
+
+	function _createForOfIteratorHelper$1(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray$2(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+	function _unsupportedIterableToArray$2(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray$2(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$2(o, minLen); }
+
+	function _arrayLikeToArray$2(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+	function _createSuper$7(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$7(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+
+	function _isNativeReflectConstruct$7() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+	var OPT_DEFAULT_INDEX_FIELD_NAME_PRIORITY = ['_id', 'id', 'ID'],
+	    DEFAULT_FILTER = {},
+	    DEFAULT_SEARCH = '',
+	    DEFAULT_RETURN = {},
+	    DEFAULT_PAGE_NUMBER = 0,
+	    DEFAULT_PAGE_SIZE = 10,
+	    DEFAULT_ACTION_PREFIX$1 = '$';
+
+	var notInterface = /*#__PURE__*/function (_notBase) {
+	  inherits(notInterface, _notBase);
+
+	  var _super = _createSuper$7(notInterface);
+
+	  function notInterface(manifest, options) {
+	    var _this;
+
+	    classCallCheck(this, notInterface);
+
+	    _this = _super.call(this, {
+	      working: {
+	        name: 'network interface for: ' + (manifest.model ? manifest.model : 'unknown'),
+	        filter: DEFAULT_FILTER,
+	        search: DEFAULT_SEARCH,
+	        return: DEFAULT_RETURN,
+	        pager: {
+	          size: DEFAULT_PAGE_SIZE,
+	          page: DEFAULT_PAGE_NUMBER
+	        }
+	      },
+	      options: options
+	    });
+	    _this.manifest = manifest;
+
+	    _this.initActions();
+
+	    return possibleConstructorReturn(_this, assertThisInitialized(_this));
+	  }
+
+	  createClass(notInterface, [{
+	    key: "initActions",
+	    value: function initActions() {
+	      if (this.getActionsCount() > 0) {
+	        var actions = this.getActions();
+
+	        for (var actionName in actions) {
+	          this.initAction(actionName, actions[actionName]);
+	        }
+	      }
+	    }
+	  }, {
+	    key: "initAction",
+	    value: function initAction(actionName) {
+	      var _this2 = this;
+
+	      if (!Object.prototype.hasOwnProperty.call(this, [DEFAULT_ACTION_PREFIX$1 + actionName])) {
+	        this[DEFAULT_ACTION_PREFIX$1 + actionName] = function (opts, headers) {
+	          var fileUpload = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+	          var files = arguments.length > 3 ? arguments[3] : undefined;
+	          return _this2.request(_this2, actionName, opts, headers, fileUpload, files);
+	        };
+	      }
+	    }
+	  }, {
+	    key: "requestHTTP",
+	    value: function requestHTTP(record, actionName, params) {
+	      var headers = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+	      var fileUpload = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
+	      var files = arguments.length > 5 ? arguments[5] : undefined;
+
+	      try {
+	        var compositeData = Object.assign({}, record.getData && typeof record.getData === 'function' ? record.getData() : record, params);
+	        var actionData = this.getActionData(actionName),
+	            requestParams = this.collectRequestData(actionData),
+	            requestParamsEncoded = this.encodeRequest(requestParams),
+	            //id = this.getID(compositeData, actionData, actionName),
+	        apiServerURL = this.getServerURL(),
+	            url = this.getURL(compositeData, actionData, actionName),
+	            opts = {};
+
+	        if (fileUpload) {
+	          url = this.getURL(params, actionData, actionName);
+	          var fd = new FormData();
+	          fd.append('file', files);
+	          opts.body = fd;
+	        } else {
+	          if (['OPTIONS', 'GET'].indexOf(actionData.method.toUpperCase()) === -1) {
+	            opts = {
+	              body: JSON.stringify(record.getData && typeof record.getData === 'function' ? record.getData() : record),
+	              headers: {
+	                'Accept': 'application/json',
+	                'Content-Type': 'application/json'
+	              }
+	            };
+	          }
+	        }
+
+	        opts.method = actionData.method.toUpperCase();
+
+	        if (headers && Object.keys(headers).length) {
+	          opts.headers = headers;
+	        }
+
+	        return fetch(apiServerURL + url + requestParamsEncoded, opts).then(function (response) {
+	          return response.json();
+	        });
+	      } catch (e) {
+	        notCommon.error(e);
+	        notCOmmon.report(e);
+	      }
+	    }
+	  }, {
+	    key: "requestWS",
+	    value: function requestWS(record, actionName, params) {
+	      try {
+	        var actionData = this.getActionData(actionName),
+	            requestParams = this.collectRequestData(actionData);
+	        return notCommon.getApp().getWS().sendRequest(this.getWSRequestName(record, actionData, actionName), Object.assign({}, requestParams, record.getData())).then(function (response) {
+	          return response.payload;
+	        });
+	      } catch (e) {
+	        notCommon.error(e);
+	        notCOmmon.report(e);
+	      }
+	    }
+	  }, {
+	    key: "request",
+	    value: function request() {
+	      var actionData = this.getActionData(arguments[1]);
+
+	      if (actionData.ws === true) {
+	        return this.requestWS.apply(this, arguments);
+	      } else {
+	        return this.requestHTTP.apply(this, arguments);
+	      }
+	    }
+	  }, {
+	    key: "getModelName",
+	    value: function getModelName() {
+	      return this && this.manifest ? this.manifest.model : null;
+	    }
+	  }, {
+	    key: "getActionData",
+	    value: function getActionData(actionName) {
+	      return this.getActions() && this.getActions()[actionName] ? this.getActions()[actionName] : null;
+	    }
+	  }, {
+	    key: "getActionsCount",
+	    value: function getActionsCount() {
+	      return this.getActions() ? Object.keys(this.getActions()).length : 0;
+	    }
+	  }, {
+	    key: "getActions",
+	    value: function getActions() {
+	      return this.manifest && this.manifest.actions ? this.manifest.actions : {};
+	    }
+	  }, {
+	    key: "parseParams",
+	    value: function parseParams(start, end, line, record) {
+	      var fieldName = '';
+	      var len = start.length;
+
+	      while (line.indexOf(start) > -1) {
+	        var ind = line.indexOf(start);
+	        var startSlice = ind + len;
+	        var endSlice = line.indexOf(end);
+	        fieldName = line.slice(startSlice, endSlice);
+	        if (fieldName == '') break;
+	        this.log(start + fieldName + end, notPath$1.get(fieldName, record));
+	        line = line.replace(start + fieldName + end, notPath$1.get(fieldName, record));
+	      }
+
+	      return line;
+	    }
+	  }, {
+	    key: "parseLine",
+	    value: function parseLine(line, record, actionName) {
+	      line = line.replace(':modelName', this.manifest.model);
+	      line = line.replace(':actionName', actionName);
+	      line = this.parseParams(':record[', ']', line, record);
+	      line = this.parseParams(':', '?', line, record);
+	      return line;
+	    }
+	  }, {
+	    key: "getURL",
+	    value: function getURL(record, actionData, actionName) {
+	      var line = this.parseLine(this.manifest.url, record, actionName) + (Object.prototype.hasOwnProperty.call(actionData, 'postFix') ? this.parseLine(actionData.postFix, record, actionName) : '');
+	      return line;
+	    }
+	  }, {
+	    key: "getServerURL",
+	    value: function getServerURL() {
+	      return notCommon.getApp() ? notCommon.getApp().getOptions('api.server.url', '') : '';
+	    }
+	  }, {
+	    key: "getWSRequestName",
+	    value: function getWSRequestName(record, actionData, actionName) {
+	      var data = record.getData && typeof record.getData === 'function' ? record.getData() : record;
+	      var line = actionData.hasOwnProperty('postFix') ? this.parseLine(actionData.postFix, data, actionName) : '';
+	      return line;
+	    }
+	  }, {
+	    key: "encodeRequest",
+	    value: function encodeRequest(data) {
+	      var p = '?';
+
+	      for (var t in data) {
+	        if (typeof data[t] !== 'undefined' && data[t] !== null) {
+	          p += encodeURIComponent(t) + '=' + encodeURIComponent(data[t].constructor === Object ? JSON.stringify(data[t]) : data[t]) + '&';
+	        }
+	      } //for test purpose only, special test server needed
+
+
+	      if (this.getOptions('test')) {
+	        p += '&test=1';
+
+	        if (this.getOptions('test.session')) {
+	          p += '&session=' + this.getOptions('test.session');
+	        }
+
+	        if (this.getOptions('test.session')) {
+	          p += '&role=' + this.getOptions('test.role');
+	        }
+	      }
+
+	      return p;
+	    }
+	  }, {
+	    key: "collectRequestData",
+	    value: function collectRequestData(actionData) {
+	      var requestData = {};
+
+	      if (Object.prototype.hasOwnProperty.call(actionData, 'data') && Array.isArray(actionData.data)) {
+	        for (var i = 0; i < actionData.data.length; i++) {
+	          var dataProviderName = 'get' + notCommon.capitalizeFirstLetter(actionData.data[i]);
+
+	          if (this[dataProviderName] && typeof this[dataProviderName] === 'function') {
+	            var data = this[dataProviderName](),
+	                res = {};
+
+	            if (['pager', 'sorter', 'filter', 'search', 'return'].indexOf(actionData.data[i]) > -1) {
+	              res[actionData.data[i]] = data;
+	            } else {
+	              res = data;
+	            }
+
+	            requestData = Object.assign(requestData, res);
+	          }
+	        }
+	      }
+
+	      return requestData;
+	    }
+	  }, {
+	    key: "getID",
+	    value: function getID(record, actionData) {
+	      var resultId,
+	          list = OPT_DEFAULT_INDEX_FIELD_NAME_PRIORITY,
+	          prefixes = ['', this.manifest.model];
+
+	      if (Object.prototype.hasOwnProperty.call(actionData, 'index') && actionData.index) {
+	        list = [actionData.index].concat(OPT_DEFAULT_INDEX_FIELD_NAME_PRIORITY);
+	      }
+
+	      for (var _i = 0, _prefixes = prefixes; _i < _prefixes.length; _i++) {
+	        var pre = _prefixes[_i];
+
+	        var _iterator = _createForOfIteratorHelper$1(list),
+	            _step;
+
+	        try {
+	          for (_iterator.s(); !(_step = _iterator.n()).done;) {
+	            var t = _step.value;
+
+	            if (Object.prototype.hasOwnProperty.call(record, pre + t)) {
+	              resultId = record[pre + t];
+	              break;
+	            }
+	          }
+	        } catch (err) {
+	          _iterator.e(err);
+	        } finally {
+	          _iterator.f();
+	        }
+	      }
+
+	      return resultId;
+	    }
+	  }, {
+	    key: "setFindBy",
+	    value: function setFindBy(key, value) {
+	      var obj = {};
+	      obj[key] = value;
+	      return this.setFilter(obj);
+	    }
+	  }, {
+	    key: "setFilter",
+	    value: function setFilter() {
+	      var filterData = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : DEFAULT_FILTER;
+	      this.setWorking('filter', filterData);
+	      return this;
+	    }
+	  }, {
+	    key: "resetFilter",
+	    value: function resetFilter() {
+	      return this.setFilter();
+	    }
+	  }, {
+	    key: "getFilter",
+	    value: function getFilter() {
+	      return this.getWorking('filter');
+	    }
+	  }, {
+	    key: "setSearch",
+	    value: function setSearch() {
+	      var searchData = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : DEFAULT_SEARCH;
+	      this.setWorking('search', searchData);
+	      return this;
+	    }
+	  }, {
+	    key: "resetSearch",
+	    value: function resetSearch() {
+	      return this.setSearch();
+	    }
+	  }, {
+	    key: "getSearch",
+	    value: function getSearch() {
+	      return this.getWorking('search');
+	    }
+	  }, {
+	    key: "setSorter",
+	    value: function setSorter(sorterData) {
+	      this.setWorking('sorter', sorterData);
+	      return this;
+	    }
+	  }, {
+	    key: "resetSorter",
+	    value: function resetSorter() {
+	      return this.setSorter({});
+	    }
+	  }, {
+	    key: "getSorter",
+	    value: function getSorter() {
+	      return this.getWorking('sorter');
+	    }
+	  }, {
+	    key: "setReturn",
+	    value: function setReturn() {
+	      var returnData = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : DEFAULT_RETURN;
+	      this.setWorking('return', returnData);
+	      return this;
+	    }
+	  }, {
+	    key: "resetReturn",
+	    value: function resetReturn() {
+	      return this.setReturn({});
+	    }
+	  }, {
+	    key: "getReturn",
+	    value: function getReturn() {
+	      return this.getWorking('return');
+	    }
+	  }, {
+	    key: "setPageNumber",
+	    value: function setPageNumber(pageNumber) {
+	      this.setWorking('pager.page', pageNumber);
+	      return this;
+	    }
+	  }, {
+	    key: "setPageSize",
+	    value: function setPageSize(pageSize) {
+	      this.setWorking('pager.size', pageSize);
+	      return this;
+	    }
+	  }, {
+	    key: "setPager",
+	    value: function setPager() {
+	      var pageSize = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : DEFAULT_PAGE_SIZE;
+	      var pageNumber = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : DEFAULT_PAGE_NUMBER;
+
+	      if (pageSize.constructor === Number) {
+	        this.setWorking('pager', {
+	          size: pageSize,
+	          page: pageNumber
+	        });
+	      } else if (pageSize.constructor === Object) {
+	        this.setWorking('pager', {
+	          size: pageSize.size || DEFAULT_PAGE_SIZE,
+	          page: pageSize.page || DEFAULT_PAGE_NUMBER
+	        });
+	      }
+
+	      return this;
+	    }
+	  }, {
+	    key: "resetPager",
+	    value: function resetPager() {
+	      return this.setPager();
+	    }
+	  }, {
+	    key: "getPager",
+	    value: function getPager() {
+	      return this.getWorking('pager');
+	    }
+	  }]);
+
+	  return notInterface;
+	}(notBase);
+
+	function _createForOfIteratorHelper$2(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray$3(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+	function _unsupportedIterableToArray$3(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray$3(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$3(o, minLen); }
+
+	function _arrayLikeToArray$3(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+	function _createSuper$8(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$8(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+
+	function _isNativeReflectConstruct$8() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+	var notRecord = /*#__PURE__*/function (_notBase) {
+	  inherits(notRecord, _notBase);
+
+	  var _super = _createSuper$8(notRecord);
+
+	  function notRecord(manifest, item) {
+	    var _this;
+
+	    classCallCheck(this, notRecord);
+
+	    _this = _super.call(this);
+
+	    if (typeof item === 'undefined' || item === null || _typeof_1(item) !== 'object') {
+	      return possibleConstructorReturn(_this, item);
+	    }
+
+	    if (item && item.isProxy) {
+	      notCommon.error('this is Proxy item');
+	      return possibleConstructorReturn(_this, item);
+	    }
+
+	    if (item && (item.isRecord || item.isProperty)) {
+	      return possibleConstructorReturn(_this, item);
+	    } else {
+	      if (Array.isArray(item)) {
+	        return possibleConstructorReturn(_this, _this.createCollection(manifest, item));
+	      }
+	    }
+
+	    _this.setOptions({});
+
+	    _this[META_INTERFACE] = new notInterface(manifest, {});
+
+	    _this.setData(item);
+
+	    _this.interfaceUp();
+
+	    _this.mapToInterface();
+
+	    _this.mapToMethods();
+
+	    return possibleConstructorReturn(_this, assertThisInitialized(_this));
+	  }
+
+	  createClass(notRecord, [{
+	    key: "mapToInterface",
+	    value: function mapToInterface() {
+	      var _this2 = this;
+
+	      var rec = this;
+
+	      var _iterator = _createForOfIteratorHelper$2(META_MAP_TO_INTERFACE),
+	          _step;
+
+	      try {
+	        var _loop = function _loop() {
+	          var t = _step.value;
+
+	          if (_this2[META_INTERFACE][t] && typeof _this2[META_INTERFACE][t] === 'function') {
+	            _this2[t] = function () {
+	              var _rec$META_INTERFACE;
+
+	              var res = (_rec$META_INTERFACE = rec[META_INTERFACE])[t].apply(_rec$META_INTERFACE, arguments);
+
+	              return res == rec[META_INTERFACE] ? rec : res;
+	            };
+	          }
+	        };
+
+	        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+	          _loop();
+	        }
+	      } catch (err) {
+	        _iterator.e(err);
+	      } finally {
+	        _iterator.f();
+	      }
+	    }
+	  }, {
+	    key: "mapToMethods",
+	    value: function mapToMethods() {
+	      var manifest = this[META_INTERFACE].manifest,
+	          app = notCommon.getApp(),
+	          methods = {};
+
+	      if (manifest.methods) {
+	        methods = manifest.methods;
+	      } else if (app) {
+	        methods = app.getOptions(['models', this[META_INTERFACE].manifest.model].join('.'), {});
+	      }
+
+	      if (methods) {
+	        for (var t in methods) {
+	          if (Object.prototype.hasOwnProperty.call(methods, t)) {
+	            this[t] = methods[t];
+	          }
+	        }
+	      }
+	    }
+	  }, {
+	    key: "createCollection",
+	    value: function createCollection(manifest, items) {
+	      var collection = [];
+
+	      for (var i = 0; i < items.length; i++) {
+	        collection.push(new notRecord(manifest, items[i]));
+	      }
+
+	      return collection;
+	    }
+	  }, {
+	    key: "interfaceUp",
+	    value: function interfaceUp() {
+	      if (this[META_INTERFACE].getActionsCount() > 0) {
+	        var actions = this[META_INTERFACE].getActions();
+
+	        for (var i in actions) {
+	          this.actionUp(i, actions[i]);
+	        }
+	      }
+	    }
+	  }, {
+	    key: "actionUp",
+	    value: function actionUp(index) {
+	      var _this3 = this;
+
+	      if (!Object.prototype.hasOwnProperty.call(this, [DEFAULT_ACTION_PREFIX + index])) {
+	        this[DEFAULT_ACTION_PREFIX + index] = function () {
+	          return _this3[META_INTERFACE].request(_this3, index);
+	        };
+	      }
+	    }
+	    /*
+	    -> 'path.to.key', valueOfKey
+	    <- ok, with one onChange event triggered
+	    */
+
+	  }, {
+	    key: "setAttr",
+	    value: function setAttr(key, value) {
+	      return this.setData(key, value);
+	    }
+	    /*
+	    ->
+	    {
+	    	'keyPath': value,
+	    	'key.subPath': value2,
+	    	'keyPath.0.title': value3
+	    }
+	    <- ok, with bunch of onChange events triggered
+	    */
+
+	  }, {
+	    key: "setAttrs",
+	    value: function setAttrs(objectPart) {
+	      //notCommon.log('setAttrs', objectPart, Object.keys(objectPart));
+	      if (objectPart && _typeof_1(objectPart) === 'object' && Object.keys(objectPart).length > 0) {
+	        for (var path in objectPart) {
+	          //notCommon.log('setAttrs one to go', path);
+	          this.setAttr(path, objectPart[path]);
+	        }
+	      }
+	    }
+	    /*
+	    -> 'pathToKey'
+	    <- value1
+	    */
+
+	  }, {
+	    key: "getAttr",
+	    value: function getAttr(what) {
+	      var plain = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+	      var prx = this.getData(what, {});
+
+	      if (plain) {
+	        return notCommon.stripProxy(prx);
+	      } else {
+	        return prx;
+	      }
+	    }
+	    /*
+	    -> ['pathToKey', 'path.to.key', 'simpleKey',...]
+	    <- [value1, value2, value3,...]
+	    */
+
+	  }, {
+	    key: "getAttrs",
+	    value: function getAttrs(what) {
+	      var result = [];
+
+	      if (what && what.length > 0) {
+	        var _iterator2 = _createForOfIteratorHelper$2(what),
+	            _step2;
+
+	        try {
+	          for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+	            var path = _step2.value;
+	            result.push(this.getAttr(path));
+	          }
+	        } catch (err) {
+	          _iterator2.e(err);
+	        } finally {
+	          _iterator2.f();
+	        }
+	      }
+
+	      return result;
+	    }
+	  }, {
+	    key: "getManifest",
+	    value: function getManifest() {
+	      if (this[META_INTERFACE]) {
+	        return this[META_INTERFACE].manifest;
+	      } else {
+	        return {};
+	      }
+	    }
+	  }, {
+	    key: "setItem",
+	    value: function setItem(item) {
+	      this.setData(item);
+	      return this;
+	    }
+	  }]);
+
+	  return notRecord;
+	}(notBase);
+
+	function _createSuper$9(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$9(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+
+	function _isNativeReflectConstruct$9() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+	var OPT_CONTROLLER_PREFIX = 'nc',
+	    OPT_RECORD_PREFIX = 'nr';
+
+	var notApp = /*#__PURE__*/function (_notBase) {
+	  inherits(notApp, _notBase);
+
+	  var _super = _createSuper$9(notApp);
+
+	  function notApp(options) {
+	    var _this;
+
+	    classCallCheck(this, notApp);
+
+	    _this = _super.call(this, {
+	      working: {
+	        name: options.name
+	      },
+	      options: options
+	    });
+
+	    _this.log('start app');
+
+	    notCommon.register('app', assertThisInitialized(_this));
+
+	    _this.setWorking({
+	      interfaces: {},
+	      controllers: {},
+	      initController: null,
+	      currentController: null
+	    });
+
+	    _this.initManifest();
+
+	    return possibleConstructorReturn(_this, assertThisInitialized(_this));
+	  }
+
+	  createClass(notApp, [{
+	    key: "initManifest",
+	    value: function initManifest() {
+	      notCommon.getJSON(this.getOptions('manifestURL'), {}).then(this.setInterfaceManifest.bind(this)).catch(notCommon.report.bind(this));
+	    }
+	  }, {
+	    key: "initRouter",
+	    value: function initRouter() {
+	      this.setWorking('router', notRouter$1);
+	      this.getWorking('router').setRoot(this.getOptions('router.root'));
+	      notRouter$1.reRouteExisted();
+	    }
+	  }, {
+	    key: "execRouter",
+	    value: function execRouter() {
+	      var routieInput = {};
+
+	      for (var t = 0; t < this.getOptions('router.manifest').length; t++) {
+	        var routeBlock = this.getOptions('router.manifest')[t],
+	            paths = routeBlock.paths,
+	            controller = routeBlock.controller;
+
+	        for (var i = 0; i < paths.length; i++) {
+	          routieInput[paths[i]] = this.bindController(controller);
+	        }
+	      }
+
+	      this.getWorking('router').addList(routieInput).listen(); //.navigate(this.getOptions('router.index'));
+	    }
+	  }, {
+	    key: "setInterfaceManifest",
+	    value: function setInterfaceManifest(manifest) {
+	      this.setOptions('interfaceManifest', manifest);
+	      this.initRouter();
+	      this.update();
+	    }
+	  }, {
+	    key: "getInterfaceManifest",
+	    value: function getInterfaceManifest() {
+	      return this.getOptions('interfaceManifest');
+	    }
+	  }, {
+	    key: "update",
+	    value: function update() {
+	      //нужно инициализировать
+	      //модели полученными интерфейсами
+	      this.updateInterfaces(); //иницилицировать и запустить контроллер инициализации
+
+	      this.initController();
+	      this.startApp();
+	    }
+	  }, {
+	    key: "startApp",
+	    value: function startApp() {
+	      //создать контроллеры
+	      //роутер и привязать к нему контроллеры
+	      this.execRouter();
+	    }
+	  }, {
+	    key: "bindController",
+	    value: function bindController(controllerName) {
+	      var app = this;
+	      return function () {
+	        new controllerName(app, arguments);
+	      };
+	    }
+	  }, {
+	    key: "initController",
+	    value: function initController() {
+	      if (typeof this.getOptions('initController') !== 'undefined') {
+	        var initController = this.getOptions('initController');
+	        this.setWorking('initController', new initController(this));
+	      }
+	    }
+	  }, {
+	    key: "getCurrentController",
+	    value: function getCurrentController() {
+	      return this.getWorking('currentController');
+	    }
+	  }, {
+	    key: "setCurrentController",
+	    value: function setCurrentController(ctrl) {
+	      this.setWorking('currentController', ctrl);
+	      return this;
+	    }
+	  }, {
+	    key: "updateInterfaces",
+	    value: function updateInterfaces() {
+	      var _this2 = this;
+
+	      this.clearInterfaces();
+	      var manifests = this.getOptions('interfaceManifest');
+
+	      if (manifests) {
+	        var _loop = function _loop(name) {
+	          var recordManifest = manifests[name],
+	              recordMethods = _this2.getOptions(['models', name].join('.'), {});
+
+	          recordManifest.methods = recordMethods;
+
+	          _this2.getWorking('interfaces')[name] = function (recordData) {
+	            return new notRecord(recordManifest, recordData);
+	          };
+
+	          window['nr' + notCommon.capitalizeFirstLetter(name)] = _this2.getWorking('interfaces')[name];
+	        };
+
+	        for (var name in manifests) {
+	          _loop(name);
+	        }
+	      }
+	    }
+	  }, {
+	    key: "getRecordName",
+	    value: function getRecordName(name) {
+	      return OPT_RECORD_PREFIX + notCommon.capitalizeFirstLetter(name);
+	    }
+	  }, {
+	    key: "getControllerName",
+	    value: function getControllerName(name) {
+	      return OPT_CONTROLLER_PREFIX + notCommon.capitalizeFirstLetter(name);
+	    }
+	  }, {
+	    key: "getInterfaces",
+	    value: function getInterfaces() {
+	      return this.getWorking('interfaces');
+	    }
+	  }, {
+	    key: "clearInterfaces",
+	    value: function clearInterfaces() {
+	      this.setWorking('interfaces', {});
+	      return this;
+	    }
+	  }, {
+	    key: "setWS",
+	    value: function setWS(WS_CLIENT) {
+	      return this.setWorking('WS_CLIENT', WS_CLIENT);
+	    }
+	  }, {
+	    key: "getWS",
+	    value: function getWS() {
+	      return this.getWorking('WS_CLIENT');
+	    }
+	  }]);
+
+	  return notApp;
+	}(notBase);
+
+	function _arrayWithHoles(arr) {
+	  if (Array.isArray(arr)) return arr;
+	}
+
+	var arrayWithHoles = _arrayWithHoles;
+
+	function _nonIterableRest() {
+	  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+	}
+
+	var nonIterableRest = _nonIterableRest;
+
+	function _toArray(arr) {
+	  return arrayWithHoles(arr) || iterableToArray(arr) || unsupportedIterableToArray(arr) || nonIterableRest();
+	}
+
+	var toArray = _toArray;
+
+	function _createSuper$a(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$a(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+
+	function _isNativeReflectConstruct$a() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+	/**
+	* @const {string}	OPT_DEFAULT_ACTION_NAME			default action name
+	*/
+
+	var OPT_DEFAULT_ACTION_NAME = 'default';
+	/**
+	* @const {string}	OPT_DEFAULT_CONTAINER_SELECTOR	selector of container HTML
+	*													element
+	*/
+
+	var OPT_DEFAULT_CONTAINER_SELECTOR = 'main.content';
+	/**
+	* @const {string}	OPT_DEFAULT_PLURAL_NAME	default plural name of entities
+	*/
+
+	var OPT_DEFAULT_PLURAL_NAME = 'Models';
+	/**
+	* @const {string}	OPT_DEFAULT_SINGLE_NAME	default single name of entities
+	*/
+
+	var OPT_DEFAULT_SINGLE_NAME = 'Model';
+	/**
+	* @const {string}	OPT_DEFAULT_MODULE_NAME	default module name
+	*/
+
+	var OPT_DEFAULT_MODULE_NAME = 'main';
+	/**
+	* @const {boolean}	OPT_DEFAULT_AUTO_NAME	if shoould be used auto name generator
+	*/
+
+	var OPT_DEFAULT_AUTO_NAME = true;
+	/*
+	*	Basic class for user controller
+	*/
+
+	var notController = /*#__PURE__*/function (_notBase) {
+	  inherits(notController, _notBase);
+
+	  var _super = _createSuper$a(notController);
+
+	  /**
+	  *	@param {notApp} app
+	  */
+	  function notController(app, name) {
+	    var _this;
+
+	    classCallCheck(this, notController);
+
+	    _this = _super.call(this, {
+	      working: {
+	        name: name
+	      }
+	    });
+	    _this.app = app;
+
+	    _this.log('start controller');
+
+	    _this.setWorking({
+	      ready: false,
+	      views: {},
+	      libs: {},
+	      helpers: {}
+	    });
+
+	    _this.setData({});
+
+	    _this.setOptions({
+	      moduleName: OPT_DEFAULT_MODULE_NAME,
+	      containerSelector: OPT_DEFAULT_CONTAINER_SELECTOR,
+	      prefix: _this.getApp().getOptions('paths.module'),
+	      names: {
+	        plural: OPT_DEFAULT_PLURAL_NAME,
+	        single: OPT_DEFAULT_SINGLE_NAME
+	      }
+	    });
+	    /*
+	    	сразу делаем доступными модели notRecord из nc`ControllerName` будут доступны как this.nr`ModelName`
+	    */
+
+
+	    var interfaces = notCommon.getApp().getInterfaces();
+	    _this.make = {};
+
+	    for (var t in interfaces) {
+	      if (Object.prototype.hasOwnProperty.call(interfaces, t)) {
+	        _this.make[t] = interfaces[t];
+	      }
+	    }
+
+	    return possibleConstructorReturn(_this, assertThisInitialized(_this));
+	  }
+	  /**
+	  *	Returns current notApp
+	  *	@return {notApp}
+	  */
+
+
+	  createClass(notController, [{
+	    key: "getApp",
+	    value: function getApp() {
+	      return notCommon.getApp();
+	    }
+	    /**
+	    *	Sets default controller model
+	    *	@param {notRecord}	model	notRecord interface object
+	    *	@return {notController}
+	    */
+
+	  }, {
+	    key: "setModel",
+	    value: function setModel(model) {
+	      this.setWorking('model', model);
+	      return this;
+	    }
+	    /**
+	    *	Returns current model
+	    *	@return {notRecord}
+	    */
+
+	  }, {
+	    key: "getModel",
+	    value: function getModel() {
+	      return this.setWorking('model');
+	    }
+	    /**
+	    *	Returns current model primary ID field name
+	    *	@return {notRecord}
+	    */
+
+	  }, {
+	    key: "getModelIDFieldName",
+	    value: function getModelIDFieldName() {
+	      return this.getWorking('modelIDFieldName', '_id');
+	    }
+	    /**
+	    *	Sets current model primary ID field name
+	    *	@return {notRecord}
+	    */
+
+	  }, {
+	    key: "setModelIDFieldName",
+	    value: function setModelIDFieldName() {
+	      var val = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '_id';
+	      return this.setWorking('modelIDFieldName', val);
+	    }
+	    /**
+	    *	Marks this controller as ready
+	    *	emits "ready"/"busy" events
+	    *	@param {Boolean}	val	true/false
+	    */
+
+	  }, {
+	    key: "setReady",
+	    value: function setReady() {
+	      var val = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+	      this.setWorking('ready', val);
+	      val ? this.emit('ready') : this.emit('busy');
+	    }
+	    /**
+	    *	Sets module URL prefix
+	    *	@param {sting} val URL prefix
+	    *	@return {notController} this
+	    */
+
+	  }, {
+	    key: "setURLPrefix",
+	    value: function setURLPrefix(val) {
+	      this.setOptions('urlPrefix', val);
+	      this.updateAutoName();
+	      return this;
+	    }
+	    /**
+	    *	Returns module url prefix
+	    *	@return	{string} prefix
+	    */
+
+	  }, {
+	    key: "getURLPrefix",
+	    value: function getURLPrefix() {
+	      return this.getOptions('urlPrefix');
+	    }
+	    /**
+	    *	Sets module name
+	    *	@param {sting} val name of the module
+	    *	@return {notController} this
+	    */
+
+	  }, {
+	    key: "setModuleName",
+	    value: function setModuleName(val) {
+	      this.setOptions('moduleName', val);
+	      this.updateAutoName();
+	      return this;
+	    }
+	    /**
+	    *	Returns module name
+	    *	@return	{string} module name
+	    */
+
+	  }, {
+	    key: "getModuleName",
+	    value: function getModuleName() {
+	      return this.getOptions('moduleName');
+	    }
+	    /**
+	    *	Returns this module path prefix
+	    *	@return {string}	path to module dir
+	    */
+
+	  }, {
+	    key: "getModulePrefix",
+	    value: function getModulePrefix() {
+	      return [notCommon.getApp().getOptions('paths.modules'), this.getModuleName()].join('/');
+	    }
+	    /**
+	    *	Returns this model URL with URL prefix
+	    *	@return {string}	url path
+	    */
+
+	  }, {
+	    key: "getModelURL",
+	    value: function getModelURL() {
+	      var urlPrefix = this.getURLPrefix(),
+	          moduleName = this.getModuleName();
+	      return urlPrefix ? [urlPrefix, moduleName].join('/') : moduleName;
+	    }
+	    /**
+	    *	Updates working name
+	    *	@param {sting} val name of the module
+	    *	@return {notController} this
+	    */
+
+	  }, {
+	    key: "updateAutoName",
+	    value: function updateAutoName() {
+	      if (this.getOptions('autoName', OPT_DEFAULT_AUTO_NAME)) {
+	        this.setWorking('name', this.getModelURL());
+	      }
+	    }
+	    /**
+	    *	Sets object name
+	    *	@param {sting} val name of the object
+	    *	@return {notController} this
+	    */
+
+	  }, {
+	    key: "setName",
+	    value: function setName(val) {
+	      this.setWorking('name', val);
+	      this.setOptions('autoName', false);
+	      return this;
+	    }
+	    /**
+	    *	Preload records from server, using listAll method,
+	    *	returns Promise
+	    *	@param {object}	list	map of preloaded records
+	    *	@return {Promise}
+	    */
+
+	  }, {
+	    key: "preloadLib",
+	    value: function preloadLib() {
+	      var _this2 = this;
+
+	      var list = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+	      return new Promise(function (resolve, reject) {
+	        if (_typeof_1(list) !== 'object') {
+	          resolve();
+	        } else {
+	          _this2.setWorking('loading', []);
+
+	          var _loop = function _loop(t) {
+	            _this2.getWorking('loading').push(list[t]);
+
+	            _this2.make[list[t]]({}).$listAll().then(function (data) {
+	              if (!_this2.getOptions('libs')) {
+	                _this2.setOptions('libs', {});
+	              }
+
+	              _this2.getOptions('libs')[t] = data;
+
+	              if (_this2.getWorking('loading').indexOf(list[t]) > -1) {
+	                _this2.getWorking('loading').splice(_this2.getWorking('loading').indexOf(list[t]), 1);
+	              }
+
+	              if (_this2.getWorking('loading').length === 0) {
+	                resolve();
+	              }
+	            }).catch(function (err) {
+	              _this2.report(err);
+
+	              reject();
+	            });
+	          };
+
+	          for (var t in list) {
+	            _loop(t);
+	          }
+
+	          if (_this2.getWorking('loading').length === 0) {
+	            resolve();
+	          }
+	        }
+	      });
+	    }
+	    /**
+	    * emits afterRender event
+	    */
+
+	  }, {
+	    key: "onAfterRender",
+	    value: function onAfterRender() {
+	      this.emit('afterRender');
+	    }
+	    /**
+	    *	Transform route name in action name
+	    *	@param {String} 	name tranform action name
+	    *	@return {String}
+	    */
+
+	  }, {
+	    key: "getActionName",
+	    value: function getActionName() {
+	      var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : OPT_DEFAULT_ACTION_NAME;
+	      return 'run' + notCommon.capitalizeFirstLetter(name);
+	    }
+	    /**
+	    *	Get default controller action name
+	    *	@return {String} default action from options
+	    */
+
+	  }, {
+	    key: "getDefaultActionName",
+	    value: function getDefaultActionName() {
+	      return this.getActionName(this.getOptions('defaultAction', OPT_DEFAULT_ACTION_NAME));
+	    }
+	    /**
+	    *	Route params into specific run[Route_name] function
+	    *	@param {array} 	params 	controller input params
+	    *	@return {undefined}
+	    */
+
+	  }, {
+	    key: "route",
+	    value: function route(params) {
+	      var _params = toArray(params),
+	          routerName = _params[0],
+	          subParams = _params.slice(1),
+	          actionName = this.getActionName(routerName ? routerName : OPT_DEFAULT_ACTION_NAME);
+
+	      if (typeof this[actionName] === 'function') {
+	        this[actionName](subParams);
+	      } else if (this[this.getDefaultActionName()]) {
+	        this[this.getDefaultActionName()](subParams);
+	      } else {
+	        this.error('No action in router', params);
+	      }
+	    }
+	    /**
+	    *	Return application options
+	    *	@return {object}
+	    */
+
+	  }, {
+	    key: "getAppOptions",
+	    value: function getAppOptions() {
+	      try {
+	        return this.getApp().getOptions();
+	      } catch (e) {
+	        this.error(e);
+	      }
+	    }
+	    /**
+	    *	Returns module options
+	    *	@param	{string} 	moduleName		name of the module which options requested
+	    *	@return {object}
+	    */
+
+	  }, {
+	    key: "getModuleOptions",
+	    value: function getModuleOptions(moduleName) {
+	      try {
+	        return this.getApp().getOptions(['modules', moduleName || this.getModuleName()].join('.'));
+	      } catch (e) {
+	        this.error(e);
+	      }
+	    }
+	    /**
+	    *	Returns module services
+	    *	@param	{string} 	moduleName		name of the module which services requested
+	    *	@return {object}
+	    */
+
+	  }, {
+	    key: "getServices",
+	    value: function getServices(moduleName) {
+	      try {
+	        return this.getApp().getOptions(['services', moduleName || this.getModuleName()].join('.'));
+	      } catch (e) {
+	        this.error(e);
+	      }
+	    }
+	    /**
+	    *	Returns module components
+	    *	@param	{string} 	moduleName		name of the module which components requested
+	    *	@return {object}
+	    */
+
+	  }, {
+	    key: "getComponents",
+	    value: function getComponents(moduleName) {
+	      try {
+	        return this.getApp().getOptions(['components', moduleName || this.getModuleName()].join('.'));
+	      } catch (e) {
+	        this.error(e);
+	      }
+	    }
+	  }]);
+
+	  return notController;
+	}(notBase);
+
+	//import 'babel-polyfill/dist/polyfill';
+
+	var index$1 = /*#__PURE__*/Object.freeze({
+		__proto__: null,
+		notCommon: notCommon,
+		notPath: notPath$1,
+		notController: notController,
+		notBase: notBase,
+		notRouter: notRouter$1,
+		notRecord: notRecord,
+		notInterface: notInterface,
+		notApp: notApp,
+		notAPI: index
+	});
 
 	var runtime_1 = createCommonjsModule(function (module) {
 	/**
@@ -22003,1309 +25168,9 @@ var notBulma = (function (exports) {
 
 	var asyncToGenerator = _asyncToGenerator;
 
-	var HAS_SPECIES_SUPPORT$3 = arrayMethodHasSpeciesSupport('slice');
-	var USES_TO_LENGTH$5 = arrayMethodUsesToLength('slice', { ACCESSORS: true, 0: 0, 1: 2 });
+	function _createSuper$b(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$b(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
 
-	var SPECIES$6 = wellKnownSymbol('species');
-	var nativeSlice = [].slice;
-	var max$2 = Math.max;
-
-	// `Array.prototype.slice` method
-	// https://tc39.github.io/ecma262/#sec-array.prototype.slice
-	// fallback for not array-like ES3 strings and DOM objects
-	_export({ target: 'Array', proto: true, forced: !HAS_SPECIES_SUPPORT$3 || !USES_TO_LENGTH$5 }, {
-	  slice: function slice(start, end) {
-	    var O = toIndexedObject(this);
-	    var length = toLength(O.length);
-	    var k = toAbsoluteIndex(start, length);
-	    var fin = toAbsoluteIndex(end === undefined ? length : end, length);
-	    // inline `ArraySpeciesCreate` for usage native `Array#slice` where it's possible
-	    var Constructor, result, n;
-	    if (isArray(O)) {
-	      Constructor = O.constructor;
-	      // cross-realm fallback
-	      if (typeof Constructor == 'function' && (Constructor === Array || isArray(Constructor.prototype))) {
-	        Constructor = undefined;
-	      } else if (isObject(Constructor)) {
-	        Constructor = Constructor[SPECIES$6];
-	        if (Constructor === null) Constructor = undefined;
-	      }
-	      if (Constructor === Array || Constructor === undefined) {
-	        return nativeSlice.call(O, k, fin);
-	      }
-	    }
-	    result = new (Constructor === undefined ? Array : Constructor)(max$2(fin - k, 0));
-	    for (n = 0; k < fin; k++, n++) if (k in O) createProperty(result, n, O[k]);
-	    result.length = n;
-	    return result;
-	  }
-	});
-
-	function _arrayWithHoles(arr) {
-	  if (Array.isArray(arr)) return arr;
-	}
-
-	var arrayWithHoles = _arrayWithHoles;
-
-	function _nonIterableRest() {
-	  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-	}
-
-	var nonIterableRest = _nonIterableRest;
-
-	function _toArray(arr) {
-	  return arrayWithHoles(arr) || iterableToArray(arr) || unsupportedIterableToArray(arr) || nonIterableRest();
-	}
-
-	var toArray = _toArray;
-
-	// `Symbol.iterator` well-known symbol
-	// https://tc39.github.io/ecma262/#sec-symbol.iterator
-	defineWellKnownSymbol('iterator');
-
-	// `Array.prototype.{ reduce, reduceRight }` methods implementation
-	var createMethod$3 = function (IS_RIGHT) {
-	  return function (that, callbackfn, argumentsLength, memo) {
-	    aFunction$1(callbackfn);
-	    var O = toObject(that);
-	    var self = indexedObject(O);
-	    var length = toLength(O.length);
-	    var index = IS_RIGHT ? length - 1 : 0;
-	    var i = IS_RIGHT ? -1 : 1;
-	    if (argumentsLength < 2) while (true) {
-	      if (index in self) {
-	        memo = self[index];
-	        index += i;
-	        break;
-	      }
-	      index += i;
-	      if (IS_RIGHT ? index < 0 : length <= index) {
-	        throw TypeError('Reduce of empty array with no initial value');
-	      }
-	    }
-	    for (;IS_RIGHT ? index >= 0 : length > index; index += i) if (index in self) {
-	      memo = callbackfn(memo, self[index], index, O);
-	    }
-	    return memo;
-	  };
-	};
-
-	var arrayReduce = {
-	  // `Array.prototype.reduce` method
-	  // https://tc39.github.io/ecma262/#sec-array.prototype.reduce
-	  left: createMethod$3(false),
-	  // `Array.prototype.reduceRight` method
-	  // https://tc39.github.io/ecma262/#sec-array.prototype.reduceright
-	  right: createMethod$3(true)
-	};
-
-	var $reduce = arrayReduce.left;
-
-
-
-	var STRICT_METHOD$3 = arrayMethodIsStrict('reduce');
-	var USES_TO_LENGTH$6 = arrayMethodUsesToLength('reduce', { 1: 0 });
-
-	// `Array.prototype.reduce` method
-	// https://tc39.github.io/ecma262/#sec-array.prototype.reduce
-	_export({ target: 'Array', proto: true, forced: !STRICT_METHOD$3 || !USES_TO_LENGTH$6 }, {
-	  reduce: function reduce(callbackfn /* , initialValue */) {
-	    return $reduce(this, callbackfn, arguments.length, arguments.length > 1 ? arguments[1] : undefined);
-	  }
-	});
-
-	var defineProperty$6 = objectDefineProperty.f;
-
-	var FunctionPrototype = Function.prototype;
-	var FunctionPrototypeToString = FunctionPrototype.toString;
-	var nameRE = /^\s*function ([^ (]*)/;
-	var NAME = 'name';
-
-	// Function instances `.name` property
-	// https://tc39.github.io/ecma262/#sec-function-instances-name
-	if (descriptors && !(NAME in FunctionPrototype)) {
-	  defineProperty$6(FunctionPrototype, NAME, {
-	    configurable: true,
-	    get: function () {
-	      try {
-	        return FunctionPrototypeToString.call(this).match(nameRE)[1];
-	      } catch (error) {
-	        return '';
-	      }
-	    }
-	  });
-	}
-
-	var charAt$1 = stringMultibyte.charAt;
-
-	// `AdvanceStringIndex` abstract operation
-	// https://tc39.github.io/ecma262/#sec-advancestringindex
-	var advanceStringIndex = function (S, index, unicode) {
-	  return index + (unicode ? charAt$1(S, index).length : 1);
-	};
-
-	var max$3 = Math.max;
-	var min$3 = Math.min;
-	var floor$1 = Math.floor;
-	var SUBSTITUTION_SYMBOLS = /\$([$&'`]|\d\d?|<[^>]*>)/g;
-	var SUBSTITUTION_SYMBOLS_NO_NAMED = /\$([$&'`]|\d\d?)/g;
-
-	var maybeToString = function (it) {
-	  return it === undefined ? it : String(it);
-	};
-
-	// @@replace logic
-	fixRegexpWellKnownSymbolLogic('replace', 2, function (REPLACE, nativeReplace, maybeCallNative, reason) {
-	  var REGEXP_REPLACE_SUBSTITUTES_UNDEFINED_CAPTURE = reason.REGEXP_REPLACE_SUBSTITUTES_UNDEFINED_CAPTURE;
-	  var REPLACE_KEEPS_$0 = reason.REPLACE_KEEPS_$0;
-	  var UNSAFE_SUBSTITUTE = REGEXP_REPLACE_SUBSTITUTES_UNDEFINED_CAPTURE ? '$' : '$0';
-
-	  return [
-	    // `String.prototype.replace` method
-	    // https://tc39.github.io/ecma262/#sec-string.prototype.replace
-	    function replace(searchValue, replaceValue) {
-	      var O = requireObjectCoercible(this);
-	      var replacer = searchValue == undefined ? undefined : searchValue[REPLACE];
-	      return replacer !== undefined
-	        ? replacer.call(searchValue, O, replaceValue)
-	        : nativeReplace.call(String(O), searchValue, replaceValue);
-	    },
-	    // `RegExp.prototype[@@replace]` method
-	    // https://tc39.github.io/ecma262/#sec-regexp.prototype-@@replace
-	    function (regexp, replaceValue) {
-	      if (
-	        (!REGEXP_REPLACE_SUBSTITUTES_UNDEFINED_CAPTURE && REPLACE_KEEPS_$0) ||
-	        (typeof replaceValue === 'string' && replaceValue.indexOf(UNSAFE_SUBSTITUTE) === -1)
-	      ) {
-	        var res = maybeCallNative(nativeReplace, regexp, this, replaceValue);
-	        if (res.done) return res.value;
-	      }
-
-	      var rx = anObject(regexp);
-	      var S = String(this);
-
-	      var functionalReplace = typeof replaceValue === 'function';
-	      if (!functionalReplace) replaceValue = String(replaceValue);
-
-	      var global = rx.global;
-	      if (global) {
-	        var fullUnicode = rx.unicode;
-	        rx.lastIndex = 0;
-	      }
-	      var results = [];
-	      while (true) {
-	        var result = regexpExecAbstract(rx, S);
-	        if (result === null) break;
-
-	        results.push(result);
-	        if (!global) break;
-
-	        var matchStr = String(result[0]);
-	        if (matchStr === '') rx.lastIndex = advanceStringIndex(S, toLength(rx.lastIndex), fullUnicode);
-	      }
-
-	      var accumulatedResult = '';
-	      var nextSourcePosition = 0;
-	      for (var i = 0; i < results.length; i++) {
-	        result = results[i];
-
-	        var matched = String(result[0]);
-	        var position = max$3(min$3(toInteger(result.index), S.length), 0);
-	        var captures = [];
-	        // NOTE: This is equivalent to
-	        //   captures = result.slice(1).map(maybeToString)
-	        // but for some reason `nativeSlice.call(result, 1, result.length)` (called in
-	        // the slice polyfill when slicing native arrays) "doesn't work" in safari 9 and
-	        // causes a crash (https://pastebin.com/N21QzeQA) when trying to debug it.
-	        for (var j = 1; j < result.length; j++) captures.push(maybeToString(result[j]));
-	        var namedCaptures = result.groups;
-	        if (functionalReplace) {
-	          var replacerArgs = [matched].concat(captures, position, S);
-	          if (namedCaptures !== undefined) replacerArgs.push(namedCaptures);
-	          var replacement = String(replaceValue.apply(undefined, replacerArgs));
-	        } else {
-	          replacement = getSubstitution(matched, S, position, captures, namedCaptures, replaceValue);
-	        }
-	        if (position >= nextSourcePosition) {
-	          accumulatedResult += S.slice(nextSourcePosition, position) + replacement;
-	          nextSourcePosition = position + matched.length;
-	        }
-	      }
-	      return accumulatedResult + S.slice(nextSourcePosition);
-	    }
-	  ];
-
-	  // https://tc39.github.io/ecma262/#sec-getsubstitution
-	  function getSubstitution(matched, str, position, captures, namedCaptures, replacement) {
-	    var tailPos = position + matched.length;
-	    var m = captures.length;
-	    var symbols = SUBSTITUTION_SYMBOLS_NO_NAMED;
-	    if (namedCaptures !== undefined) {
-	      namedCaptures = toObject(namedCaptures);
-	      symbols = SUBSTITUTION_SYMBOLS;
-	    }
-	    return nativeReplace.call(replacement, symbols, function (match, ch) {
-	      var capture;
-	      switch (ch.charAt(0)) {
-	        case '$': return '$';
-	        case '&': return matched;
-	        case '`': return str.slice(0, position);
-	        case "'": return str.slice(tailPos);
-	        case '<':
-	          capture = namedCaptures[ch.slice(1, -1)];
-	          break;
-	        default: // \d\d?
-	          var n = +ch;
-	          if (n === 0) return match;
-	          if (n > m) {
-	            var f = floor$1(n / 10);
-	            if (f === 0) return match;
-	            if (f <= m) return captures[f - 1] === undefined ? ch.charAt(1) : captures[f - 1] + ch.charAt(1);
-	            return match;
-	          }
-	          capture = captures[n - 1];
-	      }
-	      return capture === undefined ? '' : capture;
-	    });
-	  }
-	});
-
-	function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray$1(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
-
-	function _unsupportedIterableToArray$1(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray$1(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$1(o, minLen); }
-
-	function _arrayLikeToArray$1(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-	/*
-	https://github.com/TehShrike/is-mergeable-object
-
-	Included for convinience only. All rights belongs to their authors and etc.
-	start of my code marked.
-
-	*/
-	var isMergeableObject = function isMergeableObject(value) {
-	  return isNonNullObject(value) && !isSpecial(value);
-	};
-
-	function isNonNullObject(value) {
-	  return !!value && _typeof_1(value) === 'object';
-	}
-
-	function isSpecial(value) {
-	  var stringValue = Object.prototype.toString.call(value);
-	  return stringValue === '[object RegExp]' || stringValue === '[object Date]' || isReactElement(value);
-	} // see https://github.com/facebook/react/blob/b5ac963fb791d1298e7f396236383bc955f916c1/src/isomorphic/classic/element/ReactElement.js#L21-L25
-
-
-	var canUseSymbol = typeof Symbol === 'function' && Symbol.for;
-	var REACT_ELEMENT_TYPE = canUseSymbol ? Symbol.for('react.element') : 0xeac7;
-
-	function isReactElement(value) {
-	  return value.$$typeof === REACT_ELEMENT_TYPE;
-	}
-	/*
-	https://github.com/KyleAMathews/deepmerge
-
-	The MIT License (MIT)
-
-	Copyright (c) 2012 Nicholas Fisher
-
-	Permission is hereby granted, free of charge, to any person obtaining a copy
-	of this software and associated documentation files (the "Software"), to deal
-	in the Software without restriction, including without limitation the rights
-	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	copies of the Software, and to permit persons to whom the Software is
-	furnished to do so, subject to the following conditions:
-
-	The above copyright notice and this permission notice shall be included in
-	all copies or substantial portions of the Software.
-
-	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	THE SOFTWARE.
-	*/
-
-
-	function emptyTarget(val) {
-	  return Array.isArray(val) ? [] : {};
-	}
-
-	function cloneUnlessOtherwiseSpecified(value, optionsArgument) {
-	  var clone = !optionsArgument || optionsArgument.clone !== false;
-	  return clone && isMergeableObject(value) ? deepmerge(emptyTarget(value), value, optionsArgument) : value;
-	}
-
-	function defaultArrayMerge(target, source, optionsArgument) {
-	  return target.concat(source).map(function (element) {
-	    return cloneUnlessOtherwiseSpecified(element, optionsArgument);
-	  });
-	}
-
-	function mergeObject(target, source, optionsArgument) {
-	  var destination = {};
-
-	  if (isMergeableObject(target)) {
-	    Object.keys(target).forEach(function (key) {
-	      destination[key] = cloneUnlessOtherwiseSpecified(target[key], optionsArgument);
-	    });
-	  }
-
-	  Object.keys(source).forEach(function (key) {
-	    if (!isMergeableObject(source[key]) || !target[key]) {
-	      destination[key] = cloneUnlessOtherwiseSpecified(source[key], optionsArgument);
-	    } else {
-	      destination[key] = deepmerge(target[key], source[key], optionsArgument);
-	    }
-	  });
-	  return destination;
-	}
-
-	function deepmerge(target, source, optionsArgument) {
-	  var sourceIsArray = Array.isArray(source);
-	  var targetIsArray = Array.isArray(target);
-	  var options = optionsArgument || {
-	    arrayMerge: defaultArrayMerge
-	  };
-	  var sourceAndTargetTypesMatch = sourceIsArray === targetIsArray;
-
-	  if (!sourceAndTargetTypesMatch) {
-	    return cloneUnlessOtherwiseSpecified(source, optionsArgument);
-	  } else if (sourceIsArray) {
-	    var arrayMerge = options.arrayMerge || defaultArrayMerge;
-	    return arrayMerge(target, source, optionsArgument);
-	  } else {
-	    return mergeObject(target, source, optionsArgument);
-	  }
-	}
-
-	deepmerge.all = function deepmergeAll(array, optionsArgument) {
-	  if (!Array.isArray(array)) {
-	    throw new Error('first argument should be an array');
-	  }
-
-	  return array.reduce(function (prev, next) {
-	    return deepmerge(prev, next, optionsArgument);
-	  }, {});
-	};
-
-	var notCommon = /*#__PURE__*/function () {
-	  function notCommon() {
-	    classCallCheck(this, notCommon);
-	  }
-
-	  createClass(notCommon, [{
-	    key: "genLogError",
-	    value: function genLogError(prefix) {
-	      var _arguments = arguments,
-	          _this = this;
-
-	      return function () {
-	        var _window$_this$LOG;
-
-	        var now = _this.localIsoDate(); // eslint-disable-next-line no-console
-
-
-	        (_window$_this$LOG = window[_this.LOG]).error.apply(_window$_this$LOG, ["[".concat(now, "]: ").concat(prefix, "::")].concat(toConsumableArray(_arguments)));
-	      };
-	    }
-	  }, {
-	    key: "report",
-	    value: function report(e) {
-	      if (this.getApp() && this.getApp().getOptions('services.errorReporter')) {
-	        var reporter = this.getApp().getOptions('services.errorReporter');
-
-	        if (reporter && reporter.report) {
-	          reporter.report(e);
-	        }
-	      } else {
-	        if (!this.get('production')) {
-	          this.error.apply(this, arguments);
-	        }
-	      }
-	    }
-	  }], [{
-	    key: "isError",
-	    value: function isError(e) {
-	      return e instanceof Error;
-	    }
-	  }, {
-	    key: "mute",
-	    value: function mute() {
-	      this.ENV_TYPE = 'production';
-	    }
-	  }, {
-	    key: "pad",
-	    value: function pad(n) {
-	      return n < 10 ? '0' + n : n;
-	    } //Проверка является ли переменная функцией.
-
-	  }, {
-	    key: "isFunc",
-	    value: function isFunc(func) {
-	      return typeof func === 'function';
-	    } //Проверка является ли переменная массивом
-
-	  }, {
-	    key: "isArray",
-	    value: function isArray(data) {
-	      return _typeof_1(data) == "object" && data instanceof Array;
-	    }
-	  }, {
-	    key: "localIsoDate",
-	    value: function localIsoDate(date) {
-	      date = date || new Date();
-	      var localIsoString = date.getFullYear() + '-' + this.pad(date.getMonth() + 1) + '-' + this.pad(date.getDate()) + 'T' + this.pad(date.getHours()) + ':' + this.pad(date.getMinutes()) + ':' + this.pad(date.getSeconds());
-	      return localIsoString;
-	    }
-	  }, {
-	    key: "getToday",
-	    value: function getToday() {
-	      var today = new Date();
-	      var date = today.getFullYear() + '-' + this.pad(today.getMonth() + 1) + '-' + this.pad(today.getDate());
-	      return date;
-	    }
-	  }, {
-	    key: "logMsg",
-	    value: function logMsg() {
-	      var _window$this$LOG;
-
-	      var now = this.localIsoDate(); // eslint-disable-next-line no-console
-
-	      (_window$this$LOG = window[this.LOG]).log.apply(_window$this$LOG, ["[".concat(now, "]: ")].concat(Array.prototype.slice.call(arguments)));
-	    } //Генерация метода вывода сообщений в консоль с указанием префикса.
-
-	  }, {
-	    key: "genLogMsg",
-	    value: function genLogMsg(prefix) {
-	      var _arguments2 = arguments,
-	          _this2 = this;
-
-	      return function () {
-	        var _window$_this2$LOG;
-
-	        var now = _this2.localIsoDate(); // eslint-disable-next-line no-console
-
-
-	        (_window$_this2$LOG = window[_this2.LOG]).log.apply(_window$_this2$LOG, ["[".concat(now, "]: ").concat(prefix, "::")].concat(toConsumableArray(_arguments2)));
-	      };
-	    }
-	    /**
-	     * Определяет является ли окружение окружением разработки
-	     * @returns  {boolean} true если это запущено в окружении разработки
-	     **/
-
-	  }, {
-	    key: "isDev",
-	    value: function isDev() {
-	      return this.ENV_TYPE === this.DEV_ENV;
-	    }
-	  }, {
-	    key: "genLogDebug",
-	    value: function genLogDebug(prefix) {
-	      if (this.isDev()) {
-	        return this.genLogMsg(prefix);
-	      } else {
-	        return this.NOOP;
-	      }
-	    } //Функция вывода сообщения об ошибке
-
-	  }, {
-	    key: "logError",
-	    value: function logError() {
-	      var _window$this$LOG2;
-
-	      var now = this.localIsoDate(); // eslint-disable-next-line no-console
-
-	      (_window$this$LOG2 = window[this.LOG]).error.apply(_window$this$LOG2, ["[".concat(now, "]: ")].concat(Array.prototype.slice.call(arguments)));
-	    }
-	  }, {
-	    key: "trace",
-	    value: function trace() {
-	      if (!this.get('production')) {
-	        this.trace.apply(this, arguments);
-	      }
-	    }
-	  }, {
-	    key: "capitalizeFirstLetter",
-	    value: function capitalizeFirstLetter(name) {
-	      return name.charAt(0).toUpperCase() + name.slice(1);
-	    }
-	  }, {
-	    key: "lowerFirstLetter",
-	    value: function lowerFirstLetter(string) {
-	      return string.charAt(0).toLowerCase() + string.slice(1);
-	    }
-	  }, {
-	    key: "escapeHtml",
-	    value: function escapeHtml(unsafe) {
-	      return unsafe.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
-	    }
-	  }, {
-	    key: "startApp",
-	    value: function startApp(starter) {
-	      document.addEventListener('DOMContentLoaded', starter);
-	    }
-	  }, {
-	    key: "getApp",
-	    value: function getApp() {
-	      return this.get('app');
-	    }
-	  }, {
-	    key: "extendAppConfig",
-	    value: function extendAppConfig(conf, conf2) {
-	      return this.deepMerge(conf, conf2);
-	    }
-	  }, {
-	    key: "absorbModule",
-	    value: function absorbModule(defaultConf, mod) {
-	      for (var prop in mod) {
-	        if (prop === 'manifest') {
-	          defaultConf = this.extendAppConfig(defaultConf, mod.manifest);
-	        } else {
-	          window[prop] = mod[prop];
-	        }
-	      }
-
-	      return defaultConf;
-	    }
-	  }, {
-	    key: "defineIfNotExists",
-	    value: function defineIfNotExists(obj, key, defaultValue) {
-	      if (!Object.prototype.hasOwnProperty.call(obj, key)) {
-	        obj[key] = defaultValue;
-	      }
-	    }
-	  }, {
-	    key: "register",
-	    value: function register(key, val) {
-	      this.registry[key] = val;
-	    }
-	  }, {
-	    key: "get",
-	    value: function get(key) {
-	      return Object.prototype.hasOwnProperty.call(this.registry, key) ? this.registry[key] : null;
-	    }
-	  }, {
-	    key: "moveItem",
-	    value: function moveItem(array, old_index, new_index) {
-	      if (new_index >= array.length) {
-	        var k = new_index - array.length;
-
-	        while (k-- + 1) {
-	          array.push(undefined);
-	        }
-	      }
-
-	      array.splice(new_index, 0, array.splice(old_index, 1)[0]);
-	    }
-	  }, {
-	    key: "stripProxy",
-	    value: function stripProxy(obj) {
-	      if (typeof obj !== 'undefined' && obj !== null) {
-	        if (obj.isProxy) {
-	          if (Array.isArray(obj)) {
-	            obj = Array.from(obj);
-	          } else {
-	            obj = Object.assign({}, obj);
-	          }
-
-	          for (var t in obj) {
-	            if (Object.prototype.hasOwnProperty.call(obj, t)) {
-	              obj[t] = this.stripProxy(obj[t]);
-	            }
-	          }
-	        }
-	      }
-
-	      return obj;
-	    }
-	  }, {
-	    key: "pipe",
-	    value: function pipe(data
-	    /* feed data */
-	    , funcs
-	    /* functions array */
-	    ) {
-	      var result;
-
-	      var _iterator = _createForOfIteratorHelper(funcs),
-	          _step;
-
-	      try {
-	        for (_iterator.s(); !(_step = _iterator.n()).done;) {
-	          var func = _step.value;
-	          result = func(result || data);
-	        }
-	      } catch (err) {
-	        _iterator.e(err);
-	      } finally {
-	        _iterator.f();
-	      }
-
-	      return result;
-	    }
-	  }, {
-	    key: "getAPI",
-	    value: function getAPI(type) {
-	      return this.getManager() ? this.getManager().getAPI(type) : null;
-	    }
-	  }, {
-	    key: "setManager",
-	    value: function setManager(v) {
-	      this.MANAGER = v;
-	    }
-	  }, {
-	    key: "getManager",
-	    value: function getManager() {
-	      return this.MANAGER;
-	    }
-	  }, {
-	    key: "getJSON",
-	    value: function getJSON(url) {
-	      return fetch(url).then(function (response) {
-	        return response.json();
-	      });
-	    }
-	  }]);
-
-	  return notCommon;
-	}();
-
-	defineProperty$1(notCommon, "MANAGER", null);
-
-	defineProperty$1(notCommon, "LOG", 'console');
-
-	defineProperty$1(notCommon, "deepMerge", deepmerge);
-
-	defineProperty$1(notCommon, "TZ_OFFSET", new Date().getTimezoneOffset() / 60 * -1);
-
-	defineProperty$1(notCommon, "DEV_ENV", 'production');
-
-	defineProperty$1(notCommon, "ENV_TYPE", window.NOT_ENV_TYPE ? window.NOT_ENV_TYPE : notCommon.DEV_ENV);
-
-	defineProperty$1(notCommon, "NOOP", function () {});
-
-	defineProperty$1(notCommon, "registry", {});
-
-	function _createSuper$3(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$3(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
-
-	function _isNativeReflectConstruct$3() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-	var META_METHOD_INIT = Symbol('init'),
-	    META_DATA = Symbol('data'),
-	    META_WORKING = Symbol('working'),
-	    META_OPTIONS = Symbol('options');
-
-	var notBase = /*#__PURE__*/function (_EventEmitter) {
-	  inherits(notBase, _EventEmitter);
-
-	  var _super = _createSuper$3(notBase);
-
-	  function notBase(input) {
-	    var _this;
-
-	    classCallCheck(this, notBase);
-
-	    _this = _super.call(this);
-	    _this[META_DATA] = {};
-	    _this[META_WORKING] = {};
-	    _this[META_OPTIONS] = {};
-
-	    _this[META_METHOD_INIT](input);
-
-	    return possibleConstructorReturn(_this, assertThisInitialized(_this));
-	  }
-
-	  createClass(notBase, [{
-	    key: META_METHOD_INIT,
-	    value: function value(input) {
-	      if (!input) {
-	        input = {};
-	      }
-
-	      if (Object.prototype.hasOwnProperty.call(input, 'data')) {
-	        this.setData(input.data);
-	      }
-
-	      if (Object.prototype.hasOwnProperty.call(input, 'working')) {
-	        this.setWorking(input.working);
-	      }
-
-	      if (Object.prototype.hasOwnProperty.call(input, 'options')) {
-	        this.setOptions(input.options);
-	      }
-
-	      this.log = notCommon.genLogMsg(this.getWorking('name'));
-	      this.info = this.log;
-	      this.debug = notCommon.genLogDebug(this.getWorking('name'));
-	      this.error = notCommon.genLogError(this.getWorking('name'));
-	    }
-	  }, {
-	    key: "setCommon",
-	    value: function setCommon(what, args) {
-	      switch (args.length) {
-	        case 1:
-	          {
-	            /* set collection */
-	            what = args[0];
-	            break;
-	          }
-
-	        case 2:
-	          {
-	            /* set collection element */
-	            notPath$1.set(args[0]
-	            /* path */
-	            , what
-	            /* collection */
-	            , undefined
-	            /* helpers */
-	            , args[1]
-	            /* value */
-	            );
-	            break;
-	          }
-	      }
-
-	      return this;
-	    }
-	  }, {
-	    key: "getCommon",
-	    value: function getCommon(what, args) {
-	      switch (args.length) {
-	        /* if we want get data by path */
-	        case 1:
-	          {
-	            return notPath$1.get(args[0], what);
-	          }
-
-	        /* if we want get data by path with default value */
-
-	        case 2:
-	          {
-	            var res = notPath$1.get(args[0], what);
-
-	            if (res === undefined) {
-	              /* no data, return default value */
-	              return args[1];
-	            } else {
-	              /* data, return it */
-	              return res;
-	            }
-	          }
-
-	        /* return full collection */
-
-	        default:
-	          {
-	            return what;
-	          }
-	      }
-	    }
-	    /*
-	    	CORE OBJECT
-	    		DATA - information
-	    		OPTIONS - how to work
-	    		WORKING - temporarily generated in proccess
-	    */
-
-	  }, {
-	    key: "setData",
-	    value: function setData() {
-	      if (arguments.length === 1) {
-	        this[META_DATA] = arguments[0];
-	      } else {
-	        this.setCommon(this.getData(), arguments);
-	      }
-
-	      this.emit('change');
-	      return this;
-	    }
-	  }, {
-	    key: "getData",
-	    value: function getData() {
-	      return this.getCommon(this[META_DATA], arguments);
-	    }
-	  }, {
-	    key: "setOptions",
-	    value: function setOptions() {
-	      if (arguments.length === 1) {
-	        this[META_OPTIONS] = arguments[0];
-	      } else {
-	        this.setCommon(this.getOptions(), arguments);
-	      }
-
-	      return this;
-	    }
-	  }, {
-	    key: "getOptions",
-	    value: function getOptions() {
-	      return this.getCommon(this[META_OPTIONS], arguments);
-	    }
-	  }, {
-	    key: "setWorking",
-	    value: function setWorking() {
-	      if (arguments.length === 1) {
-	        this[META_WORKING] = arguments[0];
-	      } else {
-	        this.setCommon(this.getWorking(), arguments);
-	      }
-
-	      return this;
-	    }
-	  }, {
-	    key: "getWorking",
-	    value: function getWorking() {
-	      return this.getCommon(this[META_WORKING], arguments);
-	    }
-	  }, {
-	    key: "report",
-	    value: function report() {
-	      if (notCommon.report) {
-	        notCommon.report.apply(notCommon, [this.getWorking('name')].concat(Array.prototype.slice.call(arguments)));
-	      }
-	    }
-	  }, {
-	    key: "getApp",
-	    value: function getApp() {
-	      return notCommon.getApp();
-	    }
-	  }]);
-
-	  return notBase;
-	}(EventEmitter);
-
-	function _createSuper$4(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$4(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
-
-	function _isNativeReflectConstruct$4() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-	/**
-	* @const {string}	OPT_DEFAULT_ACTION_NAME			default action name
-	*/
-
-	var OPT_DEFAULT_ACTION_NAME = 'default';
-	/**
-	* @const {string}	OPT_DEFAULT_CONTAINER_SELECTOR	selector of container HTML
-	*													element
-	*/
-
-	var OPT_DEFAULT_CONTAINER_SELECTOR = 'main.content';
-	/**
-	* @const {string}	OPT_DEFAULT_PLURAL_NAME	default plural name of entities
-	*/
-
-	var OPT_DEFAULT_PLURAL_NAME = 'Models';
-	/**
-	* @const {string}	OPT_DEFAULT_SINGLE_NAME	default single name of entities
-	*/
-
-	var OPT_DEFAULT_SINGLE_NAME = 'Model';
-	/**
-	* @const {string}	OPT_DEFAULT_MODULE_NAME	default module name
-	*/
-
-	var OPT_DEFAULT_MODULE_NAME = 'main';
-	/**
-	* @const {boolean}	OPT_DEFAULT_AUTO_NAME	if shoould be used auto name generator
-	*/
-
-	var OPT_DEFAULT_AUTO_NAME = true;
-	/*
-	*	Basic class for user controller
-	*/
-
-	var notController = /*#__PURE__*/function (_notBase) {
-	  inherits(notController, _notBase);
-
-	  var _super = _createSuper$4(notController);
-
-	  /**
-	  *	@param {notApp} app
-	  */
-	  function notController(app, name) {
-	    var _this;
-
-	    classCallCheck(this, notController);
-
-	    _this = _super.call(this, {
-	      working: {
-	        name: name
-	      }
-	    });
-	    _this.app = app;
-
-	    _this.log('start controller');
-
-	    _this.setWorking({
-	      ready: false,
-	      views: {},
-	      libs: {},
-	      helpers: {}
-	    });
-
-	    _this.setData({});
-
-	    _this.setOptions({
-	      moduleName: OPT_DEFAULT_MODULE_NAME,
-	      containerSelector: OPT_DEFAULT_CONTAINER_SELECTOR,
-	      prefix: _this.getApp().getOptions('paths.module'),
-	      names: {
-	        plural: OPT_DEFAULT_PLURAL_NAME,
-	        single: OPT_DEFAULT_SINGLE_NAME
-	      }
-	    });
-	    /*
-	    	сразу делаем доступными модели notRecord из nc`ControllerName` будут доступны как this.nr`ModelName`
-	    */
-
-
-	    var interfaces = notCommon.getApp().getInterfaces();
-	    _this.make = {};
-
-	    for (var t in interfaces) {
-	      if (Object.prototype.hasOwnProperty.call(interfaces, t)) {
-	        _this.make[t] = interfaces[t];
-	      }
-	    }
-
-	    return possibleConstructorReturn(_this, assertThisInitialized(_this));
-	  }
-	  /**
-	  *	Returns current notApp
-	  *	@return {notApp}
-	  */
-
-
-	  createClass(notController, [{
-	    key: "getApp",
-	    value: function getApp() {
-	      return notCommon.getApp();
-	    }
-	    /**
-	    *	Sets default controller model
-	    *	@param {notRecord}	model	notRecord interface object
-	    *	@return {notController}
-	    */
-
-	  }, {
-	    key: "setModel",
-	    value: function setModel(model) {
-	      this.setWorking('model', model);
-	      return this;
-	    }
-	    /**
-	    *	Returns current model
-	    *	@return {notRecord}
-	    */
-
-	  }, {
-	    key: "getModel",
-	    value: function getModel() {
-	      return this.setWorking('model');
-	    }
-	    /**
-	    *	Returns current model primary ID field name
-	    *	@return {notRecord}
-	    */
-
-	  }, {
-	    key: "getModelIDFieldName",
-	    value: function getModelIDFieldName() {
-	      return this.getWorking('modelIDFieldName', '_id');
-	    }
-	    /**
-	    *	Sets current model primary ID field name
-	    *	@return {notRecord}
-	    */
-
-	  }, {
-	    key: "setModelIDFieldName",
-	    value: function setModelIDFieldName() {
-	      var val = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '_id';
-	      return this.setWorking('modelIDFieldName', val);
-	    }
-	    /**
-	    *	Marks this controller as ready
-	    *	emits "ready"/"busy" events
-	    *	@param {Boolean}	val	true/false
-	    */
-
-	  }, {
-	    key: "setReady",
-	    value: function setReady() {
-	      var val = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-	      this.setWorking('ready', val);
-	      val ? this.emit('ready') : this.emit('busy');
-	    }
-	    /**
-	    *	Sets module URL prefix
-	    *	@param {sting} val URL prefix
-	    *	@return {notController} this
-	    */
-
-	  }, {
-	    key: "setURLPrefix",
-	    value: function setURLPrefix(val) {
-	      this.setOptions('urlPrefix', val);
-	      this.updateAutoName();
-	      return this;
-	    }
-	    /**
-	    *	Returns module url prefix
-	    *	@return	{string} prefix
-	    */
-
-	  }, {
-	    key: "getURLPrefix",
-	    value: function getURLPrefix() {
-	      return this.getOptions('urlPrefix');
-	    }
-	    /**
-	    *	Sets module name
-	    *	@param {sting} val name of the module
-	    *	@return {notController} this
-	    */
-
-	  }, {
-	    key: "setModuleName",
-	    value: function setModuleName(val) {
-	      this.setOptions('moduleName', val);
-	      this.updateAutoName();
-	      return this;
-	    }
-	    /**
-	    *	Returns module name
-	    *	@return	{string} module name
-	    */
-
-	  }, {
-	    key: "getModuleName",
-	    value: function getModuleName() {
-	      return this.getOptions('moduleName');
-	    }
-	    /**
-	    *	Returns this module path prefix
-	    *	@return {string}	path to module dir
-	    */
-
-	  }, {
-	    key: "getModulePrefix",
-	    value: function getModulePrefix() {
-	      return [notCommon.getApp().getOptions('paths.modules'), this.getModuleName()].join('/');
-	    }
-	    /**
-	    *	Returns this model URL with URL prefix
-	    *	@return {string}	url path
-	    */
-
-	  }, {
-	    key: "getModelURL",
-	    value: function getModelURL() {
-	      var urlPrefix = this.getURLPrefix(),
-	          moduleName = this.getModuleName();
-	      return urlPrefix ? [urlPrefix, moduleName].join('/') : moduleName;
-	    }
-	    /**
-	    *	Updates working name
-	    *	@param {sting} val name of the module
-	    *	@return {notController} this
-	    */
-
-	  }, {
-	    key: "updateAutoName",
-	    value: function updateAutoName() {
-	      if (this.getOptions('autoName', OPT_DEFAULT_AUTO_NAME)) {
-	        this.setWorking('name', this.getModelURL());
-	      }
-	    }
-	    /**
-	    *	Sets object name
-	    *	@param {sting} val name of the object
-	    *	@return {notController} this
-	    */
-
-	  }, {
-	    key: "setName",
-	    value: function setName(val) {
-	      this.setWorking('name', val);
-	      this.setOptions('autoName', false);
-	      return this;
-	    }
-	    /**
-	    *	Preload records from server, using listAll method,
-	    *	returns Promise
-	    *	@param {object}	list	map of preloaded records
-	    *	@return {Promise}
-	    */
-
-	  }, {
-	    key: "preloadLib",
-	    value: function preloadLib() {
-	      var _this2 = this;
-
-	      var list = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-	      return new Promise(function (resolve, reject) {
-	        if (_typeof_1(list) !== 'object') {
-	          resolve();
-	        } else {
-	          _this2.setWorking('loading', []);
-
-	          var _loop = function _loop(t) {
-	            _this2.getWorking('loading').push(list[t]);
-
-	            _this2.make[list[t]]({}).$listAll().then(function (data) {
-	              if (!_this2.getOptions('libs')) {
-	                _this2.setOptions('libs', {});
-	              }
-
-	              _this2.getOptions('libs')[t] = data;
-
-	              if (_this2.getWorking('loading').indexOf(list[t]) > -1) {
-	                _this2.getWorking('loading').splice(_this2.getWorking('loading').indexOf(list[t]), 1);
-	              }
-
-	              if (_this2.getWorking('loading').length === 0) {
-	                resolve();
-	              }
-	            }).catch(function (err) {
-	              _this2.report(err);
-
-	              reject();
-	            });
-	          };
-
-	          for (var t in list) {
-	            _loop(t);
-	          }
-
-	          if (_this2.getWorking('loading').length === 0) {
-	            resolve();
-	          }
-	        }
-	      });
-	    }
-	    /**
-	    * emits afterRender event
-	    */
-
-	  }, {
-	    key: "onAfterRender",
-	    value: function onAfterRender() {
-	      this.emit('afterRender');
-	    }
-	    /**
-	    *	Transform route name in action name
-	    *	@param {String} 	name tranform action name
-	    *	@return {String}
-	    */
-
-	  }, {
-	    key: "getActionName",
-	    value: function getActionName() {
-	      var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : OPT_DEFAULT_ACTION_NAME;
-	      return 'run' + notCommon.capitalizeFirstLetter(name);
-	    }
-	    /**
-	    *	Get default controller action name
-	    *	@return {String} default action from options
-	    */
-
-	  }, {
-	    key: "getDefaultActionName",
-	    value: function getDefaultActionName() {
-	      return this.getActionName(this.getOptions('defaultAction', OPT_DEFAULT_ACTION_NAME));
-	    }
-	    /**
-	    *	Route params into specific run[Route_name] function
-	    *	@param {array} 	params 	controller input params
-	    *	@return {undefined}
-	    */
-
-	  }, {
-	    key: "route",
-	    value: function route(params) {
-	      var _params = toArray(params),
-	          routerName = _params[0],
-	          subParams = _params.slice(1),
-	          actionName = this.getActionName(routerName ? routerName : OPT_DEFAULT_ACTION_NAME);
-
-	      if (typeof this[actionName] === 'function') {
-	        this[actionName](subParams);
-	      } else if (this[this.getDefaultActionName()]) {
-	        this[this.getDefaultActionName()](subParams);
-	      } else {
-	        this.error('No action in router', params);
-	      }
-	    }
-	    /**
-	    *	Return application options
-	    *	@return {object}
-	    */
-
-	  }, {
-	    key: "getAppOptions",
-	    value: function getAppOptions() {
-	      try {
-	        return this.getApp().getOptions();
-	      } catch (e) {
-	        this.error(e);
-	      }
-	    }
-	    /**
-	    *	Returns module options
-	    *	@param	{string} 	moduleName		name of the module which options requested
-	    *	@return {object}
-	    */
-
-	  }, {
-	    key: "getModuleOptions",
-	    value: function getModuleOptions(moduleName) {
-	      try {
-	        return this.getApp().getOptions(['modules', moduleName || this.getModuleName()].join('.'));
-	      } catch (e) {
-	        this.error(e);
-	      }
-	    }
-	    /**
-	    *	Returns module services
-	    *	@param	{string} 	moduleName		name of the module which services requested
-	    *	@return {object}
-	    */
-
-	  }, {
-	    key: "getServices",
-	    value: function getServices(moduleName) {
-	      try {
-	        return this.getApp().getOptions(['services', moduleName || this.getModuleName()].join('.'));
-	      } catch (e) {
-	        this.error(e);
-	      }
-	    }
-	    /**
-	    *	Returns module components
-	    *	@param	{string} 	moduleName		name of the module which components requested
-	    *	@return {object}
-	    */
-
-	  }, {
-	    key: "getComponents",
-	    value: function getComponents(moduleName) {
-	      try {
-	        return this.getApp().getOptions(['components', moduleName || this.getModuleName()].join('.'));
-	      } catch (e) {
-	        this.error(e);
-	      }
-	    }
-	  }]);
-
-	  return notController;
-	}(notBase);
-
-	function _createSuper$5(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$5(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
-
-	function _isNativeReflectConstruct$5() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+	function _isNativeReflectConstruct$b() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 	var ERROR_DEFAULT = 'Что пошло не так.';
 	var BREADCRUMBS = [];
@@ -23313,7 +25178,7 @@ var notBulma = (function (exports) {
 	var ncCRUD = /*#__PURE__*/function (_notController) {
 	  inherits(ncCRUD, _notController);
 
-	  var _super = _createSuper$5(ncCRUD);
+	  var _super = _createSuper$b(ncCRUD);
 
 	  function ncCRUD(app, params) {
 	    var _this;
@@ -23835,10 +25700,10 @@ var notBulma = (function (exports) {
 	                this.ui.list = new notTable({
 	                  options: {
 	                    targetEl: this.els.main,
-	                    interface: {
+	                    interface: this.getOptions('list.interface', {
 	                      combined: true,
 	                      factory: this.getModel()
-	                    },
+	                    }),
 	                    endless: false,
 	                    preload: {},
 	                    pager: {
@@ -23852,7 +25717,9 @@ var notBulma = (function (exports) {
 	                      title: 'Создать',
 	                      action: this.goCreate.bind(this)
 	                    }],
-	                    fields: this.getOptions('list.fields')
+	                    fields: this.getOptions('list.fields'),
+	                    showSelect: this.getOptions('list.showSelect'),
+	                    showSearch: this.getOptions('list.showSearch')
 	                  }
 	                });
 
@@ -23980,10 +25847,20 @@ var notBulma = (function (exports) {
 	Object.keys(FormElements).forEach(function (fieldtype) {
 	  Form$1.addComponent(fieldtype, FormElements[fieldtype]);
 	});
+	var notCommon$1 = notCommon,
+	    notPath$2 = notPath$1,
+	    notController$1 = notController,
+	    notBase$1 = notBase,
+	    notRouter$2 = notRouter$1,
+	    notRecord$1 = notRecord,
+	    notInterface$1 = notInterface,
+	    notApp$1 = notApp,
+	    notAPI = index;
 
 	exports.Breadcrumbs = Breadcrumbs;
 	exports.Form = Form$1;
 	exports.FormElements = FormElements;
+	exports.Frame = index$1;
 	exports.Menu = Menu;
 	exports.SideMenu = SideMenu;
 	exports.Table = notTable;
@@ -24000,6 +25877,15 @@ var notBulma = (function (exports) {
 	exports.UISideMenu = Ui_side_menu;
 	exports.UITag = Ui_tag;
 	exports.ncCRUD = ncCRUD;
+	exports.notAPI = notAPI;
+	exports.notApp = notApp$1;
+	exports.notBase = notBase$1;
+	exports.notCommon = notCommon$1;
+	exports.notController = notController$1;
+	exports.notInterface = notInterface$1;
+	exports.notPath = notPath$2;
+	exports.notRecord = notRecord$1;
+	exports.notRouter = notRouter$2;
 
 	return exports;
 

@@ -1,6 +1,6 @@
 <script>
 
-  import {createEventDispatcher} from 'svelte';
+  import { createEventDispatcher } from 'svelte';
   let dispatch = createEventDispatcher();
   /*
   item = {

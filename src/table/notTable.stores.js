@@ -16,7 +16,7 @@ function get(key) {
 	}
 }
 
-function create(key, props = {'raw': [], 'filtered': []}) {
+function create(key, props = {'raw': [], 'filtered': [], 'selected': {} }) {
 	if (!exist(key)) {
 		if(Object.keys(props).length > 0){
 			ALL[key] = {};

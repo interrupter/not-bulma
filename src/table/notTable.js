@@ -33,7 +33,8 @@ class notTable extends EventEmitter {
 		this.data = {
 			raw: [],
 			filtered: [],
-			refined: []
+			refined: [],
+			slectyed: {},
 		};
 		this.state = {
 			pagination: {
@@ -57,6 +58,7 @@ class notTable extends EventEmitter {
 			'raw': [],
 			'filtered': [],
 			'refined': [],
+			'selected': {},
 			'state': this.state,
 			'working': this.working
 		});
@@ -68,6 +70,8 @@ class notTable extends EventEmitter {
 		this.stores.filtered.subscribe(this.onFilteredUpdate.bind(this));
 		//урезаны до минимального набора, точно соотвествующего табличному формату
 		this.stores.refined.subscribe(this.onRefinedUpdate.bind(this));
+		//словарь с идентификаторами выбранных строк
+		this.stores.selected.subscribe(this.onSelectedUpdate.bind(this));
 		//pagination, items information
 		this.stores.state.subscribe(this.onStateUpdate.bind(this));
 
@@ -125,6 +129,7 @@ class notTable extends EventEmitter {
 
 	onRefinedUpdate(val) {
 		this.data.refined = val;
+		this.clearSelected();
 		return val;
 	}
 
@@ -139,7 +144,31 @@ class notTable extends EventEmitter {
 		}else{
 			this.setSearch();
 		}
+	}
 
+	onSelectedUpdate(val){
+		this.data.selected = val;
+	}
+
+	clearSelected(){
+		this.data.selected = {};
+	}
+
+	getSelected(object = false){
+		let res = [];
+		for(let id in this.data.selected){
+			if(this.data.selected[id]){
+				if(object){
+					let indx = this.data.refined.findIndex(item => item._id === id);
+					if(indx > -1){
+						res.push(this.data.refined(indx));
+					}
+				}else{
+					res.push(id);
+				}
+			}
+		}
+		return res;
 	}
 
 	render() {
@@ -152,7 +181,9 @@ class notTable extends EventEmitter {
 					fields: this.getOptions('fields'),
 					actions: this.getActions(),
 					links: this.getLinks(),
-					search: ''
+					search: '',
+					showSelect: this.getOptions('showSelect'),
+					showSearch: this.getOptions('showSearch'),
 				}
 			});
 		}
