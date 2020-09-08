@@ -123,7 +123,7 @@
 		<tr>
 			{#if showSelect }
 			<td>
-				<input type="checkbox" id="table-row-select-{getItemId(item)}" data-id="{getItemId(item)}" bind:checked={selected[getItemId(item)]} placeholder="" name="row_selected_{getItemId(item)}" on:change={onRowSelect} on:input={onRowSelect} />
+				<input type="checkbox" id="table-row-select-{getItemId(item)}" data-id="{getItemId(item)}" bind:checked={selected[getItemId(item)]} placeholder="" name="row_selected_{getItemId(item)}" on:change={onRowSelect} />
 			</td>
 			{/if}
 			{#each fields as field}
