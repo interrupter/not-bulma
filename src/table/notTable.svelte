@@ -22,6 +22,7 @@
 	export let search = '';
 	export let showSearch = true;
 	export let showSelect = true;
+	export let selectAll = false;
 
 	export function getItemId(item){
 		return item._id;
@@ -47,6 +48,7 @@
 						}
 					}
 				}
+				selected=selected;
 			}
 		});
 
@@ -96,6 +98,13 @@
 		});
 	}
 
+	function onSelectAll(e){
+		TableStores.get(id).selected.update((value)=>{
+			value[itemId] = selectAll;
+			return value;
+		});
+	}
+
 </script>
 
 {#if links.length}
@@ -121,7 +130,9 @@
 		<th>#</th>
 		{/if}
 		{#each fields as field}
-		<th>{field.title}</th>
+		<th>
+			<input type="checkbox" id="table-row-select-page" bind:checked={selectAll} placeholder="" name="row_selected_all" on:change={onSelectAll} />
+		</th>
 		{/each}
 	</thead>
 	<tbody>
