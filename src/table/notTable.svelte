@@ -100,9 +100,9 @@
 
 	function onSelectAll(e){
 		TableStores.get(id).selected.update((value)=>{
-			for(let k in value){
-				value[k] = selectAll;
-			}
+			items.forEach(item => {
+				value[getItemId(item)] = selectAll;
+			});
 			return value;
 		});
 	}
