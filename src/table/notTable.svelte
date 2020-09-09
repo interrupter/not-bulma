@@ -88,13 +88,9 @@
 
 	function onRowSelect(e){
 		let itemId = e.target.dataset.id;
-		TableStores.get(id).selected.update((value)=>{
-			if(Object.prototype.hasOwnProperty.call(value, itemId)){
-				value[itemId] = !value[itemId];
-			}else{
-				value[itemId] = true;
-			}
-			return value;
+		dispatch('rowSelectChange', {
+			id: 		itemId,
+			selected: selected[itemId]
 		});
 	}
 
@@ -140,7 +136,7 @@
 		<tr>
 			{#if showSelect }
 			<td>
-				<input type="checkbox" id="table-row-select-{getItemId(item)}" data-id="{getItemId(item)}" bind:checked={selected[getItemId(item)]} placeholder="" name="row_selected_{getItemId(item)}" on:change={onRowSelect} />
+				<input type="checkbox" id="table-row-select-{getItemId(item)}" data-id="{getItemId(item)}" bind:checked={selected[getItemId(item)]} placeholder="" name="row_selected_{getItemId(item)}" />
 			</td>
 			{/if}
 			{#each fields as field}
