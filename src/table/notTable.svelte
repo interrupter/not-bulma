@@ -127,12 +127,10 @@
 <table class="table">
 	<thead>
 		{#if showSelect }
-		<th>#</th>
+		<th><input type="checkbox" id="table-row-select-page" bind:checked={selectAll} placeholder="" name="row_selected_all" on:change={onSelectAll} /></th>
 		{/if}
 		{#each fields as field}
-		<th>
-			<input type="checkbox" id="table-row-select-page" bind:checked={selectAll} placeholder="" name="row_selected_all" on:change={onSelectAll} />
-		</th>
+		<th>{field.title}</th>
 		{/each}
 	</thead>
 	<tbody>
