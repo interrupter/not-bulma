@@ -40,6 +40,6 @@
   bind:checked={value}
   name="{fieldname}"
   {readonly} {disabled}
-  on:blur={onBlur} on:input={onInput}
+  on:input={onInput}
   />
 <label class="label" for="edit-table-row-cell-inline-switch-{fieldname}-{id}"></label>

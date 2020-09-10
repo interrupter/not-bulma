@@ -35,7 +35,7 @@ class notTable extends EventEmitter {
 			raw: [],
 			filtered: [],
 			refined: [],
-			slectyed: {},
+			selected: {},
 		};
 		this.state = {
 			pagination: {
