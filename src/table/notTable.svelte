@@ -4,6 +4,7 @@
 	import TableLinks from '../ui.links.svelte';
 	import TableButtons from '../ui.buttons.svelte';
 	import TableBooleans from '../ui.booleans.svelte';
+	import TableSwitch from './controls/ui.switch.svelte';
 
 	import notPath from 'not-path';
 	import { onMount } from 'svelte';
@@ -149,6 +150,15 @@
 				<TableImages values={ notPath.get(field.path, item, helpers) } />
 				{:else if field.type === 'boolean' }
 				<TableBooleans values={ notPath.get(field.path, item, helpers) } />
+				{:else if field.type === 'switch' }
+				<TableSwitch
+					id={getItemId(item)}
+					fieldname={field.path}
+					on:change="{field.onChange}"
+					value={ notPath.get(field.path, item, helpers) }
+					disabled={field.disabled}
+					readonly={field.readonly}
+					/>
 				{:else}
 				{notPath.get(field.path, item, helpers)}
 				{/if}
