@@ -12,21 +12,11 @@
 	export let readonly = false;
   export let styling = " is-rounded is-success ";
 
-  function onBlur(ev){
-  	let data = {
-			id,
-  		field: fieldname,
-  		value: ev.target.type === 'checkbox' ? ev.target.checked:ev.target.value
-  	};
-    dispatch('change', data);
-    return true;
-  }
-
   function onInput(ev){
   	let data = {
 			id,
   		field: fieldname,
-      value
+      value: ev.target.type === 'checkbox' ? ev.target.checked:ev.target.value
   	};
     dispatch('change', data);
     return true;
