@@ -1,4 +1,5 @@
 //raw svelte
+import UIOverlay from './ui.overlay.svelte';
 import UIBreadcrumbs from './ui.breadcrumbs.svelte';
 import UIError from './ui.error.svelte';
 import UISideMenu from './ui.side.menu.svelte';
@@ -43,6 +44,7 @@ const
 	notAPI = Frame.notAPI;
 
 export {
+	UIOverlay,
 	UIBreadcrumbs,
 	UIError,
 	UISideMenu,

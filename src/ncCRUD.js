@@ -172,6 +172,7 @@ class ncCRUD extends notController {
 		});
 		this.ui.create.$on('submit', (ev) => this.onCreateFormSubmit(ev.detail));
 		this.ui.create.$on('reject', this.goList.bind(this));
+		this.emit('after:render:create');
 	}
 
 	async runDetails(params) {
@@ -202,6 +203,7 @@ class ncCRUD extends notController {
 					validators: this.getOptions('Validators'),
 					data: notCommon.stripProxy(res.result)
 				});
+				this.emit('after:render:details');
 			} else {
 				this.error(res);
 				this.ui.error = new UIError({
@@ -252,6 +254,8 @@ class ncCRUD extends notController {
 				});
 
 				this.ui.update.$on('reject', this.goList.bind(this));
+
+				this.emit('after:render:update');
 			} else {
 				this.ui.error = new UIError({
 					target: this.els.main,
@@ -309,14 +313,12 @@ class ncCRUD extends notController {
 					factory: this.getModel()
 				}),
 				endless: false,
-				preload: {},
-				pager: {
-					size: 50,
-					page: 0
-				},
-				sorter: {
+				preload: this.getOptions('list.preload', {}),
+				pager: 	this.getOptions('list.pager', { size: 50, page: 0}),
+				filter: this.getOptions('list.filter'),
+				sorter: this.getOptions('list.sorter', {
 					id: -1
-				},
+				}),
 				actions: [{
 					title: 'Создать',
 					action: this.goCreate.bind(this)
@@ -327,6 +329,7 @@ class ncCRUD extends notController {
 				idField: 			this.getOptions('list.idField'),
 			}
 		});
+		this.emit('after:render:list');
 	}
 
 	goCreate() {
