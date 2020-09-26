@@ -12,7 +12,7 @@ import UILinks from './ui.links.svelte';
 //form related
 import * as FormElements from './form/index.js';
 //stores
-import * as TableStores from './table/notTable.stores.js';
+import Stores from './stores.js';
 //wrappers
 import Table from './table/notTable.js';
 import Breadcrumbs from './breadcrumbs.js';
@@ -21,7 +21,7 @@ import TopMenu from './topmenu.js';
 import Menu from './menu.js';
 
 import Form from './form.js';
-import Stores from './stores.js';
+
 
 import * as Frame  from './frame';
 
@@ -56,7 +56,6 @@ export {
 	UIImages,
 	UILinks,
 	Stores,
-	TableStores,
 	Table,
 	Breadcrumbs,
 	SideMenu,
