@@ -12,7 +12,7 @@ import UILinks from './ui.links.svelte';
 //form related
 import * as FormElements from './form/index.js';
 //stores
-import Stores from './stores.js';
+import * as Stores from './stores.js';
 //wrappers
 import Table from './table/notTable.js';
 import Breadcrumbs from './breadcrumbs.js';
