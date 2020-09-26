@@ -1,5 +1,5 @@
 <script>
-	import * as TableStores from './notTable.stores.js';
+	import * as Stores from './../stores.js';
 	import TableImages from '../ui.images.svelte';
 	import TableLinks from '../ui.links.svelte';
 	import TableButtons from '../ui.buttons.svelte';
@@ -33,12 +33,12 @@
 	onMount(() => {
 
 		if(showSelect){
-			TableStores.get(id).selected.subscribe(value => {
+			Stores.get(id).selected.subscribe(value => {
 				selected = value;
 			});
 		}
 
-		TableStores.get(id).refined.subscribe(value => {
+		Stores.get(id).refined.subscribe(value => {
 			items = value;
 			if(showSelect){
 				for(let itemId in selected){
@@ -54,7 +54,7 @@
 			}
 		});
 
-		TableStores.get(id).state.subscribe(value => {
+		Stores.get(id).state.subscribe(value => {
 			state = value;
 		});
 
@@ -97,7 +97,7 @@
 	}
 
 	function onSelectAll(e){
-		TableStores.get(id).selected.update((value)=>{
+		Stores.get(id).selected.update((value)=>{
 			items.forEach(item => {
 				value[getItemId(item)] = selectAll;
 			});

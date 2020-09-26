@@ -1,7 +1,7 @@
 import EventEmitter from 'wolfy87-eventemitter';
 import notPath from 'not-path';
 
-import * as TableStores from './notTable.stores.js';
+import * as Stores from './../stores.js';
 import UITable from './notTable.svelte';
 
 const OPT_DEFAULT_PAGE_SIZE = 20,
@@ -55,7 +55,7 @@ class notTable extends EventEmitter {
 		};
 		this.working = {};
 
-		this.stores = TableStores.create(this.id, {
+		this.stores = Stores.create(this.id, {
 			'raw': [],
 			'filtered': [],
 			'refined': [],
