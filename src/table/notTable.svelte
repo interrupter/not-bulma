@@ -91,12 +91,9 @@
 	function onRowSelect(e){
 		e.preventDefault();
 		let itemId = e.currentTarget.dataset.id;
-		Stores.get(id).selected.update((value)=>{
-			value[itemId] = !e.currentTarget.checked;
-			return value;
-		});
+		Stores.get(id).selected.update((value)=>{return value;});
 		dispatch('rowSelectChange', {
-			id: 		itemId,
+			id: 			itemId,
 			selected: selected[itemId]
 		});
 		return false;
