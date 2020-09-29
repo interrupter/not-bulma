@@ -22,7 +22,10 @@ const DEFAULT_OPTIONS = {
 	links:[],
 	actions:[],
 	endless: false,
-	idField: '_id'
+	idField: '_id',
+	getItemId: (item)=>{
+		return item._id;
+	}
 };
 
 class notTable extends EventEmitter {
@@ -172,14 +175,28 @@ class notTable extends EventEmitter {
 		return res;
 	}
 
+	getItemId(item){
+		return this.getOptions('getItemId', DEFAULT_OPTIONS.getItemId)(item);
+	}
+
 	selectAll(){
 		this.stores.selected.update(() => {
-			return this.data.filtered.map(item => item.id);
+			let value = {};
+			this.data.filtered.forEach(item => {
+				value[this.getItemId(item)] = true;
+			});
+			return value;
 		});
 	}
 
 	selectNone(){
-		this.stores.selected.update(() => []);
+		this.stores.selected.update(() => {
+			let value = {};
+			this.data.filtered.forEach(item => {
+				value[this.getItemId(item)] = true;
+			});
+			return value;
+		});
 	}
 
 	render() {
@@ -196,6 +213,7 @@ class notTable extends EventEmitter {
 					showSelect: this.getOptions('showSelect'),
 					showSearch: this.getOptions('showSearch'),
 					idField: this.getOptions('idField'),
+					getItemId: this.getOptions('getItemId')
 				}
 			});
 		}
