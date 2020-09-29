@@ -193,7 +193,7 @@ class notTable extends EventEmitter {
 		this.stores.selected.update(() => {
 			let value = {};
 			this.data.filtered.forEach(item => {
-				value[this.getItemId(item)] = true;
+				value[this.getItemId(item)] = false;
 			});
 			return value;
 		});
