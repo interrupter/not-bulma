@@ -162,7 +162,7 @@ class notTable extends EventEmitter {
 				if(object){
 					let indx = this.data.refined.findIndex(item => item._id === id);
 					if(indx > -1){
-						res.push(this.data.refined(indx));
+						res.push(this.data.refined[indx]);
 					}
 				}else{
 					res.push(id);
@@ -170,6 +170,16 @@ class notTable extends EventEmitter {
 			}
 		}
 		return res;
+	}
+
+	selectAll(){
+		this.stores.selected.update(() => {
+			return this.data.refined.map(item => item.id);
+		});
+	}
+
+	selectNone(){
+		this.stores.selected.update(() => []);
 	}
 
 	render() {
