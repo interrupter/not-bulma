@@ -174,7 +174,7 @@ class notTable extends EventEmitter {
 
 	selectAll(){
 		this.stores.selected.update(() => {
-			return this.data.refined.map(item => item.id);
+			return this.data.filtered.map(item => item.id);
 		});
 	}
 
