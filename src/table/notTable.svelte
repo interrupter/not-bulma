@@ -89,11 +89,17 @@
 	}
 
 	function onRowSelect(e){
-		let itemId = e.target.dataset.id;
+		e.preventDefault();
+		let itemId = e.currentTarget.dataset.id;
+		Stores.get(id).selected.update((value)=>{
+			value[itemId] = !e.currentTarget.checked;
+			return value;
+		});
 		dispatch('rowSelectChange', {
 			id: 		itemId,
 			selected: selected[itemId]
 		});
+		return false;
 	}
 
 	function onSelectAll(e){
