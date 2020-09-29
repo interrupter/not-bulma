@@ -158,14 +158,14 @@ class notTable extends EventEmitter {
 		this.data.selected = {};
 	}
 
-	getSelected(object = false){
+	getSelected(object = false, store = 'refined'){
 		let res = [];
 		for(let id in this.data.selected){
 			if(this.data.selected[id]){
 				if(object){
-					let indx = this.data.refined.findIndex(item => item._id === id);
+					let indx = this.data[store].findIndex(item => item._id === id);
 					if(indx > -1){
-						res.push(this.data.refined[indx]);
+						res.push(this.data[store][indx]);
 					}
 				}else{
 					res.push(id);
