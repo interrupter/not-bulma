@@ -101,7 +101,7 @@ class notController extends notBase {
 	*	@return {notRecord}
 	*/
 	getModel() {
-		return this.setWorking('model');
+		return this.getWorking('model');
 	}
 
 	/**
