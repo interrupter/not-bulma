@@ -138,5 +138,4 @@ export default class notApp extends notBase {
 		return this.getWorking('WS_CLIENT');
 	}
 
-
 }
