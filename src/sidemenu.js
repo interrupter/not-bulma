@@ -48,7 +48,7 @@ class SideMenu extends Menu {
 
 	static updateMenu(url) {
 		Array.from(document.querySelectorAll(this.getOptions().targetSelector + ' aside.menu a')).forEach((item) => {
-			if ((item.href == url) || (url.href && url.href.indexOf(item.href) == 0)) {
+			if ((item.getAttribute('href') == url) || (url.href && url.href.indexOf(item.getAttribute('href')) == 0)) {
 				item.classList.add('is-active');
 			} else {
 				item.classList.remove('is-active');
