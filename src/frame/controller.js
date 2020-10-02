@@ -235,7 +235,7 @@ class notController extends notBase {
 		if(model)		{ url.push(encodeURIComponent(model));	}
 		if(id)			{ url.push(encodeURIComponent(id));			}
 		if(action)	{ url.push(encodeURIComponent(action));	}
-		return url.implode('/').replace(/\/\//g, '/');
+		return url.join('/').replace(/\/\//g, '/');
 	}
 
 	/**
