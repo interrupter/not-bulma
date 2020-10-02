@@ -46,6 +46,7 @@ class notController extends notBase {
 			}
 		});
 		this.app = app;
+		this.setURLPrefix(app.getOptions('router.root'));
 		this.log('start controller');
 		this.setWorking({
 			ready: false,

@@ -39,7 +39,6 @@ export default class notBase extends EventEmitter {
 		this.info = this.log;
 		this.debug = notCommon.genLogDebug(this.getWorking('name'));
 		this.error = notCommon.genLogError(this.getWorking('name'));
-
 	}
 
 	setCommon(what, args) {

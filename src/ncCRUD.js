@@ -11,9 +11,8 @@ import notCommon from './frame/common.js';
 const BREADCRUMBS = [];
 
 class ncCRUD extends notController {
-	constructor(app, params) {
-		super(app);
-		this.log('CRUD Controller');
+	constructor(app, name) {
+		super(app, `CRUD.${name}`);
 		this.ui = {};
 		this.els = {};
 		this.setOptions('names', {
@@ -21,7 +20,6 @@ class ncCRUD extends notController {
 			single: 'single',
 		});
 		this.setOptions('containerSelector', this.app.getOptions('crud.containerSelector'));
-		this.setOptions('params', params);
 		this.buildFrame();
 		return this;
 	}
