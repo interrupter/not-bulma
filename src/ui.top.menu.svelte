@@ -28,7 +28,7 @@
       {#if item.break }
       <hr class="navbar-divider" />
       {/if}
-      <a href class="navbar-item" href="{root}{item.url}" data-href="{item.url}" on:click="{onClick}">{item.title}
+      <a class="navbar-item" href="{root}{item.url}" data-href="{item.url}" on:click="{onClick}">{item.title}
         {#if item.tag }
         <span class="ml-3 tag is-{item.tag.type} is-pulled-right">{item.tag.label}</span>
         {/if}
