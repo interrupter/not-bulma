@@ -47,9 +47,10 @@
 
 </script>
 <div class="field form-field-password-{fieldname}">
-  <label class="label">{label}</label>
+  <label class="label" for="form-field-password-{fieldname}">{label}</label>
   <div class="control {iconClasses}">
     <input class="input {validationClasses}" {readonly}
+    id="form-field-password-{fieldname}"
     type="password" name="{fieldname}" invalid="{invalid}" required={required} placeholder="{placeholder}" bind:value={value} autocomplete="{fieldname}" aria-controls="input-field-helper-{fieldname}"
       on:change={onBlur} on:input={onInput}
       aria-describedby="input-field-helper-{fieldname}" />

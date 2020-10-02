@@ -48,9 +48,10 @@
 
 </script>
 <div class="field form-field-date-{fieldname}">
-  <label class="label">{label}</label>
+  <label class="label" for="form-field-date-{fieldname}">{label}</label>
   <div class="control {iconClasses}">
     <input class="input {validationClasses}"
+    id="form-field-date-{fieldname}"
     type="date" name="{fieldname}"
     invalid="{invalid}" required={required}
     placeholder="{placeholder}" bind:value={value} {readonly}

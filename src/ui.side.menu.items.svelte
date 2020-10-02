@@ -1,7 +1,7 @@
 <script>
 	import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
-	
+
 	export let root = '';
 	export let items = [];
 
@@ -22,7 +22,7 @@
 		{#if item.url }
 		<a href="{root}{item.url}" data-href="{item.url}" on:click="{onClick}">{item.title}</a>
 		{:else}
-		<a>{item.title}</a>
+		<a href>{item.title}</a>
 		{/if}
 		<svelte:self items="{item.items}" {root} on:navigate />
 	</li>
@@ -30,7 +30,7 @@
 	{#if item.url }
 	<li><a href="{root}{item.url}" data-href="{item.url}" on:click="{onClick}">{item.title}</a></li>
 	{:else }
-	<li><a>{item.title}</a></li>
+	<li><a href>{item.title}</a></li>
 	{/if}
 	{/if}
 {/each}

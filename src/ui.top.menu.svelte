@@ -21,14 +21,14 @@
   {#each sections as section }
   {#if items.filter(t=>t.section===section.id).length }
   <div class="navbar-item has-dropdown is-hoverable is-pulled-right">
-    <a class="navbar-link">{section.title}</a>
+    <a href class="navbar-link">{section.title}</a>
     <div class="navbar-dropdown">
       {#each items as item}
       {#if section.id === item.section }
       {#if item.break }
       <hr class="navbar-divider" />
       {/if}
-      <a class="navbar-item" href="{root}{item.url}" data-href="{item.url}" on:click="{onClick}">{item.title}
+      <a href class="navbar-item" href="{root}{item.url}" data-href="{item.url}" on:click="{onClick}">{item.title}
         {#if item.tag }
         <span class="ml-3 tag is-{item.tag.type} is-pulled-right">{item.tag.label}</span>
         {/if}

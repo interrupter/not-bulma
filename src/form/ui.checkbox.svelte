@@ -49,12 +49,12 @@
 </script>
 
 <div class="field form-field-checkbox-{fieldname}">
-  <label class="label">{label}</label>
+  <label class="label" for="edit-form-checkbox-{fieldname}">{label}</label>
   <div class="control {iconClasses}">
     <label class="checkbox" disabled={disabled}
-     for="edit-form-checkbox-{fieldname}">
+     for="form-field-checkbox-{fieldname}">
       <input type="checkbox"
-        id="edit-form-checkbox-{fieldname}"
+        id="form-field-checkbox-{fieldname}"
         bind:checked={value}
         placeholder="{placeholder}"
         name="{fieldname}"

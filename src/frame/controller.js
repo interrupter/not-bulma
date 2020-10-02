@@ -53,6 +53,8 @@ class notController extends notBase {
 			libs: {},
 			helpers: {}
 		});
+		this.ui = {};
+    this.els = {};
 		this.setData({});
 		this.setOptions({
 			moduleName: OPT_DEFAULT_MODULE_NAME,

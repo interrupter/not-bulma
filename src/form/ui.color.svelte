@@ -46,9 +46,15 @@
 
 </script>
 <div class="field form-field-color-{fieldname}">
-  <label class="label">{label}</label>
+  <label class="label" for="form-field-color-{fieldname}">{label}</label>
   <div class="control {iconClasses}">
-    <input class="input {validationClasses}" type="color" name="{fieldname}" invalid="{invalid}" required={required} placeholder="{placeholder}" bind:value={value} autocomplete="{fieldname}" aria-controls="input-field-helper-{fieldname}"
+    <input
+      id="form-field-color-{fieldname}"
+      class="input {validationClasses}" type="color" name="{fieldname}"
+      invalid="{invalid}" required={required}
+      placeholder="{placeholder}"
+      bind:value={value} autocomplete="{fieldname}"
+      aria-controls="input-field-helper-{fieldname}"
       on:change={onBlur} on:input={onInput} {readonly}
       aria-describedby="input-field-helper-{fieldname}" />
     {#if icon }

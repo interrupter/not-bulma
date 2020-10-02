@@ -17,7 +17,7 @@
 	export let show = true;
 	export let closeOnClick = true;
 	export let closeSize = 'normal';
-	export let layer = 1;
+	//export let layer = 1;
 
 	$: if(show){
 		document.body.style.overflow = 'hidden';

@@ -46,10 +46,15 @@
   }
 
 </script>
-<div class="field form-field-textfield-{fieldname}">
-  <label class="label">{label}</label>
+<div class="field form-field-email-{fieldname}">
+  <label class="label" for="form-field-textfield-{fieldname}">{label}</label>
   <div class="control {iconClasses}">
-    <input class="input {validationClasses}" type="email" name="{fieldname}" invalid="{invalid}" required={required} placeholder="{placeholder}" bind:value={value} autocomplete="{fieldname}" aria-controls="input-field-helper-{fieldname}"
+    <input class="input {validationClasses}"
+      id="form-field-email-{fieldname}"
+      type="email" name="{fieldname}" invalid="{invalid}"
+      required={required} placeholder="{placeholder}"
+      bind:value={value} autocomplete="{fieldname}"
+      aria-controls="input-field-helper-{fieldname}"
       on:change={onBlur} on:input={onInput} {readonly}
       aria-describedby="input-field-helper-{fieldname}" />
     {#if icon }

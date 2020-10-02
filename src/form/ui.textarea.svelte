@@ -48,9 +48,10 @@
 
 </script>
 <div class="field form-field-textarea-{fieldname}">
-  <label class="label">{label}</label>
+  <label class="label" for="form-field-textarea-{fieldname}">{label}</label>
   <div class="control {iconClasses}">
-    <textarea invalid="{invalid}"
+    <textarea id="form-field-textarea-{fieldname}"
+    invalid="{invalid}"
     on:blur={onBlur}
     class="textarea {validationClasses}"
     required={required} {readonly}

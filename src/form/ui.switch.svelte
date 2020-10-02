@@ -53,7 +53,7 @@
   <div class="control">
       <input type="checkbox"
         class="switch {styling}"
-        id="edit-form-switch-{fieldname}"
+        id="form-field-switch-{fieldname}"
         bind:checked={value}
         placeholder="{placeholder}"
         name="{fieldname}"
@@ -63,7 +63,7 @@
         aria-controls="input-field-helper-{fieldname}"
         aria-describedby="input-field-helper-{fieldname}"
         disabled={disabled} />
-				<label class="label" for="edit-form-switch-{fieldname}">{label}</label>
+				<label class="label" for="form-field-switch-{fieldname}">{label}</label>
   </div>
   <p class="help {validationClasses}" id="form-field-helper-{fieldname}">
     {#if !(validated && valid) && (inputStarted) }

@@ -74,11 +74,14 @@
 </script>
 
 <div class="field form-field-select-{fieldname}">
-  <label class="label">{label}</label>
+  <label class="label" for="form-field-select-{fieldname}">{label}</label>
   <div class="control {iconClasses}">
     <div class="select {validationClasses} {multipleClass}">
       {#if multiple }
-      <select name="{fieldname}" size="{size}" on:blur={onBlur} on:input={onInput} {readonly} {required} multiple >
+      <select
+        id="form-field-select-{fieldname}"
+        name="{fieldname}" size="{size}"
+        on:blur={onBlur} on:input={onInput} {readonly} {required} multiple >
         {#if placeholder.length > 0 }
         {#if value }
         <option value="{CLEAR_MACRO}" >{placeholder}</option>
@@ -91,7 +94,8 @@
         {/each}
       </select>
       {:else}
-      <select name="{fieldname}" bind:value={value} on:blur={onBlur} on:input={onInput} {readonly} >
+      <select id="form-field-select-{fieldname}"
+        name="{fieldname}" bind:value={value} on:blur={onBlur} on:input={onInput} {readonly} >
         {#if placeholder.length > 0 }
         {#if value }
         <option value="{CLEAR_MACRO}">{placeholder}</option>
