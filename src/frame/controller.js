@@ -97,13 +97,29 @@ class notController extends notBase {
 		return this;
 	}
 
-
 	/**
 	*	Returns current model
 	*	@return {notRecord}
 	*/
 	getModel() {
 		return this.getWorking('model');
+	}
+
+	/**
+	*	Returns current model name
+	*	@return {notRecord}
+	*/
+	getModelName(){
+		return this.getWorking('modelName');
+	}
+	/**
+	*	Sets default controller model name
+	*	@param {string}	modelName	notRecord interface object
+	*	@return {notController}
+	*/
+	setModelName(modelName){
+		this.setWorking('modelName', modelName);
+		return this;
 	}
 
 	/**
@@ -182,9 +198,43 @@ class notController extends notBase {
 	*	@return {string}	url path
 	*/
 	getModelURL(){
-		let urlPrefix = this.getURLPrefix(),
-			moduleName = this.getModuleName();
-		return urlPrefix?[urlPrefix, moduleName].join('/'):moduleName;
+		return this.buildURL({
+			prefix: this.getURLPrefix(),
+			module: this.getModuleName(),
+			model: 	this.getModelName(),
+		});
+	}
+
+	/**
+	*	Returns this model action URL with URL prefix
+	* @param  {string} 	id 			some identificator of model
+	* @param  {string} 	action 	action name
+	*	@return {string}	url path
+	*/
+	getModelActionURL(id, action = false){
+		return this.buildURL({
+			prefix: this.getURLPrefix(),
+			module: this.getModuleName(),
+			model: 	this.getModelName(),
+			id,
+			action
+		});
+	}
+
+	/**
+	*	Builds URL with structure like prefix/module/model/id/action
+	* If some part absent or set to false it will be excluded from result
+	*
+	*	@return {string}	url path
+	*/
+	buildURL({	prefix, module, model, id, action	}){
+		let url = ['/'];
+		if(prefix)	{ url.push(encodeURIComponent(prefix));	}
+		if(module)	{ url.push(encodeURIComponent(module));	}
+		if(model)		{ url.push(encodeURIComponent(model));	}
+		if(id)			{ url.push(encodeURIComponent(id));			}
+		if(action)	{ url.push(encodeURIComponent(action));	}
+		return url.implode('/').replace(/\/\//g, '/');
 	}
 
 	/**
@@ -341,6 +391,16 @@ class notController extends notBase {
 		}catch(e){
 			this.error(e);
 		}
+	}
+
+
+	/**
+	*	Returns module components
+	*	@param	{string} 	moduleName		name of the module which components requested
+	*	@return {object}
+	*/
+	buildUrl(parts = []){
+
 	}
 
 }

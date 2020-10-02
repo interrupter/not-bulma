@@ -43,9 +43,11 @@ export default class notApp extends notBase {
 		for (let t = 0; t < this.getOptions('router.manifest').length; t++) {
 			let routeBlock = this.getOptions('router.manifest')[t],
 				paths = routeBlock.paths,
+				schemes = routeBlock.schemes,
 				controller = routeBlock.controller;
 			for (let i = 0; i < paths.length; i++) {
-				routieInput[paths[i]] = this.bindController(controller);
+				let pathScheme = (schemes && Array.isArray(schemes) && schemes.length > i)?schemes[i]: false;
+				routieInput[paths[i]] = this.bindController(controller, pathScheme);
 			}
 		}
 		this.getWorking('router').addList(routieInput).listen(); //.navigate(this.getOptions('router.index'));
@@ -76,10 +78,10 @@ export default class notApp extends notBase {
 		this.execRouter();
 	}
 
-	bindController(controllerName) {
+	bindController(controllerName, controllerPathScheme) {
 		let app = this;
 		return function () {
-			new controllerName(app, arguments);
+			new controllerName(app, arguments, controllerPathScheme);
 		};
 	}
 

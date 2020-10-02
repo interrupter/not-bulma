@@ -41,7 +41,7 @@ class ncCRUD extends notController {
 	}
 
 	getModel(){
-		return this.make[this.getModuleName()];
+		return this.make[this.getModelName()];
 	}
 
 	setBreadcrumbs(tail) {
@@ -154,7 +154,7 @@ class ncCRUD extends notController {
 		await this.preloadVariants('create');
 		this.setBreadcrumbs([{
 			title: 'Добавление',
-			url: '/'+this.getModuleName()+'/create'
+			url: this.getModelActionURL(false, 'create')
 		}]);
 		if (this.ui.create) {
 			return;
@@ -179,7 +179,7 @@ class ncCRUD extends notController {
 		await this.preloadVariants('details');
 		this.setBreadcrumbs([{
 			title: 'Просмотр',
-			url: '/'+this.getModuleName()+`/${params[0]}`
+			url: this.getModelActionURL(params[0], false)
 		}]);
 
 		if (this.ui.details) {
@@ -188,7 +188,7 @@ class ncCRUD extends notController {
 			this.$destroyUI();
 		}
 
-		let manifest = this.app.getInterfaceManifest()[this.getModuleName()];
+		let manifest = this.app.getInterfaceManifest()[this.getModelName()];
 		this.getModel()({
 			_id: params[0]
 		}).$get().then((res) => {
@@ -201,7 +201,7 @@ class ncCRUD extends notController {
 						readonly: true
 					},
 					validators: this.getOptions('Validators'),
-					data: notCommon.stripProxy(res.result)
+					data: res.result
 				});
 				this.emit('after:render:details');
 			} else {
@@ -222,7 +222,7 @@ class ncCRUD extends notController {
 		await this.preloadVariants('update');
 		this.setBreadcrumbs([{
 			title: 'Редактирование',
-			url: '/' + this.getModuleName() + `/${params[0]}/update`
+			url: this.getModelActionURL(params[0], 'update')
 		}]);
 
 		if (this.ui.update) {
@@ -230,14 +230,14 @@ class ncCRUD extends notController {
 		} else {
 			this.$destroyUI();
 		}
-		let manifest = this.app.getInterfaceManifest()[this.getModuleName()];
+		let manifest = this.app.getInterfaceManifest()[this.getModel()];
 		this.getModel()({
 			_id: params[0]
 		}).$getRaw().then((res) => {
 			if (res.status === 'ok') {
 				this.setBreadcrumbs([{
 					title: `Редактирование "${res.result.title}"`,
-					url: '/'+this.getModuleName()+`/${params[0]}/update`
+					url: this.getModelActionURL(params[0], 'update')
 				}]);
 
 				this.ui.update = Form.build({
@@ -273,7 +273,7 @@ class ncCRUD extends notController {
 		await this.preloadVariants('delete');
 		this.setBreadcrumbs([{
 			title: 'Удаление',
-			url: '/'+this.getModuleName()+`/${params[0]}/delete`
+			url: this.getModelActionURL(params[0], 'delete')
 		}]);
 
 		if (confirm('Удалить запись?')) {
@@ -296,7 +296,7 @@ class ncCRUD extends notController {
 		await this.preloadVariants('list');
 		this.setBreadcrumbs([{
 			title: 'Список',
-			url: `/`+this.getModuleName()
+			url: this.getModelURL()
 		}]);
 
 		if (this.ui.list) {
@@ -333,23 +333,23 @@ class ncCRUD extends notController {
 	}
 
 	goCreate() {
-		this.app.getWorking('router').navigate('/' + [this.getModelURL(), 'create'].join('/'));
+		this.app.getWorking('router').navigate(this.getModelActionURL(false, 'create'));
 	}
 
 	goDetails(value) {
-		this.app.getWorking('router').navigate('/' + [this.getModelURL(), value].join('/'));
+		this.app.getWorking('router').navigate(this.getModelActionURL(value, false));
 	}
 
 	goUpdate(value) {
-		this.app.getWorking('router').navigate('/' + [this.getModelURL(), value, 'update'].join('/'));
+		this.app.getWorking('router').navigate(this.getModelActionURL(value, 'update'));
 	}
 
 	goDelete(value) {
-		this.app.getWorking('router').navigate('/' + [this.getModelURL(), value, 'delete'].join('/'));
+		this.app.getWorking('router').navigate(this.getModelActionURL(value, 'delete'));
 	}
 
 	goList() {
-		this.app.getWorking('router').navigate('/' + this.getModelURL());
+		this.app.getWorking('router').navigate(this.getModelURL());
 	}
 
 	onCreateFormSubmit(item) {
