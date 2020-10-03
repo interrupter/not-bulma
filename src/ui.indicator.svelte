@@ -18,4 +18,4 @@
 
 </script>
 
-<span class="tag is-{state}">{lables[state]}</span>
+<span class="tag is-{state}">{labels[state]}</span>
