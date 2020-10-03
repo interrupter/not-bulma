@@ -16,14 +16,16 @@
     return false;
   }
 
+  let lastLength = 0;
+
 </script>
 
 
 <div class="navbar-end mr-6">
   {#each sections as section(section.id) }
-  {#if items.filter(t => t.section === section.id).length || section.indicator || section.tag }
-  <div class="navbar-item {items.filter(t => t.section === section.id).length?'has-dropdown':'is-arrowless'} is-hoverable is-pulled-right">
-    <a href class="navbar-link">
+  {#if (lastLength = items.filter(t => t.section === section.id).length) || section.indicator || section.tag }
+  <div class="navbar-item {lastLength?'has-dropdown':''} is-hoverable is-pulled-right">
+    <a href class="navbar-link {lastLength?'':'is-arrowless'}">
       {section.title}
       {#if section.tag }
       <span class="ml-3 tag is-{section.tag.type} is-pulled-right">{section.tag.label}</span>
