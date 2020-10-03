@@ -20,17 +20,49 @@
 	{#if item.items && item.items.length }
 	<li>
 		{#if item.url }
-		<a href="{root}{item.url}" data-href="{item.url}" on:click="{onClick}">{item.title}</a>
+		<a href="{root}{item.url}" data-href="{item.url}" on:click="{onClick}">
+			{item.title}
+			{#if item.tag }
+			<span class="ml-3 tag is-{item.tag.type} is-pulled-right">{item.tag.label}</span>
+			{/if}
+			{#if item.indicator }
+				<UIIndicator {...(item.indicator)} />
+			{/if}
+		</a>
 		{:else}
-		<a href>{item.title}</a>
+		<a href>
+			{item.title}
+			{#if item.tag }
+			<span class="ml-3 tag is-{item.tag.type} is-pulled-right">{item.tag.label}</span>
+			{/if}
+			{#if item.indicator }
+				<UIIndicator {...(item.indicator)} />
+			{/if}
+		</a>
 		{/if}
 		<svelte:self items="{item.items}" {root} on:navigate />
 	</li>
 	{:else}
 	{#if item.url }
-	<li><a href="{root}{item.url}" data-href="{item.url}" on:click="{onClick}">{item.title}</a></li>
+	<li><a href="{root}{item.url}" data-href="{item.url}" on:click="{onClick}">
+		{item.title}
+		{#if item.tag }
+		<span class="ml-3 tag is-{item.tag.type} is-pulled-right">{item.tag.label}</span>
+		{/if}
+		{#if item.indicator }
+			<UIIndicator {...(item.indicator)} />
+		{/if}
+	</a></li>
 	{:else }
-	<li><a href>{item.title}</a></li>
+	<li><a href>
+		{item.title}
+		{#if item.tag }
+		<span class="ml-3 tag is-{item.tag.type} is-pulled-right">{item.tag.label}</span>
+		{/if}
+		{#if item.indicator }
+			<UIIndicator {...(item.indicator)} />
+		{/if}
+	</a></li>
 	{/if}
 	{/if}
 {/each}

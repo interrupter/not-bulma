@@ -139,6 +139,48 @@ class Menu {
 		}
 	}
 
+	static updateIndicator(sectionId, itemURL, state){
+		this.updateSection(sectionId, (section)=>{
+			section.indicator.state = state;
+		});
+		this.updateItem(itemURL, (item)=>{
+			item.indicator.state = state;
+		});
+	}
+
+	static updateTag(sectionId, itemURL, tag){
+		this.updateSection(sectionId, (section)=>{
+			section.tag = tag;
+		});
+		this.updateItem(itemURL, (item)=>{
+			item.tag = tag;
+		});
+	}
+
+	static updateSection(sectionId, proc){
+		if(this.sections && sectionId){
+			for(let section in this.sections){
+				if( this.sections[section].id !== sectionId ) continue;
+				proc(this.sections[section]);
+			}
+			if(this.menu){
+				this.menu.$set({ sections: this.sections });
+			}
+		}
+	}
+
+	static updateItem(itemURL, proc){
+		if(itemURL && this.items){
+			this.items.forEach((item)=>{
+				if (item.url !== itemURL) return;
+				proc(item);
+			});
+			if(this.menu){
+				this.menu.$set({ items: this.items });
+			}
+		}
+	}
+
 }
 
 export default Menu;

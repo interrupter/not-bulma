@@ -41,6 +41,9 @@
       {/if}
       {/each}
     </div>
+    {#if section.tag }
+    <span class="ml-3 tag is-{section.tag.type} is-pulled-right">{section.tag.label}</span>
+    {/if}
     {#if section.indicator }
       <UIIndicator {...(section.indicator)} />
     {/if}

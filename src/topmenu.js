@@ -69,6 +69,7 @@ class TopMenu extends Menu{
 			this.updateMenu(url);
 		}
 	}
+
 }
 
 export default TopMenu;
