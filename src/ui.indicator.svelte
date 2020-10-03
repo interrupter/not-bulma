@@ -19,4 +19,4 @@
 
 </script>
 
-<span class="tag is-{state} classes">{labels[state]}</span>
+<span class="tag is-{state} {classes}">{labels[state]}</span>
