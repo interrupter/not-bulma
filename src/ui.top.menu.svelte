@@ -23,7 +23,16 @@
   {#each sections as section(section.id) }
   {#if items.filter(t => t.section === section.id).length || section.indicator || section.tag }
   <div class="navbar-item has-dropdown is-hoverable is-pulled-right">
-    <a href class="navbar-link">{section.title}</a>
+    <a href class="navbar-link">
+      {section.title}
+      {#if section.tag }
+      <span class="ml-3 tag is-{section.tag.type} is-pulled-right">{section.tag.label}</span>
+      {/if}
+      {#if section.indicator }
+        <UIIndicator {...(section.indicator)} />
+      {/if}
+    </a>
+    {#if items.filter(t => t.section === section.id).length }
     <div class="navbar-dropdown">
       {#each items as item}
       {#if section.id === item.section }
@@ -41,11 +50,6 @@
       {/if}
       {/each}
     </div>
-    {#if section.tag }
-    <span class="ml-3 tag is-{section.tag.type} is-pulled-right">{section.tag.label}</span>
-    {/if}
-    {#if section.indicator }
-      <UIIndicator {...(section.indicator)} />
     {/if}
   </div>
   {/if}
