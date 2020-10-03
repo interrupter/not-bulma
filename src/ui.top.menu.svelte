@@ -22,7 +22,7 @@
 <div class="navbar-end mr-6">
   {#each sections as section(section.id) }
   {#if items.filter(t => t.section === section.id).length || section.indicator || section.tag }
-  <div class="navbar-item has-dropdown is-hoverable is-pulled-right">
+  <div class="navbar-item {items.filter(t => t.section === section.id).length?'has-dropdown':''} is-hoverable is-pulled-right">
     <a href class="navbar-link">
       {section.title}
       {#if section.tag }
