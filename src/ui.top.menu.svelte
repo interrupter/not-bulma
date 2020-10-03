@@ -1,4 +1,5 @@
 <script>
+  import UIIndicator from './ui.indicator.svelte';
   export let sections = [];
   export let items = [];
   export let root = '';
@@ -14,12 +15,13 @@
     }
     return false;
   }
+
 </script>
 
 
 <div class="navbar-end mr-6">
-  {#each sections as section }
-  {#if items.filter(t=>t.section===section.id).length }
+  {#each sections as section(section.id) }
+  {#if items.filter(t => t.section === section.id).length }
   <div class="navbar-item has-dropdown is-hoverable is-pulled-right">
     <a href class="navbar-link">{section.title}</a>
     <div class="navbar-dropdown">
@@ -32,10 +34,16 @@
         {#if item.tag }
         <span class="ml-3 tag is-{item.tag.type} is-pulled-right">{item.tag.label}</span>
         {/if}
+        {#if item.indicator }
+          <UIIndicator {...(item.indicator)} />
+        {/if}
       </a>
       {/if}
       {/each}
     </div>
+    {#if section.indicator }
+      <UIIndicator {...(section.indicator)} />
+    {/if}
   </div>
   {/if}
   {/each}
