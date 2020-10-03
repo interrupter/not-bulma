@@ -228,7 +228,7 @@ class ncCRUD extends notController {
 		} else {
 			this.$destroyUI();
 		}
-		let manifest = this.app.getInterfaceManifest()[this.getModel()];
+		let manifest = this.app.getInterfaceManifest()[this.getModelName()];
 		this.getModel()({
 			_id: params[0]
 		}).$getRaw().then((res) => {
