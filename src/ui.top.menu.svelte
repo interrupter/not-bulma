@@ -1,4 +1,6 @@
 <script>
+  import { beforeUpdate } from 'svelte';
+
   import UIIndicator from './ui.indicator.svelte';
   export let sections = [];
   export let items = [];
@@ -16,16 +18,22 @@
     return false;
   }
 
-  let lastLength = 0;
+  let sectionsItemsCount = {};
+
+  beforeUpdate(()=>{
+    for(let section of sections){
+      sectionsItemsCount[section.id] = items.filter(t => t.section === section.id).length;
+    }
+  });
 
 </script>
 
 
 <div class="navbar-end mr-6">
   {#each sections as section(section.id) }
-  {#if (lastLength = items.filter(t => t.section === section.id).length) || section.indicator || section.tag }
-  <div class="navbar-item {lastLength?'has-dropdown':''} is-hoverable is-pulled-right">
-    <a href class="navbar-link {lastLength?'':'is-arrowless'}">
+  {#if sectionsItemsCount[section.id] || section.indicator || section.tag }
+  <div class="navbar-item {sectionsItemsCount[section.id]?'has-dropdown':''} is-hoverable is-pulled-right">
+    <a href class="navbar-link {sectionsItemsCount[section.id]?'':'is-arrowless'}">
       {section.title}
       {#if section.tag }
       <span class="ml-3 tag is-{section.tag.type} is-pulled-right">{section.tag.label}</span>
