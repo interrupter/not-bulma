@@ -30,7 +30,26 @@ function create(key, props = {'raw': [], 'filtered': [], 'selected': {} }) {
 	return ALL[key];
 }
 
+/**
+* Creates object that is fake Store
+* Some time this is useful when you need to initialize local var,
+* before you could get actual Stores from central storage by its ID
+*	@params {mixed} val 	data of type that is actual storage will contain
+* @returns {Object}
+*/
+
+function fake(val){
+    return {
+      subscribe(f){
+        f(val);
+        return ()=>{}
+      },
+      set(){}
+    };
+  }
+
 export {
 	create,
-	get
+	get,
+	fake
 };
