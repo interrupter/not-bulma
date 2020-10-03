@@ -1,4 +1,5 @@
 <script>
+	import UIIndicator from './ui.indicator.svelte';
 	import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
 
