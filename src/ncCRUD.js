@@ -159,7 +159,7 @@ class ncCRUD extends notController {
 		} else {
 			this.$destroyUI();
 		}
-		let manifest = this.app.getInterfaceManifest()[this.getModuleName()];
+		let manifest = this.app.getInterfaceManifest()[this.getModelName()];
 		this.ui.create = Form.build({
 			target: this.els.main,
 			manifest,
