@@ -2,7 +2,7 @@
 
 import UICommon from '../common.js';
 
-  import {createEventDispatcher} from 'svelte';
+  import {createEventDispatcher, onMount} from 'svelte';
 	let dispatch = createEventDispatcher();
 
   export let inputStarted = false;
@@ -18,10 +18,31 @@ import UICommon from '../common.js';
   export let errors = false;
   export let formErrors = false;
   export let formLevelError = false;
+  export let multi = false;
+  export let subKeys = [];
+  export let subKeysLabels = {};
+  export let activeSubKey = '';
+
+  onMount(()=>{
+    if(multi && activeSubKey === ''){
+      if(subKeys.length){
+        activeSubKey = subKeys[0];
+      }else{
+        if(Object.keys(value).length){
+          activeSubKey = Object.keys(value)[0];
+        }else{
+          value = {
+            'default': '',
+          };
+          activeSubKey = 'default';
+        }
+      }
+    }
+  });
 
   $: iconClasses = (icon? ' has-icons-left ':'') + ' has-icons-right ';
   $: allErrors = [].concat(errors?errors:[], formErrors?formErrors:[]);
-  $: helper = allErrors?allErrors.join(', '): placeholder;
+  $: helper = allErrors?allErrors.join(', '): (multi?placeholder[activeSubKey]:placeholder);
   $: invalid = ((valid===false) || (formLevelError));
   $: validationClasses = (valid===true || !inputStarted)?UICommon.CLASS_OK:UICommon.CLASS_ERR;
 
@@ -46,11 +67,24 @@ import UICommon from '../common.js';
   }
 
 </script>
-<div class="field form-field-textfield-{fieldname}">
+<div class="field {multi?'has-addons'} form-field-textfield-{fieldname}">
   <label class="label" for="form-field-textfield-{fieldname}">{label}</label>
+  {#if multi }
+  <div class="control">
+    <span class="select">
+      <select bind:value={activeSubKey} >
+        {#each subKeys as subKey}
+        <option value="{subKey}" selected="{activeSubKey === subKey}">{Object.prototype.hasOwnProperty.call(subKeysLabels, subKey)?subKeysLabels[subKey]:subKeys}</option>
+        {/each}
+      </select>
+    </span>
+  </div>
+  {/if}
   <div class="control {iconClasses}">
     <input id="form-field-textfield-{fieldname}"
-    class="input {validationClasses}" type="text" name="{fieldname}" invalid="{invalid}" required={required} placeholder="{placeholder}" bind:value={value} autocomplete="{fieldname}" aria-controls="input-field-helper-{fieldname}"
+    class="input {validationClasses}" type="text" name="{fieldname}" invalid="{invalid}" required={required} placeholder="{placeholder}"
+      bind:value={multi?value[activeSubKey]:value} autocomplete="{fieldname}"
+      aria-controls="input-field-helper-{fieldname}"
       on:change={onBlur} on:input={onInput}
       aria-describedby="input-field-helper-{fieldname}" {readonly}/>
     {#if icon }
