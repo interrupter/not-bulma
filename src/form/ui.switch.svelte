@@ -6,7 +6,7 @@
 	let dispatch = createEventDispatcher();
 
   export let inputStarted = false;
-  export let value = '';
+  export let value = false;
   export let label = 'textfield';
   export let placeholder = 'input some text here, please';
   export let fieldname = 'textfield';
@@ -30,7 +30,7 @@
   function onBlur(ev){
   	let data = {
   		field: fieldname,
-  		value: ev.target.type === 'checkbox' ? ev.target.checked:ev.target.value
+  		value: ev.target.type === 'checkbox' ? ev.target.checked:value
   	};
     inputStarted = true;
     dispatch('change', data);

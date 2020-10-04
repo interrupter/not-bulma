@@ -189,30 +189,31 @@ class ncCRUD extends notController {
 		let manifest = this.app.getInterfaceManifest()[this.getModelName()];
 		this.getModel()({
 			_id: params[0]
-		}).$get().then((res) => {
-			if (res.status === 'ok') {
-				this.ui.details = Form.build({
-					target: this.els.main,
-					manifest,
-					action: 'get',
-					options: {
-						readonly: true
-					},
-					validators: this.getOptions('Validators'),
-					data: res.result
-				});
-				this.emit('after:render:details');
-			} else {
-				this.error(res);
-				this.ui.error = new UIError({
-					target: this.els.main,
-					props: {
-						title: 'Произошла ошибка',
-						message: res.error ? res.error : ERROR_DEFAULT
-					}
-				});
-			}
-		})
+		}).$get()
+			.then((res) => {
+				if (res.status === 'ok') {
+					this.ui.details = Form.build({
+						target: this.els.main,
+						manifest,
+						action: 'get',
+						options: {
+							readonly: true
+						},
+						validators: this.getOptions('Validators'),
+						data: res.result
+					});
+					this.emit('after:render:details');
+				} else {
+					this.error(res);
+					this.ui.error = new UIError({
+						target: this.els.main,
+						props: {
+							title: 'Произошла ошибка',
+							message: res.error ? res.error : ERROR_DEFAULT
+						}
+					});
+				}
+			})
 			.catch(this.error.bind(this));
 	}
 

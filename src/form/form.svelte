@@ -215,7 +215,7 @@
 		caption: 'Назад',
 		enabled: true
 	};
-	
+
 	export let loading = false;
 
 	export let submitForm = (e) => {
