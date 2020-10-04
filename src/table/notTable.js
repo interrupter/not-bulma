@@ -542,18 +542,23 @@ class notTable extends EventEmitter {
 			if (this.getOptions('interface.combined', OPT_DEFAULT_COMBINED)) {
 				this.loadData()
 					.then((data) => {
+						let full = Object.prototype.hasOwnProperty.call(data, 'status') && Object.prototype.hasOwnProperty.call(data, 'result');
 						this.stores.filtered.update((val) => {
 							if (!this.getOptions('endless', false)) {
 								this.clearFilteredData();
 							}
-							if(Object.prototype.hasOwnProperty.call(data, 'list') && Array.isArray(data.list)){
-								val.push(...(data.list));
-							}else if(Array.isArray(data)){
-								val.push(...data);
+							if(full){
+								val.push(...(data.result.list));
+							}else{
+								if(Object.prototype.hasOwnProperty.call(data, 'list') && Array.isArray(data.list)){
+									val.push(...(data.list));
+								}else if(Array.isArray(data)){
+									val.push(...data);
+								}
 							}
 							return val;
 						});
-						this.setWorking('lastCount', data.count);
+						this.setWorking('lastCount', full?data.result.count:data.count);
 					})
 					.then(() => {
 						this.updatePagination(this.getWorking('lastCount'));
