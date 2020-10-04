@@ -67,7 +67,7 @@ import UICommon from '../common.js';
   }
 
 </script>
-<div class="field {multi?'has-addons'} form-field-textfield-{fieldname}">
+<div class="field {multi?'has-addons':''} form-field-textfield-{fieldname}">
   <label class="label" for="form-field-textfield-{fieldname}">{label}</label>
   {#if multi }
   <div class="control">
