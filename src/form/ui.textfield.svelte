@@ -81,12 +81,21 @@ import UICommon from '../common.js';
   </div>
   {/if}
   <div class="control {iconClasses}">
+    {#if multi}
     <input id="form-field-textfield-{fieldname}"
     class="input {validationClasses}" type="text" name="{fieldname}" invalid="{invalid}" required={required} placeholder="{placeholder}"
-      bind:value={multi?value[activeSubKey]:value} autocomplete="{fieldname}"
+      bind:value={value[activeSubKey]} autocomplete="{fieldname}"
       aria-controls="input-field-helper-{fieldname}"
       on:change={onBlur} on:input={onInput}
       aria-describedby="input-field-helper-{fieldname}" {readonly}/>
+    {:else }
+    <input id="form-field-textfield-{fieldname}"
+    class="input {validationClasses}" type="text" name="{fieldname}" invalid="{invalid}" required={required} placeholder="{placeholder}"
+      bind:value={value} autocomplete="{fieldname}"
+      aria-controls="input-field-helper-{fieldname}"
+      on:change={onBlur} on:input={onInput}
+      aria-describedby="input-field-helper-{fieldname}" {readonly}/>
+    {/if}
     {#if icon }
     <span class="icon is-small is-left"><i class="fas fa-{icon}"></i></span>
     {/if}
