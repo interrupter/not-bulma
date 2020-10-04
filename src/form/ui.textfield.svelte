@@ -53,7 +53,7 @@ import UICommon from '../common.js';
   function onBlur(ev){
   	let data = {
   		field: fieldname,
-  		value: ev.target.type === 'checkbox' ? ev.target.checked:ev.target.value
+  		value: ev.target.type === 'checkbox' ? ev.target.checked: value
   	};
     inputStarted = true;
     dispatch('change', data);
