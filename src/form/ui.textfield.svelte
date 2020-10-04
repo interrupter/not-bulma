@@ -38,6 +38,10 @@ import UICommon from '../common.js';
         }
       }
     }
+    if(multi && value == ''){
+      value = {};
+      subKeys.forEach(key => value[key] = '' );
+    }
   });
 
   $: iconClasses = (icon? ' has-icons-left ':'') + ' has-icons-right ';
@@ -70,6 +74,7 @@ import UICommon from '../common.js';
 <div class="field {multi?'has-addons':''} form-field-textfield-{fieldname}">
   <label class="label" for="form-field-textfield-{fieldname}">{label}</label>
   {#if multi }
+  <br/>
   <div class="control">
     <span class="select">
       <select bind:value={activeSubKey} >
