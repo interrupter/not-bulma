@@ -310,6 +310,10 @@ class notInterface extends notBase {
 	getPager() {
 		return this.getWorking('pager');
 	}
+
+	getRecord(){
+		this.getData();
+	}
 }
 
 export default notInterface;
