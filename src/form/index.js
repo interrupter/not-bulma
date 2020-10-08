@@ -1,3 +1,6 @@
+import UIForm from './form.svelte';
+import UIField from './field.svelte';
+import UILabel from './ui.label.svelte';
 import UICheckbox from './ui.checkbox.svelte';
 import UIColor from './ui.color.svelte';
 import UIDate from './ui.date.svelte';
@@ -15,6 +18,9 @@ import UITextarea from './ui.textarea.svelte';
 import UITextfield from './ui.textfield.svelte';
 
 export {
+	UIForm,
+	UIField,
+	UILabel,
 	UICheckbox,
 	UIColor,
 	UIDate,

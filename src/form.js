@@ -17,6 +17,26 @@ class Form{
 		FIELDS.add(name, field);
 	}
 
+	static actionFieldsInit(fieldName, action, options, validators, data){
+		if(Array.isArray(fieldName)){
+			fieldName.forEach( subFieldName => {
+				this.actionFieldsInit(subFieldName, action, options, validators, data)
+			});
+		}else{
+			if(!Object.prototype.hasOwnProperty.call(options, 'fields')){          options.fields = {};            }
+			if(!Object.prototype.hasOwnProperty.call(options.fields, fieldName)){ options.fields[fieldName] = {}; }
+			//copying validators
+			if(validators && validators.fields && Object.prototype.hasOwnProperty.call(validators.fields, fieldName)){
+				options.fields[fieldName].validate = validators.fields[fieldName];
+			}
+			//copying initial data
+			if(typeof data !== 'undefined' && data!== null &&
+			typeof data[fieldName] !== 'undefined' && data[fieldName]!== null){
+				options.fields[fieldName].value = data[fieldName];
+			}
+		}
+	}
+
 	static build({target, manifest, action, options = {}, validators = {}, data = null}){
 		if(Object.prototype.hasOwnProperty.call(manifest, 'fields')){
 			FIELDS.import(manifest.fields);
@@ -26,19 +46,7 @@ class Form{
 		}
 
 		if (manifest.actions[action].fields){
-			manifest.actions[action].fields.forEach((fieldName)=>{
-				if(!Object.prototype.hasOwnProperty.call(options,'fields')){          options.fields = {};            }
-				if(!Object.prototype.hasOwnProperty.call(options.fields, fieldName)){ options.fields[fieldName] = {}; }
-				//copying validators
-				if(validators && validators.fields && Object.prototype.hasOwnProperty.call(validators.fields, fieldName)){
-					options.fields[fieldName].validate = validators.fields[fieldName];
-				}
-				//copying initial data
-				if(typeof data !== 'undefined' && data!== null &&
-				typeof data[fieldName] !== 'undefined' && data[fieldName]!== null){
-					options.fields[fieldName].value = data[fieldName];
-				}
-			});
+			this.actionFieldsInit(manifest.actions[action].fields, action, options, validators, data);
 		}
 
 		if(typeof validators !== 'undefined' && validators !== null){

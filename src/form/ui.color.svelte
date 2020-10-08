@@ -6,7 +6,6 @@
 
   export let inputStarted = false;
   export let value = '';
-  export let label = 'Colour';
   export let placeholder = 'Select you favorite color';
   export let fieldname = 'color';
   export let icon = false;
@@ -27,7 +26,7 @@
   function onBlur(ev){
   	let data = {
   		field: fieldname,
-  		value: ev.target.type === 'checkbox' ? ev.target.checked:ev.target.value
+  		value: ev.currentTarget.value
   	};
     inputStarted = true;
     dispatch('change', data);
@@ -37,7 +36,7 @@
   function onInput(ev){
   	let data = {
   		field: fieldname,
-      value
+      value: ev.currentTarget.value
   	};
     inputStarted = true;
     dispatch('change', data);
@@ -45,8 +44,7 @@
   }
 
 </script>
-<div class="field form-field-color-{fieldname}">
-  <label class="label" for="form-field-color-{fieldname}">{label}</label>
+
   <div class="control {iconClasses}">
     <input
       id="form-field-color-{fieldname}"
@@ -75,4 +73,3 @@
     {helper}
     {:else}&nbsp;{/if}
   </p>
-</div>

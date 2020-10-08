@@ -7,7 +7,6 @@
 
   export let inputStarted = false;
   export let value = '';
-  export let label = 'password';
   export let placeholder = 'input some text here, please';
   export let fieldname = 'password';
   export let icon = false;
@@ -28,7 +27,7 @@
   function onBlur(ev){
   	let data = {
   		field: fieldname,
-  		value: ev.target.type === 'checkbox' ? ev.target.checked:ev.target.value
+  		value: ev.currentTarget.value
   	};
     inputStarted = true;
     dispatch('change', data);
@@ -38,7 +37,7 @@
   function onInput(ev){
   	let data = {
   		field: fieldname,
-      value
+      value: ev.currentTarget.value
   	};
     inputStarted = true;
     dispatch('change', data);
@@ -46,8 +45,7 @@
   }
 
 </script>
-<div class="field form-field-password-{fieldname}">
-  <label class="label" for="form-field-password-{fieldname}">{label}</label>
+
   <div class="control {iconClasses}">
     <input class="input {validationClasses}" {readonly}
     id="form-field-password-{fieldname}"
@@ -72,4 +70,3 @@
     {helper}
     {:else}&nbsp;{/if}
   </p>
-</div>

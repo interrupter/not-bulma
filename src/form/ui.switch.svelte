@@ -30,7 +30,7 @@
   function onBlur(ev){
   	let data = {
   		field: fieldname,
-  		value: ev.target.type === 'checkbox' ? ev.target.checked:value
+  		value: ev.currentTarget.type==='checkbox'?ev.currentTarget.checked: value
   	};
     inputStarted = true;
     dispatch('change', data);
@@ -40,7 +40,7 @@
   function onInput(ev){
   	let data = {
   		field: fieldname,
-      value
+      value: ev.currentTarget.type === 'checkbox' ? ev.currentTarget.checked:value
   	};
     inputStarted = true;
     dispatch('change', data);
@@ -49,7 +49,6 @@
 
 </script>
 
-<div class="field form-field-switch-{fieldname}">
   <div class="control">
       <input type="checkbox"
         class="switch {styling}"
@@ -70,4 +69,3 @@
     {helper}
     {:else}&nbsp;{/if}
   </p>
-</div>

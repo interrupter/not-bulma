@@ -7,7 +7,6 @@ import UICommon from '../common.js';
 
   export let inputStarted = false;
   export let value = '';
-  export let label = 'telephone';
   export let placeholder = '+79876543210';
   export let fieldname = 'telephone';
   export let icon = false;
@@ -28,7 +27,7 @@ import UICommon from '../common.js';
   function onBlur(ev){
   	let data = {
   		field: fieldname,
-  		value: ev.target.type === 'checkbox' ? ev.target.checked:ev.target.value
+  		value: ev.currentTarget.value
   	};
     inputStarted = true;
     dispatch('change', data);
@@ -38,7 +37,7 @@ import UICommon from '../common.js';
   function onInput(ev){
   	let data = {
   		field: fieldname,
-      value
+      value: ev.currentTarget.value
   	};
     inputStarted = true;
     dispatch('change', data);
@@ -46,8 +45,8 @@ import UICommon from '../common.js';
   }
 
 </script>
-<div class="field form-field-telephone-{fieldname}">
-  <label class="label" for="form-field-telephone-{fieldname}">{label}</label>
+
+
   <div class="control {iconClasses}">
     <input id="form-field-telephone-{fieldname}"
     class="input {validationClasses}" type="tel" name="{fieldname}" invalid="{invalid}" required={required} placeholder="{placeholder}" bind:value={value} autocomplete="{fieldname}" aria-controls="input-field-helper-{fieldname}"
@@ -71,4 +70,3 @@ import UICommon from '../common.js';
     {helper}
     {:else}&nbsp;{/if}
   </p>
-</div>

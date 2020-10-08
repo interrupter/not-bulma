@@ -1,5 +1,5 @@
 <script>
-	import UITextfield from './ui.textfield.svelte';
+	import UIField from './field.svelte';
 	import UICommon from '../common.js';
 
 	import {
@@ -16,9 +16,7 @@
 	let dispatch = createEventDispatcher();
 
 	let form = {};
-	let validate = () => {
-		return { clean: true };
-	}
+	let validate = () => { return { clean: true }; }
 	let overlay;
 	let stage = 'filling';
 	let formErrors = [];
@@ -47,8 +45,8 @@
 			Object.assign(field, mutation);
 		}
 		if(
-			Object.prototype.hasOwnProperty.call(field, 'variantsSource') &&
-			VARIANTS.contain(field.variantsSource)
+			Object.prototype.hasOwnProperty.call(field, 'variantsSource')
+			&& VARIANTS.contain(field.variantsSource)
 			){
 			field.variants = VARIANTS.get(field.variantsSource);
 		}
@@ -57,7 +55,7 @@
 
 	function collectData() {
 		let result = {};
-		fields.forEach((fieldname) => {
+		fields.flat().forEach((fieldname) => {
 			if (Object.prototype.hasOwnProperty.call(form, fieldname) && form[fieldname].enabled) {
 				result[fieldname] = form[fieldname].value;
 			}
@@ -105,6 +103,7 @@
 	export function setFormFieldInvalid(fieldName, errors) {
 		form[fieldName].formErrors = [...errors];
 		form[fieldName].validated = true;
+		form[fieldName].valid = false;
 		form[fieldName].formLevelError = true;
 		form = form;
 	}
@@ -112,6 +111,7 @@
 	export function setFormFieldValid(fieldName, value) {
 		form[fieldName].formErrors = false;
 		form[fieldName].validated = true;
+		form[fieldName].valid = true;
 		form[fieldName].formLevelError = false;
 		form = form;
 	}
@@ -129,8 +129,10 @@
 		}
 	}
 
-	onMount(() => {
-		fields.forEach((fieldName) => {
+	function initFormByField(fieldName){
+		if(Array.isArray(fieldName)){
+			fieldName.forEach(initFormByField);
+		}else{
 			let opts = {};
 			if (Object.prototype.hasOwnProperty.call(options, 'fields')) {
 				if (Object.prototype.hasOwnProperty.call(options.fields, fieldName)) {
@@ -141,13 +143,37 @@
 			if(options.readonly){
 				form[fieldName].readonly = true;
 			}
-		});
+		}
+	}
+
+	onMount(() => {
+		initFormByField(fields);
 		if (Object.prototype.hasOwnProperty.call(options, 'validate') && typeof options.validate === 'function') {
 			validate = options.validate;
 		}
 
 		form = form;
 	});
+
+
+	function addFormError(err){
+		if(Array.isArray(formErrors)){
+			if (!formErrors.includes(err)) {
+				formErrors.push(err);
+			}
+		}else{
+			formErrors = [err];
+		}
+	}
+
+	function removeFormErrors(err){
+		if(Array.isArray(formErrors)){
+			formErrors.splice(0, formErrors.length);
+			formErrors = formErrors;
+		}else{
+			formErrors = false;
+		}
+	}
 
 	function onFieldChange(ev) {
 		let data = ev.detail;
@@ -162,35 +188,35 @@
 			//form level validations
 			let errors = validate(collectData());
 			if ((!errors) || errors.clean) {
-				formErrors.splice(0, formErrors.length);
-				formErrors = formErrors;
 				formHasErrors = false;
+				console.log('no form errors', formErrors);
 			} else {
 				if ((errors.form.length === 0) && Object.keys(errors.fields).length === 0) {
 					formHasErrors = false;
-					for (let fieldName in fields) {
+					console.log('no form errors', formErrors);
+					for (let fieldName in fields.flat()) {
 						setFormFieldValid(fieldName);
 					}
 				} else {
 					if (errors.form.length) {
-						errors.form.forEach((err) => {
-							if (!formErrors.includes(err)) {
-								formErrors.push(err);
-							}
-						});
+						errors.form.forEach(addFormError);
 						formErrors = formErrors;
 					} else {
-						formErrors.splice(0, formErrors.length);
-						formErrors = formErrors
+						formErrors = false;
 					}
-					for (let fieldName of fields) {
+					for (let fieldName of fields.flat()) {
 						if (Object.prototype.hasOwnProperty.call(errors.fields, fieldName)) {
 							setFormFieldInvalid(fieldName, errors.fields[fieldName]);
 						} else {
 							setFormFieldValid(fieldName);
 						}
 					}
-					formHasErrors = true;
+					if(formErrors && Array.isArray(formErrors) && formErrors.length > 0){
+						formHasErrors = true;
+					}else{
+						formHasErrors = false;
+					}
+					console.log('form errors', formErrors);
 				}
 			}
 		} else {
@@ -249,30 +275,44 @@
 	</div>
 	{:else}
 	{#if title }
-	<h5 class="title">{title}</h5>
+	<h5 class="title is-5">{title}</h5>
 	{/if}
 	{#if description }
 	<h6 class="subtitle is-6">{description}</h6>
 	{/if}
 
 	{#each fields as field}
-	{#if form[field] && form[field].component }
-	<svelte:component this={COMPONENTS.get(form[field].component)} {...form[field]} on:change={onFieldChange} fieldname={field} />
-	{:else}
-	<div class="is-danger">Field '{field}' is not registered</div>
-	{/if}
+		{#if Array.isArray(field) }
+			<div class="columns">
+			{#each field as subfield }
+				{#if form[subfield] && form[subfield].component }
+					<div class="column {form[subfield].fieldSize?('is-'+form[subfield].fieldSize):''} ">
+						<UIField controls={[form[subfield]]} on:change={onFieldChange} name={subfield} />
+					</div>
+				{:else}
+					<div class="column notification is-danger">Subfield '{subfield}' is not registered</div>
+				{/if}
+			{/each}
+			</div>
+		{:else }
+			{#if form[field] && form[field].component }
+				<UIField controls={[form[field]]} on:change={onFieldChange} name={field} />
+			{:else}
+				<div class="notification is-danger">Field '{field}' is not registered</div>
+			{/if}
+		{/if}
 	{/each}
 
 	{#if formErrors.length > 0 }
 	<div class="edit-form-error notification is-danger">{formErrors.join(', ')}</div>
 	{/if}
 
-	<div class="buttons-row">
+	<div class="buttons is-grouped is-centered">
 		{#if cancel.enabled}
 		<button class="button is-outlined" on:click={rejectForm}>{cancel.caption}</button>
 		{/if}
 		{#if submit.enabled}
-		<button on:click={submitForm} disabled={formInvalid} class="button is-primary is-hovered pull-right">{submit.caption}</button>
+		<button on:click={submitForm} disabled={formInvalid} class="button is-primary is-hovered">{submit.caption}</button>
 		{/if}
 	</div>
 	{/if}

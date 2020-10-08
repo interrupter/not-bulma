@@ -7,7 +7,6 @@
 
   export let inputStarted = false;
   export let value = '';
-  export let label = 'Email';
   export let placeholder = '';
   export let fieldname = 'email';
   export let icon = false;
@@ -28,7 +27,7 @@
   function onBlur(ev){
   	let data = {
   		field: fieldname,
-  		value: ev.target.type === 'checkbox' ? ev.target.checked:ev.target.value
+  		value: ev.currentTarget.value
   	};
     inputStarted = true;
     dispatch('change', data);
@@ -38,7 +37,7 @@
   function onInput(ev){
   	let data = {
   		field: fieldname,
-      value
+      value: ev.currentTarget.value
   	};
     inputStarted = true;
     dispatch('change', data);
@@ -46,8 +45,8 @@
   }
 
 </script>
-<div class="field form-field-email-{fieldname}">
-  <label class="label" for="form-field-textfield-{fieldname}">{label}</label>
+
+
   <div class="control {iconClasses}">
     <input class="input {validationClasses}"
       id="form-field-email-{fieldname}"
@@ -75,4 +74,3 @@
     {helper}
     {:else}&nbsp;{/if}
   </p>
-</div>

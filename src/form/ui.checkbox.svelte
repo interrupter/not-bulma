@@ -6,10 +6,10 @@
 	let dispatch = createEventDispatcher();
 
   export let inputStarted = false;
-  export let value = '';
-  export let label = 'textfield';
-  export let placeholder = 'input some text here, please';
-  export let fieldname = 'textfield';
+  export let value = false;
+  export let label = 'checkbox';
+  export let placeholder = 'checkbox placeholder';
+  export let fieldname = 'checkbox';
   export let icon = false;
   export let required = true;
   export let readonly = false;
@@ -29,7 +29,7 @@
   function onBlur(ev){
   	let data = {
   		field: fieldname,
-  		value: ev.target.type === 'checkbox' ? ev.target.checked:ev.target.value
+  		value: ev.currentTarget.type==='checkbox'?ev.currentTarget.checked: value
   	};
     inputStarted = true;
     dispatch('change', data);
@@ -39,7 +39,7 @@
   function onInput(ev){
   	let data = {
   		field: fieldname,
-      value
+      value: ev.currentTarget.type==='checkbox'?ev.currentTarget.checked: value
   	};
     inputStarted = true;
     dispatch('change', data);
@@ -48,28 +48,15 @@
 
 </script>
 
-<div class="field form-field-checkbox-{fieldname}">
-  <label class="label" for="edit-form-checkbox-{fieldname}">{label}</label>
-  <div class="control {iconClasses}">
-    <label class="checkbox" disabled={disabled}
-     for="form-field-checkbox-{fieldname}">
-      <input type="checkbox"
-        id="form-field-checkbox-{fieldname}"
-        bind:checked={value}
-        placeholder="{placeholder}"
-        name="{fieldname}"
-        required={required} {readonly}
-        invalid="{invalid}"
-        on:change={onBlur} on:input={onInput}
-        aria-controls="input-field-helper-{fieldname}"
-        aria-describedby="input-field-helper-{fieldname}"
-        disabled={disabled}>
-        {label}
-    </label>
-  </div>
-  <p class="help {validationClasses}" id="form-field-helper-{fieldname}">
-    {#if !(validated && valid) && (inputStarted) }
-    {helper}
-    {:else}&nbsp;{/if}
-  </p>
+<div class="control {iconClasses}">
+  <label class="checkbox" disabled={disabled} for="form-field-checkbox-{fieldname}">
+    <input type="checkbox" id="form-field-checkbox-{fieldname}" bind:checked={value} placeholder="{placeholder}" name="{fieldname}" required={required} {readonly} invalid="{invalid}" on:change={onBlur} on:input={onInput} aria-controls="input-field-helper-{fieldname}"
+      aria-describedby="input-field-helper-{fieldname}" disabled={disabled}>
+    {label}
+  </label>
 </div>
+<p class="help {validationClasses}" id="form-field-helper-{fieldname}">
+  {#if !(validated && valid) && (inputStarted) }
+  {helper}
+  {:else}&nbsp;{/if}
+</p>

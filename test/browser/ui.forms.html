@@ -7,11 +7,9 @@
 	<title>Bulma UI Form builder</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
 	<link rel="stylesheet" href="/assets/bulma/notBulma.css">
-	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,600,700">
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css">
 	<script type="module" src="/fetch.xhr.js"></script>
 	<script type="module" src="./validators.js"></script>
 </head>
@@ -75,7 +73,7 @@
 						},
 						beenToKerch: {
 							component: 'UISwitch',
-							value: true,
+							value: false,
 							label: 'Был в Керчи?'
 						},
 						favoriteColor: {
@@ -119,13 +117,10 @@
 							method: 'post',
 							title: 'Edit title',
 							fields: [
-								'username',
-								'email',
+								['username', 'email'],
 								'story',
 								'telephone',
-								'beenToKerch',
-								'country',
-								'date',
+								['beenToKerch','country', 'date'],
 								'favoriteColor',
 								'password',
 								'password2',

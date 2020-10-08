@@ -7,7 +7,6 @@
 
   export let inputStarted = false;
   export let value = '';
-  export let label = 'textarea';
   export let placeholder = 'input some text here, please';
   export let fieldname = 'textarea';
   export let icon = false;
@@ -39,7 +38,7 @@
   function onInput(ev){
   	let data = {
   		field: fieldname,
-      value
+      value: ev.currentTarget.value
   	};
     inputStarted = true;
     dispatch('change', data);
@@ -47,8 +46,7 @@
   }
 
 </script>
-<div class="field form-field-textarea-{fieldname}">
-  <label class="label" for="form-field-textarea-{fieldname}">{label}</label>
+
   <div class="control {iconClasses}">
     <textarea id="form-field-textarea-{fieldname}"
     invalid="{invalid}"
@@ -78,4 +76,3 @@
     {helper}
     {:else}&nbsp;{/if}
   </p>
-</div>

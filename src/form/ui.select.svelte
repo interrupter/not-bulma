@@ -8,7 +8,6 @@
   export let inputStarted = false;
   export let value = '';
   export let variants = [];
-  export let label = 'select';
   export let placeholder = 'empty select item';
   export let fieldname = 'select';
   export let icon = false;
@@ -32,7 +31,7 @@
   function onBlur(ev){
     let data = {
   		field: fieldname,
-  		value: ev.target.value
+  		value: ev.currentTarget.value
   	};
     if(multiple){
       value = Array.from(ev.target.selectedOptions).map( el => el.value );
@@ -53,7 +52,7 @@
   function onInput(ev){
   	let data = {
   		field: fieldname,
-      value
+      value: ev.currentTarget.value
   	};
     if(multiple){
       value = Array.from(ev.target.selectedOptions).map( el => el.value );
@@ -73,8 +72,6 @@
 
 </script>
 
-<div class="field form-field-select-{fieldname}">
-  <label class="label" for="form-field-select-{fieldname}">{label}</label>
   <div class="control {iconClasses}">
     <div class="select {validationClasses} {multipleClass}">
       {#if multiple }
@@ -127,4 +124,3 @@
     {helper}
     {:else}&nbsp;{/if}
   </p>
-</div>
