@@ -159,8 +159,7 @@
 		form = form;
 	});
 
-
-	function addFormError(err) {
+	export function addFormError(err) {
 		if (Array.isArray(formErrors)) {
 			if (!formErrors.includes(err)) {
 				formErrors.push(err);
@@ -168,6 +167,7 @@
 		} else {
 			formErrors = [err];
 		}
+		formHasErrors = true;
 	}
 
 	function removeFormErrors(err) {
@@ -193,18 +193,15 @@
 			let errors = validate(collectData());
 			if ((!errors) || errors.clean) {
 				formHasErrors = false;
-				console.log('no form errors', formErrors);
 			} else {
 				if ((errors.form.length === 0) && Object.keys(errors.fields).length === 0) {
 					formHasErrors = false;
-					console.log('no form errors', formErrors);
 					for (let fieldName in fields.flat()) {
 						setFormFieldValid(fieldName);
 					}
 				} else {
 					if (errors.form.length) {
 						errors.form.forEach(addFormError);
-						formErrors = formErrors;
 					} else {
 						formErrors = false;
 					}
@@ -215,12 +212,6 @@
 							setFormFieldValid(fieldName);
 						}
 					}
-					if (formErrors && Array.isArray(formErrors) && formErrors.length > 0) {
-						formHasErrors = true;
-					} else {
-						formHasErrors = false;
-					}
-					console.log('form errors', formErrors);
 				}
 			}
 		} else {
