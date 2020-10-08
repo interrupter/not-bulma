@@ -21,8 +21,7 @@ import TopMenu from './topmenu.js';
 import Menu from './menu.js';
 
 import Form from './form.js';
-
-
+import * as LIB from './form/LIB.js';
 import * as Frame from './frame';
 
 import ncCRUD from './ncCRUD.js';
@@ -68,6 +67,7 @@ const {
 } = FormElements;
 
 export {
+  LIB,
   UIForm,
   UIField,
   UILabel,

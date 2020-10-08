@@ -17,10 +17,10 @@ class Form{
 		FIELDS.add(name, field);
 	}
 
-	static actionFieldsInit(fieldName, action, options, validators, data){
+	static actionFieldsInit(fieldName, options, validators, data){
 		if(Array.isArray(fieldName)){
 			fieldName.forEach( subFieldName => {
-				this.actionFieldsInit(subFieldName, action, options, validators, data)
+				this.actionFieldsInit(subFieldName, options, validators, data)
 			});
 		}else{
 			if(!Object.prototype.hasOwnProperty.call(options, 'fields')){          options.fields = {};            }
@@ -45,8 +45,8 @@ class Form{
 			options = {};
 		}
 
-		if (manifest.actions[action].fields){
-			this.actionFieldsInit(manifest.actions[action].fields, action, options, validators, data);
+		if (manifest.actions[action] && manifest.actions[action].fields){
+			this.actionFieldsInit(manifest.actions[action].fields, options, validators, data);
 		}
 
 		if(typeof validators !== 'undefined' && validators !== null){
