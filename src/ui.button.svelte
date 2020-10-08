@@ -1,23 +1,24 @@
 <script>
-
-  export let state = '';
   export let title = '';
   export let light = false;
+  export let loading = false;
+  export let raised = false;
+  export let outlined = false;
+  export let inverted = false;
+  export let rounded = false;
+  export let state = '';
   export let type = '';
+  export let color = '';
   export let size = '';
+  export let class = '';
   export let icon = false;
   export let action = ()=>{ return true; }
-
-  $: classes = (state&&state.length>0?(` is-${state} `):'')+(light?(` is-light `):'')+(type&&type.length>0?(` is-${type} `):'')+(size&&size.length>0?(` is-${size} `):'');
-
 </script>
 
 
-<button on:click="{action}" class="button {classes}">
+<button on:click="{action}" class="button {class} {state?`is-${state}`:''} {inverted?`is-inverted`:''} {outlined?`is-outlined`:''} {raised?`is-raised`:''} {rounded?`is-rounded`:''} {light?`is-light`:''} {loading?`is-loading`:''} {color?`is-${color}`:''} {type?`is-${type}`:''} {size?`is-${size}`:''}">
   {title}
-  {#if icon}
-  <span class="icon">
-    <i class="fas fa-{icon}"></i>
-  </span>
+  {#if icon }
+  <span class="icon"><i class="fas fa-{icon}"></i></span>
   {/if}
 </button>
