@@ -6,6 +6,7 @@
   export let outlined = false;
   export let inverted = false;
   export let rounded = false;
+  export let disabled = false;
   export let state = '';
   export let type = '';
   export let color = '';
@@ -16,7 +17,7 @@
 </script>
 
 
-<button on:click="{action}" class="button {classes} {state?`is-${state}`:''} {inverted?`is-inverted`:''} {outlined?`is-outlined`:''} {raised?`is-raised`:''} {rounded?`is-rounded`:''} {light?`is-light`:''} {loading?`is-loading`:''} {color?`is-${color}`:''} {type?`is-${type}`:''} {size?`is-${size}`:''}">
+<button on:click="{action}" {disabled} class="button {classes} {state?`is-${state}`:''} {inverted?`is-inverted`:''} {outlined?`is-outlined`:''} {raised?`is-raised`:''} {rounded?`is-rounded`:''} {light?`is-light`:''} {loading?`is-loading`:''} {color?`is-${color}`:''} {type?`is-${type}`:''} {size?`is-${size}`:''}">
   {title}
   {#if icon }
   <span class="icon"><i class="fas fa-{icon}"></i></span>
