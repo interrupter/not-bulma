@@ -16,7 +16,11 @@
 	let dispatch = createEventDispatcher();
 
 	let form = {};
-	let validate = () => { return { clean: true }; }
+	let validate = () => {
+		return {
+			clean: true
+		};
+	}
 	let overlay;
 	let stage = 'filling';
 	let formErrors = [];
@@ -44,10 +48,10 @@
 		if (mutation) {
 			Object.assign(field, mutation);
 		}
-		if(
-			Object.prototype.hasOwnProperty.call(field, 'variantsSource')
-			&& VARIANTS.contain(field.variantsSource)
-			){
+		if (
+			Object.prototype.hasOwnProperty.call(field, 'variantsSource') &&
+			VARIANTS.contain(field.variantsSource)
+		) {
 			field.variants = VARIANTS.get(field.variantsSource);
 		}
 		return field;
@@ -129,10 +133,10 @@
 		}
 	}
 
-	function initFormByField(fieldName){
-		if(Array.isArray(fieldName)){
+	function initFormByField(fieldName) {
+		if (Array.isArray(fieldName)) {
 			fieldName.forEach(initFormByField);
-		}else{
+		} else {
 			let opts = {};
 			if (Object.prototype.hasOwnProperty.call(options, 'fields')) {
 				if (Object.prototype.hasOwnProperty.call(options.fields, fieldName)) {
@@ -140,7 +144,7 @@
 				}
 			}
 			form[fieldName] = fieldInit(fieldName, opts);
-			if(options.readonly){
+			if (options.readonly) {
 				form[fieldName].readonly = true;
 			}
 		}
@@ -156,21 +160,21 @@
 	});
 
 
-	function addFormError(err){
-		if(Array.isArray(formErrors)){
+	function addFormError(err) {
+		if (Array.isArray(formErrors)) {
 			if (!formErrors.includes(err)) {
 				formErrors.push(err);
 			}
-		}else{
+		} else {
 			formErrors = [err];
 		}
 	}
 
-	function removeFormErrors(err){
-		if(Array.isArray(formErrors)){
+	function removeFormErrors(err) {
+		if (Array.isArray(formErrors)) {
 			formErrors.splice(0, formErrors.length);
 			formErrors = formErrors;
-		}else{
+		} else {
 			formErrors = false;
 		}
 	}
@@ -179,7 +183,7 @@
 		let data = ev.detail;
 		if (validation) {
 			//fields level validations
-			let res = typeof form[data.field].validate === 'function' ? form[data.field].validate(data.value): [];
+			let res = typeof form[data.field].validate === 'function' ? form[data.field].validate(data.value) : [];
 			if (res.length === 0) {
 				setFieldValid(data.field, data.value);
 			} else {
@@ -211,9 +215,9 @@
 							setFormFieldValid(fieldName);
 						}
 					}
-					if(formErrors && Array.isArray(formErrors) && formErrors.length > 0){
+					if (formErrors && Array.isArray(formErrors) && formErrors.length > 0) {
 						formHasErrors = true;
-					}else{
+					} else {
 						formHasErrors = false;
 					}
 					console.log('form errors', formErrors);
@@ -268,52 +272,50 @@
 	}
 </script>
 
-<div class="container">
-	{#if success}
-	<div class="notification is-success">
-		<h3 class="form-success-message">{SUCCESS_TEXT}</h3>
+{#if success}
+<div class="notification is-success">
+	<h3 class="form-success-message">{SUCCESS_TEXT}</h3>
+</div>
+{:else}
+{#if title }
+<h5 class="title is-5">{title}</h5>
+{/if}
+{#if description }
+<h6 class="subtitle is-6">{description}</h6>
+{/if}
+
+{#each fields as field}
+{#if Array.isArray(field) }
+<div class="columns">
+	{#each field as subfield }
+	{#if form[subfield] && form[subfield].component }
+	<div class="column {form[subfield].fieldSize?('is-'+form[subfield].fieldSize):''} ">
+		<UIField controls={[form[subfield]]} on:change={onFieldChange} name={subfield} />
 	</div>
 	{:else}
-	{#if title }
-	<h5 class="title is-5">{title}</h5>
+	<div class="column notification is-danger">Subfield '{subfield}' is not registered</div>
 	{/if}
-	{#if description }
-	<h6 class="subtitle is-6">{description}</h6>
-	{/if}
-
-	{#each fields as field}
-		{#if Array.isArray(field) }
-			<div class="columns">
-			{#each field as subfield }
-				{#if form[subfield] && form[subfield].component }
-					<div class="column {form[subfield].fieldSize?('is-'+form[subfield].fieldSize):''} ">
-						<UIField controls={[form[subfield]]} on:change={onFieldChange} name={subfield} />
-					</div>
-				{:else}
-					<div class="column notification is-danger">Subfield '{subfield}' is not registered</div>
-				{/if}
-			{/each}
-			</div>
-		{:else }
-			{#if form[field] && form[field].component }
-				<UIField controls={[form[field]]} on:change={onFieldChange} name={field} />
-			{:else}
-				<div class="notification is-danger">Field '{field}' is not registered</div>
-			{/if}
-		{/if}
 	{/each}
+</div>
+{:else }
+{#if form[field] && form[field].component }
+<UIField controls={[form[field]]} on:change={onFieldChange} name={field} />
+{:else}
+<div class="notification is-danger">Field '{field}' is not registered</div>
+{/if}
+{/if}
+{/each}
 
-	{#if formErrors.length > 0 }
-	<div class="edit-form-error notification is-danger">{formErrors.join(', ')}</div>
+{#if formErrors.length > 0 }
+<div class="edit-form-error notification is-danger">{formErrors.join(', ')}</div>
+{/if}
+
+<div class="buttons is-grouped is-centered">
+	{#if cancel.enabled}
+	<button class="button is-outlined" on:click={rejectForm}>{cancel.caption}</button>
 	{/if}
-
-	<div class="buttons is-grouped is-centered">
-		{#if cancel.enabled}
-		<button class="button is-outlined" on:click={rejectForm}>{cancel.caption}</button>
-		{/if}
-		{#if submit.enabled}
-		<button on:click={submitForm} disabled={formInvalid} class="button is-primary is-hovered">{submit.caption}</button>
-		{/if}
-	</div>
+	{#if submit.enabled}
+	<button on:click={submitForm} disabled={formInvalid} class="button is-primary is-hovered">{submit.caption}</button>
 	{/if}
 </div>
+{/if}

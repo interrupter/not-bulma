@@ -23,56 +23,97 @@ import Menu from './menu.js';
 import Form from './form.js';
 
 
-import * as Frame  from './frame';
+import * as Frame from './frame';
 
 import ncCRUD from './ncCRUD.js';
 
-import {default as UICommon} from './common.js';
+import {
+  default as UICommon
+} from './common.js';
 
-Object.keys(FormElements).forEach((fieldtype)=>{
-	Form.addComponent(fieldtype, FormElements[fieldtype]);
+Object.keys(FormElements).forEach((fieldtype) => {
+  Form.addComponent(fieldtype, FormElements[fieldtype]);
 });
 
 const
-	notCommon = Frame.notCommon,
-	notPath = Frame.notPath,
-	notController = Frame.notController,
-	notBase = Frame.notBase,
-	notRouter = Frame.notRouter,
-	notRecord = Frame.notRecord,
-	notInterface = Frame.notInterface,
-	notApp = Frame.notApp,
-	notAPI = Frame.notAPI;
+  notCommon = Frame.notCommon,
+  notPath = Frame.notPath,
+  notController = Frame.notController,
+  notBase = Frame.notBase,
+  notRouter = Frame.notRouter,
+  notRecord = Frame.notRecord,
+  notInterface = Frame.notInterface,
+  notApp = Frame.notApp,
+  notAPI = Frame.notAPI;
+
+const {
+  UIForm,
+  UIField,
+  UILabel,
+  UICheckbox,
+  UIColor,
+  UIDate,
+  UIEmail,
+  UIHidden,
+  UIPassword,
+  UIRadio,
+  UIRadiogroup,
+  UIRange,
+  UISelect,
+  UISlider,
+  UISwitch,
+  UITelephone,
+  UITextarea,
+  UITextfield
+} = FormElements;
 
 export {
-	UIOverlay,
-	UIBreadcrumbs,
-	UIError,
-	UISideMenu,
-	UITag,
-	UIBooleans,
-	UIButton,
-	UIButtons,
-	UIImages,
-	UILinks,
-	Stores,
-	Table,
-	Breadcrumbs,
-	SideMenu,
-	TopMenu,
-	Menu,
-	Form,
-	FormElements,
-	UICommon,
-	ncCRUD,
-	Frame,
-	notCommon,
-	notPath,
-	notController,
-	notBase,
-	notRouter,
-	notRecord,
-	notInterface,
-	notApp,
-	notAPI
+  UIForm,
+  UIField,
+  UILabel,
+  UICheckbox,
+  UIColor,
+  UIDate,
+  UIEmail,
+  UIHidden,
+  UIPassword,
+  UIRadio,
+  UIRadiogroup,
+  UIRange,
+  UISelect,
+  UISlider,
+  UISwitch,
+  UITelephone,
+  UITextarea,
+  UITextfield,
+  UIOverlay,
+  UIBreadcrumbs,
+  UIError,
+  UISideMenu,
+  UITag,
+  UIBooleans,
+  UIButton,
+  UIButtons,
+  UIImages,
+  UILinks,
+  Stores,
+  Table,
+  Breadcrumbs,
+  SideMenu,
+  TopMenu,
+  Menu,
+  Form,
+  FormElements,
+  UICommon,
+  ncCRUD,
+  Frame,
+  notCommon,
+  notPath,
+  notController,
+  notBase,
+  notRouter,
+  notRecord,
+  notInterface,
+  notApp,
+  notAPI
 };
