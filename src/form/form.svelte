@@ -107,6 +107,7 @@
 	export function setFormFieldInvalid(fieldName, errors) {
 		form[fieldName].formErrors = [...errors];
 		form[fieldName].validated = true;
+		form[fieldName].inputStarted = true;
 		form[fieldName].valid = false;
 		form[fieldName].formLevelError = true;
 		form = form;
