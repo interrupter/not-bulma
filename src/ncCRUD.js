@@ -321,7 +321,7 @@ class ncCRUD extends notController {
 				actions: [{
 					title: 'Создать',
 					action: this.goCreate.bind(this)
-				}],
+				}, ...(this.getOptions('list.actions', []))],
 				fields: 			this.getOptions('list.fields'),
 				showSelect: 	this.getOptions('list.showSelect'),
 				showSearch: 	this.getOptions('list.showSearch'),
