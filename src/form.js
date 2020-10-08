@@ -30,8 +30,10 @@ class Form{
 				options.fields[fieldName].validate = validators.fields[fieldName];
 			}
 			//copying initial data
-			if(typeof data !== 'undefined' && data!== null &&
-			typeof data[fieldName] !== 'undefined' && data[fieldName]!== null){
+			if(typeof data !== 'undefined' && data!== null
+				&&	typeof data[fieldName] !== 'undefined'
+				&& data[fieldName]!== null
+			){
 				options.fields[fieldName].value = data[fieldName];
 			}
 		}

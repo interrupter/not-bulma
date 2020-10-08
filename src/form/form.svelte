@@ -312,10 +312,10 @@
 
 <div class="buttons is-grouped is-centered">
 	{#if cancel.enabled}
-	<button class="button is-outlined" on:click={rejectForm}>{cancel.caption}</button>
+	<button class="button is-outlined {cancel.classes}" on:click={rejectForm}>{cancel.caption}</button>
 	{/if}
 	{#if submit.enabled}
-	<button on:click={submitForm} disabled={formInvalid} class="button is-primary is-hovered">{submit.caption}</button>
+	<button on:click={submitForm} disabled={formInvalid} class="button is-primary is-hovered {submit.classes}">{submit.caption}</button>
 	{/if}
 </div>
 {/if}
