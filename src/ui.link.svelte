@@ -1,5 +1,6 @@
 <script>
   export let title = '';
+  export let url = '';
   export let light = false;
   export let loading = false;
   export let raised = false;
