@@ -392,16 +392,6 @@ class notController extends notBase {
 		}
 	}
 
-
-	/**
-	*	Returns module components
-	*	@param	{string} 	moduleName		name of the module which components requested
-	*	@return {object}
-	*/
-	buildUrl(parts = []){
-
-	}
-
 }
 
 export default notController;
