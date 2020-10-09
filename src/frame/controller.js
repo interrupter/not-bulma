@@ -46,8 +46,6 @@ class notController extends notBase {
 			}
 		});
 		this.app = app;
-		this.setURLPrefix(app.getOptions('router.root'));
-		this.log('start controller');
 		this.setWorking({
 			ready: false,
 			views: {},
@@ -66,7 +64,7 @@ class notController extends notBase {
 				single: OPT_DEFAULT_SINGLE_NAME
 			}
 		});
-
+		this.setURLPrefix(app.getOptions('router.root'));
 		/*
 			сразу делаем доступными модели notRecord из nc`ControllerName` будут доступны как this.nr`ModelName`
 		*/
