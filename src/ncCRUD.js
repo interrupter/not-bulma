@@ -174,6 +174,8 @@ class ncCRUD extends notController {
 	}
 
 	async runDetails(params) {
+		let idField = this.getOptions('details.idField', '_id'),
+			query = {};
 		await this.preloadVariants('details');
 		this.setBreadcrumbs([{
 			title: 'Просмотр',
@@ -185,11 +187,9 @@ class ncCRUD extends notController {
 		} else {
 			this.$destroyUI();
 		}
-
 		let manifest = this.app.getInterfaceManifest()[this.getModelName()];
-		this.getModel()({
-			_id: params[0]
-		}).$get()
+		query[idField] = params[0];
+		this.getModel()(query).$get()
 			.then((res) => {
 				if (res.status === 'ok') {
 					this.ui.details = Form.build({
@@ -203,6 +203,7 @@ class ncCRUD extends notController {
 						data: res.result
 					});
 					this.emit('after:render:details');
+					this.ui.details.$on('reject', this.goList.bind(this));
 				} else {
 					this.error(res);
 					this.ui.error = new UIError({
@@ -218,6 +219,8 @@ class ncCRUD extends notController {
 	}
 
 	async runUpdate(params) {
+		let idField = this.getOptions('update.idField', '_id'),
+			query = {};
 		await this.preloadVariants('update');
 		this.setBreadcrumbs([{
 			title: 'Редактирование',
@@ -230,9 +233,8 @@ class ncCRUD extends notController {
 			this.$destroyUI();
 		}
 		let manifest = this.app.getInterfaceManifest()[this.getModelName()];
-		this.getModel()({
-			_id: params[0]
-		}).$getRaw().then((res) => {
+		query[idField] = params[0];
+		this.getModel()(query).$getRaw().then((res) => {
 			if (res.status === 'ok') {
 				this.setBreadcrumbs([{
 					title: `Редактирование "${res.result.title}"`,
