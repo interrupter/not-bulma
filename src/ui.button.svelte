@@ -13,13 +13,21 @@
   export let size = '';
   export let classes = '';
   export let icon = false;
+  export let iconSide = 'right';
   export let action = ()=>{ return true; }
 </script>
 
 
 <button on:click="{action}" {disabled} class="button {classes} {state?`is-${state}`:''} {inverted?`is-inverted`:''} {outlined?`is-outlined`:''} {raised?`is-raised`:''} {rounded?`is-rounded`:''} {light?`is-light`:''} {loading?`is-loading`:''} {color?`is-${color}`:''} {type?`is-${type}`:''} {size?`is-${size}`:''}">
-  {title}
   {#if icon }
-  <span class="icon"><i class="fas fa-{icon}"></i></span>
+  {#if iconSide === 'left' }
+  <span class="icon"><i class="fas fa-{icon} {size?`is-${size}`:''}"></i></span>
+    {/if}
+  <span>{title}</span>
+  {#if iconSide === 'right' }
+    <span class="icon"><i class="fas fa-{icon} {size?`is-${size}`:''}"></i></span>
+  {/if}
+  {:else}
+  {title}
   {/if}
 </button>
