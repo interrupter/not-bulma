@@ -23,7 +23,9 @@
   {#if iconSide === 'left' }
   <span class="icon"><i class="fas fa-{icon} {size?`is-${size}`:''}"></i></span>
     {/if}
+  {#if title }
   <span>{title}</span>
+  {/if}
   {#if iconSide === 'right' }
     <span class="icon"><i class="fas fa-{icon} {size?`is-${size}`:''}"></i></span>
   {/if}
