@@ -228,11 +228,11 @@ class notController extends notBase {
 	*/
 	buildURL({	prefix, module, model, id, action	}){
 		let url = ['/'];
-		if(prefix)	{ url.push(encodeURIComponent(prefix));	}
-		if(module)	{ url.push(encodeURIComponent(module));	}
-		if(model)		{ url.push(encodeURIComponent(model));	}
-		if(id)			{ url.push(encodeURIComponent(id));			}
-		if(action)	{ url.push(encodeURIComponent(action));	}
+		if(prefix)	{	url.push(encodeURIComponent(notCommon.trimBackslash(prefix)));}
+		if(module)	{ url.push(encodeURIComponent(notCommon.trimBackslash(module)));}
+		if(model)		{ url.push(encodeURIComponent(notCommon.trimBackslash(model)));}
+		if(id)			{ url.push(encodeURIComponent(notCommon.trimBackslash(id)));			}
+		if(action)	{ url.push(encodeURIComponent(notCommon.trimBackslash(action)));	}
 		return url.join('/').replace(/\/\//g, '/');
 	}
 

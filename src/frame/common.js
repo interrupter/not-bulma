@@ -252,6 +252,17 @@ export default class notCommon {
 		}
 	}
 
+
+	static trimBackslash(str){
+		if(str.indexOf('/') === 0){
+			str = str.substring(1);
+		}
+		if(str[str.length - 1] === '/'){
+			str = str.substring(0, str.length - 1);
+		}
+		return str;
+	}
+
 	static capitalizeFirstLetter(name) {
 		return name.charAt(0).toUpperCase() + name.slice(1);
 	}
