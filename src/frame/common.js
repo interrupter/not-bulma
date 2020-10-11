@@ -268,7 +268,7 @@ export default class notCommon {
 	*
 	*	@return {string}	url path
 	*/
-	buildURL({	prefix, module, model, id, action	}){
+	static buildURL({	prefix, module, model, id, action	}){
 		let url = ['/'];
 		if(prefix)	{	url.push(encodeURIComponent(this.trimBackslash(prefix)));}
 		if(module)	{ url.push(encodeURIComponent(this.trimBackslash(module)));}
