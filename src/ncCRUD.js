@@ -30,7 +30,7 @@ class ncCRUD extends notController {
 			url: this.getModelURL()
 		});
 		Breadcrumbs.setHead(BREADCRUMBS).render({
-			root: this.app.getOptions('router.root'),
+			root: '',
 			target: this.els.top,
 			navigate: (url) => this.app.getWorking('router').navigate(url)
 		});
