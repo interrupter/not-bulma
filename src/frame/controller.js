@@ -197,7 +197,7 @@ class notController extends notBase {
 	*	@return {string}	url path
 	*/
 	getModelURL(){
-		return this.buildURL({
+		return notCommon.buildURL({
 			prefix: this.getURLPrefix(),
 			module: this.getModuleName(),
 			model: 	this.getModelName(),
@@ -211,7 +211,7 @@ class notController extends notBase {
 	*	@return {string}	url path
 	*/
 	getModelActionURL(id, action = false){
-		return this.buildURL({
+		return notCommon.buildURL({
 			prefix: this.getURLPrefix(),
 			module: this.getModuleName(),
 			model: 	this.getModelName(),
@@ -220,20 +220,8 @@ class notController extends notBase {
 		});
 	}
 
-	/**
-	*	Builds URL with structure like prefix/module/model/id/action
-	* If some part absent or set to false it will be excluded from result
-	*
-	*	@return {string}	url path
-	*/
-	buildURL({	prefix, module, model, id, action	}){
-		let url = ['/'];
-		if(prefix)	{	url.push(encodeURIComponent(notCommon.trimBackslash(prefix)));}
-		if(module)	{ url.push(encodeURIComponent(notCommon.trimBackslash(module)));}
-		if(model)		{ url.push(encodeURIComponent(notCommon.trimBackslash(model)));}
-		if(id)			{ url.push(encodeURIComponent(notCommon.trimBackslash(id)));			}
-		if(action)	{ url.push(encodeURIComponent(notCommon.trimBackslash(action)));	}
-		return url.join('/').replace(/\/\//g, '/');
+	buildURL(val){
+		return notCommon.buildURL(val);
 	}
 
 	/**

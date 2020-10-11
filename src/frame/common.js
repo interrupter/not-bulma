@@ -252,7 +252,6 @@ export default class notCommon {
 		}
 	}
 
-
 	static trimBackslash(str){
 		if(str.indexOf('/') === 0){
 			str = str.substring(1);
@@ -262,6 +261,23 @@ export default class notCommon {
 		}
 		return str;
 	}
+
+	/**
+	*	Builds URL with structure like prefix/module/model/id/action
+	* If some part absent or set to false it will be excluded from result
+	*
+	*	@return {string}	url path
+	*/
+	buildURL({	prefix, module, model, id, action	}){
+		let url = ['/'];
+		if(prefix)	{	url.push(encodeURIComponent(this.trimBackslash(prefix)));}
+		if(module)	{ url.push(encodeURIComponent(this.trimBackslash(module)));}
+		if(model)		{ url.push(encodeURIComponent(this.trimBackslash(model)));}
+		if(id)			{ url.push(encodeURIComponent(this.trimBackslash(id)));			}
+		if(action)	{ url.push(encodeURIComponent(this.trimBackslash(action)));	}
+		return url.join('/').replace(/\/\//g, '/');
+	}
+
 
 	static capitalizeFirstLetter(name) {
 		return name.charAt(0).toUpperCase() + name.slice(1);
