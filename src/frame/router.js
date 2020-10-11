@@ -179,7 +179,7 @@ class notRouter extends notBase {
 		let root = this.getWorking('root');
 		if (root !== '/'){
 			if(path.indexOf(root.substring(1)) === 0){
-				return path;
+				return '/'+path;
 			}
 		}
 		return this.getWorking('root') + this.clearSlashes(path);
