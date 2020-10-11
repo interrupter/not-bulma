@@ -25,6 +25,8 @@ class notRouter extends notBase {
 		this.setWorking('mode', OPT_MODE_HASH);
 	}
 
+
+	// root should start and end with /
 	setRoot(root) {
 		this.setWorking('root', (root && root !== '/') ? '/' + this.clearSlashes(root) + '/' : '/');
 		return this;
@@ -173,6 +175,13 @@ class notRouter extends notBase {
 	}
 
 	getFullRoute(path = '') {
+		path = this.clearSlashes(path);
+		let root = this.getWorking('root');
+		if (root !== '/'){
+			if(path.indexOf(root) === 0){
+				return path;
+			}
+		}
 		return this.getWorking('root') + this.clearSlashes(path);
 	}
 
