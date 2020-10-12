@@ -86,19 +86,19 @@ class notTable extends EventEmitter {
 			});
 		}
 		if(Object.prototype.hasOwnProperty.call(this.options, 'filter')){
-			this.setFilter(this.options.filter);
+			this.setFilter(this.options.filter, true);
 		}else{
 			this.resetFilter();
 		}
 		if(Object.prototype.hasOwnProperty.call(this.options, 'pager')){
-			this.setPager(this.options.pager);
+			this.setPager(this.options.pager, true);
 		}else{
 			this.resetPager();
 		}
 		if(Object.prototype.hasOwnProperty.call(this.options, 'sorter')){
-			this.setSorter(this.options.sorter);
+			this.setSorter(this.options.sorter, true);
 		}else{
-			this.resetSorter();
+			this.resetSorter(true);
 		}
 		if(Object.prototype.hasOwnProperty.call(this.options, 'return')){
 			this.setReturn(this.options.return);
@@ -106,7 +106,7 @@ class notTable extends EventEmitter {
 			this.setReturn();
 		}
 		if(Object.prototype.hasOwnProperty.call(this.options, 'search')){
-			this.setSearch(this.options.search);
+			this.setSearch(this.options.search, true);
 		}else{
 			this.setSearch();
 		}
@@ -283,23 +283,32 @@ class notTable extends EventEmitter {
 		}
 	}
 
-	setFilter(hash) {
+	setFilter(hash, withoutInvalidation = false) {
 		this.setState('filter', hash);
+		if(withoutInvalidation){
+			return this;
+		}
 		this.invalidateData();
 		this.updateData();
+		return this;
 	}
 
 	resetFilter() {
 		this.setState('filter', {});
+		return this;
 	}
 
 	getFilter() {
 		return this.getState('filter');
 	}
 
-	setPager(hash) {
+	setPager(hash, withoutInvalidation = false) {
 		this.setState('pager', hash);
+		if(withoutInvalidation){
+			return this;
+		}
 		this.updateData();
+		return this;
 	}
 
 	getDefaultPageNumber() {
@@ -321,16 +330,20 @@ class notTable extends EventEmitter {
 		return this.getState('pager');
 	}
 
-	setSorter(hash) {
+	setSorter(hash, withoutInvalidation = false) {
 		this.setWorking('sorter', hash);
+		if(withoutInvalidation){
+			return this;
+		}
 		this.invalidateData();
 		this.updateData();
+		return this;
 	}
 
-	resetSorter() {
+	resetSorter(withoutInvalidation = false) {
 		let t = {};
 		t[OPT_DEFAULT_SORT_FIELD] = OPT_DEFAULT_SORT_DIRECTION;
-		this.setSorter(t);
+		return this.setSorter(t, withoutInvalidation);
 	}
 
 	getSorter() {
@@ -351,8 +364,11 @@ class notTable extends EventEmitter {
 		return search ? this.getWorking('search') : '';
 	}
 
-	setSearch(line = OPT_DEFAULT_SEARCH) {
+	setSearch(line = OPT_DEFAULT_SEARCH, withoutInvalidation = false) {
 		this.setWorking('search', line);
+		if(withoutInvalidation){
+			return this;
+		}
 		this.invalidateData();
 		this.updateData();
 		return this;
@@ -399,7 +415,6 @@ class notTable extends EventEmitter {
 		//resset pager anyway
 		this.resetPager();
 	}
-
 
 	isLive() {
 		return this.getOptions('interface') && this.getOptions('interface.factory');
