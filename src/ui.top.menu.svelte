@@ -34,7 +34,7 @@
   {#each sections as section(section.id) }
   {#if sectionsItemsCount[section.id] || section.indicator || section.tag }
   <div class="navbar-item {sectionsItemsCount[section.id]?'has-dropdown':''} is-hoverable is-pulled-right">
-    <a href class="navbar-link {sectionsItemsCount[section.id]?'':'is-arrowless'}" on:click="{(e)=>{onClick(e, section)})}" >
+    <a href class="navbar-link {sectionsItemsCount[section.id]?'':'is-arrowless'}" on:click="{(e)=>{onClick(e, section);}}" >
       {section.title}
       {#if section.tag }
       <span class="ml-3 tag is-{section.tag.type} is-pulled-right">{section.tag.label}</span>
@@ -50,7 +50,7 @@
       {#if item.break }
       <hr class="navbar-divider" />
       {/if}
-      <a class="navbar-item" href="{root}{item.url}" data-href="{item.url}"  on:click="{(e)=>{onClick(e, item)})}">{item.title}
+      <a class="navbar-item" href="{root}{item.url}" data-href="{item.url}"  on:click="{(e)=>{onClick(e, item);}}">{item.title}
         {#if item.tag }
         <span class="ml-3 tag is-{item.tag.type} is-pulled-right">{item.tag.label}</span>
         {/if}
