@@ -11,13 +11,15 @@
 		onDestroy
 	} from 'svelte';
 
+	const zIndexStep = 1000;
+
 	const dispatch = createEventDispatcher();
 
 	export let closeButton = false;
 	export let show = true;
 	export let closeOnClick = true;
 	export let closeSize = 'normal';
-	//export let layer = 1;
+	export let layer = 1;
 
 	$: if(show){
 		document.body.style.overflow = 'hidden';
@@ -60,7 +62,7 @@
 </script>
 
 {#if show}
-<div class="is-overlay not-overlay" transition:fade on:click={overlayClick}>
+<div class="is-overlay not-overlay" transition:fade on:click={overlayClick} style="z-index: {zIndexStep * layer};">
 	{#if closeButton}
   <button on:click={closeButtonClick} class="delete is-{closeSize}"></button>
 	{/if}
