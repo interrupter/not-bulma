@@ -51,6 +51,7 @@
 
 	onMount(() => {
 		overflowSave = document.body.style.overflow;
+
 	});
 
 	onDestroy(() => {
@@ -59,7 +60,7 @@
 </script>
 
 {#if show}
-<div class="is-overlay" transition:fade on:click={overlayClick}>
+<div class="is-overlay not-overlay" transition:fade on:click={overlayClick}>
 	{#if closeButton}
   <button on:click={closeButtonClick} class="delete is-{closeSize}"></button>
 	{/if}
@@ -75,9 +76,15 @@
 		width: 100vw;
 		height: 100vh;
 		margin: 0px;
-		background-color: #CCC;
 		display: block;
 		opacity: 1;
 		overflow: hidden;
 	}
+
+
+.stop-scrolling {
+    height: 100%;
+    overflow: hidden;
+}
+
 </style>
