@@ -2,6 +2,7 @@
 import UIOverlay from './ui.overlay.svelte';
 import UIBreadcrumbs from './ui.breadcrumbs.svelte';
 import UIError from './ui.error.svelte';
+import UISuccess from './ui.success.svelte';
 import UISideMenu from './ui.side.menu.svelte';
 import UITag from './ui.tag.svelte';
 import UIBooleans from './ui.booleans.svelte';
@@ -89,6 +90,7 @@ export {
   UIOverlay,
   UIBreadcrumbs,
   UIError,
+  UISuccess,
   UISideMenu,
   UITag,
   UIBooleans,
