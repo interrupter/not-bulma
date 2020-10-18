@@ -21,7 +21,13 @@
     {#if (items.length === (index + 1)) }
     <li class="is-active"><a href="{root}{link.url}" data-href="{link.url}" aria-current="page">{link.title}</a></li>
     {:else }
-    <li><a href="{root}{link.url}" data-href="{link.url}" on:click="{onClick}">{link.title}</a></li>
+    <li>
+      {#if link.url === false }
+      {link.title}
+      {:else}
+      <a href="{root}{link.url}" data-href="{link.url}" on:click="{onClick}">{link.title}</a>
+      {/if}
+    </li>
     {/if}
     {/each}
   </ul>
