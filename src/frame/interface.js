@@ -78,7 +78,7 @@ class notInterface extends notBase {
 			return fetch(apiServerURL + url + requestParamsEncoded, opts).then(response => response.json());
 		} catch (e) {
 			notCommon.error(e);
-			notCOmmon.report(e);
+			notCommon.report(e);
 		}
 	}
 
@@ -94,7 +94,7 @@ class notInterface extends notBase {
 				.then(response => response.payload);
 		} catch (e) {
 			notCommon.error(e);
-			notCOmmon.report(e);
+			notCommon.report(e);
 		}
 	}
 
@@ -130,6 +130,9 @@ class notInterface extends notBase {
 			let ind = line.indexOf(start);
 			let startSlice = ind + len;
 			let endSlice = line.indexOf(end);
+			if(ind > endSlice){
+				break;
+			}
 			fieldName = line.slice(startSlice, endSlice);
 			if (fieldName == '') break;
 			this.log(start + fieldName + end, notPath.get(fieldName, record));
