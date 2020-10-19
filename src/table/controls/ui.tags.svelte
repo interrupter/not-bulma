@@ -16,5 +16,12 @@
 </script>
 
 {#each values as item (item.id)}
-<span class="mx-1 tag is-{item.type}">{item.title}</span>
+{#if item.value }
+  <div class="mx-1 tags has-addons">
+    <span class="tag">{item.title}</span>
+    <span class="tag is-{item.color}">{item.value}</span>
+  </div>
+{:else}
+  <span class="mx-1 tag is-{item.color}">{item.title}</span>
+{/if}
 {/each}
