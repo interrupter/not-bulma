@@ -7,7 +7,8 @@
   item = {
     id,        //unique
     title,     //some text
-    type       //for coloring items, usual html template names danger, success, etc
+    value,      //for double tags
+    color       //coloring
   }
   */
 
@@ -16,7 +17,7 @@
 </script>
 
 {#each values as item (item.id)}
-{#if item.value }
+{#if Object.prototype.hasOwnProperty.call(item, 'value') }
   <div class="mx-1 tags has-addons">
     <span class="tag">{item.title}</span>
     <span class="tag is-{item.color}">{item.value}</span>
