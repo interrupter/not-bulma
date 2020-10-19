@@ -26,3 +26,9 @@
   <span class="mx-1 tag is-{item.color}">{item.title}</span>
 {/if}
 {/each}
+
+<style>
+  .tags:not(:last-child){
+    margin-bottom: none;
+  }
+</style>
