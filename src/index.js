@@ -10,6 +10,7 @@ import UIButton from './ui.button.svelte';
 import UIButtons from './ui.buttons.svelte';
 import UIImages from './ui.images.svelte';
 import UILinks from './ui.links.svelte';
+import UICookiesNotification from './ui.cookie.notification.svelte';
 //form related
 import * as FormElements from './form/index.js';
 //stores
@@ -72,6 +73,7 @@ export {
   UIForm,
   UIField,
   UILabel,
+  UICookiesNotification,
   UICheckbox,
   UIColor,
   UIDate,
