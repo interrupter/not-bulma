@@ -117,7 +117,7 @@ class notController extends notBase {
 	*	@return {notController}
 	*/
 	setModelName(modelName){
-		this.setWorking('modelName', modelName);
+		this.setWorking('modelName', notCommon.lowerFirstLetter(modelName));
 		return this;
 	}
 
@@ -172,7 +172,7 @@ class notController extends notBase {
 	*	@return {notController} this
 	*/
 	setModuleName(val) {
-		this.setOptions('moduleName', val);
+		this.setOptions('moduleName', notCommon.lowerFirstLetter(val));
 		this.updateAutoName();
 		return this;
 	}
