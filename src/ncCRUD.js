@@ -385,21 +385,21 @@ class ncCRUD extends notController {
 		ui.resetLoading();
 		if (notCommon.isError(res)) {
 			notCommon.report(res);
-			ui.setFormError(res.message);
+			ui.addFormError(res.message);
 		} else {
 			if(Object.prototype.hasOwnProperty.call(res, 'status')){
 				if(res.status === 'error'){
 					if (!Array.isArray(res.error)) {
 						res.error = [ERROR_DEFAULT];
 					}
-					ui.setFormError(res.error);
+					ui.addFormError(res.error);
 				}else if(res.status === 'ok'){
 					ui.showSuccess();
 				}
 			}else{
 				this.processFieldsErrors(ui, res);
 				if (res.error) {
-					ui.setFormError(res.error);
+					ui.addFormError(res.error);
 				}
 				if (!res.error) {
 					ui.showSuccess();
