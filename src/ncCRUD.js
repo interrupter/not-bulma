@@ -34,7 +34,6 @@ class ncCRUD extends notController {
 			target: this.els.top,
 			navigate: (url) => this.app.getWorking('router').navigate(url)
 		});
-		this.preloadVariants();
 		this.route(this.getOptions('params'));
 	}
 
