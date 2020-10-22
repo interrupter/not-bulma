@@ -55,7 +55,7 @@
 </script>
 
 {#if horizontal}
-<div class="field is-horizontal {fieldClasses} form-field-{controls[0].component}-{name}">
+<div class="field is-horizontal {fieldClasses} form-field-{controls.map(itm=>itm.component).join('_')}-{name}">
   <div class="field-label">{label}</div>
   <div class="field-body">
     {#each controls as control}
@@ -64,7 +64,7 @@
   </div>
 </div>
 {:else}
-<div class="field {fieldClasses} form-field-{controls[0].component}-{name}">
+<div class="field {fieldClasses} form-field-{controls.map(itm=>itm.component).join('_')}-{name}">
   {#each controls as control}
   <UILabel id="form-field-{control.component}-{name}" label={control.label} />
   <svelte:component this={COMPONENTS.get(control.component)} {...control} on:change={onControlChange} fieldname={name} />

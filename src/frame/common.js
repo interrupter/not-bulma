@@ -128,7 +128,7 @@ export default class notCommon {
 	static deepMerge = deepmerge;
 
 	static isError(e) {
-		return e instanceof Error;
+		return (e instanceof Error) || (Object.prototype.hasOwnProperty.call(e, 'status') && e.status === 'error');
 	}
 
 	static TZ_OFFSET = (new Date().getTimezoneOffset() / 60) * -1;
@@ -387,6 +387,6 @@ export default class notCommon {
 		return fetch(url).then(response => response.json());
 	}
 
-	
+
 
 }

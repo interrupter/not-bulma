@@ -358,7 +358,7 @@ class ncCRUD extends notController {
 			.then((res) => {
 				this.log(res);
 				this.showResult(this.ui.create, res);
-				if (!notCommon.isError(res) && !res.error) {
+				if (!notCommon.isError(res)) {
 					setTimeout(() => this.goList(this.app), 3000);
 				}
 			})
@@ -385,22 +385,38 @@ class ncCRUD extends notController {
 		ui.resetLoading();
 		if (notCommon.isError(res)) {
 			notCommon.report(res);
+			ui.setFormError(res.message);
 		} else {
-			if (res.errors && Object.keys(res.errors).length > 0) {
-				if (!Array.isArray(res.error)) {
-					res.error = [];
+			if(Object.prototype.hasOwnProperty.call(res, 'status')){
+				if(res.status === 'error'){
+					if (!Array.isArray(res.error)) {
+						res.error = [ERROR_DEFAULT];
+					}
+					ui.setFormError(res.error);
+				}else if(res.status === 'ok'){
+					ui.showSuccess();
 				}
-				Object.keys(res.errors).forEach((fieldName) => {
-					ui.setFieldInvalid(fieldName, res.errors[fieldName]);
-					res.error.push(...res.errors[fieldName]);
-				});
+			}else{
+				this.processFieldsErrors(ui, res);
+				if (res.error) {
+					ui.setFormError(res.error);
+				}
+				if (!res.error) {
+					ui.showSuccess();
+				}
 			}
-			if (res.error) {
-				ui.setFormError(res.error);
+		}
+	}
+
+	processFieldsErrors(ui, res){
+		if (res.errors && Object.keys(res.errors).length > 0) {
+			if (!Array.isArray(res.error)) {
+				res.error = [];
 			}
-			if (!res.error) {
-				ui.showSuccess();
-			}
+			Object.keys(res.errors).forEach((fieldName) => {
+				ui.setFieldInvalid(fieldName, res.errors[fieldName]);
+				res.error.push(...res.errors[fieldName]);
+			});
 		}
 	}
 
