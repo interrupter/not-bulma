@@ -233,7 +233,7 @@ export default class notCommon {
 		};
 	}
 
-	static report(name, e) {
+	static report(e) {
 		if (this.getApp() && this.getApp().getOptions('services.errorReporter')) {
 			let reporter = this.getApp().getOptions('services.errorReporter');
 			if (reporter && reporter.report) {
@@ -386,7 +386,5 @@ export default class notCommon {
 	static getJSON(url){
 		return fetch(url).then(response => response.json());
 	}
-
-
 
 }
