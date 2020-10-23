@@ -27065,6 +27065,7 @@ var notBulma = (function (exports) {
 	      //создать контроллеры
 	      //роутер и привязать к нему контроллеры
 	      this.execRouter();
+	      this.emit('afterStarted', this);
 	    }
 	  }, {
 	    key: "bindController",
@@ -27247,7 +27248,7 @@ var notBulma = (function (exports) {
 	    _this.setOptions({
 	      moduleName: OPT_DEFAULT_MODULE_NAME,
 	      containerSelector: OPT_DEFAULT_CONTAINER_SELECTOR,
-	      prefix: _this.getApp().getOptions('paths.module'),
+	      prefix: app.getOptions('paths.module'),
 	      names: {
 	        plural: OPT_DEFAULT_PLURAL_NAME,
 	        single: OPT_DEFAULT_SINGLE_NAME
@@ -27260,7 +27261,7 @@ var notBulma = (function (exports) {
 	    */
 
 
-	    var interfaces = notCommon.getApp().getInterfaces();
+	    var interfaces = app.getInterfaces();
 	    _this.make = {};
 
 	    for (var t in interfaces) {
