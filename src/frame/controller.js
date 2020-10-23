@@ -58,7 +58,7 @@ class notController extends notBase {
 		this.setOptions({
 			moduleName: OPT_DEFAULT_MODULE_NAME,
 			containerSelector: OPT_DEFAULT_CONTAINER_SELECTOR,
-			prefix: this.getApp().getOptions('paths.module'),
+			prefix: app.getOptions('paths.module'),
 			names: {
 				plural: OPT_DEFAULT_PLURAL_NAME,
 				single: OPT_DEFAULT_SINGLE_NAME
@@ -68,7 +68,7 @@ class notController extends notBase {
 		/*
 			сразу делаем доступными модели notRecord из nc`ControllerName` будут доступны как this.nr`ModelName`
 		*/
-		let interfaces = notCommon.getApp().getInterfaces();
+		let interfaces = app.getInterfaces();
 		this.make = {};
 		for (let t in interfaces) {
 			if (Object.prototype.hasOwnProperty.call(interfaces, t)) {

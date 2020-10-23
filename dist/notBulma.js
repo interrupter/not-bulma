@@ -5702,7 +5702,7 @@ var notBulma = (function (exports) {
 					each_blocks[i].c();
 				}
 
-				attr(div, "class", div_class_value = "field " + /*fieldClasses*/ ctx[4] + " form-field-" + /*controls*/ ctx[3][0].component + "-" + /*name*/ ctx[1]);
+				attr(div, "class", div_class_value = "field " + /*fieldClasses*/ ctx[4] + " form-field-" + /*controls*/ ctx[3].map(func_1).join("_") + "-" + /*name*/ ctx[1]);
 			},
 			m(target, anchor) {
 				insert(target, div, anchor);
@@ -5741,7 +5741,7 @@ var notBulma = (function (exports) {
 					check_outros();
 				}
 
-				if (!current || dirty & /*fieldClasses, controls, name*/ 26 && div_class_value !== (div_class_value = "field " + /*fieldClasses*/ ctx[4] + " form-field-" + /*controls*/ ctx[3][0].component + "-" + /*name*/ ctx[1])) {
+				if (!current || dirty & /*fieldClasses, controls, name*/ 26 && div_class_value !== (div_class_value = "field " + /*fieldClasses*/ ctx[4] + " form-field-" + /*controls*/ ctx[3].map(func_1).join("_") + "-" + /*name*/ ctx[1])) {
 					attr(div, "class", div_class_value);
 				}
 			},
@@ -5804,7 +5804,7 @@ var notBulma = (function (exports) {
 
 				attr(div0, "class", "field-label");
 				attr(div1, "class", "field-body");
-				attr(div2, "class", div2_class_value = "field is-horizontal " + /*fieldClasses*/ ctx[4] + " form-field-" + /*controls*/ ctx[3][0].component + "-" + /*name*/ ctx[1]);
+				attr(div2, "class", div2_class_value = "field is-horizontal " + /*fieldClasses*/ ctx[4] + " form-field-" + /*controls*/ ctx[3].map(func).join("_") + "-" + /*name*/ ctx[1]);
 			},
 			m(target, anchor) {
 				insert(target, div2, anchor);
@@ -5849,7 +5849,7 @@ var notBulma = (function (exports) {
 					check_outros();
 				}
 
-				if (!current || dirty & /*fieldClasses, controls, name*/ 26 && div2_class_value !== (div2_class_value = "field is-horizontal " + /*fieldClasses*/ ctx[4] + " form-field-" + /*controls*/ ctx[3][0].component + "-" + /*name*/ ctx[1])) {
+				if (!current || dirty & /*fieldClasses, controls, name*/ 26 && div2_class_value !== (div2_class_value = "field is-horizontal " + /*fieldClasses*/ ctx[4] + " form-field-" + /*controls*/ ctx[3].map(func).join("_") + "-" + /*name*/ ctx[1])) {
 					attr(div2, "class", div2_class_value);
 				}
 			},
@@ -6138,6 +6138,9 @@ var notBulma = (function (exports) {
 			}
 		};
 	}
+
+	const func = itm => itm.component;
+	const func_1 = itm => itm.component;
 
 	function instance$h($$self, $$props, $$invalidate) {
 		let dispatch = createEventDispatcher();
@@ -14443,21 +14446,18 @@ var notBulma = (function (exports) {
 		return child_ctx;
 	}
 
-	// (18:0) {#each values as item (item.id)}
-	function create_each_block$b(key_1, ctx) {
+	// (25:0) {:else}
+	function create_else_block$h(ctx) {
 		let span;
 		let t_value = /*item*/ ctx[2].title + "";
 		let t;
 		let span_class_value;
 
 		return {
-			key: key_1,
-			first: null,
 			c() {
 				span = element("span");
 				t = text(t_value);
-				attr(span, "class", span_class_value = "mx-1 tag is-" + /*item*/ ctx[2].type);
-				this.first = span;
+				attr(span, "class", span_class_value = "mx-1 tag is-" + /*item*/ ctx[2].color + " svelte-9c4k6c");
 			},
 			m(target, anchor) {
 				insert(target, span, anchor);
@@ -14466,12 +14466,111 @@ var notBulma = (function (exports) {
 			p(ctx, dirty) {
 				if (dirty & /*values*/ 1 && t_value !== (t_value = /*item*/ ctx[2].title + "")) set_data(t, t_value);
 
-				if (dirty & /*values*/ 1 && span_class_value !== (span_class_value = "mx-1 tag is-" + /*item*/ ctx[2].type)) {
+				if (dirty & /*values*/ 1 && span_class_value !== (span_class_value = "mx-1 tag is-" + /*item*/ ctx[2].color + " svelte-9c4k6c")) {
 					attr(span, "class", span_class_value);
 				}
 			},
 			d(detaching) {
 				if (detaching) detach(span);
+			}
+		};
+	}
+
+	// (20:0) {#if Object.prototype.hasOwnProperty.call(item, 'value') }
+	function create_if_block$k(ctx) {
+		let div;
+		let span0;
+		let t0_value = /*item*/ ctx[2].title + "";
+		let t0;
+		let t1;
+		let span1;
+		let t2_value = /*item*/ ctx[2].value + "";
+		let t2;
+		let span1_class_value;
+		let t3;
+
+		return {
+			c() {
+				div = element("div");
+				span0 = element("span");
+				t0 = text(t0_value);
+				t1 = space();
+				span1 = element("span");
+				t2 = text(t2_value);
+				t3 = space();
+				attr(span0, "class", "tag");
+				attr(span1, "class", span1_class_value = "tag is-" + /*item*/ ctx[2].color + " svelte-9c4k6c");
+				attr(div, "class", "mx-1 tags has-addons svelte-9c4k6c");
+			},
+			m(target, anchor) {
+				insert(target, div, anchor);
+				append(div, span0);
+				append(span0, t0);
+				append(div, t1);
+				append(div, span1);
+				append(span1, t2);
+				append(div, t3);
+			},
+			p(ctx, dirty) {
+				if (dirty & /*values*/ 1 && t0_value !== (t0_value = /*item*/ ctx[2].title + "")) set_data(t0, t0_value);
+				if (dirty & /*values*/ 1 && t2_value !== (t2_value = /*item*/ ctx[2].value + "")) set_data(t2, t2_value);
+
+				if (dirty & /*values*/ 1 && span1_class_value !== (span1_class_value = "tag is-" + /*item*/ ctx[2].color + " svelte-9c4k6c")) {
+					attr(span1, "class", span1_class_value);
+				}
+			},
+			d(detaching) {
+				if (detaching) detach(div);
+			}
+		};
+	}
+
+	// (19:0) {#each values as item (item.id)}
+	function create_each_block$b(key_1, ctx) {
+		let first;
+		let show_if;
+		let if_block_anchor;
+
+		function select_block_type(ctx, dirty) {
+			if (show_if == null || dirty & /*values*/ 1) show_if = !!Object.prototype.hasOwnProperty.call(/*item*/ ctx[2], "value");
+			if (show_if) return create_if_block$k;
+			return create_else_block$h;
+		}
+
+		let current_block_type = select_block_type(ctx, -1);
+		let if_block = current_block_type(ctx);
+
+		return {
+			key: key_1,
+			first: null,
+			c() {
+				first = empty();
+				if_block.c();
+				if_block_anchor = empty();
+				this.first = first;
+			},
+			m(target, anchor) {
+				insert(target, first, anchor);
+				if_block.m(target, anchor);
+				insert(target, if_block_anchor, anchor);
+			},
+			p(ctx, dirty) {
+				if (current_block_type === (current_block_type = select_block_type(ctx, dirty)) && if_block) {
+					if_block.p(ctx, dirty);
+				} else {
+					if_block.d(1);
+					if_block = current_block_type(ctx);
+
+					if (if_block) {
+						if_block.c();
+						if_block.m(if_block_anchor.parentNode, if_block_anchor);
+					}
+				}
+			},
+			d(detaching) {
+				if (detaching) detach(first);
+				if_block.d(detaching);
+				if (detaching) detach(if_block_anchor);
 			}
 		};
 	}
@@ -14505,7 +14604,7 @@ var notBulma = (function (exports) {
 				insert(target, each_1_anchor, anchor);
 			},
 			p(ctx, [dirty]) {
-				if (dirty & /*values*/ 1) {
+				if (dirty & /*values, Object*/ 1) {
 					const each_value = /*values*/ ctx[0];
 					each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, each_1_anchor.parentNode, destroy_block, create_each_block$b, each_1_anchor, get_each_context$b);
 				}
@@ -15289,7 +15388,7 @@ var notBulma = (function (exports) {
 	}
 
 	// (181:2) {#if state.pagination && state.pagination.pages && state.pagination.pages.list }
-	function create_if_block$k(ctx) {
+	function create_if_block$l(ctx) {
 		let each_1_anchor;
 		let each_value = /*state*/ ctx[0].pagination.pages.list;
 		let each_blocks = [];
@@ -15345,7 +15444,7 @@ var notBulma = (function (exports) {
 	}
 
 	// (186:3) {:else}
-	function create_else_block$h(ctx) {
+	function create_else_block$i(ctx) {
 		let a;
 		let t_value = /*page*/ ctx[24].index + 1 + "";
 		let t;
@@ -15431,7 +15530,7 @@ var notBulma = (function (exports) {
 
 		function select_block_type_1(ctx, dirty) {
 			if (/*page*/ ctx[24].active) return create_if_block_1$f;
-			return create_else_block$h;
+			return create_else_block$i;
 		}
 
 		let current_block_type = select_block_type_1(ctx);
@@ -15509,7 +15608,7 @@ var notBulma = (function (exports) {
 			each1_lookup.set(key, each_blocks[i] = create_each_block_1$4(key, child_ctx));
 		}
 
-		let if_block4 = /*state*/ ctx[0].pagination && /*state*/ ctx[0].pagination.pages && /*state*/ ctx[0].pagination.pages.list && create_if_block$k(ctx);
+		let if_block4 = /*state*/ ctx[0].pagination && /*state*/ ctx[0].pagination.pages && /*state*/ ctx[0].pagination.pages.list && create_if_block$l(ctx);
 
 		return {
 			c() {
@@ -15704,7 +15803,7 @@ var notBulma = (function (exports) {
 					if (if_block4) {
 						if_block4.p(ctx, dirty);
 					} else {
-						if_block4 = create_if_block$k(ctx);
+						if_block4 = create_if_block$l(ctx);
 						if_block4.c();
 						if_block4.m(ul, null);
 					}
@@ -17563,7 +17662,7 @@ var notBulma = (function (exports) {
 	}
 
 	// (35:2) {#if sectionsItemsCount[section.id] || section.indicator || section.tag }
-	function create_if_block$l(ctx) {
+	function create_if_block$m(ctx) {
 		let div;
 		let a;
 		let t0_value = /*section*/ ctx[9].title + "";
@@ -18178,7 +18277,7 @@ var notBulma = (function (exports) {
 		let first;
 		let if_block_anchor;
 		let current;
-		let if_block = (/*sectionsItemsCount*/ ctx[3][/*section*/ ctx[9].id] || /*section*/ ctx[9].indicator || /*section*/ ctx[9].tag) && create_if_block$l(ctx);
+		let if_block = (/*sectionsItemsCount*/ ctx[3][/*section*/ ctx[9].id] || /*section*/ ctx[9].indicator || /*section*/ ctx[9].tag) && create_if_block$m(ctx);
 
 		return {
 			key: key_1,
@@ -18204,7 +18303,7 @@ var notBulma = (function (exports) {
 							transition_in(if_block, 1);
 						}
 					} else {
-						if_block = create_if_block$l(ctx);
+						if_block = create_if_block$m(ctx);
 						if_block.c();
 						transition_in(if_block, 1);
 						if_block.m(if_block_anchor.parentNode, if_block_anchor);
@@ -24917,7 +25016,7 @@ var notBulma = (function (exports) {
 	  createClass(notCommon, null, [{
 	    key: "isError",
 	    value: function isError(e) {
-	      return e instanceof Error;
+	      return e instanceof Error || Object.prototype.hasOwnProperty.call(e, 'status') && e.status === 'error';
 	    }
 	  }, {
 	    key: "mute",
@@ -25037,7 +25136,7 @@ var notBulma = (function (exports) {
 	    }
 	  }, {
 	    key: "report",
-	    value: function report(name, e) {
+	    value: function report(e) {
 	      if (this.getApp() && this.getApp().getOptions('services.errorReporter')) {
 	        var reporter = this.getApp().getOptions('services.errorReporter');
 
@@ -27224,7 +27323,7 @@ var notBulma = (function (exports) {
 	  }, {
 	    key: "setModelName",
 	    value: function setModelName(modelName) {
-	      this.setWorking('modelName', modelName);
+	      this.setWorking('modelName', notCommon.lowerFirstLetter(modelName));
 	      return this;
 	    }
 	    /**
@@ -27293,7 +27392,7 @@ var notBulma = (function (exports) {
 	  }, {
 	    key: "setModuleName",
 	    value: function setModuleName(val) {
-	      this.setOptions('moduleName', val);
+	      this.setOptions('moduleName', notCommon.lowerFirstLetter(val));
 	      this.updateAutoName();
 	      return this;
 	    }
@@ -29113,7 +29212,6 @@ var notBulma = (function (exports) {
 	          return _this2.app.getWorking('router').navigate(url);
 	        }
 	      });
-	      this.preloadVariants();
 	      this.route(this.getOptions('params'));
 	    }
 	  }, {
@@ -29674,7 +29772,7 @@ var notBulma = (function (exports) {
 
 	        _this8.showResult(_this8.ui.create, res);
 
-	        if (!notCommon.isError(res) && !res.error) {
+	        if (!notCommon.isError(res)) {
 	          setTimeout(function () {
 	            return _this8.goList(_this8.app);
 	          }, 3000);
@@ -29708,28 +29806,46 @@ var notBulma = (function (exports) {
 
 	      if (notCommon.isError(res)) {
 	        notCommon.report(res);
+	        ui.addFormError(res.message);
 	      } else {
-	        if (res.errors && Object.keys(res.errors).length > 0) {
-	          if (!Array.isArray(res.error)) {
-	            res.error = [];
+	        if (Object.prototype.hasOwnProperty.call(res, 'status')) {
+	          if (res.status === 'error') {
+	            if (!Array.isArray(res.error)) {
+	              res.error = [ERROR_DEFAULT];
+	            }
+
+	            ui.addFormError(res.error);
+	          } else if (res.status === 'ok') {
+	            ui.showSuccess();
+	          }
+	        } else {
+	          this.processFieldsErrors(ui, res);
+
+	          if (res.error) {
+	            ui.addFormError(res.error);
 	          }
 
-	          Object.keys(res.errors).forEach(function (fieldName) {
-	            var _res$error;
-
-	            ui.setFieldInvalid(fieldName, res.errors[fieldName]);
-
-	            (_res$error = res.error).push.apply(_res$error, toConsumableArray(res.errors[fieldName]));
-	          });
+	          if (!res.error) {
+	            ui.showSuccess();
+	          }
+	        }
+	      }
+	    }
+	  }, {
+	    key: "processFieldsErrors",
+	    value: function processFieldsErrors(ui, res) {
+	      if (res.errors && Object.keys(res.errors).length > 0) {
+	        if (!Array.isArray(res.error)) {
+	          res.error = [];
 	        }
 
-	        if (res.error) {
-	          ui.setFormError(res.error);
-	        }
+	        Object.keys(res.errors).forEach(function (fieldName) {
+	          var _res$error;
 
-	        if (!res.error) {
-	          ui.showSuccess();
-	        }
+	          ui.setFieldInvalid(fieldName, res.errors[fieldName]);
+
+	          (_res$error = res.error).push.apply(_res$error, toConsumableArray(res.errors[fieldName]));
+	        });
 	      }
 	    }
 	  }, {

@@ -76,6 +76,7 @@ export default class notApp extends notBase {
 		//создать контроллеры
 		//роутер и привязать к нему контроллеры
 		this.execRouter();
+		this.emit('afterStarted', this);
 	}
 
 	bindController(controllerName, controllerPathScheme) {
