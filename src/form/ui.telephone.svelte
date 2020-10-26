@@ -7,7 +7,7 @@ import UICommon from '../common.js';
 
   export let inputStarted = false;
   export let value = '';
-  export let placeholder = '+79876543210';
+  export let placeholder = '+7 (987) 654-32-10';
   export let fieldname = 'telephone';
   export let icon = false;
   export let required = true;
@@ -25,33 +25,49 @@ import UICommon from '../common.js';
   $: validationClasses = (valid===true || !inputStarted)?UICommon.CLASS_OK:UICommon.CLASS_ERR;
 
   function onBlur(ev){
+    ev.preventDefault();
+    let val = UICommon.formatPhone(ev.currentTarget.value);
   	let data = {
   		field: fieldname,
-  		value: ev.currentTarget.value
+  		value: val
   	};
+    value = val;
     inputStarted = true;
     dispatch('change', data);
-    return true;
+    return false;
   }
 
   function onInput(ev){
+    ev.preventDefault();
+    let val = UICommon.formatPhone(ev.currentTarget.value);
   	let data = {
   		field: fieldname,
-      value: ev.currentTarget.value
+      value: val
   	};
+    value = val;
     inputStarted = true;
     dispatch('change', data);
-    return true;
+    return false;
   }
 
 </script>
 
-
   <div class="control {iconClasses}">
     <input id="form-field-telephone-{fieldname}"
-    class="input {validationClasses}" type="tel" name="{fieldname}" invalid="{invalid}" required={required} placeholder="{placeholder}" bind:value={value} autocomplete="{fieldname}" aria-controls="input-field-helper-{fieldname}"
-      on:change={onBlur} on:input={onInput} {readonly}
-      aria-describedby="input-field-helper-{fieldname}" />
+    class="input {validationClasses}"
+    type="tel"
+    name="{fieldname}"
+    bind:value={value}
+    {invalid}
+    {required}
+    {readonly}
+    placeholder="{placeholder}"
+    autocomplete="{fieldname}"
+    on:change={onBlur}
+    on:input={onInput}
+    aria-controls="input-field-helper-{fieldname}"
+    aria-describedby="input-field-helper-{fieldname}"
+      />
     {#if icon }
     <span class="icon is-small is-left"><i class="fas fa-{icon}"></i></span>
     {/if}

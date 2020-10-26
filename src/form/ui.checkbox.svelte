@@ -39,7 +39,7 @@
   function onInput(ev){
   	let data = {
   		field: fieldname,
-      value: ev.currentTarget.type==='checkbox'?ev.currentTarget.checked: value
+      value: ev.currentTarget.type === 'checkbox'?ev.currentTarget.checked: value
   	};
     inputStarted = true;
     dispatch('change', data);

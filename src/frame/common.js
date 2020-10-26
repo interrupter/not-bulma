@@ -386,5 +386,5 @@ export default class notCommon {
 	static getJSON(url){
 		return fetch(url).then(response => response.json());
 	}
-
+	
 }
