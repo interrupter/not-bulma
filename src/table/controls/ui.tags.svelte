@@ -22,7 +22,7 @@
     <span class="tag">{item.title}</span>
     <span class="tag is-{item.color} {item.customClasses}">
       {#if item.url }
-      <a href="{item.url}">{item.value}</a>
+      <a href="{item.url}" class="{item.urlCustomClasses}" >{item.value}</a>
       {:else}
       {item.value}
       {/if}
@@ -31,7 +31,7 @@
 {:else}
   <span class="mx-1 tag is-{item.color} {item.customClasses}">
     {#if item.url }
-    <a href="{item.url}">{item.title}</a>
+    <a href="{item.url}" class="{item.urlCustomClasses}">{item.title}</a>
     {:else}
     {item.title}
     {/if}
