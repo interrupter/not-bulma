@@ -20,7 +20,7 @@
 {#if Object.prototype.hasOwnProperty.call(item, 'value') }
   <div class="mx-1 tags has-addons">
     <span class="tag">{item.title}</span>
-    <span class="tag is-{item.color}">
+    <span class="tag is-{item.color} {item.customClasses}">
       {#if item.url }
       <a href="{item.url}">{item.value}</a>
       {:else}
@@ -29,7 +29,7 @@
     </span>
   </div>
 {:else}
-  <span class="mx-1 tag is-{item.color}">
+  <span class="mx-1 tag is-{item.color} {item.customClasses}">
     {#if item.url }
     <a href="{item.url}">{item.title}</a>
     {:else}
