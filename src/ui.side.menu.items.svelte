@@ -15,11 +15,19 @@
 		return false;
 	}
 
+	function getActiveClass(link){
+		if(window.location.href.indexOf(link) > - 1){
+			return ' is-active ';
+		}else{
+			return '';
+		}
+	}
+
 </script>
 <ul class="menu-list">
 {#each items as item}
 	{#if item.items && item.items.length }
-	<li>
+	<li class="{item.url?'':'is-no-follow-subtitle'}">
 		{#if item.url }
 		<a href="{root}{item.url}" data-href="{item.url}" on:click="{onClick}">
 			{item.title}
@@ -31,7 +39,6 @@
 			{/if}
 		</a>
 		{:else}
-		<a href>
 			{item.title}
 			{#if item.tag }
 			<span class="ml-3 tag is-{item.tag.type} is-pulled-right">{item.tag.label}</span>
@@ -39,7 +46,6 @@
 			{#if item.indicator }
 				<UIIndicator {...(item.indicator)} />
 			{/if}
-		</a>
 		{/if}
 		<svelte:self items="{item.items}" {root} on:navigate />
 	</li>
@@ -55,7 +61,7 @@
 		{/if}
 	</a></li>
 	{:else }
-	<li><a href>
+	<li class="is-no-follow-subtitle">
 		{item.title}
 		{#if item.tag }
 		<span class="ml-3 tag is-{item.tag.type} is-pulled-right">{item.tag.label}</span>
@@ -63,8 +69,14 @@
 		{#if item.indicator }
 			<UIIndicator {...(item.indicator)} />
 		{/if}
-	</a></li>
+	</li>
 	{/if}
 	{/if}
 {/each}
 </ul>
+
+<style>
+.is-no-follow-subtitle{
+	padding: .5em .75em;
+}
+</style>
