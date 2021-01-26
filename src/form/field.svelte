@@ -31,6 +31,7 @@
   export let groupedCentered = false;
 
   let fieldClasses = '';
+  let hidden = false;
 
   onMount(()=>{
     fieldClasses+=(' ' + classes);
@@ -43,8 +44,10 @@
     fieldClasses+=(groupedRight?' is-grouped-right ':'');
     fieldClasses+=(groupedCentered?' is-grouped-centered ':'');
     if(readonly){
-      controls.forEach((control) => {control.readonly = true;});
+      controls.forEach((control) => { control.readonly = true; });
     }
+    let notHidden = controls.filter(control => control.component !== 'UIHidden');
+    hidden = (notHidden.length === 0);
   });
 
   function onControlChange(ev){
@@ -53,6 +56,14 @@
   }
 
 </script>
+
+{#if hidden }
+
+{#each controls as control}
+<svelte:component this={COMPONENTS.get(control.component)} {...control} on:change={onControlChange} fieldname={name} />
+{/each}
+
+{:else }
 
 {#if horizontal}
 <div class="field is-horizontal {fieldClasses} form-field-{controls.map(itm=>itm.component).join('_')}-{name}">
@@ -70,4 +81,6 @@
   <svelte:component this={COMPONENTS.get(control.component)} {...control} on:change={onControlChange} fieldname={name} />
   {/each}
 </div>
+{/if}
+
 {/if}
