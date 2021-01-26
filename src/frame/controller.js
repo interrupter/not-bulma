@@ -380,6 +380,13 @@ class notController extends notBase {
 		}
 	}
 
+	/**
+	*	Refreshes current URL, re-run all action
+	*/
+	refresh(){
+		this.app.getWorking('router').refresh();
+	}
+
 }
 
 export default notController;

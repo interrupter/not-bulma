@@ -155,13 +155,18 @@ class notRouter extends notBase {
 		return this;
 	}
 
+	refresh(){
+		this.check(this.getWorking('current'));
+	}
+
 	navigate(path) {
 		path = path ? path : '';
 		switch (this.getWorking('mode')) {
 		case OPT_MODE_HISTORY:
 		{
 			//console.log('push state', this.getFullRoute(path));
-			history.pushState(null, null, this.getFullRoute(path));
+			this.lastRoute = this.getFullRoute(path);
+			history.pushState(null, null, this.lastRoute);
 			break;
 		}
 		case OPT_MODE_HASH:
