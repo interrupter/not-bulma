@@ -155,8 +155,16 @@ class notRouter extends notBase {
 		return this;
 	}
 
-	refresh(){
-		this.check(this.getWorking('current'));
+	/**
+	*	Refreshes page
+	* @param {integer} timeout time to wait in ms
+	*/
+	refresh(timeout = 0){
+		if(timeout > 0){
+			setTimeout(()=>this.refresh(), timeout);
+		}else{
+			this.check(this.getWorking('current'));
+		}
 	}
 
 	navigate(path) {

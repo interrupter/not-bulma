@@ -382,9 +382,10 @@ class notController extends notBase {
 
 	/**
 	*	Refreshes current URL, re-run all action
+	*	@param {integer} timeout time to wait in ms
 	*/
-	refresh(){
-		this.app.getWorking('router').refresh();
+	refresh(timeout = 0){
+		this.app.getWorking('router').refresh(timeout);
 	}
 
 }
