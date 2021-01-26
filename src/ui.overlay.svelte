@@ -38,7 +38,7 @@
 	}
 
 	function closeOverlay(e) {
-		if(e.originalTarget && e.originalTarget.classList.contains('is-overlay')){
+		if(e && e.originalTarget && e.originalTarget.classList && e.originalTarget.classList.contains('is-overlay')){
 			rejectOverlay();
 		}
 	}

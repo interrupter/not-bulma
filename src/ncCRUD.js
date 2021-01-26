@@ -124,6 +124,17 @@ class ncCRUD extends notController {
 		return newRecord;
 	}
 
+	getItemTitle(item){
+		if(Object.prototype.hasOwnProperty.call(item, 'title') && (item.title instanceof String)){
+			return item.title;
+		}else if(Object.prototype.hasOwnProperty.call(item, 'label') && (item.label instanceof String)){
+			return item.label;
+		}else if(Object.prototype.hasOwnProperty.call(item, 'id') && (item.id instanceof String)){
+			return item.id;
+		}else if(Object.prototype.hasOwnProperty.call(item, 'name') && (item.name instanceof String)){
+			return ite.name;
+		}
+	}
 
 	route(params = []) {
 		if (params.length == 1) {
@@ -191,6 +202,11 @@ class ncCRUD extends notController {
 		this.getModel()(query).$get()
 			.then((res) => {
 				if (res.status === 'ok') {
+					let title = this.getItemTitle(res.result);
+					this.setBreadcrumbs([{
+						title: `Просмотр "${title}"`,
+						url: this.getModelActionURL(params[0], false)
+					}]);
 					this.ui.details = Form.build({
 						target: this.els.main,
 						manifest,
@@ -235,8 +251,9 @@ class ncCRUD extends notController {
 		query[idField] = params[0];
 		this.getModel()(query).$getRaw().then((res) => {
 			if (res.status === 'ok') {
+				let title = this.getItemTitle(res.result);
 				this.setBreadcrumbs([{
-					title: `Редактирование "${res.result.title}"`,
+					title: `Редактирование "${title}"`,
 					url: this.getModelActionURL(params[0], 'update')
 				}]);
 
