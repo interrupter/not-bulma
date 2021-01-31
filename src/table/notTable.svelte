@@ -165,6 +165,17 @@
 					disabled={field.disabled}
 					readonly={field.readonly}
 					/>
+				{:else if field.type === 'component' }
+				<svelte:component
+					this={field.component}
+					id={getItemId(item)}
+					on:change="{field.onChange}"
+					fieldname={field.path}
+					disabled={field.disabled}
+					readonly={field.readonly}
+					value={ notPath.get(field.path, item, helpers) }
+					{...field.options}
+					/>
 				{:else}
 				{notPath.get(field.path, item, helpers)}
 				{/if}
