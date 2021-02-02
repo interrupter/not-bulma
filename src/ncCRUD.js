@@ -132,7 +132,7 @@ class ncCRUD extends notController {
 		}else if(Object.prototype.hasOwnProperty.call(item, 'id') && (item.id instanceof String)){
 			return item.id;
 		}else if(Object.prototype.hasOwnProperty.call(item, 'name') && (item.name instanceof String)){
-			return ite.name;
+			return item.name;
 		}
 	}
 

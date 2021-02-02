@@ -82,7 +82,7 @@ class notInterface extends notBase {
 		}
 	}
 
-	requestWS(record, actionName, params) {
+	requestWS(record, actionName) {
 		try {
 			let actionData = this.getActionData(actionName),
 				requestParams = this.collectRequestData(actionData);
@@ -161,7 +161,7 @@ class notInterface extends notBase {
 
 	getWSRequestName(record, actionData, actionName) {
 		let data = ((record.getData && typeof record.getData === 'function') ? record.getData() : record);
-		let line = ((actionData.hasOwnProperty('postFix')) ? this.parseLine(actionData.postFix, data, actionName) : '');
+		let line = ((Object.prototype.hasOwnProperty.call(actionData, 'postFix')) ? this.parseLine(actionData.postFix, data, actionName) : '');
 		return line;
 	}
 

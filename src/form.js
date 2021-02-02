@@ -20,7 +20,7 @@ class Form{
 	static actionFieldsInit(fieldName, options, validators, data){
 		if(Array.isArray(fieldName)){
 			fieldName.forEach( subFieldName => {
-				this.actionFieldsInit(subFieldName, options, validators, data)
+				this.actionFieldsInit(subFieldName, options, validators, data);
 			});
 		}else{
 			if(!Object.prototype.hasOwnProperty.call(options, 'fields')){          options.fields = {};            }

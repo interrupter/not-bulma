@@ -8,11 +8,10 @@
 		VARIANTS
 	} from './LIB.js';
 	import {
-		onMount
-	} from 'svelte';
-	import {
+		onMount,
 		createEventDispatcher
 	} from 'svelte';
+
 	let dispatch = createEventDispatcher();
 
 	let form = {};
