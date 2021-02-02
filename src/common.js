@@ -37,7 +37,7 @@ export default class UICommon {
 		}, {});
 		//fill empty positions with filler (_)
 		for (let t in stack) {
-			let dif = lens[t] - stack[t].length;
+			let dif = lens[parseInt(t) + 1] - stack[t].length;
 			while (dif > 0) {
 				stack[t] = (stack[t] + filler);
 				dif--;
