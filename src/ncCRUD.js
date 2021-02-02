@@ -125,13 +125,13 @@ class ncCRUD extends notController {
 	}
 
 	getItemTitle(item){
-		if(Object.prototype.hasOwnProperty.call(item, 'title') && (item.title instanceof String)){
+		if(Object.prototype.hasOwnProperty.call(item, 'title') && (typeof item.title === 'string')){
 			return item.title;
-		}else if(Object.prototype.hasOwnProperty.call(item, 'label') && (item.label instanceof String)){
+		}else if(Object.prototype.hasOwnProperty.call(item, 'label') && (typeof item.label === 'string')){
 			return item.label;
-		}else if(Object.prototype.hasOwnProperty.call(item, 'id') && (item.id instanceof String)){
+		}else if(Object.prototype.hasOwnProperty.call(item, 'id') && (typeof item.id === 'string')){
 			return item.id;
-		}else if(Object.prototype.hasOwnProperty.call(item, 'name') && (item.name instanceof String)){
+		}else if(Object.prototype.hasOwnProperty.call(item, 'name') && (typeof item.name === 'string')){
 			return item.name;
 		}
 	}
