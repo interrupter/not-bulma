@@ -33,6 +33,7 @@ export default class UICommon {
 			} else {
 				acc[curr] += 1;
 			}
+			return acc;
 		}, {});
 		//fill empty positions with filler (_)
 		for (let t in stack) {
