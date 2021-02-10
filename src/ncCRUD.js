@@ -445,7 +445,6 @@ class ncCRUD extends notController {
 	}
 
 	showSuccessMessage(title, message){
-		this.error(res);
 		this.ui.success = new UISuccess({
 			target: this.els.main,
 			props: {
