@@ -1,6 +1,7 @@
 <script>
 	import UIField from './field.svelte';
 	import UICommon from '../common.js';
+	import 'bulma-pageloader';
 
 	import {
 		FIELDS,
@@ -26,6 +27,7 @@
 	let formHasErrors = false;
 	let fieldsHasErrors = false;
 	let success = false;
+
 
 	$: formInvalid = formHasErrors || fieldsHasErrors;
 
@@ -223,6 +225,7 @@
 	export let options = {};
 	export let validation = true;
 	export let SUCCESS_TEXT = 'Операция завершена';
+	export let WAITING_TEXT = 'Отправка данных на сервер';
 
 	export let title = 'Форма';
 	export let description = 'Заполните пожалуйста форму';
@@ -262,6 +265,8 @@
 		loading = false;
 	}
 </script>
+
+<div class="pageloader {loading?'is-active':''}"><span class="title">{WAITING_TEXT}</span></div>
 
 {#if success}
 <div class="notification is-success">
