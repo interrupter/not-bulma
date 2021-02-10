@@ -3,6 +3,7 @@ const ERROR_DEFAULT = 'Что пошло не так.';
 import notTable from './table/notTable.js';
 import Breadcrumbs from './breadcrumbs.js';
 import UIError from './ui.error.svelte';
+import UISuccess from './ui.success.svelte';
 import Form from './form.js';
 
 import notController from './frame/controller.js';
@@ -439,6 +440,17 @@ class ncCRUD extends notController {
 			props: {
 				title: 'Произошла ошибка',
 				message: res.error ? res.error : ERROR_DEFAULT
+			}
+		});
+	}
+
+	showSuccessMessage(title, message){
+		this.error(res);
+		this.ui.success = new UISuccess({
+			target: this.els.main,
+			props: {
+				title,
+				message
 			}
 		});
 	}
