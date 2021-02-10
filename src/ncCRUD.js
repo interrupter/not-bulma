@@ -220,14 +220,7 @@ class ncCRUD extends notController {
 					this.emit('after:render:details');
 					this.ui.details.$on('reject', this.goList.bind(this));
 				} else {
-					this.error(res);
-					this.ui.error = new UIError({
-						target: this.els.main,
-						props: {
-							title: 'Произошла ошибка',
-							message: res.error ? res.error : ERROR_DEFAULT
-						}
-					});
+					this.showErrorMessage(res);
 				}
 			})
 			.catch(this.error.bind(this));
@@ -274,13 +267,7 @@ class ncCRUD extends notController {
 
 				this.emit('after:render:update');
 			} else {
-				this.ui.error = new UIError({
-					target: this.els.main,
-					props: {
-						title: 'Произошла ошибка',
-						message: res.error ? res.error : ERROR_DEFAULT
-					}
-				});
+				this.showErrorMessage(res);
 			}
 		})
 			.catch(this.error.bind(this));
@@ -443,6 +430,17 @@ class ncCRUD extends notController {
 			this.ui[name].$destroy && this.ui[name].$destroy();
 			delete this.ui[name];
 		}
+	}
+
+	showErrorMessage(res){
+		this.error(res);
+		this.ui.error = new UIError({
+			target: this.els.main,
+			props: {
+				title: 'Произошла ошибка',
+				message: res.error ? res.error : ERROR_DEFAULT
+			}
+		});
 	}
 
 }
