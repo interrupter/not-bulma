@@ -144,7 +144,7 @@ class ncCRUD extends notController {
 			} else {
 				return this.runDetails(params);
 			}
-		} else if (params.length == 2) {
+		} else if (params.length > 1) {
 			if (params[1] === 'delete') {
 				return this.runDelete(params);
 			} else if (params[1] === 'update') {
