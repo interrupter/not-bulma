@@ -387,4 +387,10 @@ export default class notCommon {
 		return fetch(url).then(response => response.json());
 	}
 
+	static wait(sec){
+		return new Promise((res)=>{
+			setTimeout(res, sec * 1000);
+		});
+	}
+
 }
