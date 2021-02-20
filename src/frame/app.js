@@ -18,7 +18,7 @@ export default class notApp extends notBase {
 		notCommon.register('app', this);
 		this.setWorking({
 			interfaces: {},
-			controllers: {},
+			controllers: Object.prototype.hasOwnProperty.call(options, 'controllers')?options.controllers:{},
 			initController: null,
 			currentController: null
 		});

@@ -310,10 +310,23 @@ export default class notCommon {
 
 	static absorbModule(defaultConf, mod) {
 		for (let prop in mod) {
+			//add manifest to other
 			if (prop === 'manifest') {
 				defaultConf = this.extendAppConfig(defaultConf, mod.manifest);
 			} else {
-				window[prop] = mod[prop];
+				//collect controller
+				if(prop.indexOf('nc')===0){
+					if(!Object.prototype.hasOwnProperty.call(defaultConf, 'controllers')){
+						defaultConf.controllers = {};
+					}
+					defaultConf.controllers[prop] = mod[prop];
+				}else{
+					//in case of some other stuff presented, isolating it in special var
+					if(!Object.prototype.hasOwnProperty.call(window, 'notEnv')){
+						window.notEnv = {};
+					}
+					window.notEnv[prop] = mod[prop];
+				}
 			}
 		}
 		return defaultConf;
