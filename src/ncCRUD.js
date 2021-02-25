@@ -25,6 +25,8 @@ class ncCRUD extends notController {
 		return this;
 	}
 
+	static ERROR_DEFAULT = 'Что пошло не так.';
+
 	start(){
 		BREADCRUMBS.splice(0, BREADCRUMBS.length ,{
 			title: this.getOptions('names.plural'),

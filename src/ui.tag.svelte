@@ -13,6 +13,7 @@
   export let items = [];
   export let variants = [];
   export let error = false;
+  export let readonly = false;
   export let beforeAdd = (item, list)=>{
     return true;
   };
@@ -51,9 +52,14 @@
 <div class="columns">
   <div class="column {classes}">
     {#each items as item (item.id)}
-    <span class="mx-1 tag is-{item.type}">{item.title}<button data-id="{item.id}" class="delete is-small" on:click="{remove}"></button></span>
+    <span class="mx-1 tag is-{item.type}">{item.title}
+      {#if !readonly }
+      <button data-id="{item.id}" class="delete is-small" on:click="{remove}"></button>
+      {/if}
+    </span>
     {/each}
   </div>
+  {#if !readonly }
   <div class="column">
     <div class="control">
       <div class="select is-small">
@@ -67,4 +73,5 @@
       <button class="button is-primary is-small" on:click={add}>Добавить</button>
     </div>
   </div>
+  {/if}
 </div>
