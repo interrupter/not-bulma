@@ -275,6 +275,7 @@ export default class notCommon {
 		if(model)		{ url.push(encodeURIComponent(this.trimBackslash(model)));}
 		if(id)			{ url.push(encodeURIComponent(this.trimBackslash(id)));			}
 		if(action)	{ url.push(encodeURIComponent(this.trimBackslash(action)));	}
+		url = url.filter(el => el !== '' );
 		return url.join('/').replace(/\/\//g, '/');
 	}
 
