@@ -45,6 +45,7 @@ class Menu {
 				someNavigate;
 			if(router){
 				someNavigate = (urls) => {
+					this.hide();
 					router.navigate.call(router, urls.short);
 				};
 			}else{
