@@ -53,6 +53,7 @@ class Menu {
 				items: this.app.getOptions(this.getOptionsPathTo('items'), this.options.items),
 				sections: this.app.getOptions(this.getOptionsPathTo('sections'), this.options.sections),
 				targetSelector: this.app.getOptions(this.getOptionsPathTo('targetSelector'), this.options.targetSelector),
+				toggleSelector: this.app.getOptions(this.getOptionsPathTo('toggleSelector'), this.options.toggleSelector),
 				root: this.app.getOptions('router.root', this.options.root),
 				navigate: someNavigate,
 			};

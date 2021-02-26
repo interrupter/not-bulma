@@ -14,6 +14,7 @@ class SideMenu extends Menu {
 		items: [],
 		sections: [],
 		targetSelector: `#${TYPE}-menu`,
+		toggleSelector: `.${TYPE}-menu-toggle`,
 		root: '/',
 		navigate: (urls) => {
 			if (this.app) {
@@ -43,6 +44,7 @@ class SideMenu extends Menu {
 				}
 			});
 			this.interval = setInterval(this.updateMenuActiveItem.bind(this), 200);
+			this.bindToggle();
 		}
 	}
 
@@ -72,6 +74,20 @@ class SideMenu extends Menu {
 			this.location = url;
 			this.updateMenu();
 		}
+	}
+
+	static bindToggle(){
+		let els = document.querySelectorAll(this.getOptions().toggleSelector);
+		Array.from(els).forEach((el) => {
+			el.removeEventListener('click', this.toggle.bind(this));
+			el.addEventListener('click', this.toggle.bind(this));
+		});
+	}
+
+	static toggle(){
+		let el = document.querySelector(this.getOptions().targetSelector);
+		el.classList.toggle('is-hidden-touch');
+		el.classList.toggle('is-12');
 	}
 }
 

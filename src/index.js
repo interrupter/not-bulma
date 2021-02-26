@@ -1,3 +1,4 @@
+import './style.scss';
 //raw svelte
 import UIOverlay from './ui.overlay.svelte';
 import UIBreadcrumbs from './ui.breadcrumbs.svelte';
