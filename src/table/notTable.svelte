@@ -133,7 +133,7 @@
 		<th><input type="checkbox" id="table-row-select-page" bind:checked={selectAll} placeholder="" name="row_selected_all" on:change={onSelectAll} /></th>
 		{/if}
 		{#each fields as field}
-		<th>{field.title}</th>
+		<th class="{field.hideOnMobile?'is-hidden-touch':''}">{field.title}</th>
 		{/each}
 	</thead>
 	<tbody>
@@ -145,7 +145,7 @@
 			</td>
 			{/if}
 			{#each fields as field}
-			<td class="{field.classes?field.classes:''}">
+			<td class="{field.hideOnMobile?'is-hidden-touch':''}">
 				{#if field.type === 'link' }
 				<TableLinks values={ notPath.get(field.path, item, helpers) } />
 				{:else if field.type === 'button' }
