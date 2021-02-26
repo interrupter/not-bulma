@@ -89,6 +89,12 @@ class SideMenu extends Menu {
 		el.classList.toggle('is-hidden-touch');
 		el.classList.toggle('is-12');
 	}
+
+	static hide(){
+		let el = document.querySelector(this.getOptions().targetSelector);
+		el.classList.add('is-hidden-touch');
+		el.classList.remove('is-12');
+	}
 }
 
 export default SideMenu;

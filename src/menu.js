@@ -8,6 +8,7 @@ class Menu {
 	static menu;
 	static options = {
 		navigate: (urls) => {
+			this.hide();
 			if (this.app) {
 				let func = this.app.getWorking('router');
 				if (func) {

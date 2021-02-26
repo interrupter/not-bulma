@@ -145,7 +145,7 @@
 			</td>
 			{/if}
 			{#each fields as field}
-			<td>
+			<td class="{field.classes?field.classes:''}">
 				{#if field.type === 'link' }
 				<TableLinks values={ notPath.get(field.path, item, helpers) } />
 				{:else if field.type === 'button' }
