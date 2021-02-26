@@ -70,6 +70,16 @@ class TopMenu extends Menu{
 		}
 	}
 
+	static toggle(){
+		let el = document.querySelector(this.getOptions().targetSelector);
+		el.classList.toggle('is-active');
+	}
+
+	static hide(){
+		let el = document.querySelector(this.getOptions().targetSelector);
+		el.classList.remove('is-active');
+	}
+
 }
 
 export default TopMenu;
