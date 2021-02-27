@@ -1,5 +1,5 @@
 export default class UICommon {
-	static DEFAULT_REDIRECT_TIMEOUT = 5000;
+	static DEFAULT_REDIRECT_TIMEOUT = 3000;
 	static CLASS_OK = 'is-success';
 	static CLASS_ERR = 'is-danger';
 	static FILLER = '_';
@@ -45,4 +45,18 @@ export default class UICommon {
 		}
 		return `+${stack[0]} (${stack[1]}) ${stack[2]}-${stack[3]}-${stack[4]}`;
 	}
+
+	static MONEY_SIGN = '&#8381;';
+
+	static setMoneySign(val){
+		this.MONEY_SIGN = val;
+	}
+
+	static formatPrice(price) {
+		let major = parseInt(Math.floor(price / 100)),
+			minor = parseInt(price % 100);
+		major = '' + major;
+		return `${this.MONEY_SIGN}${major}.${minor}`;
+	}
+
 }
