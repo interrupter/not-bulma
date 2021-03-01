@@ -237,7 +237,7 @@ export default class notCommon {
 		if (this.getApp() && this.getApp().getOptions('services.notErrorReporter')) {
 			let reporter = this.getApp().getOptions('services.notErrorReporter');
 			if (reporter && reporter.report) {
-				reporter.report(e);
+				reporter.report(e).catch(err => this.logError(err));
 			}
 		} else {
 			if (!this.get('production')) {
