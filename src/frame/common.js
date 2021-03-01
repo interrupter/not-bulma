@@ -309,25 +309,32 @@ export default class notCommon {
 		return this.deepMerge(conf, conf2);
 	}
 
-	static absorbModule(defaultConf, mod) {
+	static absorbModule(defaultConf, mod, services) {
 		for (let prop in mod) {
 			//add manifest to other
-			if (prop === 'manifest') {
-				defaultConf = this.extendAppConfig(defaultConf, mod.manifest);
-			} else {
-				//collect controller
-				if(prop.indexOf('nc')===0){
-					if(!Object.prototype.hasOwnProperty.call(defaultConf, 'controllers')){
-						defaultConf.controllers = {};
-					}
-					defaultConf.controllers[prop] = mod[prop];
-				}else{
+			switch (prop) {
+				case 'manifest':
+					defaultConf = this.extendAppConfig(defaultConf, mod.manifest);
+					break;
+				case 'services':
+					services = {...services, ...mod[prop]};
+					break;
+				case 'services':
+					services = {...services, ...mod[prop]};
+					break;
+				default:
+					if(prop.indexOf('nc')===0){
+						if(!Object.prototype.hasOwnProperty.call(defaultConf, 'controllers')){
+							defaultConf.controllers = {};
+						}
+						defaultConf.controllers[prop] = mod[prop];
+					}else{
 					//in case of some other stuff presented, isolating it in special var
-					if(!Object.prototype.hasOwnProperty.call(window, 'notEnv')){
-						window.notEnv = {};
+						if(!Object.prototype.hasOwnProperty.call(window, 'notEnv')){
+							window.notEnv = {};
+						}
+						window.notEnv[prop] = mod[prop];
 					}
-					window.notEnv[prop] = mod[prop];
-				}
 			}
 		}
 		return defaultConf;
