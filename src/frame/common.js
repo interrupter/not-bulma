@@ -234,8 +234,8 @@ export default class notCommon {
 	}
 
 	static report(e) {
-		if (this.getApp() && this.getApp().getOptions('services.errorReporter')) {
-			let reporter = this.getApp().getOptions('services.errorReporter');
+		if (this.getApp() && this.getApp().getOptions('services.notErrorReporter')) {
+			let reporter = this.getApp().getOptions('services.notErrorReporter');
 			if (reporter && reporter.report) {
 				reporter.report(e);
 			}
@@ -317,10 +317,9 @@ export default class notCommon {
 					defaultConf = this.extendAppConfig(defaultConf, mod.manifest);
 					break;
 				case 'services':
-					services = {...services, ...mod[prop]};
-					break;
-				case 'services':
-					services = {...services, ...mod[prop]};
+					for(let serv in mod[prop]){
+						services[serv] = mod[prop][serv];
+					}
 					break;
 				default:
 					if(prop.indexOf('nc')===0){
