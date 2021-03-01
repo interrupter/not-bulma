@@ -48,7 +48,8 @@
 </script>
 
   <div class="control {iconClasses}">
-    <textarea id="form-field-textarea-{fieldname}"
+    <textarea
+    id="form-field-textarea-{fieldname}"
     invalid="{invalid}"
     on:blur={onBlur}
     class="textarea {validationClasses}"

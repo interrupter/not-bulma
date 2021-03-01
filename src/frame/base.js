@@ -132,9 +132,9 @@ export default class notBase extends EventEmitter {
 		return this.getCommon(this[META_WORKING], arguments);
 	}
 
-	report() {
+	report(e) {
 		if (notCommon.report) {
-			notCommon.report(this.getWorking('name'), ...arguments);
+			notCommon.report(e);
 		}
 	}
 
