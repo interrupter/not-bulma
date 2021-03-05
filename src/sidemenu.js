@@ -84,16 +84,20 @@ class SideMenu extends Menu {
 		});
 	}
 
-	static toggle(){
+	static toggle(e){
+		e && e.preventDefault();
 		let el = document.querySelector(this.getOptions().targetSelector);
 		el.classList.toggle('is-hidden-touch');
 		el.classList.toggle('is-12');
+		return false;
 	}
 
-	static hide(){
+	static hide(e){
+		e && e.preventDefault();
 		let el = document.querySelector(this.getOptions().targetSelector);
 		el.classList.add('is-hidden-touch');
 		el.classList.remove('is-12');
+		return false;
 	}
 }
 
