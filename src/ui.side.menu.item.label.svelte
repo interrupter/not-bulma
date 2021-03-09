@@ -1,10 +1,12 @@
 <script>
+  import UIIconText from './ui.icon.text.svelte';
   import UIIndicator from './ui.indicator.svelte';
   export let item = {};
 </script>
 
 
 {#if item.icon }
+<UIIconText title={item.title} icon={item.icon} />
 {:else}
 {item.title}
 {/if}
