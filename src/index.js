@@ -1,4 +1,4 @@
-import './style.scss';
+import './scss/style.scss';
 //raw svelte
 import UIOverlay from './ui.overlay.svelte';
 import UIBreadcrumbs from './ui.breadcrumbs.svelte';
@@ -11,6 +11,8 @@ import UIButton from './ui.button.svelte';
 import UIButtons from './ui.buttons.svelte';
 import UIImages from './ui.images.svelte';
 import UILinks from './ui.links.svelte';
+import UIIconText from './ui.icon.text.svelte';
+import UIIconFloating from './ui.icon.floating.svelte';
 import UICookiesNotification from './ui.cookie.notification.svelte';
 //form related
 import * as FormElements from './form/index.js';
@@ -101,6 +103,8 @@ export {
 	UIButtons,
 	UIImages,
 	UILinks,
+	UIIconText,
+	UIIconFloating,
 	Stores,
 	Table,
 	Breadcrumbs,

@@ -1,0 +1,35 @@
+aside.menu{
+  position: fixed;
+  background-color: #ffffff;
+  overflow-y: scroll;
+  padding-left: 1rem;
+
+  & .is-no-follow-subtitle{
+	  padding: .5em .75em;
+  }
+
+  & .is-closed{
+    display: none;
+  }
+
+  & .is-toggle-submenu{
+    cursor: pointer;
+  }
+
+}
+
+@media screen and (min-width: 1024px){
+  aside.menu{
+    width: 20em;
+  }
+}
+@media screen and (max-width: 1023px){
+  aside.menu{
+    z-index: 10;
+    width: 100%;
+  }
+}
+
+.is-wide{
+  min-width: 15em;
+}
