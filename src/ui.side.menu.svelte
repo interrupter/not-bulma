@@ -13,9 +13,6 @@
 
 </script>
 
-
-<aside class="menu">
-	{#each sections as section}
-	<UISideMenuSection {section} {items} {root} on:navigate={onClick} />
-	{/each}
-</aside>
+{#each sections as section}
+<UISideMenuSection {section} {items} {root} on:navigate={onClick} />
+{/each}
