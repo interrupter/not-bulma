@@ -77,7 +77,7 @@ class SideMenu extends Menu {
     }
   }
 
-  initSizeResponse() {
+  static initSizeResponse() {
     let nav = document.querySelector('nav.navbar');
     let aside = document.querySelector('aside');
     let main = document.querySelector('main');
@@ -87,7 +87,7 @@ class SideMenu extends Menu {
   }
 
 
-  resizeMain(main, aside) {
+  static resizeMain(main, aside) {
     let rect = aside.getBoundingClientRect();
     if (rect.width < window.innerWidth - 40) {
       main.style.display = 'block';
@@ -100,7 +100,7 @@ class SideMenu extends Menu {
     }
   }
 
-  resizeAside(aside, nav) {
+  static resizeAside(aside, nav) {
     if (aside.style.display !== 'none') {
       let rect = nav.getBoundingClientRect();
       aside.style.height = (window.innerHeight - rect.height) + 'px';
@@ -108,7 +108,7 @@ class SideMenu extends Menu {
     }
   }
 
-  resizeAsideAndMain(aside, main, nav) {
+  static resizeAsideAndMain(aside, main, nav) {
     let rect = nav.getBoundingClientRect();
     aside.style.height = (window.innerHeight - rect.height) + 'px';
     aside.style.paddingTop = (rect.height) + 'px';
