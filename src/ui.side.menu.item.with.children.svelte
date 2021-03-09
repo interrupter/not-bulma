@@ -1,7 +1,7 @@
 <script>
   import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
-  
+
   import UISideMenuTrigger from './ui.side.menu.trigger.svelte';
   import UISideMenuItems from './ui.side.menu.items.svelte';
   import UISideMenuItemLabel from './ui.side.menu.item.label.svelte';
@@ -33,6 +33,7 @@
   </a>
   {:else}
     <UISideMenuItemLabel {item} />
+    <UISideMenuTrigger {closed} on:toggle={toggle} />
   {/if}
   <UISideMenuItems {root} items="{item.items}" {closed} on:navigate />
 </li>
