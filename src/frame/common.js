@@ -309,7 +309,7 @@ export default class notCommon {
 		return this.deepMerge(conf, conf2);
 	}
 
-	static absorbModule(defaultConf, mod, services = {}) {
+	static absorbModule(defaultConf, mod, services = {}, uis = {}) {
 		for (let prop in mod) {
 			//add manifest to other
 			switch (prop) {
@@ -320,6 +320,16 @@ export default class notCommon {
 					if (services){
 						for(let serv in mod[prop]){
 							services[serv] = mod[prop][serv];
+						}
+					}
+					break;
+				case 'uis':
+					if (uis){
+						for(let ui in mod[prop]){
+							if(Object.prototype.hasOwnProperty.call(uis, ui)){
+								this.logError(`uis property duplication ${ui}`);
+							}
+							uis[ui] = mod[prop][ui];
 						}
 					}
 					break;

@@ -17,10 +17,11 @@ export default class notApp extends notBase {
 		this.log('start app');
 		notCommon.register('app', this);
 		this.setWorking({
-			interfaces: {},
-			controllers: Object.prototype.hasOwnProperty.call(options, 'controllers')?options.controllers:{},
-			initController: null,
-			currentController: null
+			interfaces: 				{},
+			controllers: 				Object.prototype.hasOwnProperty.call(options, 'controllers')?options.controllers:{},
+			initController: 		null,
+			currentController: 	null,
+			uis: 								{}
 		});
 		this.initManifest();
 		return this;

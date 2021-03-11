@@ -3,6 +3,8 @@ class Menu {
 		section: 'any',
 		sectionTitle: 'Меню',
 		priority: 0,
+		//link, button, dropdown, component
+		type: 			'link'
 	};
 	static app = false;
 	static menu;
@@ -58,19 +60,26 @@ class Menu {
 				toggleSelector: this.app.getOptions(this.getOptionsPathTo('toggleSelector'), this.options.toggleSelector),
 				root: this.app.getOptions('router.root', this.options.root),
 				navigate: someNavigate,
+				getComponent: this.getComponent.bind(this)
 			};
 		} else {
 			return this.options;
 		}
 	}
 
-	static initField(list, field) {
+	static getComponent(name){
+		return this.app.getWorking(`uis.${name}`, false);
+	}
+
+	static initField(list, fields = []) {
 		list.forEach((item) => {
-			if (!Object.prototype.hasOwnProperty.call(item, field)) {
-				item[field] = this.DEFAULT[field];
-			}
+			fields.forEach((field)=>{
+				if (!Object.prototype.hasOwnProperty.call(item, field)) {
+					item[field] = this.DEFAULT[field];
+				}
+			});
 			if (Object.prototype.hasOwnProperty.call(item, 'items')) {
-				this.initField(item.items, field);
+				this.initField(item.items, fields);
 			}
 		});
 	}
@@ -118,10 +127,9 @@ class Menu {
 		let sections = [];
 		sections.push(...this.getOptions().sections);
 
-		this.initField(sections, 'priority');
+		this.initField(sections, ['priority']);
 		this.removeDublicates(sections);
-		this.initField(items, 'priority');
-		this.initField(items, 'section');
+		this.initField(items, ['priority', 'section', 'type']);
 		this.sortList(sections);
 
 		sections.push({
@@ -142,21 +150,33 @@ class Menu {
 		}
 	}
 
-	static updateIndicator(sectionId, itemURL, state){
+	static updateIndicator(sectionId, itemId, state){
 		this.updateSection(sectionId, (section)=>{
 			section.indicator.state = state;
 		});
-		this.updateItem(itemURL, (item)=>{
+		this.updateItem(itemId, (item)=>{
 			item.indicator.state = state;
 		});
 	}
 
-	static updateTag(sectionId, itemURL, tag){
+	static updateTag(sectionId, itemId, tag){
 		this.updateSection(sectionId, (section)=>{
 			section.tag = tag;
 		});
-		this.updateItem(itemURL, (item)=>{
+		this.updateItem(itemId, (item)=>{
 			item.tag = tag;
+		});
+	}
+
+	static updateSectionTag(sectionId, tag){
+		this.updateSection(sectionId, (section)=>{
+			section.tag = {...section.tag, ...tag};
+		});
+	}
+
+	static updateItemTag(itemId, tag){
+		this.updateItem(itemId, (item)=>{
+			item.tag = {...item.tag, ...tag};
 		});
 	}
 
@@ -172,10 +192,10 @@ class Menu {
 		}
 	}
 
-	static updateItem(itemURL, proc){
-		if(itemURL && this.items){
+	static updateItem(itemId, proc){
+		if(itemId && this.items){
 			this.items.forEach((item)=>{
-				if (item.url !== itemURL) return;
+				if (item.id !== itemId) return;
 				proc(item);
 			});
 			if(this.menu){

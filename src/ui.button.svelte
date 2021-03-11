@@ -18,7 +18,11 @@
 </script>
 
 
-<button on:click="{action}" {disabled} class="button {classes} {state?`is-${state}`:''} {inverted?`is-inverted`:''} {outlined?`is-outlined`:''} {raised?`is-raised`:''} {rounded?`is-rounded`:''} {light?`is-light`:''} {loading?`is-loading`:''} {color?`is-${color}`:''} {type?`is-${type}`:''} {size?`is-${size}`:''}">
+<button
+  on:click="{action}"
+  {disabled}
+  class="button {classes} {state?`is-${state}`:''} {inverted?`is-inverted`:''} {outlined?`is-outlined`:''} {raised?`is-raised`:''} {rounded?`is-rounded`:''} {light?`is-light`:''} {loading?`is-loading`:''} {color?`is-${color}`:''} {type?`is-${type}`:''} {size?`is-${size}`:''}"
+  >
   {#if icon }
   {#if iconSide === 'left' }
   <span class="icon"><i class="fas fa-{icon} {size?`is-${size}`:''}"></i></span>

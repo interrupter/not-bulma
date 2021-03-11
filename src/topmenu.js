@@ -8,6 +8,9 @@ class TopMenu extends Menu{
 		section: 'any',
 		sectionTitle: 'Меню',
 		priority: 0,
+		//link, button, dropdown, component
+		type: 			'link',
+		place:			'main'
 	};
 
 	static options = {
