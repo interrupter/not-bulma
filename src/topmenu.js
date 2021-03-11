@@ -1,6 +1,7 @@
 import Menu from './menu.js';
 import UITopMenu from './ui.top.menu.svelte';
 
+import UINavbarTop from './ui.navbar.top.svelte';
 const TYPE = 'top';
 
 class TopMenu extends Menu{
@@ -14,8 +15,9 @@ class TopMenu extends Menu{
 	};
 
 	static options = {
-		type: TYPE,
-		items: [],
+		brand: 		false,
+		type: 		TYPE,
+		items: 		[],
 		sections: [],
 		targetSelector: `#${TYPE}-menu`,
 		root: '/',
@@ -40,6 +42,7 @@ class TopMenu extends Menu{
 			this.menu = new UITopMenu({
 				target: document.querySelector(this.getOptions().targetSelector),
 				props:{
+					brand:   			this.getOptions().brand,
 					items:  			this.items,
 					sections:  		this.sections,
 					root:   			this.getOptions().root,
