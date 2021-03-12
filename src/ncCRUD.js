@@ -311,31 +311,42 @@ class ncCRUD extends notController {
 		} else {
 			this.$destroyUI();
 		}
+		const DEFAULT_OPTIONS_TABLE = {
+			interface: {
+				combined: true,
+				factory: this.getModel()
+			},
+			fields: 			undefined,
+			showSelect: 	undefined,
+			getItemId: 		undefined,
+			idField: 			undefined,
+			preload: 			{},
+			pager: 				{ size: 50, page: 0},
+			filter: 			undefined,
+			sorter: 			{
+				id: -1
+			},
+		};
 
-		this.ui.list = new notTable({
+		const TABLE_OPTIONS = {
 			options: {
 				targetEl: this.els.main,
-				interface: this.getOptions('list.interface', {
-					combined: true,
-					factory: this.getModel()
-				}),
 				endless: false,
-				preload: this.getOptions('list.preload', {}),
-				pager: 	this.getOptions('list.pager', { size: 50, page: 0}),
-				filter: this.getOptions('list.filter'),
-				sorter: this.getOptions('list.sorter', {
-					id: -1
-				}),
-				actions: [{
-					title: 'Создать',
-					action: this.goCreate.bind(this)
-				}, ...(this.getOptions('list.actions', []))],
-				fields: 			this.getOptions('list.fields'),
-				showSelect: 	this.getOptions('list.showSelect'),
-				showSearch: 	this.getOptions('list.showSearch'),
-				idField: 			this.getOptions('list.idField'),
+				actions: [
+					{
+						title: 'Создать',
+						action: this.goCreate.bind(this)
+					},
+					...(this.getOptions('list.actions', []))
+				],
 			}
+		};
+
+		Object.keys(DEFAULT_OPTIONS_TABLE).forEach(key=>{
+			TABLE_OPTIONS[key] = this.getOptions(`list.${key}`, DEFAULT_OPTIONS_TABLE[key]);
 		});
+
+		this.ui.list = new notTable(TABLE_OPTIONS);
 		this.emit('after:render:list');
 	}
 

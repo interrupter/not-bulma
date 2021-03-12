@@ -34,8 +34,10 @@ class SideMenu extends Menu {
     }
     this.prepareData();
     if (!this.menu) {
+      let target = document.querySelector(this.getOptions().targetSelector);
+      if(!target){return;}
       this.menu = new UISideMenu({
-        target: document.querySelector(this.getOptions().targetSelector),
+        target,
         props: {
           items: this.items,
           sections: this.sections,

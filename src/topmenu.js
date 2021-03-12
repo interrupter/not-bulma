@@ -39,8 +39,10 @@ class TopMenu extends Menu{
 		}
 		this.prepareData();
 		if (!this.menu) {
+			let target = document.querySelector(this.getOptions().targetSelector);
+      if (!target){return;}
 			this.menu = new UITopMenu({
-				target: document.querySelector(this.getOptions().targetSelector),
+				target,
 				props:{
 					brand:   			this.getOptions().brand,
 					items:  			this.items,
