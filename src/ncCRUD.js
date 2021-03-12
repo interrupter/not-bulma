@@ -343,7 +343,7 @@ class ncCRUD extends notController {
 		};
 
 		Object.keys(DEFAULT_OPTIONS_TABLE).forEach(key=>{
-			TABLE_OPTIONS[key] = this.getOptions(`list.${key}`, DEFAULT_OPTIONS_TABLE[key]);
+			TABLE_OPTIONS.options[key] = this.getOptions(`list.${key}`, DEFAULT_OPTIONS_TABLE[key]);
 		});
 
 		this.ui.list = new notTable(TABLE_OPTIONS);

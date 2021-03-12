@@ -26,9 +26,7 @@
 	export let showSelect = true;
 	export let selectAll = false;
 
-	export function getItemId(item){
-		return item._id;
-	}
+	export let getItemId = item=>item._id;
 
 	onMount(() => {
 
