@@ -8,6 +8,7 @@
 		COMPONENTS,
 		VARIANTS
 	} from './LIB.js';
+
 	import {
 		onMount,
 		createEventDispatcher
@@ -43,7 +44,7 @@
 			errors: false,
 			variants: []
 		};
-		if (FIELDS.contain(type)) {
+		if (FIELDS.contains(type)) {
 			Object.assign(field, FIELDS.get(type));
 		}
 		if (mutation) {
@@ -51,7 +52,7 @@
 		}
 		if (
 			Object.prototype.hasOwnProperty.call(field, 'variantsSource') &&
-			VARIANTS.contain(field.variantsSource)
+			VARIANTS.contains(field.variantsSource)
 		) {
 			field.variants = VARIANTS.get(field.variantsSource);
 		}

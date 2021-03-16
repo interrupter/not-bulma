@@ -11,4 +11,11 @@ cp dist/notBulma.min.js test/browser/assets/bulma
 cp dist/notBulma.css test/browser/assets/bulma
 fi
 
+if [[ $ENV == 'development' ]]
+then
+cp dist/notBulma.js examples/dist/assets/not-bulma
+cp dist/notBulma.min.js examples/dist/assets/not-bulma
+cp dist/notBulma.css examples/dist/assets/not-bulma
+fi
+
 exit 0;

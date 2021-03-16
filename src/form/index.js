@@ -13,6 +13,7 @@ import UIRange from './ui.range.svelte';
 import UISelect from './ui.select.svelte';
 import UISlider from './ui.slider.svelte';
 import UISwitch from './ui.switch.svelte';
+import UITagControl from './ui.tag.svelte';
 import UITelephone from './ui.telephone.svelte';
 import UITextarea from './ui.textarea.svelte';
 import UITextfield from './ui.textfield.svelte';
@@ -33,6 +34,7 @@ export {
 	UISelect,
 	UISlider,
 	UISwitch,
+	UITagControl,
 	UITelephone,
 	UITextarea,
 	UITextfield

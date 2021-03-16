@@ -1,77 +1,59 @@
 <script>
+  import {onMount} from 'svelte';
+  import {notCommon} from './frame';
+  //if we want to address this tag
+  export let id = 'tagId';
+  export let title = 'tag';
+  export let color = 'info';
+  export let size = 'normal';
 
-  import { createEventDispatcher } from 'svelte';
-  let dispatch = createEventDispatcher();
-  /*
-  item = {
-    id,        //unique
-    title,     //some text
-    type       //for coloring items, usual html template names danger, success, etc
-  }
-  */
+  export let padding = 'normal';
+  export let bold = false;
 
-  export let items = [];
-  export let variants = [];
-  export let error = false;
-  export let readonly = false;
-  export let beforeAdd = (item, list)=>{
-    return true;
+  export let right = false;
+  export let left = false;
+  export let top = false;
+  export let bottom = false;
+
+  export let classes = '';
+  let sided = false;
+  $: sided = right || left || top || bottom;
+
+  export let events = {};        //events to react on
+  //register event handlers
+  export let register = notCommon.registerWidgetEvents;
+  //
+  export let onUpdate = (data)=>{
+    if (Object.prototype.hasOwnProperty.call(data, 'title')){
+      title = data.title;
+    }
   };
 
-  function remove(e){
-    e && e.preventDefault();
-    let id = parseInt(e.currentTarget.dataset.id);
-    let item = items.find(el => el.id === id);
-    if(item){
-      items.splice(items.indexOf(item), 1);
-      items = items;
-      dispatch('change', items);
-    }
-    return false;
+  function getStandartUpdateEventName(){
+    return `tag-${id}:update`;
   }
 
-  function add(e){
-    e && e.preventDefault();
-    let id = parseInt(e.currentTarget.parentNode.querySelector('select').value);
-    let item = variants.find(el => el.id === id);
-    if(!beforeAdd(item, items)){
-      return false;
+  onMount(()=>{
+    if (!Object.prototype.hasOwnProperty(events, getStandartUpdateEventName())){
+      events[getStandartUpdateEventName()] = onUpdate;
     }
-    if(item && (items.indexOf(item) === -1)){
-      items.push(item);
-      items = items;
-      dispatch('change', items);
-    }
-    return false;
-  }
-
-  $: classes = error?'is-danger':'';
+    register(events);
+  });
 
 </script>
 
-<div class="columns">
-  <div class="column {classes}">
-    {#each items as item (item.id)}
-    <span class="mx-1 tag is-{item.type}">{item.title}
-      {#if !readonly }
-      <button data-id="{item.id}" class="delete is-small" on:click="{remove}"></button>
-      {/if}
-    </span>
-    {/each}
-  </div>
-  {#if !readonly }
-  <div class="column">
-    <div class="control">
-      <div class="select is-small">
-        <select>
-          <option value="-1" selected>Выберите из списка...</option>
-          {#each variants as variant}
-          <option value="{variant.id}">{variant.title}</option>
-          {/each}
-        </select>
-      </div>
-      <button class="button is-primary is-small" on:click={add}>Добавить</button>
-    </div>
-  </div>
-  {/if}
-</div>
+<span
+  id="tag-{id}"
+  class="
+  tag
+  {bold?'has-text-weight-bold':''}
+  {padding!=='normal'?`is-padded-${padding}`:''}
+  is-{size}
+  is-{color}
+  {sided?'is-sided':''}
+  {right?'is-sided-right':''}
+  {left?'is-sided-left':''}
+  {top?'is-sided-top':''}
+  {bottom?'is-sided-bottom':''}
+  {classes}"
+  >{title}</span>

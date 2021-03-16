@@ -1,7 +1,7 @@
 import Menu from './menu.js';
 import UITopMenu from './ui.top.menu.svelte';
 
-import UINavbarTop from './ui.navbar.top.svelte';
+import UINavbarTop from './navbar/ui.top.svelte';
 const TYPE = 'top';
 
 class TopMenu extends Menu{
@@ -41,7 +41,7 @@ class TopMenu extends Menu{
 		if (!this.menu) {
 			let target = document.querySelector(this.getOptions().targetSelector);
       if (!target){return;}
-			this.menu = new UITopMenu({
+			this.menu = new UINavbarTop({
 				target,
 				props:{
 					brand:   			this.getOptions().brand,

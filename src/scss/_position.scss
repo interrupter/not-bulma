@@ -1,5 +1,26 @@
-.is-right-top{
-  position: absolute;
-  right: 0px;
-  top: 0px;
+.tag{
+  &.is-small{
+    font-size: 0.65em;
+  }
+
+  &.is-sided{
+    position: absolute;
+  }
+
+  &.is-sided-right{
+    right: 0px;
+  }
+
+  &.is-sided-left{
+    left: 0px;
+  }
+
+  &.is-sided-top{
+    top: 0px;
+  }
+
+  &.is-sided-bottom{
+    bottom: 0px;
+  }
+
 }

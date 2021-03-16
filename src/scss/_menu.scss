@@ -25,8 +25,12 @@ aside.menu{
 }
 @media screen and (max-width: 1023px){
   aside.menu{
+    transition: width .5s;
     z-index: 10;
-    width: 100%;
+    width: 0%;
+    &.is-active{
+      width: 100%;
+    }
   }
 }
 

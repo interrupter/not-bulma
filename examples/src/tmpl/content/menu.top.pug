@@ -1,0 +1,72 @@
+section(id="examples" class="section")
+  h1(class="title") Верхнее меню
+  h2( class="subtitle") 
+  div( class="box")
+    h3( class="title") Constructor
+    h4(class="subtitle") как создать
+    div(class="block")
+      p Верхнее меню. Статический класс.
+      p Может вызываться с указанием экземпляра notApp, тогда настройки будут получаться от туда.
+      pre
+        | notBulma.TopMenu(notApp app);
+      p Или без. Тогда требует предварительной установки настроек.
+      pre
+        | notBulma.setOptions(Object options);
+        | notBulma.TopMenu();
+    h3( class="title") Props
+    h4(class="subtitle") что можно задавать
+    div(class="block")
+      p Структура объекта настроек
+      pre 
+        | {
+        |   Object brand      - настройки для 
+        a(href="./brand.html") UIBrand
+        |
+        |   [Object] sections - массив секций
+        |                   {
+        |                     String id         - уникальный идентификатор
+        |                     String title      - надпись
+        |                     ** необязательные **
+        |                     url               - ссылка (автоматом будет использован link-рендерер), 
+        |                                         если указан root, то ссылки будут иметь ввид ${root}${url}
+        |                     String place      - позиция (brand/start/end). Default: main.
+        |                     String hide       - прятать на устройствах (desktop/touch)
+        |                     Number priority   - приоритет отображения, больше выше в списке
+        |                     Object tag        - props для 
+        a(href="./tag.html") UITag
+        |
+        |                     Object indicator  - props для 
+        a(href="./indicator.html") UIIndicator
+        |
+        |                     String type       - тип link/button/icon/component
+        |                     Class component   - конструктор для компонента
+        |                     [String] events   - список сигналов на которые нужно подписать
+        |                     right             - выравнивание выпадающего меню по правому краю
+        |                   }
+        |   [Object] items: 	-	массив элементов
+        |                   {
+        |                     String id         - уникальный идентификатор
+        |                     String section    - идентификатор секции
+        |                     String title      - надпись
+        |                     ** необязательные **
+        |                     Boolean break     - полоса разрыва
+        |                     url               - ссылка (автоматом будет использован link-рендерер), 
+        |                                         если указан root, то ссылки будут иметь ввид ${root}${url}
+        |                     Array items       - дочерние элементы
+        |                     Number priority   - приоритет отображения, больше выше в списке
+        |                     Object tag        - props для 
+        a(href="./tag.html") UITag
+        |
+        |                     Object indicator  - props для 
+        a(href="./indicator.html") UIIndicator
+        |
+        |                     String type       - тип link/button/icon/component
+        |                     Class component   - конструктор для компонента
+        |                   }
+        |   String targetSelector                       - селектор контейнера в котором будет рендериться меню
+        |   String toggleSelector                       - селектор для поиска и инициализации переключателя видимости
+        |   String    root                              - корень для ссылок меню
+        |   function  navigate(url)                     - функция переход по ссылке, для перехвата
+        |   function  getComponent(String name):Class 	- функция получения конструктора компонента, если не указана, то будет произведен поиск в 
+        a(href="./frame.components.html") Frame.COMPONENTS
+        | }

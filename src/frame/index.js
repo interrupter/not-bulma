@@ -17,6 +17,8 @@ import * as notAPI from './api';
 	basic event handlers and core data modifiers
 */
 import notBase from './base.js';
+
+import {COMPONENTS} from './LIB.js';
 /*
 	application main infrastructure setter
 */
@@ -37,5 +39,6 @@ export {
 	notRecord,
 	notInterface,
 	notApp,
-	notAPI
+	notAPI,
+	COMPONENTS
 };

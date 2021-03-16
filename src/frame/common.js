@@ -425,4 +425,12 @@ export default class notCommon {
 		});
 	}
 
+	static registerWidgetEvents(events){
+		if(this.getApp()){
+			Object.keys(events).forEach(eventName => {
+				this.getApp().on(eventName, events[eventName]);
+			});
+		}
+	}
+
 }

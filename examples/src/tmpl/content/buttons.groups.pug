@@ -1,0 +1,22 @@
+section(id="examples" class="section")
+  h1(class="title") Кнопки в группах
+  h2( class="subtitle") субтитра
+  div( class="box")
+    h3( class="title") Constructor
+    h4(class="subtitle") как создать
+    div(class="block")
+      | Этот компонент позволяет создавать сгруппированные кнопки из массива настроек
+      | для компонента 
+      a(href="./buttons.html") UIButton
+      |.
+      pre
+        | new notBulma.UIButtons({target: HTMLElement, props: Object});
+    h3( class="title") Props
+    h4(class="subtitle") что можно задавать
+    div(class="block")
+      pre
+        | Нотация тип: название = поумолчанию - описание
+        | array:            values = []           - массив props для UIButton
+        | boolean:          centered = false      - класс центровка.
+        | boolean:          right = false         - класс снос вправо.
+        | string:           classes = '';         - дополнительные классы, строкой. Не передается в кнопки.

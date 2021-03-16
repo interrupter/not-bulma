@@ -1,10 +1,13 @@
+import {COMPONENTS} from './frame';
+
 class Menu {
+	static MAX_TOUCH_WIDTH = 1023;
 	static DEFAULT = {
 		section: 'any',
 		sectionTitle: 'Меню',
 		priority: 0,
 		//link, button, dropdown, component
-		type: 			'link'
+		type: 			'link',
 	};
 	static app = false;
 	static menu;
@@ -33,7 +36,7 @@ class Menu {
 	}
 
 	static setOptions(options) {
-		this.options = Object.assign(this.options, options);
+		this.options = {...this.options, ...options};
 		return this;
 	}
 
@@ -59,9 +62,10 @@ class Menu {
 				sections: 			this.app.getOptions(this.getOptionsPathTo('sections'), this.options.sections),
 				targetSelector: this.app.getOptions(this.getOptionsPathTo('targetSelector'), this.options.targetSelector),
 				toggleSelector: this.app.getOptions(this.getOptionsPathTo('toggleSelector'), this.options.toggleSelector),
+				open: 					this.app.getOptions(this.getOptionsPathTo('open'), this.options.open),
 				root: 					this.app.getOptions('router.root', this.options.root),
 				navigate: 			someNavigate,
-				getComponent: 	this.getComponent.bind(this)
+				getComponent: 	this.getComponent.bind(this),
 			};
 		} else {
 			return this.options;
@@ -69,7 +73,11 @@ class Menu {
 	}
 
 	static getComponent(name){
-		return this.app.getWorking(`uis.${name}`, false);
+		if (COMPONENTS.contains(name)){
+			return COMPONENTS.get(name);
+		}else{
+			return false;
+		}
 	}
 
 	static initField(list, fields = []) {
@@ -203,6 +211,11 @@ class Menu {
 				this.menu.$set({ items: this.items });
 			}
 		}
+	}
+
+
+	static isTouch(){
+		return window.innerWidth <= this.MAX_TOUCH_WIDTH;
 	}
 
 }

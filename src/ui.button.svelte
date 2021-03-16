@@ -21,7 +21,21 @@
 <button
   on:click="{action}"
   {disabled}
-  class="button {classes} {state?`is-${state}`:''} {inverted?`is-inverted`:''} {outlined?`is-outlined`:''} {raised?`is-raised`:''} {rounded?`is-rounded`:''} {light?`is-light`:''} {loading?`is-loading`:''} {color?`is-${color}`:''} {type?`is-${type}`:''} {size?`is-${size}`:''}"
+
+  type={type?type:""}
+
+  class="
+    button
+    {classes}
+    {state?`is-${state}`:''}
+    {inverted?`is-inverted`:''}
+    {outlined?`is-outlined`:''}
+    {raised?`is-raised`:''}
+    {rounded?`is-rounded`:''}
+    {light?`is-light`:''}
+    {loading?`is-loading`:''}
+    {color?`is-${color}`:''}
+    {size?`is-${size}`:''}"
   >
   {#if icon }
   {#if iconSide === 'left' }

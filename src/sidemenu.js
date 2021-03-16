@@ -1,14 +1,20 @@
 import Menu from './menu.js';
-import UISideMenu from './ui.side.menu.svelte';
+import UISideMenu from './sidemenu/ui.side.menu.svelte';
 
 const TYPE = 'side';
 
 class SideMenu extends Menu {
+  static nav;
+  static main;
+  static aside;
+
   static DEFAULT = {
     section: 'any',
     sectionTitle: 'Меню',
     priority: 0,
+    open: false
   };
+
   static options = {
     type: TYPE,
     items: [],
@@ -25,7 +31,8 @@ class SideMenu extends Menu {
       } else {
         document.location.assign(urls.full);
       }
-    }
+    },
+    open: false
   };
 
   static render(app) {
@@ -80,41 +87,50 @@ class SideMenu extends Menu {
   }
 
   static initSizeResponse() {
-    let nav = document.querySelector('nav.navbar');
-    let aside = document.querySelector('aside');
-    let main = document.querySelector('main');
-    this.resizeAsideAndMain(aside, main, nav);
-    this.resizeMain(main, aside);
-    window.addEventListener('resize', () => this.resizeMain(main, aside));
+    this.nav = document.querySelector('nav.navbar');
+    this.aside = document.querySelector('aside');
+    this.main = document.querySelector('main');
+    this.resizeAsideAndMain(this.aside, this.main, this.nav);
+    this.resizeMain(this.main, this.aside);
+    window.addEventListener('resize', this.resizeMain.bind(this));
+    if(this.getOptions().open){
+      this.show();
+    }else{
+      this.hide();
+    }
   }
 
-
-  static resizeMain(main, aside) {
-    let rect = aside.getBoundingClientRect();
-    if (rect.width < window.innerWidth - 40) {
-      main.style.display = 'block';
-      if (main.style.height === '0px') {
-        main.style.height = 'auto';
+  static resizeMain() {
+    if(this.isTouch()){
+      if(this.aside.classList.contains('is-active')){
+        this.main.style.display = 'none';
+      }else{
+        this.main.style.display = 'block';
+        this.main.style.marginLeft = '0px';
       }
-      main.style.marginLeft = (rect.width + rect.left) + 'px';
-    } else {
-      main.style.display = 'none';
+    }else{
+      let rect = this.aside.getBoundingClientRect();
+      this.main.style.display = 'block';
+      if (this.main.style.height === '0px') {
+        this.main.style.height = 'auto';
+      }
+      this.main.style.marginLeft = (rect.width + rect.left) + 'px';
     }
   }
 
-  static resizeAside(aside, nav) {
-    if (aside.style.display !== 'none') {
-      let rect = nav.getBoundingClientRect();
-      aside.style.height = (window.innerHeight - rect.height) + 'px';
-      aside.style.marginTop = (rect.height) + 'px';
+  static resizeAside() {
+    if (this.aside.style.display !== 'none') {
+      let rect = this.nav.getBoundingClientRect();
+      this.aside.style.height = (window.innerHeight - rect.height) + 'px';
+      this.aside.style.marginTop = (rect.height) + 'px';
     }
   }
 
-  static resizeAsideAndMain(aside, main, nav) {
-    let rect = nav.getBoundingClientRect();
-    aside.style.height = (window.innerHeight - rect.height) + 'px';
-    aside.style.paddingTop = (rect.height) + 'px';
-    main.style.marginTop = (rect.height) + 'px';
+  static resizeAsideAndMain() {
+    let rect = this.nav.getBoundingClientRect();
+    this.aside.style.height = (window.innerHeight - rect.height) + 'px';
+    this.aside.style.paddingTop = (rect.height) + 'px';
+    this.main.style.marginTop = (rect.height) + 'px';
   }
 
   static bindToggle() {
@@ -127,18 +143,31 @@ class SideMenu extends Menu {
 
   static toggle(e) {
     e && e.preventDefault();
-    let el = document.querySelector(this.getOptions().targetSelector);
-    el.classList.toggle('is-hidden-touch');
-    el.classList.toggle('is-12');
+    this.aside.classList.toggle('is-active');
+    this.resizeMain();
     return false;
   }
 
   static hide(e) {
     e && e.preventDefault();
-    let el = document.querySelector(this.getOptions().targetSelector);
-    el.classList.add('is-hidden-touch');
-    el.classList.remove('is-12');
+    this.aside.classList.remove('is-active');
+    this.resizeMain();
     return false;
+  }
+
+  static show(e) {
+    e && e.preventDefault();
+    this.classList.add('is-active');
+    this.resizeMain();
+    return false;
+  }
+
+  static isOpen(){
+    if(this.aside){
+      return this.aside.classList.contains('is-active');
+    }else{
+      return true;
+    }
   }
 }
 

@@ -2,16 +2,20 @@ import './scss/style.scss';
 //raw svelte
 import UIOverlay from './ui.overlay.svelte';
 import UIBreadcrumbs from './ui.breadcrumbs.svelte';
+import UIProgress from './ui.progress.svelte';
+import UIUserCard from './ui.user.card.svelte';
 import UIError from './ui.error.svelte';
 import UISuccess from './ui.success.svelte';
-import UISideMenu from './ui.side.menu.svelte';
+import UISideMenu from './sidemenu/ui.side.menu.svelte';
+import UISideMenuBurger from './sidemenu/ui.burger.svelte';
 import UITag from './ui.tag.svelte';
 import UIBooleans from './ui.booleans.svelte';
 import UIButton from './ui.button.svelte';
 import UIButtons from './ui.buttons.svelte';
 import UIImages from './ui.images.svelte';
 import UILinks from './ui.links.svelte';
-import UIIconText from './ui.icon.text.svelte';
+import UIIcon from './ui.icon.svelte';
+import UIIconFont from './ui.icon.font.svelte';
 import UIIconFloating from './ui.icon.floating.svelte';
 import UICookiesNotification from './ui.cookie.notification.svelte';
 //form related
@@ -48,7 +52,12 @@ const
 	notRecord = Frame.notRecord,
 	notInterface = Frame.notInterface,
 	notApp = Frame.notApp,
+	notAppComponents = Frame.COMPONENTS,
 	notAPI = Frame.notAPI;
+
+Frame.COMPONENTS.add('UIProgress', UIProgress);
+Frame.COMPONENTS.add('UIUserCard', UIUserCard);
+Frame.COMPONENTS.add('UISideMenuBurger', UISideMenuBurger);
 
 const {
 	UIForm,
@@ -68,7 +77,8 @@ const {
 	UISwitch,
 	UITelephone,
 	UITextarea,
-	UITextfield
+	UITextfield,
+	UITagControl
 } = FormElements;
 
 export {
@@ -95,16 +105,19 @@ export {
 	UIOverlay,
 	UIBreadcrumbs,
 	UIError,
+	UITag,
 	UISuccess,
 	UISideMenu,
-	UITag,
+	UITagControl,
 	UIBooleans,
 	UIButton,
 	UIButtons,
 	UIImages,
 	UILinks,
-	UIIconText,
+	UIIcon,
+	UIIconFont,
 	UIIconFloating,
+	UIProgress,
 	Stores,
 	Table,
 	Breadcrumbs,
@@ -124,5 +137,6 @@ export {
 	notRecord,
 	notInterface,
 	notApp,
+	notAppComponents,
 	notAPI
 };
