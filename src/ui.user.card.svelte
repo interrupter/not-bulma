@@ -42,14 +42,14 @@
 <article id="{getCompId()}" class="media">
   <figure class="media-left">
     <p class="image is-32x32">
-      <img src={image} />
+      <img src={image} alt="{username}"/>
     </p>
   </figure>
   <div class="media-content">
     <div class="content">
       <p>
         <strong>{username}</strong>
-        <small>as</small>
+        <small>@</small>
         <strong>{role}</strong>
       </p>
     </div>

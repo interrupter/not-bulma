@@ -13,7 +13,7 @@
 
 </script>
 
-<a on:click={toggle} role="button" class="navbar-burger {closed?'':'is-active'}" aria-label="menu" aria-expanded="false" data-target="navbar">
+<a href on:click={toggle} role="button" class="navbar-burger {closed?'':'is-active'}" aria-label="menu" aria-expanded="false" data-target="navbar">
   <span aria-hidden="true"></span>
   <span aria-hidden="true"></span>
   <span aria-hidden="true"></span>

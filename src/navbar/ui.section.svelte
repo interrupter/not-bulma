@@ -5,7 +5,6 @@
   export let section = {};
   export let items = [];
   export let hidden = '';
-  export let right = false;
   export let hoverable = true;
   export let arrowless = false;
 
