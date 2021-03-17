@@ -21,7 +21,7 @@
 
   export let events = {};        //events to react on
   //register event handlers
-  export let register = notCommon.registerWidgetEvents;
+  export let register = notCommon.registerWidgetEvents.bind(notCommon);
   //
   export let onUpdate = (data)=>{
     if (Object.prototype.hasOwnProperty.call(data, 'title')){
