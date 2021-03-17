@@ -30,15 +30,16 @@
 
   let menuClosed = true;
 
-  function onClick(ev, element) {
+  function onClick({detail}) {
+    let {event, element} = detail;
     if (Object.prototype.hasOwnProperty.call(element, 'action')) {
-      return element.action(ev, element);
+      return element.action(event, element);
     }
-    ev.preventDefault();
+    event.preventDefault();
     if (typeof navigate === 'function') {
       navigate({
-        full: ev.target.getAttribute('href'),
-        short: ev.target.dataset.href
+        full: event.target.getAttribute('href'),
+        short: event.target.dataset.href
       });
     }
     return false;
@@ -74,12 +75,12 @@
   {/if}
   {#each sections as section(section.id)}
   {#if section.showOnTouch}
-  <UINavbarItem hidden="desktop" item={section} {root} />
+  <UINavbarItem hidden="desktop" item={section} {root} on:click={onClick}/>
   {/if}
   {/each}
   {#each items as item(item.id)}
   {#if item.showOnTouch}
-  <UINavbarItem hidden="desktop" {item} {root} />
+  <UINavbarItem hidden="desktop" {item} {root} on:click={onClick}/>
   {/if}
   {/each}
   {#if showBurger}
@@ -90,14 +91,20 @@
   <div class="navbar-start">
     {#each items as item}
     {#if item.place === 'start' }
-    <UINavbarItem hidden="touch" {item} />
+    <UINavbarItem hidden="touch" {item} on:click={onClick}/>
     {/if}
     {/each}
   </div>
   <div class="navbar-end">
     {#each sections as section(section.id) }
     {#if (sectionsItemsCount[section.id] || section.indicator || section.tag) && section.place=='end' }
-    <UINavbarSection hidden={section.hidden} {root} {section} items={sectionsItems[section.id]}/>
+    <UINavbarSection
+      hidden={section.hidden}
+      {root}
+      {section}
+      items={sectionsItems[section.id]}
+      on:click={onClick}
+      />
     {/if}
     {/each}
   </div>

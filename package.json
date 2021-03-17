@@ -1,6 +1,6 @@
 {
 		"name": "not-bulma",
-		"version": "0.2.82",
+		"version": "0.2.83",
 		"description": "not-* family UI components on Bulma CSS Framework",
 		"main": "src/index.js",
 		"svelte": "src/index.js",

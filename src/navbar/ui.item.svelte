@@ -1,9 +1,19 @@
 <script>
+  import {
+    createEventDispatcher
+  } from 'svelte';
+  const dispatch = createEventDispatcher();
+
   import UIItemContent from './ui.item.content.svelte';
   export let root = '';
   export let item = {};
   export let hidden ='';
   export let classes ='';
+
+  function onClick(event){
+    dispatch('click',{event, element: item});
+  }
+
 </script>
 
 {#if item.break }
@@ -11,11 +21,19 @@
 {/if}
 
 {#if item.url }
-<a class="navbar-item {hidden?`is-hidden-${hidden}`:''} {classes} " href="{root}{item.url}">
+<a
+  on:click={onClick}
+  class="navbar-item {hidden?`is-hidden-${hidden}`:''} {classes} "
+  href="{root}{item.url}"
+  data-href="{item.url}"
+  >
   <UIItemContent {item} />
 </a>
 {:else}
-<div class="navbar-item {hidden?`is-hidden-${hidden}`:''} {classes} ">
+<div
+  on:click={onClick}
+  class="navbar-item {hidden?`is-hidden-${hidden}`:''} {classes} "
+  >
   <UIItemContent {item} />
 </div>
 {/if}
