@@ -201,6 +201,19 @@ class Menu {
 		}
 	}
 
+	static updateSectionItems(sectionId, proc){
+		if(this.sections && sectionId){
+			let oldList = this.items.filter(item =>item.section === sectionId);
+			for(let i of oldList){
+				this.items.splice(this.items.indexOf(i), 1);
+			}
+			this.items.push(...proc(oldList));
+			if(this.menu){
+				this.menu.$set({ items: this.items });
+			}
+		}
+	}
+
 	static updateItem(itemId, proc){
 		if(itemId && this.items){
 			this.items.forEach((item)=>{
@@ -212,7 +225,6 @@ class Menu {
 			}
 		}
 	}
-
 
 	static isTouch(){
 		return window.innerWidth <= this.MAX_TOUCH_WIDTH;

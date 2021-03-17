@@ -1,5 +1,10 @@
 import './scss/style.scss';
 //raw svelte
+import UIBox from './ui.box.svelte';
+import UIBlock from './ui.block.svelte';
+import UIContent from './ui.content.svelte';
+import UITitle from './ui.title.svelte';
+
 import UIOverlay from './ui.overlay.svelte';
 import UIBreadcrumbs from './ui.breadcrumbs.svelte';
 import UIProgress from './ui.progress.svelte';
@@ -84,6 +89,7 @@ const {
 } = FormElements;
 
 export {
+	UIBox, UIBlock, UIContent, UITitle,
 	LIB,
 	UIForm,
 	UIField,
