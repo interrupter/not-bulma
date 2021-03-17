@@ -33,6 +33,8 @@ import Form from './form.js';
 import * as LIB from './form/LIB.js';
 import * as Frame from './frame';
 
+import * as Layout from './layout';
+
 import ncCRUD from './ncCRUD.js';
 
 import {
@@ -129,6 +131,7 @@ export {
 	UICommon,
 	ncCRUD,
 	Frame,
+	Layout,
 	notCommon,
 	notPath,
 	notController,

@@ -1,6 +1,4 @@
 import Menu from './menu.js';
-import UITopMenu from './ui.top.menu.svelte';
-
 import UINavbarTop from './navbar/ui.top.svelte';
 const TYPE = 'top';
 
