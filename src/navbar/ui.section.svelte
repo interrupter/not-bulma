@@ -9,9 +9,11 @@
   export let root = '';
   export let section = {};
   export let items = [];
+
   export let hidden = '';
   export let hoverable = true;
   export let arrowless = false;
+  export let right = false;
 
   function onClick(event){
     dispatch('click', {event, element: section});
@@ -27,7 +29,7 @@
     >
     <UIItemContent item={section} />
   </a>
-  <div class="navbar-dropdown {section.right?'is-right':''}">
+  <div class="navbar-dropdown {right?'is-right':''}">
     {#each items as item(item.id)}
     <UIItem {root} {item} on:click />
     {/each}

@@ -99,6 +99,7 @@
     {#each sections as section(section.id) }
     {#if (sectionsItemsCount[section.id] || section.indicator || section.tag) && section.place=='end' }
     <UINavbarSection
+      right={true}
       hidden={section.hidden}
       {root}
       {section}

@@ -202,7 +202,7 @@ class ncCRUD extends notController {
 		}
 		let manifest = this.app.getInterfaceManifest()[this.getModelName()];
 		query[idField] = params[0];
-		this.getModel()(query).$get()
+		this.getModel()(query)['$get']()
 			.then((res) => {
 				if (res.status === 'ok') {
 					let title = this.getItemTitle(res.result);

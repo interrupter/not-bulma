@@ -42,6 +42,7 @@
 
 </script>
 
+{#if title }
 <span
   id="tag-{id}"
   class="
@@ -57,3 +58,4 @@
   {bottom?'is-sided-bottom':''}
   {classes}"
   >{title}</span>
+{/if}
