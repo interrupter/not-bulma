@@ -1,7 +1,10 @@
 <script>
   import {
-    onMount
+    onMount,
+    createEventDispatcher
   } from 'svelte';
+
+  let dispatch = createEventDispatcher();
 
   import UIContainer from '../layout/ui.container.svelte';
   import UIBox from '../ui.box.svelte';
@@ -79,6 +82,22 @@
         return fetchListOfCompletions('genre', keyword);
       }
     },
+    cycle: {
+      component: 'UIAutocomplete',
+      label: 'Из цикла',
+      value: undefined,
+      searchFunction(keyword) {
+        return fetchListOfCompletions('cycle', keyword);
+      }
+    },
+    theme: {
+      component: 'UIAutocomplete',
+      label: 'Тема',
+      value: undefined,
+      searchFunction(keyword) {
+        return fetchListOfCompletions('theme', keyword);
+      }
+    },
     media: {
       component: 'UIAutocomplete',
       label: 'Материал',
@@ -129,7 +148,9 @@
           'media',
           'imagining',
           'storedIn',
-          'locatedIn'
+          'locatedIn',
+          'theme',
+          'cycle'
         ]
       }
     }
@@ -144,7 +165,6 @@
       action: 'search',
       validators: Validators
     });
-
   });
 
   function toggleForm() {
@@ -166,12 +186,40 @@
   		enabled: true
     },
   };
+
+  export let onChange;
+  export let onSubmit;
+
+  function _onSubmit({detail}){
+    if(typeof _onSubmit == 'function'){
+      onSubmit(detail, form);
+    }else{
+      dispatch('submit', detail);
+    }
+  }
+
+  function _onChange({detail}){
+    if(typeof onChange == 'function'){
+      onChange(detail, form);
+    }else{
+      dispatch('change', detail);
+    }
+  }
+
 </script>
 
 <UIContainer id='search-filter'>
     {#if show}
     {#if props}
-    <UIForm bind:this={form} cancel={buttons.cancel} submit={buttons.submit} {...props} on:submit on:reject={toggleForm} on:change />
+    <UIForm
+      bind:this={form}
+      cancel={buttons.cancel}
+      submit={buttons.submit}
+      {...props}
+      on:change={_onChange}
+      on:submit={_onSubmit}
+      on:reject={toggleForm}
+      />
     {/if}
     {:else}
     <UIButton title='Поиск' icon='search' size='large' classes=" is-fullwidth " action={toggleForm} />
