@@ -139,11 +139,10 @@
     actions: {
       search: {
         method: 'post',
-        title: 'Поиск',
-        description: ' ',
+        title: '',
+        description: '',
         fields: [
           'term',
-          'type',
           'genre',
           'media',
           'imagining',
