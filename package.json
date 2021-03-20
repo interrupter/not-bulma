@@ -1,6 +1,6 @@
 {
 		"name": "not-bulma",
-		"version": "0.2.85",
+		"version": "0.2.86",
 		"description": "not-* family UI components on Bulma CSS Framework",
 		"main": "src/index.js",
 		"svelte": "src/index.js",
@@ -14,6 +14,7 @@
 				"js-build": "babel examples/src/js --out-dir ./examples/dist/js",
 				"js-watch": "npm run js-build -- --watch",
 				"build": "./bin/build.sh",
+				"build:prod": "ENV=production ./bin/build.sh",
 				"build:dev": "ENV=development ./bin/build.sh",
 				"build:dev:watch": "watch 'npm run build:dev' ./src --interval=5",
 				"serve": "serve ./examples/dist",

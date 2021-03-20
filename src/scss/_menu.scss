@@ -2,7 +2,7 @@ aside.menu{
   position: fixed;
   background-color: #ffffff;
   overflow-y: scroll;
-  padding-left: 1rem;
+  padding: 1rem;
 
   & .is-no-follow-subtitle{
 	  padding: .5em .75em;
@@ -36,4 +36,17 @@ aside.menu{
 
 .is-wide{
   min-width: 15em;
+}
+
+
+#search-filter{
+  padding: 1rem;
+}
+#search-filter .field:not(:last-child){
+  margin-bottom: 0.25px!important;
+}
+
+#search-filter .form-field-UICheckboxList-type label{
+  line-height: 2.25em;
+  margin-bottom: 0.0px!important;
 }

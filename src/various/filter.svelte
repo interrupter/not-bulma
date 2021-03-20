@@ -14,24 +14,30 @@
   import AutoComplete from "simple-svelte-autocomplete";
 
   export let show = false;
+
+  export let getAutocompleteUrl = (type, keyword) =>{
+    return '/data/filter.json?format=json&name=' + encodeURIComponent(keyword)+'&type=' + encodeURIComponent(type);
+  };
+
   let form;
 
-  async function fetchListOfCompletions(type, keyword){
+  export let fetchListOfCompletions = async(type, keyword)=>{
     keyword.trim();
     if (keyword.length > 2) {
-      const url = '/data/filter.json?format=json&name=' + encodeURIComponent(keyword)+'&type=' + encodeURIComponent(type);
+      const url = getAutocompleteUrl(type, keyword);
       const response = await fetch(url);
       const json = await response.json();
-      return json.result.map((itm) => {
-        return {
-          _id: itm._id,
-          title: itm.title
-        }
-      });
-    } else {
+      if( json && json.status==='ok' && json.result){
+        return json.result.map((itm) => {
+          return {
+            _id: itm._id,
+            title: itm.title
+          }
+        });
+      }
       return [];
     }
-  }
+  };
 
   const fields = {
     term: {

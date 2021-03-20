@@ -38099,7 +38099,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (166:4) {#if show}
+	// (172:4) {#if show}
 	function create_if_block(ctx) {
 		let if_block_anchor;
 		let current;
@@ -38155,7 +38155,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (167:4) {#if props}
+	// (173:4) {#if props}
 	function create_if_block_1(ctx) {
 		let uiform;
 		let current;
@@ -38173,10 +38173,10 @@ var notBulma = (function (exports) {
 		}
 
 		uiform = new Form$1({ props: uiform_props });
-		/*uiform_binding*/ ctx[5](uiform);
-		uiform.$on("submit", /*submit_handler*/ ctx[6]);
+		/*uiform_binding*/ ctx[7](uiform);
+		uiform.$on("submit", /*submit_handler*/ ctx[8]);
 		uiform.$on("reject", /*toggleForm*/ ctx[3]);
-		uiform.$on("change", /*change_handler*/ ctx[7]);
+		uiform.$on("change", /*change_handler*/ ctx[9]);
 
 		return {
 			c() {
@@ -38207,13 +38207,13 @@ var notBulma = (function (exports) {
 				current = false;
 			},
 			d(detaching) {
-				/*uiform_binding*/ ctx[5](null);
+				/*uiform_binding*/ ctx[7](null);
 				destroy_component(uiform, detaching);
 			}
 		};
 	}
 
-	// (165:0) <UIContainer id='search-filter'>
+	// (171:0) <UIContainer id='search-filter'>
 	function create_default_slot(ctx) {
 		let current_block_type_index;
 		let if_block;
@@ -38306,7 +38306,7 @@ var notBulma = (function (exports) {
 			p(ctx, [dirty]) {
 				const uicontainer_changes = {};
 
-				if (dirty & /*$$scope, props, form, show*/ 1031) {
+				if (dirty & /*$$scope, props, form, show*/ 4103) {
 					uicontainer_changes.$$scope = { dirty, ctx };
 				}
 
@@ -38327,25 +38327,32 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	async function fetchListOfCompletions(type, keyword) {
-		keyword.trim();
-
-		if (keyword.length > 2) {
-			const url = "/data/filter.json?format=json&name=" + encodeURIComponent(keyword) + "&type=" + encodeURIComponent(type);
-			const response = await fetch(url);
-			const json = await response.json();
-
-			return json.result.map(itm => {
-				return { _id: itm._id, title: itm.title };
-			});
-		} else {
-			return [];
-		}
-	}
-
 	function instance($$self, $$props, $$invalidate) {
 		let { show = false } = $$props;
+
+		let { getAutocompleteUrl = (type, keyword) => {
+			return "/data/filter.json?format=json&name=" + encodeURIComponent(keyword) + "&type=" + encodeURIComponent(type);
+		} } = $$props;
+
 		let form;
+
+		let { fetchListOfCompletions = async (type, keyword) => {
+			keyword.trim();
+
+			if (keyword.length > 2) {
+				const url = getAutocompleteUrl(type, keyword);
+				const response = await fetch(url);
+				const json = await response.json();
+
+				if (json && json.status === "ok" && json.result) {
+					return json.result.map(itm => {
+						return { _id: itm._id, title: itm.title };
+					});
+				}
+
+				return [];
+			}
+		} } = $$props;
 
 		const fields = {
 			term: {
@@ -38460,6 +38467,8 @@ var notBulma = (function (exports) {
 
 		$$self.$$set = $$props => {
 			if ("show" in $$props) $$invalidate(0, show = $$props.show);
+			if ("getAutocompleteUrl" in $$props) $$invalidate(5, getAutocompleteUrl = $$props.getAutocompleteUrl);
+			if ("fetchListOfCompletions" in $$props) $$invalidate(6, fetchListOfCompletions = $$props.fetchListOfCompletions);
 		};
 
 		return [
@@ -38468,6 +38477,8 @@ var notBulma = (function (exports) {
 			props,
 			toggleForm,
 			buttons,
+			getAutocompleteUrl,
+			fetchListOfCompletions,
 			uiform_binding,
 			submit_handler,
 			change_handler
@@ -38477,7 +38488,12 @@ var notBulma = (function (exports) {
 	class Filter extends SvelteComponent {
 		constructor(options) {
 			super();
-			init(this, options, instance, create_fragment, safe_not_equal, { show: 0 });
+
+			init(this, options, instance, create_fragment, safe_not_equal, {
+				show: 0,
+				getAutocompleteUrl: 5,
+				fetchListOfCompletions: 6
+			});
 		}
 	}
 
