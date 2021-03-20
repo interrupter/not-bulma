@@ -1,7 +1,9 @@
+import UIAutocomplete from './ui.autocomplete.svelte';
 import UIForm from './form.svelte';
 import UIField from './field.svelte';
 import UILabel from './ui.label.svelte';
 import UICheckbox from './ui.checkbox.svelte';
+import UICheckboxList from './ui.checkbox.list.svelte';
 import UIColor from './ui.color.svelte';
 import UIDate from './ui.date.svelte';
 import UIEmail from './ui.email.svelte';
@@ -19,10 +21,12 @@ import UITextarea from './ui.textarea.svelte';
 import UITextfield from './ui.textfield.svelte';
 
 export {
+	UIAutocomplete,
 	UIForm,
 	UIField,
 	UILabel,
 	UICheckbox,
+	UICheckboxList,
 	UIColor,
 	UIDate,
 	UIEmail,

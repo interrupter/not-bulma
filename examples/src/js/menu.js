@@ -41,7 +41,15 @@ function registerEvents(evs){
 
 const menu = {
   side: {
-    sections: [{
+    sections: [
+      {
+        id: 'filter',
+        title: 'Поиск',
+        component: 'UISampleFilter',
+        type: 'component',
+        priority: 100
+      },
+      {
       id: 'elements',
       title: 'Элементы',
       priority: 1

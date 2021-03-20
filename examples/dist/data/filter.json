@@ -1,0 +1,30 @@
+{
+  "result":[{
+  "_id": "som id",
+  "title": "Репин"
+},{
+  "_id": "som id 1",
+  "title": "Шишкин"
+},{
+  "_id": "som id 2",
+  "title": "Генерал"
+},{
+  "_id": "som id 3",
+  "title": "Мюнхен"
+},{
+  "_id": "som id 4",
+  "title": "Пинокотека"
+},{
+  "_id": "som id 5",
+  "title": "Лувр"
+},{
+  "_id": "som id 6",
+  "title": "Реализм"
+},{
+  "_id": "som id 7",
+  "title": "Футуризм"
+},{
+  "_id": "som id 8",
+  "title": "Яблоко"
+}]
+}

@@ -1,7 +1,10 @@
 <script>
+  export let id='';
   export let size; //medium, large
+  export let classes = '';
+
 </script>
 
-<section class="section {size?('is-'+size):''}">
+<section {id} class="section {size?('is-'+size):''}  {classes}">
   <slot></slot>
 </section>

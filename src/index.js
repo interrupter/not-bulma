@@ -42,6 +42,8 @@ import * as Layout from './layout';
 
 import ncCRUD from './ncCRUD.js';
 
+import UISampleFilter from './various/filter.svelte';
+
 import {
 	default as UICommon
 } from './common.js';
@@ -65,12 +67,15 @@ const
 Frame.COMPONENTS.add('UIProgress', UIProgress);
 Frame.COMPONENTS.add('UIUserCard', UIUserCard);
 Frame.COMPONENTS.add('UISideMenuBurger', UISideMenuBurger);
+Frame.COMPONENTS.add('UISampleFilter', UISampleFilter);
 
 const {
+	UIAutocomplete,
 	UIForm,
 	UIField,
 	UILabel,
 	UICheckbox,
+	UICheckboxList,
 	UIColor,
 	UIDate,
 	UIEmail,
@@ -89,13 +94,16 @@ const {
 } = FormElements;
 
 export {
+	UISampleFilter,
 	UIBox, UIBlock, UIContent, UITitle,
 	LIB,
+	UIAutocomplete,
 	UIForm,
 	UIField,
 	UILabel,
 	UICookiesNotification,
 	UICheckbox,
+	UICheckboxList,
 	UIColor,
 	UIDate,
 	UIEmail,

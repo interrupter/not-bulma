@@ -11,3 +11,14 @@ section{
   right: 0px;
   top: 0px;
 }
+#search-filter{
+  padding: 1rem;
+}
+#search-filter .field:not(:last-child){
+  margin-bottom: 0.25px!important;
+}
+
+#search-filter .form-field-UICheckboxList-type label{
+  line-height: 2.25em;
+  margin-bottom: 0.0px!important;
+}

@@ -129,7 +129,7 @@ class SideMenu extends Menu {
 	static resizeAsideAndMain() {
 		let rect = this.nav.getBoundingClientRect();
 		this.aside.style.height = (window.innerHeight - rect.height) + 'px';
-		this.aside.style.paddingTop = (rect.height) + 'px';
+		//this.aside.style.paddingTop = (rect.height) + 'px';
 		this.main.style.marginTop = (rect.height) + 'px';
 	}
 

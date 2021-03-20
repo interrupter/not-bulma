@@ -1,6 +1,6 @@
 {
 		"name": "not-bulma",
-		"version": "0.2.84",
+		"version": "0.2.85",
 		"description": "not-* family UI components on Bulma CSS Framework",
 		"main": "src/index.js",
 		"svelte": "src/index.js",
@@ -61,7 +61,8 @@
 				"core-js": "^3.9.1",
 				"not-path": "^1.0.0",
 				"validator": "^13.5.2",
-				"wolfy87-eventemitter": "^5.2.9"
+				"wolfy87-eventemitter": "^5.2.9",
+				"simple-svelte-autocomplete": "*"
 		},
 		"devDependencies": {
 				"@babel/core": "^7.13.10",

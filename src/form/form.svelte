@@ -90,7 +90,6 @@
 					form[fname].errors = false
 				}
 				if (form[fname].errors !== false) {
-					console.log(fname, form[fname].errors);
 					some = true;
 					break;
 				}
@@ -196,12 +195,14 @@
 			let errors = validate(collectData());
 			if ((!errors) || errors.clean) {
 				formHasErrors = false;
+				dispatch('change', data);
 			} else {
 				if ((errors.form.length === 0) && Object.keys(errors.fields).length === 0) {
 					formHasErrors = false;
 					for (let fieldName in fields.flat()) {
 						setFormFieldValid(fieldName);
 					}
+					dispatch('change', data);
 				} else {
 					if (errors.form.length) {
 						errors.form.forEach(addFormError);

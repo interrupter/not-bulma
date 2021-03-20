@@ -40,6 +40,13 @@ class Form{
 	}
 
 	static build({target, manifest, action, options = {}, validators = {}, data = null}){
+		return new UIForm({
+			target,
+			props: this.prebuild({manifest, action, options, validators, data})
+		});
+	}
+
+	static prebuild({manifest, action, options = {}, validators = {}, data = null}){
 		if(Object.prototype.hasOwnProperty.call(manifest, 'fields')){
 			FIELDS.import(manifest.fields);
 		}
@@ -59,15 +66,12 @@ class Form{
 			}
 		}
 
-		return new UIForm({
-			target,
-			props: {
+		return {
 				title:        manifest.actions[action].title,
 				description:  manifest.actions[action].description,
 				fields:       manifest.actions[action].fields,
 				options
-			}
-		});
+			};
 	}
 
 	static getVariantTitle(name, id){
