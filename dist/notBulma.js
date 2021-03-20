@@ -38099,7 +38099,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (209:4) {#if show}
+	// (212:4) {#if show}
 	function create_if_block(ctx) {
 		let if_block_anchor;
 		let current;
@@ -38155,7 +38155,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (210:4) {#if props}
+	// (213:4) {#if props}
 	function create_if_block_1(ctx) {
 		let uiform;
 		let current;
@@ -38173,7 +38173,7 @@ var notBulma = (function (exports) {
 		}
 
 		uiform = new Form$1({ props: uiform_props });
-		/*uiform_binding*/ ctx[9](uiform);
+		/*uiform_binding*/ ctx[11](uiform);
 		uiform.$on("change", /*_onChange*/ ctx[6]);
 		uiform.$on("submit", /*_onSubmit*/ ctx[5]);
 		uiform.$on("reject", /*toggleForm*/ ctx[3]);
@@ -38207,13 +38207,13 @@ var notBulma = (function (exports) {
 				current = false;
 			},
 			d(detaching) {
-				/*uiform_binding*/ ctx[9](null);
+				/*uiform_binding*/ ctx[11](null);
 				destroy_component(uiform, detaching);
 			}
 		};
 	}
 
-	// (208:0) <UIContainer id='search-filter'>
+	// (211:0) <UIContainer id='search-filter'>
 	function create_default_slot(ctx) {
 		let current_block_type_index;
 		let if_block;
@@ -38306,7 +38306,7 @@ var notBulma = (function (exports) {
 			p(ctx, [dirty]) {
 				const uicontainer_changes = {};
 
-				if (dirty & /*$$scope, props, form, show*/ 8199) {
+				if (dirty & /*$$scope, props, form, show*/ 32775) {
 					uicontainer_changes.$$scope = { dirty, ctx };
 				}
 
@@ -38477,6 +38477,9 @@ var notBulma = (function (exports) {
 			submit: { caption: "Искать", enabled: true }
 		};
 
+		let { onChange } = $$props;
+		let { onSubmit } = $$props;
+
 		function _onSubmit({ detail }) {
 			if (typeof _onSubmit == "function") {
 				onSubmit(detail, form);
@@ -38504,6 +38507,8 @@ var notBulma = (function (exports) {
 			if ("show" in $$props) $$invalidate(0, show = $$props.show);
 			if ("getAutocompleteUrl" in $$props) $$invalidate(7, getAutocompleteUrl = $$props.getAutocompleteUrl);
 			if ("fetchListOfCompletions" in $$props) $$invalidate(8, fetchListOfCompletions = $$props.fetchListOfCompletions);
+			if ("onChange" in $$props) $$invalidate(9, onChange = $$props.onChange);
+			if ("onSubmit" in $$props) $$invalidate(10, onSubmit = $$props.onSubmit);
 		};
 
 		return [
@@ -38516,6 +38521,8 @@ var notBulma = (function (exports) {
 			_onChange,
 			getAutocompleteUrl,
 			fetchListOfCompletions,
+			onChange,
+			onSubmit,
 			uiform_binding
 		];
 	}
@@ -38527,7 +38534,9 @@ var notBulma = (function (exports) {
 			init(this, options, instance, create_fragment, safe_not_equal, {
 				show: 0,
 				getAutocompleteUrl: 7,
-				fetchListOfCompletions: 8
+				fetchListOfCompletions: 8,
+				onChange: 9,
+				onSubmit: 10
 			});
 		}
 	}
