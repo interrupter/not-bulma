@@ -15,7 +15,6 @@ aside.menu{
   & .is-toggle-submenu{
     cursor: pointer;
   }
-
 }
 
 @media screen and (min-width: 1024px){
@@ -23,11 +22,12 @@ aside.menu{
     width: 20em;
   }
 }
+
 @media screen and (max-width: 1023px){
   aside.menu{
     transition: width .5s;
     z-index: 10;
-    width: 0%;
+    width: 0px;
     &.is-active{
       width: 100%;
     }
@@ -37,7 +37,6 @@ aside.menu{
 .is-wide{
   min-width: 15em;
 }
-
 
 #search-filter{
   padding: 1rem;

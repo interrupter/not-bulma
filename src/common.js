@@ -48,7 +48,7 @@ export default class UICommon {
 
 	static MONEY_SIGN = '&#8381;';
 
-	static setMoneySign(val){
+	static setMoneySign(val) {
 		this.MONEY_SIGN = val;
 	}
 
@@ -59,11 +59,50 @@ export default class UICommon {
 		return `${this.MONEY_SIGN}${major}.${minor}`;
 	}
 
-	static formatTimestamp(timestamp, offset = 0){
-		let offsetLocal  = new Date().getTimezoneOffset();
+	static formatTimestamp(timestamp, offset = 0) {
+		let offsetLocal = new Date().getTimezoneOffset();
 		let deltaOffset = (offsetLocal - parseInt(offset)) * 60 * 1000;
 		let localDateTime = new Date(parseInt(timestamp) - deltaOffset);
 		return localDateTime.toLocaleString(window.navigator.language);
 	}
+
+	static TIME = {
+		SECONDS: ['секунду', 'секунды', 'секунд'],
+		MINUTES: ['минуту', 'минуты', 'минут'],
+		HOURS: ['час', 'часа', 'часов']
+	};
+
+	static declOfNum(n, text_forms) {
+		n = Math.abs(n) % 100;
+		let n1 = n % 10;
+		if (n > 10 && n < 20) {
+			return text_forms[2];
+		}
+		if (n1 > 1 && n1 < 5) {
+			return text_forms[1];
+		}
+		if (n1 == 1) {
+			return text_forms[0];
+		}
+		return text_forms[2];
+	}
+
+	static humanizedTimeDiff(date /* unix time */) {
+    let currentTime = new Date().getTime();
+    let sec = Math.round((currentTime - date) / 1000);
+    let unit;
+    if (sec < 60) {
+      unit = this.declOfNum(sec, this.TIME.SECONDS);
+      return `${sec} ${unit} назад`;
+    } else if (sec < 3600) {
+      let min = Math.floor(sec / 60);
+      unit = this.declOfNum(min, this.TIME.MINUTES);
+      return `${min} ${unit} назад`;
+    } else {
+      let hours = Math.floor(sec / (60 * 60));
+      unit = this.declOfNum(hours, this.TIME.HOURS);
+      return `${hours} ${unit} назад`;
+    }
+  }
 
 }
