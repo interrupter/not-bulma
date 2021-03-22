@@ -20,15 +20,16 @@ class TopMenu extends Menu{
 		targetSelector: `#${TYPE}-menu`,
 		root: '/',
 		navigate: (urls)=>{
-			if(this.app){
+			if (!(this.getOptions().directNavigation) && this.app) {
 				let func = this.app.getWorking('router');
-				if (func){
+				if (func) {
 					func.navigate(urls.short);
 				}
-			}else{
+			} else {
 				document.location.assign(urls.full);
 			}
-		}
+		},
+    directNavigation: false
 	};
 
 	static render(app){

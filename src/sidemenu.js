@@ -23,7 +23,7 @@ class SideMenu extends Menu {
 		toggleSelector: `.${TYPE}-menu-toggle`,
 		root: '/',
 		navigate: (urls) => {
-			if (this.app) {
+      if (!(this.getOptions().directNavigation) && this.app) {
 				let func = this.app.getWorking('router');
 				if (func) {
 					func.navigate(urls.short);
@@ -32,7 +32,8 @@ class SideMenu extends Menu {
 				document.location.assign(urls.full);
 			}
 		},
-		open: false
+		open: false,
+    directNavigation: false
 	};
 
 	static render(app) {

@@ -10,11 +10,13 @@ class Menu {
 		type: 			'link',
 	};
 	static app = false;
+	static directNavigation = false;
 	static menu;
 	static options = {
+		directNavigation: false,
 		navigate: (urls) => {
 			this.hide();
-			if (this.app) {
+			if (!(this.getOptions().directNavigation) && this.app) {
 				let func = this.app.getWorking('router');
 				if (func) {
 					func.navigate(urls.short);
@@ -63,6 +65,7 @@ class Menu {
 				targetSelector: this.app.getOptions(this.getOptionsPathTo('targetSelector'), this.options.targetSelector),
 				toggleSelector: this.app.getOptions(this.getOptionsPathTo('toggleSelector'), this.options.toggleSelector),
 				open: 					this.app.getOptions(this.getOptionsPathTo('open'), this.options.open),
+				directNavigation: 					this.app.getOptions(this.getOptionsPathTo('directNavigation'), this.options.directNavigation),
 				root: 					this.app.getOptions('router.root', this.options.root),
 				navigate: 			someNavigate,
 				getComponent: 	this.getComponent.bind(this),
