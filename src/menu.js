@@ -16,14 +16,13 @@ class Menu {
 		directNavigation: false,
 		navigate: (urls) => {
 			this.hide();
-			if (!(this.getOptions().directNavigation) && this.app) {
+			if (!(this.isDirectNavigation()) && this.app) {
 				let func = this.app.getWorking('router');
 				if (func) {
-					func.navigate(urls.short);
+					return func.navigate(urls.short);
 				}
-			} else {
-				document.location.assign(urls.full);
 			}
+			document.location.assign(urls.full);
 		}
 	};
 
@@ -46,18 +45,12 @@ class Menu {
 		return `menu.${this.options.type}.${what}`;
 	}
 
+	static isDirectNavigation(){
+		return this.app?this.app.getOptions(this.getOptionsPathTo('directNavigation'), this.options.directNavigation):this.options.directNavigation;
+	}
+
 	static getOptions() {
 		if (this.app) {
-			let router = this.app.getWorking('router', false),
-				someNavigate;
-			if(router){
-				someNavigate = (urls) => {
-					this.hide();
-					router.navigate.call(router, urls.short);
-				};
-			}else{
-				someNavigate = this.options.navigate.bind(this);
-			}
 			return {
 				brand:   				this.app.getOptions('brand', this.options.brand ),
 				items: 					this.app.getOptions(this.getOptionsPathTo('items'), this.options.items),
@@ -67,7 +60,7 @@ class Menu {
 				open: 					this.app.getOptions(this.getOptionsPathTo('open'), this.options.open),
 				directNavigation: 					this.app.getOptions(this.getOptionsPathTo('directNavigation'), this.options.directNavigation),
 				root: 					this.app.getOptions('router.root', this.options.root),
-				navigate: 			someNavigate,
+				navigate: 			this.options.navigate.bind(this),
 				getComponent: 	this.getComponent.bind(this),
 			};
 		} else {

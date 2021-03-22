@@ -19,16 +19,6 @@ class TopMenu extends Menu{
 		sections: [],
 		targetSelector: `#${TYPE}-menu`,
 		root: '/',
-		navigate: (urls)=>{
-			if (!(this.getOptions().directNavigation) && this.app) {
-				let func = this.app.getWorking('router');
-				if (func) {
-					func.navigate(urls.short);
-				}
-			} else {
-				document.location.assign(urls.full);
-			}
-		},
     directNavigation: false
 	};
 
