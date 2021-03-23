@@ -50,9 +50,11 @@
       icon: 'search'
     },
     type: {
-      component: 'UICheckboxList',
+      component: 'UISelect',
+      placeholder: 'Тип',
+      value: 2,
       label: 'Тип',
-      value: [{
+      variants: [{
           id: 1,
           value: true,
           label: 'Артист',
@@ -71,7 +73,7 @@
           id: 4,
           value: true,
           label: 'Коллекция',
-        },
+        }
       ]
     },
     genre: {
@@ -143,6 +145,7 @@
         description: '',
         fields: [
           'term',
+          'type',
           'genre',
           'media',
           'imagining',
