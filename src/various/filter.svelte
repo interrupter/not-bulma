@@ -57,22 +57,22 @@
       variants: [{
           id: 1,
           value: true,
-          label: 'Артист',
+          title: 'Артист',
         },
         {
           id: 2,
           value: true,
-          label: 'Картина',
+          title: 'Картина',
         },
         {
           id: 3,
           value: true,
-          label: 'Категория',
+          title: 'Категория',
         },
         {
           id: 4,
           value: true,
-          label: 'Коллекция',
+          title: 'Коллекция',
         }
       ]
     },
