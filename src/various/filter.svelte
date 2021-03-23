@@ -164,7 +164,11 @@
     props = Form.prebuild({
       manifest,
       action: 'search',
-      validators: Validators
+      validators: Validators,
+      options: {
+        horizontal: true,
+        buttonsFirst: true
+      }
     });
   });
 

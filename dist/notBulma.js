@@ -5206,7 +5206,7 @@ var notBulma = (function (exports) {
 	        var reporter = this.getApp().getOptions('services.notErrorReporter');
 
 	        if (reporter && reporter.report) {
-	          reporter.report(e).catch(this.error);
+	          reporter.report(e).catch(this.error.bind(this));
 	        }
 	      } else {
 	        if (!this.get('production')) {
@@ -16767,23 +16767,23 @@ var notBulma = (function (exports) {
 
 	function get_each_context_2$2(ctx, list, i) {
 		const child_ctx = ctx.slice();
-		child_ctx[17] = list[i];
+		child_ctx[18] = list[i];
 		return child_ctx;
 	}
 
 	function get_each_context_1$5(ctx, list, i) {
 		const child_ctx = ctx.slice();
-		child_ctx[17] = list[i];
+		child_ctx[18] = list[i];
 		return child_ctx;
 	}
 
 	function get_each_context$8(ctx, list, i) {
 		const child_ctx = ctx.slice();
-		child_ctx[17] = list[i];
+		child_ctx[18] = list[i];
 		return child_ctx;
 	}
 
-	// (77:0) {:else}
+	// (82:0) {:else}
 	function create_else_block$h(ctx) {
 		let div;
 		let div_class_value;
@@ -16807,7 +16807,7 @@ var notBulma = (function (exports) {
 					each_blocks[i].c();
 				}
 
-				attr(div, "class", div_class_value = "field " + /*fieldClasses*/ ctx[4] + " form-field-" + /*controls*/ ctx[3].map(func_1).join("_") + "-" + /*name*/ ctx[1]);
+				attr(div, "class", div_class_value = "field " + /*fieldClasses*/ ctx[4] + " " + /*fieldId*/ ctx[6]);
 			},
 			m(target, anchor) {
 				insert(target, div, anchor);
@@ -16819,7 +16819,7 @@ var notBulma = (function (exports) {
 				current = true;
 			},
 			p(ctx, dirty) {
-				if (dirty & /*COMPONENTS, controls, name, onControlChange*/ 74) {
+				if (dirty & /*COMPONENTS, controls, name, onControlChange*/ 138) {
 					each_value_2 = /*controls*/ ctx[3];
 					let i;
 
@@ -16846,7 +16846,7 @@ var notBulma = (function (exports) {
 					check_outros();
 				}
 
-				if (!current || dirty & /*fieldClasses, controls, name*/ 26 && div_class_value !== (div_class_value = "field " + /*fieldClasses*/ ctx[4] + " form-field-" + /*controls*/ ctx[3].map(func_1).join("_") + "-" + /*name*/ ctx[1])) {
+				if (!current || dirty & /*fieldClasses, fieldId*/ 80 && div_class_value !== (div_class_value = "field " + /*fieldClasses*/ ctx[4] + " " + /*fieldId*/ ctx[6])) {
 					attr(div, "class", div_class_value);
 				}
 			},
@@ -16875,15 +16875,23 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (68:0) {#if horizontal}
+	// (71:0) {#if horizontal}
 	function create_if_block_1$g(ctx) {
 		let div2;
 		let div0;
-		let t0;
-		let t1;
+		let uilabel;
+		let t;
 		let div1;
 		let div2_class_value;
 		let current;
+
+		uilabel = new Ui_label({
+				props: {
+					id: /*fieldId*/ ctx[6],
+					label: /*label*/ ctx[0] || /*controls*/ ctx[3][0].label
+				}
+			});
+
 		let each_value_1 = /*controls*/ ctx[3];
 		let each_blocks = [];
 
@@ -16899,23 +16907,24 @@ var notBulma = (function (exports) {
 			c() {
 				div2 = element("div");
 				div0 = element("div");
-				t0 = text(/*label*/ ctx[0]);
-				t1 = space();
+				create_component(uilabel.$$.fragment);
+				t = space();
 				div1 = element("div");
 
 				for (let i = 0; i < each_blocks.length; i += 1) {
 					each_blocks[i].c();
 				}
 
-				attr(div0, "class", "field-label");
+				attr(div0, "class", "field-label is-normal");
 				attr(div1, "class", "field-body");
-				attr(div2, "class", div2_class_value = "field is-horizontal " + /*fieldClasses*/ ctx[4] + " form-field-" + /*controls*/ ctx[3].map(func).join("_") + "-" + /*name*/ ctx[1]);
+				attr(div1, "id", /*fieldId*/ ctx[6]);
+				attr(div2, "class", div2_class_value = "field is-horizontal " + /*fieldClasses*/ ctx[4] + " " + /*fieldId*/ ctx[6]);
 			},
 			m(target, anchor) {
 				insert(target, div2, anchor);
 				append(div2, div0);
-				append(div0, t0);
-				append(div2, t1);
+				mount_component(uilabel, div0, null);
+				append(div2, t);
 				append(div2, div1);
 
 				for (let i = 0; i < each_blocks.length; i += 1) {
@@ -16925,9 +16934,12 @@ var notBulma = (function (exports) {
 				current = true;
 			},
 			p(ctx, dirty) {
-				if (!current || dirty & /*label*/ 1) set_data(t0, /*label*/ ctx[0]);
+				const uilabel_changes = {};
+				if (dirty & /*fieldId*/ 64) uilabel_changes.id = /*fieldId*/ ctx[6];
+				if (dirty & /*label, controls*/ 9) uilabel_changes.label = /*label*/ ctx[0] || /*controls*/ ctx[3][0].label;
+				uilabel.$set(uilabel_changes);
 
-				if (dirty & /*COMPONENTS, controls, name, onControlChange*/ 74) {
+				if (dirty & /*COMPONENTS, controls, name, onControlChange*/ 138) {
 					each_value_1 = /*controls*/ ctx[3];
 					let i;
 
@@ -16954,12 +16966,17 @@ var notBulma = (function (exports) {
 					check_outros();
 				}
 
-				if (!current || dirty & /*fieldClasses, controls, name*/ 26 && div2_class_value !== (div2_class_value = "field is-horizontal " + /*fieldClasses*/ ctx[4] + " form-field-" + /*controls*/ ctx[3].map(func).join("_") + "-" + /*name*/ ctx[1])) {
+				if (!current || dirty & /*fieldId*/ 64) {
+					attr(div1, "id", /*fieldId*/ ctx[6]);
+				}
+
+				if (!current || dirty & /*fieldClasses, fieldId*/ 80 && div2_class_value !== (div2_class_value = "field is-horizontal " + /*fieldClasses*/ ctx[4] + " " + /*fieldId*/ ctx[6])) {
 					attr(div2, "class", div2_class_value);
 				}
 			},
 			i(local) {
 				if (current) return;
+				transition_in(uilabel.$$.fragment, local);
 
 				for (let i = 0; i < each_value_1.length; i += 1) {
 					transition_in(each_blocks[i]);
@@ -16968,6 +16985,7 @@ var notBulma = (function (exports) {
 				current = true;
 			},
 			o(local) {
+				transition_out(uilabel.$$.fragment, local);
 				each_blocks = each_blocks.filter(Boolean);
 
 				for (let i = 0; i < each_blocks.length; i += 1) {
@@ -16978,12 +16996,13 @@ var notBulma = (function (exports) {
 			},
 			d(detaching) {
 				if (detaching) detach(div2);
+				destroy_component(uilabel);
 				destroy_each(each_blocks, detaching);
 			}
 		};
 	}
 
-	// (60:0) {#if hidden }
+	// (63:0) {#if hidden }
 	function create_if_block$j(ctx) {
 		let each_1_anchor;
 		let current;
@@ -17015,7 +17034,7 @@ var notBulma = (function (exports) {
 				current = true;
 			},
 			p(ctx, dirty) {
-				if (dirty & /*COMPONENTS, controls, name, onControlChange*/ 74) {
+				if (dirty & /*COMPONENTS, controls, name, onControlChange*/ 138) {
 					each_value = /*controls*/ ctx[3];
 					let i;
 
@@ -17067,7 +17086,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (79:2) {#each controls as control}
+	// (84:2) {#each controls as control}
 	function create_each_block_2$2(ctx) {
 		let uilabel;
 		let t;
@@ -17077,13 +17096,13 @@ var notBulma = (function (exports) {
 
 		uilabel = new Ui_label({
 				props: {
-					id: "form-field-" + /*control*/ ctx[17].component + "-" + /*name*/ ctx[1],
-					label: /*control*/ ctx[17].label
+					id: "form-field-" + /*control*/ ctx[18].component + "-" + /*name*/ ctx[1],
+					label: /*control*/ ctx[18].label
 				}
 			});
 
-		const switch_instance_spread_levels = [/*control*/ ctx[17], { fieldname: /*name*/ ctx[1] }];
-		var switch_value = COMPONENTS.get(/*control*/ ctx[17].component);
+		const switch_instance_spread_levels = [/*control*/ ctx[18], { fieldname: /*name*/ ctx[1] }];
+		var switch_value = COMPONENTS.get(/*control*/ ctx[18].component);
 
 		function switch_props(ctx) {
 			let switch_instance_props = {};
@@ -17097,7 +17116,7 @@ var notBulma = (function (exports) {
 
 		if (switch_value) {
 			switch_instance = new switch_value(switch_props());
-			switch_instance.$on("change", /*onControlChange*/ ctx[6]);
+			switch_instance.$on("change", /*onControlChange*/ ctx[7]);
 		}
 
 		return {
@@ -17120,18 +17139,18 @@ var notBulma = (function (exports) {
 			},
 			p(ctx, dirty) {
 				const uilabel_changes = {};
-				if (dirty & /*controls, name*/ 10) uilabel_changes.id = "form-field-" + /*control*/ ctx[17].component + "-" + /*name*/ ctx[1];
-				if (dirty & /*controls*/ 8) uilabel_changes.label = /*control*/ ctx[17].label;
+				if (dirty & /*controls, name*/ 10) uilabel_changes.id = "form-field-" + /*control*/ ctx[18].component + "-" + /*name*/ ctx[1];
+				if (dirty & /*controls*/ 8) uilabel_changes.label = /*control*/ ctx[18].label;
 				uilabel.$set(uilabel_changes);
 
 				const switch_instance_changes = (dirty & /*controls, name*/ 10)
 				? get_spread_update(switch_instance_spread_levels, [
-						dirty & /*controls*/ 8 && get_spread_object(/*control*/ ctx[17]),
+						dirty & /*controls*/ 8 && get_spread_object(/*control*/ ctx[18]),
 						dirty & /*name*/ 2 && { fieldname: /*name*/ ctx[1] }
 					])
 				: {};
 
-				if (switch_value !== (switch_value = COMPONENTS.get(/*control*/ ctx[17].component))) {
+				if (switch_value !== (switch_value = COMPONENTS.get(/*control*/ ctx[18].component))) {
 					if (switch_instance) {
 						group_outros();
 						const old_component = switch_instance;
@@ -17145,7 +17164,7 @@ var notBulma = (function (exports) {
 
 					if (switch_value) {
 						switch_instance = new switch_value(switch_props());
-						switch_instance.$on("change", /*onControlChange*/ ctx[6]);
+						switch_instance.$on("change", /*onControlChange*/ ctx[7]);
 						create_component(switch_instance.$$.fragment);
 						transition_in(switch_instance.$$.fragment, 1);
 						mount_component(switch_instance, switch_instance_anchor.parentNode, switch_instance_anchor);
@@ -17176,13 +17195,13 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (72:4) {#each controls as control}
+	// (77:4) {#each controls as control}
 	function create_each_block_1$5(ctx) {
 		let switch_instance;
 		let switch_instance_anchor;
 		let current;
-		const switch_instance_spread_levels = [/*control*/ ctx[17], { fieldname: /*name*/ ctx[1] }];
-		var switch_value = COMPONENTS.get(/*control*/ ctx[17].component);
+		const switch_instance_spread_levels = [/*control*/ ctx[18], { fieldname: /*name*/ ctx[1] }];
+		var switch_value = COMPONENTS.get(/*control*/ ctx[18].component);
 
 		function switch_props(ctx) {
 			let switch_instance_props = {};
@@ -17196,7 +17215,7 @@ var notBulma = (function (exports) {
 
 		if (switch_value) {
 			switch_instance = new switch_value(switch_props());
-			switch_instance.$on("change", /*onControlChange*/ ctx[6]);
+			switch_instance.$on("change", /*onControlChange*/ ctx[7]);
 		}
 
 		return {
@@ -17215,12 +17234,12 @@ var notBulma = (function (exports) {
 			p(ctx, dirty) {
 				const switch_instance_changes = (dirty & /*controls, name*/ 10)
 				? get_spread_update(switch_instance_spread_levels, [
-						dirty & /*controls*/ 8 && get_spread_object(/*control*/ ctx[17]),
+						dirty & /*controls*/ 8 && get_spread_object(/*control*/ ctx[18]),
 						dirty & /*name*/ 2 && { fieldname: /*name*/ ctx[1] }
 					])
 				: {};
 
-				if (switch_value !== (switch_value = COMPONENTS.get(/*control*/ ctx[17].component))) {
+				if (switch_value !== (switch_value = COMPONENTS.get(/*control*/ ctx[18].component))) {
 					if (switch_instance) {
 						group_outros();
 						const old_component = switch_instance;
@@ -17234,7 +17253,7 @@ var notBulma = (function (exports) {
 
 					if (switch_value) {
 						switch_instance = new switch_value(switch_props());
-						switch_instance.$on("change", /*onControlChange*/ ctx[6]);
+						switch_instance.$on("change", /*onControlChange*/ ctx[7]);
 						create_component(switch_instance.$$.fragment);
 						transition_in(switch_instance.$$.fragment, 1);
 						mount_component(switch_instance, switch_instance_anchor.parentNode, switch_instance_anchor);
@@ -17261,13 +17280,13 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (62:0) {#each controls as control}
+	// (65:0) {#each controls as control}
 	function create_each_block$8(ctx) {
 		let switch_instance;
 		let switch_instance_anchor;
 		let current;
-		const switch_instance_spread_levels = [/*control*/ ctx[17], { fieldname: /*name*/ ctx[1] }];
-		var switch_value = COMPONENTS.get(/*control*/ ctx[17].component);
+		const switch_instance_spread_levels = [/*control*/ ctx[18], { fieldname: /*name*/ ctx[1] }];
+		var switch_value = COMPONENTS.get(/*control*/ ctx[18].component);
 
 		function switch_props(ctx) {
 			let switch_instance_props = {};
@@ -17281,7 +17300,7 @@ var notBulma = (function (exports) {
 
 		if (switch_value) {
 			switch_instance = new switch_value(switch_props());
-			switch_instance.$on("change", /*onControlChange*/ ctx[6]);
+			switch_instance.$on("change", /*onControlChange*/ ctx[7]);
 		}
 
 		return {
@@ -17300,12 +17319,12 @@ var notBulma = (function (exports) {
 			p(ctx, dirty) {
 				const switch_instance_changes = (dirty & /*controls, name*/ 10)
 				? get_spread_update(switch_instance_spread_levels, [
-						dirty & /*controls*/ 8 && get_spread_object(/*control*/ ctx[17]),
+						dirty & /*controls*/ 8 && get_spread_object(/*control*/ ctx[18]),
 						dirty & /*name*/ 2 && { fieldname: /*name*/ ctx[1] }
 					])
 				: {};
 
-				if (switch_value !== (switch_value = COMPONENTS.get(/*control*/ ctx[17].component))) {
+				if (switch_value !== (switch_value = COMPONENTS.get(/*control*/ ctx[18].component))) {
 					if (switch_instance) {
 						group_outros();
 						const old_component = switch_instance;
@@ -17319,7 +17338,7 @@ var notBulma = (function (exports) {
 
 					if (switch_value) {
 						switch_instance = new switch_value(switch_props());
-						switch_instance.$on("change", /*onControlChange*/ ctx[6]);
+						switch_instance.$on("change", /*onControlChange*/ ctx[7]);
 						create_component(switch_instance.$$.fragment);
 						transition_in(switch_instance.$$.fragment, 1);
 						mount_component(switch_instance, switch_instance_anchor.parentNode, switch_instance_anchor);
@@ -17416,9 +17435,6 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	const func = itm => itm.component;
-	const func_1 = itm => itm.component;
-
 	function instance$q($$self, $$props, $$invalidate) {
 		let dispatch = createEventDispatcher();
 		let { label = "" } = $$props;
@@ -17436,6 +17452,7 @@ var notBulma = (function (exports) {
 		let { groupedCentered = false } = $$props;
 		let fieldClasses = "";
 		let hidden = false;
+		let fieldId;
 
 		onMount(() => {
 			$$invalidate(4, fieldClasses += " " + classes);
@@ -17455,6 +17472,8 @@ var notBulma = (function (exports) {
 
 			let notHidden = controls.filter(control => control.component !== "UIHidden");
 			$$invalidate(5, hidden = notHidden.length === 0);
+			let tmp = controls.map(itm => itm.component).join("_");
+			$$invalidate(6, fieldId = `form-field-${tmp}-${name}`);
 		});
 
 		function onControlChange(ev) {
@@ -17465,17 +17484,17 @@ var notBulma = (function (exports) {
 		$$self.$$set = $$props => {
 			if ("label" in $$props) $$invalidate(0, label = $$props.label);
 			if ("name" in $$props) $$invalidate(1, name = $$props.name);
-			if ("readonly" in $$props) $$invalidate(7, readonly = $$props.readonly);
+			if ("readonly" in $$props) $$invalidate(8, readonly = $$props.readonly);
 			if ("horizontal" in $$props) $$invalidate(2, horizontal = $$props.horizontal);
 			if ("controls" in $$props) $$invalidate(3, controls = $$props.controls);
-			if ("classes" in $$props) $$invalidate(8, classes = $$props.classes);
-			if ("addons" in $$props) $$invalidate(9, addons = $$props.addons);
-			if ("addonsCentered" in $$props) $$invalidate(10, addonsCentered = $$props.addonsCentered);
-			if ("addonsRight" in $$props) $$invalidate(11, addonsRight = $$props.addonsRight);
-			if ("grouped" in $$props) $$invalidate(12, grouped = $$props.grouped);
-			if ("groupedMultiline" in $$props) $$invalidate(13, groupedMultiline = $$props.groupedMultiline);
-			if ("groupedRight" in $$props) $$invalidate(14, groupedRight = $$props.groupedRight);
-			if ("groupedCentered" in $$props) $$invalidate(15, groupedCentered = $$props.groupedCentered);
+			if ("classes" in $$props) $$invalidate(9, classes = $$props.classes);
+			if ("addons" in $$props) $$invalidate(10, addons = $$props.addons);
+			if ("addonsCentered" in $$props) $$invalidate(11, addonsCentered = $$props.addonsCentered);
+			if ("addonsRight" in $$props) $$invalidate(12, addonsRight = $$props.addonsRight);
+			if ("grouped" in $$props) $$invalidate(13, grouped = $$props.grouped);
+			if ("groupedMultiline" in $$props) $$invalidate(14, groupedMultiline = $$props.groupedMultiline);
+			if ("groupedRight" in $$props) $$invalidate(15, groupedRight = $$props.groupedRight);
+			if ("groupedCentered" in $$props) $$invalidate(16, groupedCentered = $$props.groupedCentered);
 		};
 
 		return [
@@ -17485,6 +17504,7 @@ var notBulma = (function (exports) {
 			controls,
 			fieldClasses,
 			hidden,
+			fieldId,
 			onControlChange,
 			readonly,
 			classes,
@@ -17505,17 +17525,17 @@ var notBulma = (function (exports) {
 			init(this, options, instance$q, create_fragment$q, safe_not_equal, {
 				label: 0,
 				name: 1,
-				readonly: 7,
+				readonly: 8,
 				horizontal: 2,
 				controls: 3,
-				classes: 8,
-				addons: 9,
-				addonsCentered: 10,
-				addonsRight: 11,
-				grouped: 12,
-				groupedMultiline: 13,
-				groupedRight: 14,
-				groupedCentered: 15
+				classes: 9,
+				addons: 10,
+				addonsCentered: 11,
+				addonsRight: 12,
+				grouped: 13,
+				groupedMultiline: 14,
+				groupedRight: 15,
+				groupedCentered: 16
 			});
 		}
 	}
@@ -17540,11 +17560,11 @@ var notBulma = (function (exports) {
 		let t1;
 		let t2;
 		let t3;
-		let div;
-		let t4;
+		let if_block3_anchor;
 		let current;
-		let if_block0 = /*title*/ ctx[4] && create_if_block_8$2(ctx);
-		let if_block1 = /*description*/ ctx[5] && create_if_block_7$2(ctx);
+		let if_block0 = /*title*/ ctx[5] && create_if_block_13$1(ctx);
+		let if_block1 = /*description*/ ctx[6] && create_if_block_12$1(ctx);
+		let if_block2 = /*options*/ ctx[2].buttonsFirst && create_if_block_8$2(ctx);
 		let each_value = /*fields*/ ctx[1];
 		let each_blocks = [];
 
@@ -17556,9 +17576,7 @@ var notBulma = (function (exports) {
 			each_blocks[i] = null;
 		});
 
-		let if_block2 = /*formErrors*/ ctx[11].length > 0 && create_if_block_3$a(ctx);
-		let if_block3 = /*cancel*/ ctx[7].enabled && create_if_block_2$b(ctx);
-		let if_block4 = /*submit*/ ctx[6].enabled && create_if_block_1$f(ctx);
+		let if_block3 = !/*options*/ ctx[2].buttonsFirst && create_if_block_1$f(ctx);
 
 		return {
 			c() {
@@ -17566,45 +17584,40 @@ var notBulma = (function (exports) {
 				t0 = space();
 				if (if_block1) if_block1.c();
 				t1 = space();
+				if (if_block2) if_block2.c();
+				t2 = space();
 
 				for (let i = 0; i < each_blocks.length; i += 1) {
 					each_blocks[i].c();
 				}
 
-				t2 = space();
-				if (if_block2) if_block2.c();
 				t3 = space();
-				div = element("div");
 				if (if_block3) if_block3.c();
-				t4 = space();
-				if (if_block4) if_block4.c();
-				attr(div, "class", "buttons is-grouped is-centered");
+				if_block3_anchor = empty();
 			},
 			m(target, anchor) {
 				if (if_block0) if_block0.m(target, anchor);
 				insert(target, t0, anchor);
 				if (if_block1) if_block1.m(target, anchor);
 				insert(target, t1, anchor);
+				if (if_block2) if_block2.m(target, anchor);
+				insert(target, t2, anchor);
 
 				for (let i = 0; i < each_blocks.length; i += 1) {
 					each_blocks[i].m(target, anchor);
 				}
 
-				insert(target, t2, anchor);
-				if (if_block2) if_block2.m(target, anchor);
 				insert(target, t3, anchor);
-				insert(target, div, anchor);
-				if (if_block3) if_block3.m(div, null);
-				append(div, t4);
-				if (if_block4) if_block4.m(div, null);
+				if (if_block3) if_block3.m(target, anchor);
+				insert(target, if_block3_anchor, anchor);
 				current = true;
 			},
 			p(ctx, dirty) {
-				if (/*title*/ ctx[4]) {
+				if (/*title*/ ctx[5]) {
 					if (if_block0) {
 						if_block0.p(ctx, dirty);
 					} else {
-						if_block0 = create_if_block_8$2(ctx);
+						if_block0 = create_if_block_13$1(ctx);
 						if_block0.c();
 						if_block0.m(t0.parentNode, t0);
 					}
@@ -17613,11 +17626,11 @@ var notBulma = (function (exports) {
 					if_block0 = null;
 				}
 
-				if (/*description*/ ctx[5]) {
+				if (/*description*/ ctx[6]) {
 					if (if_block1) {
 						if_block1.p(ctx, dirty);
 					} else {
-						if_block1 = create_if_block_7$2(ctx);
+						if_block1 = create_if_block_12$1(ctx);
 						if_block1.c();
 						if_block1.m(t1.parentNode, t1);
 					}
@@ -17626,7 +17639,20 @@ var notBulma = (function (exports) {
 					if_block1 = null;
 				}
 
-				if (dirty[0] & /*fields, form, onFieldChange*/ 17410) {
+				if (/*options*/ ctx[2].buttonsFirst) {
+					if (if_block2) {
+						if_block2.p(ctx, dirty);
+					} else {
+						if_block2 = create_if_block_8$2(ctx);
+						if_block2.c();
+						if_block2.m(t2.parentNode, t2);
+					}
+				} else if (if_block2) {
+					if_block2.d(1);
+					if_block2 = null;
+				}
+
+				if (dirty[0] & /*fields, form, options, onFieldChange*/ 34822) {
 					each_value = /*fields*/ ctx[1];
 					let i;
 
@@ -17640,7 +17666,7 @@ var notBulma = (function (exports) {
 							each_blocks[i] = create_each_block$7(child_ctx);
 							each_blocks[i].c();
 							transition_in(each_blocks[i], 1);
-							each_blocks[i].m(t2.parentNode, t2);
+							each_blocks[i].m(t3.parentNode, t3);
 						}
 					}
 
@@ -17653,43 +17679,17 @@ var notBulma = (function (exports) {
 					check_outros();
 				}
 
-				if (/*formErrors*/ ctx[11].length > 0) {
-					if (if_block2) {
-						if_block2.p(ctx, dirty);
-					} else {
-						if_block2 = create_if_block_3$a(ctx);
-						if_block2.c();
-						if_block2.m(t3.parentNode, t3);
-					}
-				} else if (if_block2) {
-					if_block2.d(1);
-					if_block2 = null;
-				}
-
-				if (/*cancel*/ ctx[7].enabled) {
+				if (!/*options*/ ctx[2].buttonsFirst) {
 					if (if_block3) {
 						if_block3.p(ctx, dirty);
 					} else {
-						if_block3 = create_if_block_2$b(ctx);
+						if_block3 = create_if_block_1$f(ctx);
 						if_block3.c();
-						if_block3.m(div, t4);
+						if_block3.m(if_block3_anchor.parentNode, if_block3_anchor);
 					}
 				} else if (if_block3) {
 					if_block3.d(1);
 					if_block3 = null;
-				}
-
-				if (/*submit*/ ctx[6].enabled) {
-					if (if_block4) {
-						if_block4.p(ctx, dirty);
-					} else {
-						if_block4 = create_if_block_1$f(ctx);
-						if_block4.c();
-						if_block4.m(div, null);
-					}
-				} else if (if_block4) {
-					if_block4.d(1);
-					if_block4 = null;
 				}
 			},
 			i(local) {
@@ -17715,13 +17715,12 @@ var notBulma = (function (exports) {
 				if (detaching) detach(t0);
 				if (if_block1) if_block1.d(detaching);
 				if (detaching) detach(t1);
-				destroy_each(each_blocks, detaching);
-				if (detaching) detach(t2);
 				if (if_block2) if_block2.d(detaching);
+				if (detaching) detach(t2);
+				destroy_each(each_blocks, detaching);
 				if (detaching) detach(t3);
-				if (detaching) detach(div);
-				if (if_block3) if_block3.d();
-				if (if_block4) if_block4.d();
+				if (if_block3) if_block3.d(detaching);
+				if (detaching) detach(if_block3_anchor);
 			}
 		};
 	}
@@ -17736,7 +17735,7 @@ var notBulma = (function (exports) {
 			c() {
 				div = element("div");
 				h3 = element("h3");
-				t = text(/*SUCCESS_TEXT*/ ctx[2]);
+				t = text(/*SUCCESS_TEXT*/ ctx[3]);
 				attr(h3, "class", "form-success-message");
 				attr(div, "class", "notification is-success");
 			},
@@ -17746,7 +17745,7 @@ var notBulma = (function (exports) {
 				append(h3, t);
 			},
 			p(ctx, dirty) {
-				if (dirty[0] & /*SUCCESS_TEXT*/ 4) set_data(t, /*SUCCESS_TEXT*/ ctx[2]);
+				if (dirty[0] & /*SUCCESS_TEXT*/ 8) set_data(t, /*SUCCESS_TEXT*/ ctx[3]);
 			},
 			i: noop,
 			o: noop,
@@ -17757,14 +17756,14 @@ var notBulma = (function (exports) {
 	}
 
 	// (278:0) {#if title }
-	function create_if_block_8$2(ctx) {
+	function create_if_block_13$1(ctx) {
 		let h5;
 		let t;
 
 		return {
 			c() {
 				h5 = element("h5");
-				t = text(/*title*/ ctx[4]);
+				t = text(/*title*/ ctx[5]);
 				attr(h5, "class", "title is-5");
 			},
 			m(target, anchor) {
@@ -17772,7 +17771,7 @@ var notBulma = (function (exports) {
 				append(h5, t);
 			},
 			p(ctx, dirty) {
-				if (dirty[0] & /*title*/ 16) set_data(t, /*title*/ ctx[4]);
+				if (dirty[0] & /*title*/ 32) set_data(t, /*title*/ ctx[5]);
 			},
 			d(detaching) {
 				if (detaching) detach(h5);
@@ -17781,14 +17780,14 @@ var notBulma = (function (exports) {
 	}
 
 	// (281:0) {#if description }
-	function create_if_block_7$2(ctx) {
+	function create_if_block_12$1(ctx) {
 		let h6;
 		let t;
 
 		return {
 			c() {
 				h6 = element("h6");
-				t = text(/*description*/ ctx[5]);
+				t = text(/*description*/ ctx[6]);
 				attr(h6, "class", "subtitle is-6");
 			},
 			m(target, anchor) {
@@ -17796,7 +17795,7 @@ var notBulma = (function (exports) {
 				append(h6, t);
 			},
 			p(ctx, dirty) {
-				if (dirty[0] & /*description*/ 32) set_data(t, /*description*/ ctx[5]);
+				if (dirty[0] & /*description*/ 64) set_data(t, /*description*/ ctx[6]);
 			},
 			d(detaching) {
 				if (detaching) detach(h6);
@@ -17804,7 +17803,204 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (301:0) {:else}
+	// (285:0) {#if options.buttonsFirst }
+	function create_if_block_8$2(ctx) {
+		let div;
+		let t0;
+		let t1;
+		let if_block2_anchor;
+		let if_block0 = /*cancel*/ ctx[8].enabled && create_if_block_11$1(ctx);
+		let if_block1 = /*submit*/ ctx[7].enabled && create_if_block_10$1(ctx);
+		let if_block2 = /*formErrors*/ ctx[12].length > 0 && create_if_block_9$2(ctx);
+
+		return {
+			c() {
+				div = element("div");
+				if (if_block0) if_block0.c();
+				t0 = space();
+				if (if_block1) if_block1.c();
+				t1 = space();
+				if (if_block2) if_block2.c();
+				if_block2_anchor = empty();
+				attr(div, "class", "buttons is-grouped is-centered");
+			},
+			m(target, anchor) {
+				insert(target, div, anchor);
+				if (if_block0) if_block0.m(div, null);
+				append(div, t0);
+				if (if_block1) if_block1.m(div, null);
+				insert(target, t1, anchor);
+				if (if_block2) if_block2.m(target, anchor);
+				insert(target, if_block2_anchor, anchor);
+			},
+			p(ctx, dirty) {
+				if (/*cancel*/ ctx[8].enabled) {
+					if (if_block0) {
+						if_block0.p(ctx, dirty);
+					} else {
+						if_block0 = create_if_block_11$1(ctx);
+						if_block0.c();
+						if_block0.m(div, t0);
+					}
+				} else if (if_block0) {
+					if_block0.d(1);
+					if_block0 = null;
+				}
+
+				if (/*submit*/ ctx[7].enabled) {
+					if (if_block1) {
+						if_block1.p(ctx, dirty);
+					} else {
+						if_block1 = create_if_block_10$1(ctx);
+						if_block1.c();
+						if_block1.m(div, null);
+					}
+				} else if (if_block1) {
+					if_block1.d(1);
+					if_block1 = null;
+				}
+
+				if (/*formErrors*/ ctx[12].length > 0) {
+					if (if_block2) {
+						if_block2.p(ctx, dirty);
+					} else {
+						if_block2 = create_if_block_9$2(ctx);
+						if_block2.c();
+						if_block2.m(if_block2_anchor.parentNode, if_block2_anchor);
+					}
+				} else if (if_block2) {
+					if_block2.d(1);
+					if_block2 = null;
+				}
+			},
+			d(detaching) {
+				if (detaching) detach(div);
+				if (if_block0) if_block0.d();
+				if (if_block1) if_block1.d();
+				if (detaching) detach(t1);
+				if (if_block2) if_block2.d(detaching);
+				if (detaching) detach(if_block2_anchor);
+			}
+		};
+	}
+
+	// (287:1) {#if cancel.enabled}
+	function create_if_block_11$1(ctx) {
+		let button;
+		let t_value = /*cancel*/ ctx[8].caption + "";
+		let t;
+		let button_class_value;
+		let mounted;
+		let dispose;
+
+		return {
+			c() {
+				button = element("button");
+				t = text(t_value);
+				attr(button, "class", button_class_value = "button is-outlined " + /*cancel*/ ctx[8].classes);
+			},
+			m(target, anchor) {
+				insert(target, button, anchor);
+				append(button, t);
+
+				if (!mounted) {
+					dispose = listen(button, "click", function () {
+						if (is_function(/*rejectForm*/ ctx[10])) /*rejectForm*/ ctx[10].apply(this, arguments);
+					});
+
+					mounted = true;
+				}
+			},
+			p(new_ctx, dirty) {
+				ctx = new_ctx;
+				if (dirty[0] & /*cancel*/ 256 && t_value !== (t_value = /*cancel*/ ctx[8].caption + "")) set_data(t, t_value);
+
+				if (dirty[0] & /*cancel*/ 256 && button_class_value !== (button_class_value = "button is-outlined " + /*cancel*/ ctx[8].classes)) {
+					attr(button, "class", button_class_value);
+				}
+			},
+			d(detaching) {
+				if (detaching) detach(button);
+				mounted = false;
+				dispose();
+			}
+		};
+	}
+
+	// (290:1) {#if submit.enabled}
+	function create_if_block_10$1(ctx) {
+		let button;
+		let t_value = /*submit*/ ctx[7].caption + "";
+		let t;
+		let button_class_value;
+		let mounted;
+		let dispose;
+
+		return {
+			c() {
+				button = element("button");
+				t = text(t_value);
+				button.disabled = /*formInvalid*/ ctx[14];
+				attr(button, "class", button_class_value = "button is-primary is-hovered " + /*submit*/ ctx[7].classes);
+			},
+			m(target, anchor) {
+				insert(target, button, anchor);
+				append(button, t);
+
+				if (!mounted) {
+					dispose = listen(button, "click", function () {
+						if (is_function(/*submitForm*/ ctx[9])) /*submitForm*/ ctx[9].apply(this, arguments);
+					});
+
+					mounted = true;
+				}
+			},
+			p(new_ctx, dirty) {
+				ctx = new_ctx;
+				if (dirty[0] & /*submit*/ 128 && t_value !== (t_value = /*submit*/ ctx[7].caption + "")) set_data(t, t_value);
+
+				if (dirty[0] & /*formInvalid*/ 16384) {
+					button.disabled = /*formInvalid*/ ctx[14];
+				}
+
+				if (dirty[0] & /*submit*/ 128 && button_class_value !== (button_class_value = "button is-primary is-hovered " + /*submit*/ ctx[7].classes)) {
+					attr(button, "class", button_class_value);
+				}
+			},
+			d(detaching) {
+				if (detaching) detach(button);
+				mounted = false;
+				dispose();
+			}
+		};
+	}
+
+	// (295:0) {#if formErrors.length > 0 }
+	function create_if_block_9$2(ctx) {
+		let div;
+		let t_value = /*formErrors*/ ctx[12].join(", ") + "";
+		let t;
+
+		return {
+			c() {
+				div = element("div");
+				t = text(t_value);
+				attr(div, "class", "edit-form-error notification is-danger");
+			},
+			m(target, anchor) {
+				insert(target, div, anchor);
+				append(div, t);
+			},
+			p(ctx, dirty) {
+				if (dirty[0] & /*formErrors*/ 4096 && t_value !== (t_value = /*formErrors*/ ctx[12].join(", ") + "")) set_data(t, t_value);
+			},
+			d(detaching) {
+				if (detaching) detach(div);
+			}
+		};
+	}
+
+	// (329:0) {:else}
 	function create_else_block_2$2(ctx) {
 		let div;
 		let t0;
@@ -17837,19 +18033,21 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (299:0) {#if form[field] && form[field].component }
-	function create_if_block_6$2(ctx) {
+	// (321:0) {#if form[field] && form[field].component }
+	function create_if_block_7$2(ctx) {
 		let uifield;
 		let current;
 
 		uifield = new Field({
 				props: {
-					controls: [/*form*/ ctx[10][/*field*/ ctx[36]]],
-					name: /*field*/ ctx[36]
+					controls: [/*form*/ ctx[11][/*field*/ ctx[36]]],
+					name: /*field*/ ctx[36],
+					horizontal: /*options*/ ctx[2].horizontal,
+					label: /*form*/ ctx[11][/*field*/ ctx[36]].label
 				}
 			});
 
-		uifield.$on("change", /*onFieldChange*/ ctx[14]);
+		uifield.$on("change", /*onFieldChange*/ ctx[15]);
 
 		return {
 			c() {
@@ -17861,8 +18059,10 @@ var notBulma = (function (exports) {
 			},
 			p(ctx, dirty) {
 				const uifield_changes = {};
-				if (dirty[0] & /*form, fields*/ 1026) uifield_changes.controls = [/*form*/ ctx[10][/*field*/ ctx[36]]];
+				if (dirty[0] & /*form, fields*/ 2050) uifield_changes.controls = [/*form*/ ctx[11][/*field*/ ctx[36]]];
 				if (dirty[0] & /*fields*/ 2) uifield_changes.name = /*field*/ ctx[36];
+				if (dirty[0] & /*options*/ 4) uifield_changes.horizontal = /*options*/ ctx[2].horizontal;
+				if (dirty[0] & /*form, fields*/ 2050) uifield_changes.label = /*form*/ ctx[11][/*field*/ ctx[36]].label;
 				uifield.$set(uifield_changes);
 			},
 			i(local) {
@@ -17880,8 +18080,8 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (286:0) {#if Array.isArray(field) }
-	function create_if_block_4$9(ctx) {
+	// (302:0) {#if Array.isArray(field) }
+	function create_if_block_5$3(ctx) {
 		let div;
 		let current;
 		let each_value_1 = /*field*/ ctx[36];
@@ -17915,7 +18115,7 @@ var notBulma = (function (exports) {
 				current = true;
 			},
 			p(ctx, dirty) {
-				if (dirty[0] & /*form, fields, onFieldChange*/ 17410) {
+				if (dirty[0] & /*form, fields, options, onFieldChange*/ 34822) {
 					each_value_1 = /*field*/ ctx[36];
 					let i;
 
@@ -17967,7 +18167,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (293:1) {:else}
+	// (315:1) {:else}
 	function create_else_block_1$3(ctx) {
 		let div;
 		let t0;
@@ -18000,8 +18200,8 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (289:1) {#if form[subfield] && form[subfield].component }
-	function create_if_block_5$3(ctx) {
+	// (305:1) {#if form[subfield] && form[subfield].component }
+	function create_if_block_6$2(ctx) {
 		let div;
 		let uifield;
 		let div_class_value;
@@ -18009,20 +18209,22 @@ var notBulma = (function (exports) {
 
 		uifield = new Field({
 				props: {
-					controls: [/*form*/ ctx[10][/*subfield*/ ctx[39]]],
-					name: /*subfield*/ ctx[39]
+					controls: [/*form*/ ctx[11][/*subfield*/ ctx[39]]],
+					name: /*subfield*/ ctx[39],
+					horizontal: /*options*/ ctx[2].horizontal,
+					label: /*form*/ ctx[11][/*subfield*/ ctx[39]].label
 				}
 			});
 
-		uifield.$on("change", /*onFieldChange*/ ctx[14]);
+		uifield.$on("change", /*onFieldChange*/ ctx[15]);
 
 		return {
 			c() {
 				div = element("div");
 				create_component(uifield.$$.fragment);
 
-				attr(div, "class", div_class_value = "column " + (/*form*/ ctx[10][/*subfield*/ ctx[39]].fieldSize
-				? "is-" + /*form*/ ctx[10][/*subfield*/ ctx[39]].fieldSize
+				attr(div, "class", div_class_value = "column " + (/*form*/ ctx[11][/*subfield*/ ctx[39]].fieldSize
+				? "is-" + /*form*/ ctx[11][/*subfield*/ ctx[39]].fieldSize
 				: "") + " ");
 			},
 			m(target, anchor) {
@@ -18032,12 +18234,14 @@ var notBulma = (function (exports) {
 			},
 			p(ctx, dirty) {
 				const uifield_changes = {};
-				if (dirty[0] & /*form, fields*/ 1026) uifield_changes.controls = [/*form*/ ctx[10][/*subfield*/ ctx[39]]];
+				if (dirty[0] & /*form, fields*/ 2050) uifield_changes.controls = [/*form*/ ctx[11][/*subfield*/ ctx[39]]];
 				if (dirty[0] & /*fields*/ 2) uifield_changes.name = /*subfield*/ ctx[39];
+				if (dirty[0] & /*options*/ 4) uifield_changes.horizontal = /*options*/ ctx[2].horizontal;
+				if (dirty[0] & /*form, fields*/ 2050) uifield_changes.label = /*form*/ ctx[11][/*subfield*/ ctx[39]].label;
 				uifield.$set(uifield_changes);
 
-				if (!current || dirty[0] & /*form, fields*/ 1026 && div_class_value !== (div_class_value = "column " + (/*form*/ ctx[10][/*subfield*/ ctx[39]].fieldSize
-				? "is-" + /*form*/ ctx[10][/*subfield*/ ctx[39]].fieldSize
+				if (!current || dirty[0] & /*form, fields*/ 2050 && div_class_value !== (div_class_value = "column " + (/*form*/ ctx[11][/*subfield*/ ctx[39]].fieldSize
+				? "is-" + /*form*/ ctx[11][/*subfield*/ ctx[39]].fieldSize
 				: "") + " ")) {
 					attr(div, "class", div_class_value);
 				}
@@ -18058,17 +18262,17 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (288:1) {#each field as subfield }
+	// (304:1) {#each field as subfield }
 	function create_each_block_1$4(ctx) {
 		let current_block_type_index;
 		let if_block;
 		let if_block_anchor;
 		let current;
-		const if_block_creators = [create_if_block_5$3, create_else_block_1$3];
+		const if_block_creators = [create_if_block_6$2, create_else_block_1$3];
 		const if_blocks = [];
 
 		function select_block_type_2(ctx, dirty) {
-			if (/*form*/ ctx[10][/*subfield*/ ctx[39]] && /*form*/ ctx[10][/*subfield*/ ctx[39]].component) return 0;
+			if (/*form*/ ctx[11][/*subfield*/ ctx[39]] && /*form*/ ctx[11][/*subfield*/ ctx[39]].component) return 0;
 			return 1;
 		}
 
@@ -18128,20 +18332,20 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (285:0) {#each fields as field}
+	// (301:0) {#each fields as field}
 	function create_each_block$7(ctx) {
 		let show_if;
 		let current_block_type_index;
 		let if_block;
 		let if_block_anchor;
 		let current;
-		const if_block_creators = [create_if_block_4$9, create_if_block_6$2, create_else_block_2$2];
+		const if_block_creators = [create_if_block_5$3, create_if_block_7$2, create_else_block_2$2];
 		const if_blocks = [];
 
 		function select_block_type_1(ctx, dirty) {
 			if (dirty[0] & /*fields*/ 2) show_if = !!Array.isArray(/*field*/ ctx[36]);
 			if (show_if) return 0;
-			if (/*form*/ ctx[10][/*field*/ ctx[36]] && /*form*/ ctx[10][/*field*/ ctx[36]].component) return 1;
+			if (/*form*/ ctx[11][/*field*/ ctx[36]] && /*form*/ ctx[11][/*field*/ ctx[36]].component) return 1;
 			return 2;
 		}
 
@@ -18201,10 +18405,87 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (307:0) {#if formErrors.length > 0 }
-	function create_if_block_3$a(ctx) {
+	// (335:0) {#if !options.buttonsFirst }
+	function create_if_block_1$f(ctx) {
+		let t0;
 		let div;
-		let t_value = /*formErrors*/ ctx[11].join(", ") + "";
+		let t1;
+		let if_block0 = /*formErrors*/ ctx[12].length > 0 && create_if_block_4$9(ctx);
+		let if_block1 = /*cancel*/ ctx[8].enabled && create_if_block_3$a(ctx);
+		let if_block2 = /*submit*/ ctx[7].enabled && create_if_block_2$b(ctx);
+
+		return {
+			c() {
+				if (if_block0) if_block0.c();
+				t0 = space();
+				div = element("div");
+				if (if_block1) if_block1.c();
+				t1 = space();
+				if (if_block2) if_block2.c();
+				attr(div, "class", "buttons is-grouped is-centered");
+			},
+			m(target, anchor) {
+				if (if_block0) if_block0.m(target, anchor);
+				insert(target, t0, anchor);
+				insert(target, div, anchor);
+				if (if_block1) if_block1.m(div, null);
+				append(div, t1);
+				if (if_block2) if_block2.m(div, null);
+			},
+			p(ctx, dirty) {
+				if (/*formErrors*/ ctx[12].length > 0) {
+					if (if_block0) {
+						if_block0.p(ctx, dirty);
+					} else {
+						if_block0 = create_if_block_4$9(ctx);
+						if_block0.c();
+						if_block0.m(t0.parentNode, t0);
+					}
+				} else if (if_block0) {
+					if_block0.d(1);
+					if_block0 = null;
+				}
+
+				if (/*cancel*/ ctx[8].enabled) {
+					if (if_block1) {
+						if_block1.p(ctx, dirty);
+					} else {
+						if_block1 = create_if_block_3$a(ctx);
+						if_block1.c();
+						if_block1.m(div, t1);
+					}
+				} else if (if_block1) {
+					if_block1.d(1);
+					if_block1 = null;
+				}
+
+				if (/*submit*/ ctx[7].enabled) {
+					if (if_block2) {
+						if_block2.p(ctx, dirty);
+					} else {
+						if_block2 = create_if_block_2$b(ctx);
+						if_block2.c();
+						if_block2.m(div, null);
+					}
+				} else if (if_block2) {
+					if_block2.d(1);
+					if_block2 = null;
+				}
+			},
+			d(detaching) {
+				if (if_block0) if_block0.d(detaching);
+				if (detaching) detach(t0);
+				if (detaching) detach(div);
+				if (if_block1) if_block1.d();
+				if (if_block2) if_block2.d();
+			}
+		};
+	}
+
+	// (336:0) {#if formErrors.length > 0 }
+	function create_if_block_4$9(ctx) {
+		let div;
+		let t_value = /*formErrors*/ ctx[12].join(", ") + "";
 		let t;
 
 		return {
@@ -18218,7 +18499,7 @@ var notBulma = (function (exports) {
 				append(div, t);
 			},
 			p(ctx, dirty) {
-				if (dirty[0] & /*formErrors*/ 2048 && t_value !== (t_value = /*formErrors*/ ctx[11].join(", ") + "")) set_data(t, t_value);
+				if (dirty[0] & /*formErrors*/ 4096 && t_value !== (t_value = /*formErrors*/ ctx[12].join(", ") + "")) set_data(t, t_value);
 			},
 			d(detaching) {
 				if (detaching) detach(div);
@@ -18226,10 +18507,10 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (312:1) {#if cancel.enabled}
-	function create_if_block_2$b(ctx) {
+	// (340:1) {#if cancel.enabled}
+	function create_if_block_3$a(ctx) {
 		let button;
-		let t_value = /*cancel*/ ctx[7].caption + "";
+		let t_value = /*cancel*/ ctx[8].caption + "";
 		let t;
 		let button_class_value;
 		let mounted;
@@ -18239,7 +18520,7 @@ var notBulma = (function (exports) {
 			c() {
 				button = element("button");
 				t = text(t_value);
-				attr(button, "class", button_class_value = "button is-outlined " + /*cancel*/ ctx[7].classes);
+				attr(button, "class", button_class_value = "button is-outlined " + /*cancel*/ ctx[8].classes);
 			},
 			m(target, anchor) {
 				insert(target, button, anchor);
@@ -18247,7 +18528,7 @@ var notBulma = (function (exports) {
 
 				if (!mounted) {
 					dispose = listen(button, "click", function () {
-						if (is_function(/*rejectForm*/ ctx[9])) /*rejectForm*/ ctx[9].apply(this, arguments);
+						if (is_function(/*rejectForm*/ ctx[10])) /*rejectForm*/ ctx[10].apply(this, arguments);
 					});
 
 					mounted = true;
@@ -18255,9 +18536,9 @@ var notBulma = (function (exports) {
 			},
 			p(new_ctx, dirty) {
 				ctx = new_ctx;
-				if (dirty[0] & /*cancel*/ 128 && t_value !== (t_value = /*cancel*/ ctx[7].caption + "")) set_data(t, t_value);
+				if (dirty[0] & /*cancel*/ 256 && t_value !== (t_value = /*cancel*/ ctx[8].caption + "")) set_data(t, t_value);
 
-				if (dirty[0] & /*cancel*/ 128 && button_class_value !== (button_class_value = "button is-outlined " + /*cancel*/ ctx[7].classes)) {
+				if (dirty[0] & /*cancel*/ 256 && button_class_value !== (button_class_value = "button is-outlined " + /*cancel*/ ctx[8].classes)) {
 					attr(button, "class", button_class_value);
 				}
 			},
@@ -18269,10 +18550,10 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (315:1) {#if submit.enabled}
-	function create_if_block_1$f(ctx) {
+	// (343:1) {#if submit.enabled}
+	function create_if_block_2$b(ctx) {
 		let button;
-		let t_value = /*submit*/ ctx[6].caption + "";
+		let t_value = /*submit*/ ctx[7].caption + "";
 		let t;
 		let button_class_value;
 		let mounted;
@@ -18282,8 +18563,8 @@ var notBulma = (function (exports) {
 			c() {
 				button = element("button");
 				t = text(t_value);
-				button.disabled = /*formInvalid*/ ctx[13];
-				attr(button, "class", button_class_value = "button is-primary is-hovered " + /*submit*/ ctx[6].classes);
+				button.disabled = /*formInvalid*/ ctx[14];
+				attr(button, "class", button_class_value = "button is-primary is-hovered " + /*submit*/ ctx[7].classes);
 			},
 			m(target, anchor) {
 				insert(target, button, anchor);
@@ -18291,7 +18572,7 @@ var notBulma = (function (exports) {
 
 				if (!mounted) {
 					dispose = listen(button, "click", function () {
-						if (is_function(/*submitForm*/ ctx[8])) /*submitForm*/ ctx[8].apply(this, arguments);
+						if (is_function(/*submitForm*/ ctx[9])) /*submitForm*/ ctx[9].apply(this, arguments);
 					});
 
 					mounted = true;
@@ -18299,13 +18580,13 @@ var notBulma = (function (exports) {
 			},
 			p(new_ctx, dirty) {
 				ctx = new_ctx;
-				if (dirty[0] & /*submit*/ 64 && t_value !== (t_value = /*submit*/ ctx[6].caption + "")) set_data(t, t_value);
+				if (dirty[0] & /*submit*/ 128 && t_value !== (t_value = /*submit*/ ctx[7].caption + "")) set_data(t, t_value);
 
-				if (dirty[0] & /*formInvalid*/ 8192) {
-					button.disabled = /*formInvalid*/ ctx[13];
+				if (dirty[0] & /*formInvalid*/ 16384) {
+					button.disabled = /*formInvalid*/ ctx[14];
 				}
 
-				if (dirty[0] & /*submit*/ 64 && button_class_value !== (button_class_value = "button is-primary is-hovered " + /*submit*/ ctx[6].classes)) {
+				if (dirty[0] & /*submit*/ 128 && button_class_value !== (button_class_value = "button is-primary is-hovered " + /*submit*/ ctx[7].classes)) {
 					attr(button, "class", button_class_value);
 				}
 			},
@@ -18331,7 +18612,7 @@ var notBulma = (function (exports) {
 		const if_blocks = [];
 
 		function select_block_type(ctx, dirty) {
-			if (/*success*/ ctx[12]) return 0;
+			if (/*success*/ ctx[13]) return 0;
 			return 1;
 		}
 
@@ -18342,7 +18623,7 @@ var notBulma = (function (exports) {
 			c() {
 				div = element("div");
 				span = element("span");
-				t0 = text(/*WAITING_TEXT*/ ctx[3]);
+				t0 = text(/*WAITING_TEXT*/ ctx[4]);
 				t1 = space();
 				if_block.c();
 				if_block_anchor = empty();
@@ -18359,7 +18640,7 @@ var notBulma = (function (exports) {
 				current = true;
 			},
 			p(ctx, dirty) {
-				if (!current || dirty[0] & /*WAITING_TEXT*/ 8) set_data(t0, /*WAITING_TEXT*/ ctx[3]);
+				if (!current || dirty[0] & /*WAITING_TEXT*/ 16) set_data(t0, /*WAITING_TEXT*/ ctx[4]);
 
 				if (!current || dirty[0] & /*loading*/ 1 && div_class_value !== (div_class_value = "pageloader " + (/*loading*/ ctx[0] ? "is-active" : ""))) {
 					attr(div, "class", div_class_value);
@@ -18463,25 +18744,25 @@ var notBulma = (function (exports) {
 		}
 
 		function setFieldInvalid(fieldName, value, errors) {
-			$$invalidate(10, form[fieldName].errors = errors, form);
-			$$invalidate(10, form[fieldName].validated = true, form);
-			$$invalidate(10, form[fieldName].valid = false, form);
-			$$invalidate(10, form[fieldName].value = value, form);
-			$$invalidate(10, form);
+			$$invalidate(11, form[fieldName].errors = errors, form);
+			$$invalidate(11, form[fieldName].validated = true, form);
+			$$invalidate(11, form[fieldName].valid = false, form);
+			$$invalidate(11, form[fieldName].value = value, form);
+			$$invalidate(11, form);
 			$$invalidate(28, fieldsHasErrors = true);
 		}
 
 		function setFieldValid(fieldName, value) {
-			$$invalidate(10, form[fieldName].errors = false, form);
-			$$invalidate(10, form[fieldName].validated = true, form);
-			$$invalidate(10, form[fieldName].valid = true, form);
-			$$invalidate(10, form[fieldName].value = value, form);
+			$$invalidate(11, form[fieldName].errors = false, form);
+			$$invalidate(11, form[fieldName].validated = true, form);
+			$$invalidate(11, form[fieldName].valid = true, form);
+			$$invalidate(11, form[fieldName].value = value, form);
 			let some = false;
 
 			for (let fname in form) {
 				if (fname !== fieldName) {
 					if (Array.isArray(form[fname].errors) && form[fname].errors.length === 0) {
-						$$invalidate(10, form[fname].errors = false, form);
+						$$invalidate(11, form[fname].errors = false, form);
 					}
 
 					if (form[fname].errors !== false) {
@@ -18491,7 +18772,7 @@ var notBulma = (function (exports) {
 				}
 			}
 
-			$$invalidate(10, form);
+			$$invalidate(11, form);
 
 			if (fieldsHasErrors !== some) {
 				$$invalidate(28, fieldsHasErrors = some);
@@ -18503,20 +18784,20 @@ var notBulma = (function (exports) {
 		}
 
 		function setFormFieldInvalid(fieldName, errors) {
-			$$invalidate(10, form[fieldName].formErrors = [...errors], form);
-			$$invalidate(10, form[fieldName].validated = true, form);
-			$$invalidate(10, form[fieldName].inputStarted = true, form);
-			$$invalidate(10, form[fieldName].valid = false, form);
-			$$invalidate(10, form[fieldName].formLevelError = true, form);
-			$$invalidate(10, form);
+			$$invalidate(11, form[fieldName].formErrors = [...errors], form);
+			$$invalidate(11, form[fieldName].validated = true, form);
+			$$invalidate(11, form[fieldName].inputStarted = true, form);
+			$$invalidate(11, form[fieldName].valid = false, form);
+			$$invalidate(11, form[fieldName].formLevelError = true, form);
+			$$invalidate(11, form);
 		}
 
 		function setFormFieldValid(fieldName, value) {
-			$$invalidate(10, form[fieldName].formErrors = false, form);
-			$$invalidate(10, form[fieldName].validated = true, form);
-			$$invalidate(10, form[fieldName].valid = true, form);
-			$$invalidate(10, form[fieldName].formLevelError = false, form);
-			$$invalidate(10, form);
+			$$invalidate(11, form[fieldName].formErrors = false, form);
+			$$invalidate(11, form[fieldName].validated = true, form);
+			$$invalidate(11, form[fieldName].valid = true, form);
+			$$invalidate(11, form[fieldName].formLevelError = false, form);
+			$$invalidate(11, form);
 		}
 
 		function fieldErrorsNotChanged(fieldName, errs) {
@@ -18545,10 +18826,10 @@ var notBulma = (function (exports) {
 					}
 				}
 
-				$$invalidate(10, form[fieldName] = fieldInit(fieldName, opts), form);
+				$$invalidate(11, form[fieldName] = fieldInit(fieldName, opts), form);
 
 				if (options.readonly) {
-					$$invalidate(10, form[fieldName].readonly = true, form);
+					$$invalidate(11, form[fieldName].readonly = true, form);
 				}
 			}
 		}
@@ -18560,7 +18841,7 @@ var notBulma = (function (exports) {
 				validate = options.validate;
 			}
 
-			$$invalidate(10, form);
+			$$invalidate(11, form);
 		});
 
 		function addFormError(err) {
@@ -18569,7 +18850,7 @@ var notBulma = (function (exports) {
 					formErrors.push(err);
 				}
 			} else {
-				$$invalidate(11, formErrors = [err]);
+				$$invalidate(12, formErrors = [err]);
 			}
 
 			$$invalidate(27, formHasErrors = true);
@@ -18609,7 +18890,7 @@ var notBulma = (function (exports) {
 						if (errors.form.length) {
 							errors.form.forEach(addFormError);
 						} else {
-							$$invalidate(11, formErrors = false);
+							$$invalidate(12, formErrors = false);
 						}
 
 						for (let fieldName of fields.flat()) {
@@ -18644,7 +18925,7 @@ var notBulma = (function (exports) {
 		} } = $$props;
 
 		function showSuccess() {
-			$$invalidate(12, success = true);
+			$$invalidate(13, success = true);
 		}
 
 		let { rejectForm = () => {
@@ -18662,28 +18943,29 @@ var notBulma = (function (exports) {
 
 		$$self.$$set = $$props => {
 			if ("fields" in $$props) $$invalidate(1, fields = $$props.fields);
-			if ("options" in $$props) $$invalidate(22, options = $$props.options);
+			if ("options" in $$props) $$invalidate(2, options = $$props.options);
 			if ("validation" in $$props) $$invalidate(23, validation = $$props.validation);
-			if ("SUCCESS_TEXT" in $$props) $$invalidate(2, SUCCESS_TEXT = $$props.SUCCESS_TEXT);
-			if ("WAITING_TEXT" in $$props) $$invalidate(3, WAITING_TEXT = $$props.WAITING_TEXT);
-			if ("title" in $$props) $$invalidate(4, title = $$props.title);
-			if ("description" in $$props) $$invalidate(5, description = $$props.description);
-			if ("submit" in $$props) $$invalidate(6, submit = $$props.submit);
-			if ("cancel" in $$props) $$invalidate(7, cancel = $$props.cancel);
+			if ("SUCCESS_TEXT" in $$props) $$invalidate(3, SUCCESS_TEXT = $$props.SUCCESS_TEXT);
+			if ("WAITING_TEXT" in $$props) $$invalidate(4, WAITING_TEXT = $$props.WAITING_TEXT);
+			if ("title" in $$props) $$invalidate(5, title = $$props.title);
+			if ("description" in $$props) $$invalidate(6, description = $$props.description);
+			if ("submit" in $$props) $$invalidate(7, submit = $$props.submit);
+			if ("cancel" in $$props) $$invalidate(8, cancel = $$props.cancel);
 			if ("loading" in $$props) $$invalidate(0, loading = $$props.loading);
-			if ("submitForm" in $$props) $$invalidate(8, submitForm = $$props.submitForm);
-			if ("rejectForm" in $$props) $$invalidate(9, rejectForm = $$props.rejectForm);
+			if ("submitForm" in $$props) $$invalidate(9, submitForm = $$props.submitForm);
+			if ("rejectForm" in $$props) $$invalidate(10, rejectForm = $$props.rejectForm);
 		};
 
 		$$self.$$.update = () => {
 			if ($$self.$$.dirty[0] & /*formHasErrors, fieldsHasErrors*/ 402653184) {
-				$$invalidate(13, formInvalid = formHasErrors || fieldsHasErrors);
+				$$invalidate(14, formInvalid = formHasErrors || fieldsHasErrors);
 			}
 		};
 
 		return [
 			loading,
 			fields,
+			options,
 			SUCCESS_TEXT,
 			WAITING_TEXT,
 			title,
@@ -18704,7 +18986,6 @@ var notBulma = (function (exports) {
 			setFormFieldValid,
 			fieldErrorsNotChanged,
 			addFormError,
-			options,
 			validation,
 			showSuccess,
 			setLoading,
@@ -18725,26 +19006,26 @@ var notBulma = (function (exports) {
 				create_fragment$p,
 				safe_not_equal,
 				{
-					setFieldInvalid: 15,
-					setFieldValid: 16,
-					fieldIsValid: 17,
-					setFormFieldInvalid: 18,
-					setFormFieldValid: 19,
-					fieldErrorsNotChanged: 20,
-					addFormError: 21,
+					setFieldInvalid: 16,
+					setFieldValid: 17,
+					fieldIsValid: 18,
+					setFormFieldInvalid: 19,
+					setFormFieldValid: 20,
+					fieldErrorsNotChanged: 21,
+					addFormError: 22,
 					fields: 1,
-					options: 22,
+					options: 2,
 					validation: 23,
-					SUCCESS_TEXT: 2,
-					WAITING_TEXT: 3,
-					title: 4,
-					description: 5,
-					submit: 6,
-					cancel: 7,
+					SUCCESS_TEXT: 3,
+					WAITING_TEXT: 4,
+					title: 5,
+					description: 6,
+					submit: 7,
+					cancel: 8,
 					loading: 0,
-					submitForm: 8,
+					submitForm: 9,
 					showSuccess: 24,
-					rejectForm: 9,
+					rejectForm: 10,
 					setLoading: 25,
 					resetLoading: 26
 				},
@@ -18753,31 +19034,31 @@ var notBulma = (function (exports) {
 		}
 
 		get setFieldInvalid() {
-			return this.$$.ctx[15];
-		}
-
-		get setFieldValid() {
 			return this.$$.ctx[16];
 		}
 
-		get fieldIsValid() {
+		get setFieldValid() {
 			return this.$$.ctx[17];
 		}
 
-		get setFormFieldInvalid() {
+		get fieldIsValid() {
 			return this.$$.ctx[18];
 		}
 
-		get setFormFieldValid() {
+		get setFormFieldInvalid() {
 			return this.$$.ctx[19];
 		}
 
-		get fieldErrorsNotChanged() {
+		get setFormFieldValid() {
 			return this.$$.ctx[20];
 		}
 
-		get addFormError() {
+		get fieldErrorsNotChanged() {
 			return this.$$.ctx[21];
+		}
+
+		get addFormError() {
+			return this.$$.ctx[22];
 		}
 
 		get showSuccess() {
@@ -38146,7 +38427,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (211:4) {#if show}
+	// (217:4) {#if show}
 	function create_if_block(ctx) {
 		let if_block_anchor;
 		let current;
@@ -38202,7 +38483,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (212:4) {#if props}
+	// (218:4) {#if props}
 	function create_if_block_1(ctx) {
 		let uiform;
 		let current;
@@ -38260,7 +38541,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (210:0) <UIContainer id='search-filter'>
+	// (216:0) <UIContainer id='search-filter'>
 	function create_default_slot(ctx) {
 		let current_block_type_index;
 		let if_block;
@@ -38410,13 +38691,14 @@ var notBulma = (function (exports) {
 				icon: "search"
 			},
 			type: {
-				component: "UICheckboxList",
+				component: "UISelect",
+				value: 2,
 				label: "Тип",
-				value: [
-					{ id: 1, value: true, label: "Артист" },
-					{ id: 2, value: true, label: "Картина" },
-					{ id: 3, value: true, label: "Категория" },
-					{ id: 4, value: true, label: "Коллекция" }
+				variants: [
+					{ id: 1, value: true, title: "Артист" },
+					{ id: 2, value: true, title: "Картина" },
+					{ id: 3, value: true, title: "Категория" },
+					{ id: 4, value: true, title: "Коллекция" }
 				]
 			},
 			genre: {
@@ -38488,6 +38770,7 @@ var notBulma = (function (exports) {
 					description: "",
 					fields: [
 						"term",
+						"type",
 						"genre",
 						"media",
 						"imagining",
@@ -38506,7 +38789,8 @@ var notBulma = (function (exports) {
 			$$invalidate(2, props = Form.prebuild({
 				manifest,
 				action: "search",
-				validators: Validators
+				validators: Validators,
+				options: { horizontal: true, buttonsFirst: true }
 			}));
 		});
 

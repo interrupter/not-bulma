@@ -282,32 +282,7 @@
 <h6 class="subtitle is-6">{description}</h6>
 {/if}
 
-{#each fields as field}
-{#if Array.isArray(field) }
-<div class="columns">
-	{#each field as subfield }
-	{#if form[subfield] && form[subfield].component }
-	<div class="column {form[subfield].fieldSize?('is-'+form[subfield].fieldSize):''} ">
-		<UIField controls={[form[subfield]]} on:change={onFieldChange} name={subfield} horizontal={horizontal} />
-	</div>
-	{:else}
-	<div class="column notification is-danger">Subfield '{subfield}' is not registered</div>
-	{/if}
-	{/each}
-</div>
-{:else }
-{#if form[field] && form[field].component }
-<UIField controls={[form[field]]} on:change={onFieldChange} name={field}  horizontal={horizontal} />
-{:else}
-<div class="notification is-danger">Field '{field}' is not registered</div>
-{/if}
-{/if}
-{/each}
-
-{#if formErrors.length > 0 }
-<div class="edit-form-error notification is-danger">{formErrors.join(', ')}</div>
-{/if}
-
+{#if options.buttonsFirst }
 <div class="buttons is-grouped is-centered">
 	{#if cancel.enabled}
 	<button class="button is-outlined {cancel.classes}" on:click={rejectForm}>{cancel.caption}</button>
@@ -316,4 +291,59 @@
 	<button on:click={submitForm} disabled={formInvalid} class="button is-primary is-hovered {submit.classes}">{submit.caption}</button>
 	{/if}
 </div>
+
+{#if formErrors.length > 0 }
+<div class="edit-form-error notification is-danger">{formErrors.join(', ')}</div>
+{/if}
+
+{/if}
+
+{#each fields as field}
+{#if Array.isArray(field) }
+<div class="columns">
+	{#each field as subfield }
+	{#if form[subfield] && form[subfield].component }
+	<div class="column {form[subfield].fieldSize?('is-'+form[subfield].fieldSize):''} ">
+		<UIField
+			controls={[form[subfield]]}
+			on:change={onFieldChange}
+			name={subfield}
+			horizontal={options.horizontal}
+			label={form[subfield].label}
+			/>
+	</div>
+	{:else}
+	<div class="column notification is-danger">Subfield '{subfield}' is not registered</div>
+	{/if}
+	{/each}
+</div>
+{:else }
+{#if form[field] && form[field].component }
+<UIField
+	controls={[form[field]]}
+	on:change={onFieldChange}
+	name={field}
+	horizontal={options.horizontal}
+	label={form[field].label}
+	/>
+{:else}
+<div class="notification is-danger">Field '{field}' is not registered</div>
+{/if}
+{/if}
+{/each}
+
+{#if !options.buttonsFirst }
+{#if formErrors.length > 0 }
+<div class="edit-form-error notification is-danger">{formErrors.join(', ')}</div>
+{/if}
+<div class="buttons is-grouped is-centered">
+	{#if cancel.enabled}
+	<button class="button is-outlined {cancel.classes}" on:click={rejectForm}>{cancel.caption}</button>
+	{/if}
+	{#if submit.enabled}
+	<button on:click={submitForm} disabled={formInvalid} class="button is-primary is-hovered {submit.classes}">{submit.caption}</button>
+	{/if}
+</div>
+{/if}
+
 {/if}
