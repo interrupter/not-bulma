@@ -163,12 +163,9 @@
   onMount(() => {
     props = Form.prebuild({
       manifest,
-      action: 'search',
-      validators: Validators,
-      options: {
-        horizontal: true,
-        buttonsFirst: true
-      }
+      action:       'search',
+      validators:   Validators,
+      options:     formOptions
     });
   });
 
@@ -194,6 +191,7 @@
 
   export let onChange;
   export let onSubmit;
+  export let formOptions = {};
 
   function _onSubmit({detail}){
     if(typeof _onSubmit == 'function'){
