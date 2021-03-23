@@ -288,7 +288,7 @@
 	{#each field as subfield }
 	{#if form[subfield] && form[subfield].component }
 	<div class="column {form[subfield].fieldSize?('is-'+form[subfield].fieldSize):''} ">
-		<UIField controls={[form[subfield]]} on:change={onFieldChange} name={subfield} />
+		<UIField controls={[form[subfield]]} on:change={onFieldChange} name={subfield} horizontal={horizontal} />
 	</div>
 	{:else}
 	<div class="column notification is-danger">Subfield '{subfield}' is not registered</div>
@@ -297,7 +297,7 @@
 </div>
 {:else }
 {#if form[field] && form[field].component }
-<UIField controls={[form[field]]} on:change={onFieldChange} name={field} />
+<UIField controls={[form[field]]} on:change={onFieldChange} name={field}  horizontal={horizontal} />
 {:else}
 <div class="notification is-danger">Field '{field}' is not registered</div>
 {/if}
