@@ -51,7 +51,6 @@
     },
     type: {
       component: 'UISelect',
-      placeholder: 'Тип',
       value: 2,
       label: 'Тип',
       variants: [{
