@@ -87,6 +87,12 @@ class TopMenu extends Menu{
 		el.classList.remove('is-active');
 	}
 
+	static setBurgerState(menuClosed){
+		this.menu.$set({
+			menuClosed
+		});
+	}
+
 }
 
 export default TopMenu;

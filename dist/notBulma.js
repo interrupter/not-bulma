@@ -12122,6 +12122,9 @@ var notBulma = (function (exports) {
 	    value: function isTouch() {
 	      return window.innerWidth <= this.MAX_TOUCH_WIDTH;
 	    }
+	  }, {
+	    key: "getSectionComponent",
+	    value: function getSectionComponent() {}
 	  }]);
 
 	  return Menu;
@@ -29779,6 +29782,13 @@ var notBulma = (function (exports) {
 	    value: function hide() {
 	      var el = document.querySelector(this.getOptions().targetSelector);
 	      el.classList.remove('is-active');
+	    }
+	  }, {
+	    key: "setBurgerState",
+	    value: function setBurgerState(menuClosed) {
+	      this.menu.$set({
+	        menuClosed: menuClosed
+	      });
 	    }
 	  }]);
 

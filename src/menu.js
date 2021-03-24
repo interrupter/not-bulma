@@ -226,6 +226,10 @@ class Menu {
 		return window.innerWidth <= this.MAX_TOUCH_WIDTH;
 	}
 
+	static getSectionComponent(){
+
+	}
+
 }
 
 export default Menu;
