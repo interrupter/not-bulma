@@ -17547,17 +17547,17 @@ var notBulma = (function (exports) {
 
 	function get_each_context$7(ctx, list, i) {
 		const child_ctx = ctx.slice();
-		child_ctx[36] = list[i];
+		child_ctx[39] = list[i];
 		return child_ctx;
 	}
 
 	function get_each_context_1$4(ctx, list, i) {
 		const child_ctx = ctx.slice();
-		child_ctx[39] = list[i];
+		child_ctx[42] = list[i];
 		return child_ctx;
 	}
 
-	// (277:0) {:else}
+	// (295:0) {:else}
 	function create_else_block$g(ctx) {
 		let t0;
 		let t1;
@@ -17728,7 +17728,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (273:0) {#if success}
+	// (291:0) {#if success}
 	function create_if_block$i(ctx) {
 		let div;
 		let h3;
@@ -17758,7 +17758,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (278:0) {#if title }
+	// (296:0) {#if title }
 	function create_if_block_13$1(ctx) {
 		let h5;
 		let t;
@@ -17782,7 +17782,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (281:0) {#if description }
+	// (299:0) {#if description }
 	function create_if_block_12$1(ctx) {
 		let h6;
 		let t;
@@ -17806,7 +17806,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (285:0) {#if options.buttonsFirst }
+	// (303:0) {#if options.buttonsFirst }
 	function create_if_block_8$2(ctx) {
 		let div;
 		let t0;
@@ -17887,7 +17887,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (287:1) {#if cancel.enabled}
+	// (305:1) {#if cancel.enabled}
 	function create_if_block_11$1(ctx) {
 		let button;
 		let t_value = /*cancel*/ ctx[8].caption + "";
@@ -17930,7 +17930,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (290:1) {#if submit.enabled}
+	// (308:1) {#if submit.enabled}
 	function create_if_block_10$1(ctx) {
 		let button;
 		let t_value = /*submit*/ ctx[7].caption + "";
@@ -17978,7 +17978,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (295:0) {#if formErrors.length > 0 }
+	// (313:0) {#if formErrors.length > 0 }
 	function create_if_block_9$2(ctx) {
 		let div;
 		let t_value = /*formErrors*/ ctx[12].join(", ") + "";
@@ -18003,11 +18003,11 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (329:0) {:else}
+	// (347:0) {:else}
 	function create_else_block_2$2(ctx) {
 		let div;
 		let t0;
-		let t1_value = /*field*/ ctx[36] + "";
+		let t1_value = /*field*/ ctx[39] + "";
 		let t1;
 		let t2;
 
@@ -18026,7 +18026,7 @@ var notBulma = (function (exports) {
 				append(div, t2);
 			},
 			p(ctx, dirty) {
-				if (dirty[0] & /*fields*/ 2 && t1_value !== (t1_value = /*field*/ ctx[36] + "")) set_data(t1, t1_value);
+				if (dirty[0] & /*fields*/ 2 && t1_value !== (t1_value = /*field*/ ctx[39] + "")) set_data(t1, t1_value);
 			},
 			i: noop,
 			o: noop,
@@ -18036,17 +18036,17 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (321:0) {#if form[field] && form[field].component }
+	// (339:0) {#if form[field] && form[field].visible && form[field].component }
 	function create_if_block_7$2(ctx) {
 		let uifield;
 		let current;
 
 		uifield = new Field({
 				props: {
-					controls: [/*form*/ ctx[11][/*field*/ ctx[36]]],
-					name: /*field*/ ctx[36],
+					controls: [/*form*/ ctx[11][/*field*/ ctx[39]]],
+					name: /*field*/ ctx[39],
 					horizontal: /*options*/ ctx[2].horizontal,
-					label: /*form*/ ctx[11][/*field*/ ctx[36]].label
+					label: /*form*/ ctx[11][/*field*/ ctx[39]].label
 				}
 			});
 
@@ -18062,10 +18062,10 @@ var notBulma = (function (exports) {
 			},
 			p(ctx, dirty) {
 				const uifield_changes = {};
-				if (dirty[0] & /*form, fields*/ 2050) uifield_changes.controls = [/*form*/ ctx[11][/*field*/ ctx[36]]];
-				if (dirty[0] & /*fields*/ 2) uifield_changes.name = /*field*/ ctx[36];
+				if (dirty[0] & /*form, fields*/ 2050) uifield_changes.controls = [/*form*/ ctx[11][/*field*/ ctx[39]]];
+				if (dirty[0] & /*fields*/ 2) uifield_changes.name = /*field*/ ctx[39];
 				if (dirty[0] & /*options*/ 4) uifield_changes.horizontal = /*options*/ ctx[2].horizontal;
-				if (dirty[0] & /*form, fields*/ 2050) uifield_changes.label = /*form*/ ctx[11][/*field*/ ctx[36]].label;
+				if (dirty[0] & /*form, fields*/ 2050) uifield_changes.label = /*form*/ ctx[11][/*field*/ ctx[39]].label;
 				uifield.$set(uifield_changes);
 			},
 			i(local) {
@@ -18083,11 +18083,11 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (302:0) {#if Array.isArray(field) }
+	// (320:0) {#if Array.isArray(field) }
 	function create_if_block_5$3(ctx) {
 		let div;
 		let current;
-		let each_value_1 = /*field*/ ctx[36];
+		let each_value_1 = /*field*/ ctx[39];
 		let each_blocks = [];
 
 		for (let i = 0; i < each_value_1.length; i += 1) {
@@ -18119,7 +18119,7 @@ var notBulma = (function (exports) {
 			},
 			p(ctx, dirty) {
 				if (dirty[0] & /*form, fields, options, onFieldChange*/ 34822) {
-					each_value_1 = /*field*/ ctx[36];
+					each_value_1 = /*field*/ ctx[39];
 					let i;
 
 					for (i = 0; i < each_value_1.length; i += 1) {
@@ -18170,11 +18170,11 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (315:1) {:else}
+	// (333:1) {:else}
 	function create_else_block_1$3(ctx) {
 		let div;
 		let t0;
-		let t1_value = /*subfield*/ ctx[39] + "";
+		let t1_value = /*subfield*/ ctx[42] + "";
 		let t1;
 		let t2;
 
@@ -18193,7 +18193,7 @@ var notBulma = (function (exports) {
 				append(div, t2);
 			},
 			p(ctx, dirty) {
-				if (dirty[0] & /*fields*/ 2 && t1_value !== (t1_value = /*subfield*/ ctx[39] + "")) set_data(t1, t1_value);
+				if (dirty[0] & /*fields*/ 2 && t1_value !== (t1_value = /*subfield*/ ctx[42] + "")) set_data(t1, t1_value);
 			},
 			i: noop,
 			o: noop,
@@ -18203,7 +18203,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (305:1) {#if form[subfield] && form[subfield].component }
+	// (323:1) {#if form[subfield] && form[subfield].visible && form[subfield].component }
 	function create_if_block_6$2(ctx) {
 		let div;
 		let uifield;
@@ -18212,10 +18212,10 @@ var notBulma = (function (exports) {
 
 		uifield = new Field({
 				props: {
-					controls: [/*form*/ ctx[11][/*subfield*/ ctx[39]]],
-					name: /*subfield*/ ctx[39],
+					controls: [/*form*/ ctx[11][/*subfield*/ ctx[42]]],
+					name: /*subfield*/ ctx[42],
 					horizontal: /*options*/ ctx[2].horizontal,
-					label: /*form*/ ctx[11][/*subfield*/ ctx[39]].label
+					label: /*form*/ ctx[11][/*subfield*/ ctx[42]].label
 				}
 			});
 
@@ -18226,8 +18226,8 @@ var notBulma = (function (exports) {
 				div = element("div");
 				create_component(uifield.$$.fragment);
 
-				attr(div, "class", div_class_value = "column " + (/*form*/ ctx[11][/*subfield*/ ctx[39]].fieldSize
-				? "is-" + /*form*/ ctx[11][/*subfield*/ ctx[39]].fieldSize
+				attr(div, "class", div_class_value = "column " + (/*form*/ ctx[11][/*subfield*/ ctx[42]].fieldSize
+				? "is-" + /*form*/ ctx[11][/*subfield*/ ctx[42]].fieldSize
 				: "") + " ");
 			},
 			m(target, anchor) {
@@ -18237,14 +18237,14 @@ var notBulma = (function (exports) {
 			},
 			p(ctx, dirty) {
 				const uifield_changes = {};
-				if (dirty[0] & /*form, fields*/ 2050) uifield_changes.controls = [/*form*/ ctx[11][/*subfield*/ ctx[39]]];
-				if (dirty[0] & /*fields*/ 2) uifield_changes.name = /*subfield*/ ctx[39];
+				if (dirty[0] & /*form, fields*/ 2050) uifield_changes.controls = [/*form*/ ctx[11][/*subfield*/ ctx[42]]];
+				if (dirty[0] & /*fields*/ 2) uifield_changes.name = /*subfield*/ ctx[42];
 				if (dirty[0] & /*options*/ 4) uifield_changes.horizontal = /*options*/ ctx[2].horizontal;
-				if (dirty[0] & /*form, fields*/ 2050) uifield_changes.label = /*form*/ ctx[11][/*subfield*/ ctx[39]].label;
+				if (dirty[0] & /*form, fields*/ 2050) uifield_changes.label = /*form*/ ctx[11][/*subfield*/ ctx[42]].label;
 				uifield.$set(uifield_changes);
 
-				if (!current || dirty[0] & /*form, fields*/ 2050 && div_class_value !== (div_class_value = "column " + (/*form*/ ctx[11][/*subfield*/ ctx[39]].fieldSize
-				? "is-" + /*form*/ ctx[11][/*subfield*/ ctx[39]].fieldSize
+				if (!current || dirty[0] & /*form, fields*/ 2050 && div_class_value !== (div_class_value = "column " + (/*form*/ ctx[11][/*subfield*/ ctx[42]].fieldSize
+				? "is-" + /*form*/ ctx[11][/*subfield*/ ctx[42]].fieldSize
 				: "") + " ")) {
 					attr(div, "class", div_class_value);
 				}
@@ -18265,7 +18265,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (304:1) {#each field as subfield }
+	// (322:1) {#each field as subfield }
 	function create_each_block_1$4(ctx) {
 		let current_block_type_index;
 		let if_block;
@@ -18275,7 +18275,7 @@ var notBulma = (function (exports) {
 		const if_blocks = [];
 
 		function select_block_type_2(ctx, dirty) {
-			if (/*form*/ ctx[11][/*subfield*/ ctx[39]] && /*form*/ ctx[11][/*subfield*/ ctx[39]].component) return 0;
+			if (/*form*/ ctx[11][/*subfield*/ ctx[42]] && /*form*/ ctx[11][/*subfield*/ ctx[42]].visible && /*form*/ ctx[11][/*subfield*/ ctx[42]].component) return 0;
 			return 1;
 		}
 
@@ -18335,7 +18335,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (301:0) {#each fields as field}
+	// (319:0) {#each fields as field}
 	function create_each_block$7(ctx) {
 		let show_if;
 		let current_block_type_index;
@@ -18346,9 +18346,9 @@ var notBulma = (function (exports) {
 		const if_blocks = [];
 
 		function select_block_type_1(ctx, dirty) {
-			if (dirty[0] & /*fields*/ 2) show_if = !!Array.isArray(/*field*/ ctx[36]);
+			if (dirty[0] & /*fields*/ 2) show_if = !!Array.isArray(/*field*/ ctx[39]);
 			if (show_if) return 0;
-			if (/*form*/ ctx[11][/*field*/ ctx[36]] && /*form*/ ctx[11][/*field*/ ctx[36]].component) return 1;
+			if (/*form*/ ctx[11][/*field*/ ctx[39]] && /*form*/ ctx[11][/*field*/ ctx[39]].visible && /*form*/ ctx[11][/*field*/ ctx[39]].component) return 1;
 			return 2;
 		}
 
@@ -18408,7 +18408,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (335:0) {#if !options.buttonsFirst }
+	// (353:0) {#if !options.buttonsFirst }
 	function create_if_block_1$f(ctx) {
 		let t0;
 		let div;
@@ -18485,7 +18485,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (336:0) {#if formErrors.length > 0 }
+	// (354:0) {#if formErrors.length > 0 }
 	function create_if_block_4$9(ctx) {
 		let div;
 		let t_value = /*formErrors*/ ctx[12].join(", ") + "";
@@ -18510,7 +18510,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (340:1) {#if cancel.enabled}
+	// (358:1) {#if cancel.enabled}
 	function create_if_block_3$a(ctx) {
 		let button;
 		let t_value = /*cancel*/ ctx[8].caption + "";
@@ -18553,7 +18553,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (343:1) {#if submit.enabled}
+	// (361:1) {#if submit.enabled}
 	function create_if_block_2$b(ctx) {
 		let button;
 		let t_value = /*submit*/ ctx[7].caption + "";
@@ -18711,6 +18711,7 @@ var notBulma = (function (exports) {
 				label: "",
 				placeholder: "",
 				enabled: true,
+				visible: true,
 				value: "",
 				required: true,
 				validated: false,
@@ -18738,7 +18739,7 @@ var notBulma = (function (exports) {
 			let result = {};
 
 			fields.flat().forEach(fieldname => {
-				if (Object.prototype.hasOwnProperty.call(form, fieldname) && form[fieldname].enabled) {
+				if (Object.prototype.hasOwnProperty.call(form, fieldname) && form[fieldname].enabled && form[fieldname].visible) {
 					result[fieldname] = form[fieldname].value;
 				}
 			});
@@ -18752,7 +18753,7 @@ var notBulma = (function (exports) {
 			$$invalidate(11, form[fieldName].valid = false, form);
 			$$invalidate(11, form[fieldName].value = value, form);
 			$$invalidate(11, form);
-			$$invalidate(28, fieldsHasErrors = true);
+			$$invalidate(31, fieldsHasErrors = true);
 		}
 
 		function setFieldValid(fieldName, value) {
@@ -18778,7 +18779,7 @@ var notBulma = (function (exports) {
 			$$invalidate(11, form);
 
 			if (fieldsHasErrors !== some) {
-				$$invalidate(28, fieldsHasErrors = some);
+				$$invalidate(31, fieldsHasErrors = some);
 			}
 		}
 
@@ -18856,7 +18857,7 @@ var notBulma = (function (exports) {
 				$$invalidate(12, formErrors = [err]);
 			}
 
-			$$invalidate(27, formHasErrors = true);
+			$$invalidate(30, formHasErrors = true);
 		}
 
 		function onFieldChange(ev) {
@@ -18878,11 +18879,11 @@ var notBulma = (function (exports) {
 				let errors = validate(collectData());
 
 				if (!errors || errors.clean) {
-					$$invalidate(27, formHasErrors = false);
+					$$invalidate(30, formHasErrors = false);
 					dispatch("change", data);
 				} else {
 					if (errors.form.length === 0 && Object.keys(errors.fields).length === 0) {
-						$$invalidate(27, formHasErrors = false);
+						$$invalidate(30, formHasErrors = false);
 
 						for (let fieldName in fields.flat()) {
 							setFormFieldValid(fieldName);
@@ -18944,6 +18945,22 @@ var notBulma = (function (exports) {
 			$$invalidate(0, loading = false);
 		}
 
+		function setFieldsVisibility(fieldsList, val) {
+			if (Array.isarray(fieldsList)) {
+				Object.keys(form).forEach(fieldName => {
+					$$invalidate(11, form[fieldName].visible = fieldsList.includes(fieldName) ? val : !val, form);
+				});
+			}
+		}
+
+		function setVisibleFields(fieldsList) {
+			setFieldsVisibility(fieldsList, true);
+		}
+
+		function setInvisibleFields(fieldsList) {
+			setFieldsVisibility(fieldsList, false);
+		}
+
 		$$self.$$set = $$props => {
 			if ("fields" in $$props) $$invalidate(1, fields = $$props.fields);
 			if ("options" in $$props) $$invalidate(2, options = $$props.options);
@@ -18960,7 +18977,7 @@ var notBulma = (function (exports) {
 		};
 
 		$$self.$$.update = () => {
-			if ($$self.$$.dirty[0] & /*formHasErrors, fieldsHasErrors*/ 402653184) {
+			if ($$self.$$.dirty[0] & /*formHasErrors*/ 1073741824 | $$self.$$.dirty[1] & /*fieldsHasErrors*/ 1) {
 				$$invalidate(14, formInvalid = formHasErrors || fieldsHasErrors);
 			}
 		};
@@ -18993,6 +19010,9 @@ var notBulma = (function (exports) {
 			showSuccess,
 			setLoading,
 			resetLoading,
+			setFieldsVisibility,
+			setVisibleFields,
+			setInvisibleFields,
 			formHasErrors,
 			fieldsHasErrors
 		];
@@ -19030,7 +19050,10 @@ var notBulma = (function (exports) {
 					showSuccess: 24,
 					rejectForm: 10,
 					setLoading: 25,
-					resetLoading: 26
+					resetLoading: 26,
+					setFieldsVisibility: 27,
+					setVisibleFields: 28,
+					setInvisibleFields: 29
 				},
 				[-1, -1]
 			);
@@ -19074,6 +19097,18 @@ var notBulma = (function (exports) {
 
 		get resetLoading() {
 			return this.$$.ctx[26];
+		}
+
+		get setFieldsVisibility() {
+			return this.$$.ctx[27];
+		}
+
+		get setVisibleFields() {
+			return this.$$.ctx[28];
+		}
+
+		get setInvisibleFields() {
+			return this.$$.ctx[29];
 		}
 	}
 

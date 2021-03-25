@@ -22,13 +22,13 @@
 			clean: true
 		};
 	}
+
 	let overlay;
 	let stage = 'filling';
 	let formErrors = [];
 	let formHasErrors = false;
 	let fieldsHasErrors = false;
 	let success = false;
-
 
 	$: formInvalid = formHasErrors || fieldsHasErrors;
 
@@ -37,6 +37,7 @@
 			label: '',
 			placeholder: '',
 			enabled: true,
+			visible: true,
 			value: '',
 			required: true,
 			validated: false,
@@ -62,7 +63,7 @@
 	function collectData() {
 		let result = {};
 		fields.flat().forEach((fieldname) => {
-			if (Object.prototype.hasOwnProperty.call(form, fieldname) && form[fieldname].enabled) {
+			if (Object.prototype.hasOwnProperty.call(form, fieldname) && form[fieldname].enabled && form[fieldname].visible) {
 				result[fieldname] = form[fieldname].value;
 			}
 		});
@@ -224,6 +225,7 @@
 	}
 
 	export let fields = [];
+
 	export let options = {};
 	export let validation = true;
 	export let SUCCESS_TEXT = 'Операция завершена';
@@ -266,6 +268,22 @@
 	export function resetLoading() {
 		loading = false;
 	}
+
+	export function setFieldsVisibility(fieldsList, val){
+		if(Array.isarray(fieldsList)){
+			Object.keys(form).forEach(fieldName => {
+				form[fieldName].visible = fieldsList.includes(fieldName)?val:!val;
+			});
+		}
+	}
+
+	export function setVisibleFields(fieldsList){
+		setFieldsVisibility(fieldsList, true);
+	}
+
+	export function setInvisibleFields(fieldsList){
+		setFieldsVisibility(fieldsList, false);
+	}
 </script>
 
 <div class="pageloader {loading?'is-active':''}"><span class="title">{WAITING_TEXT}</span></div>
@@ -302,7 +320,7 @@
 {#if Array.isArray(field) }
 <div class="columns">
 	{#each field as subfield }
-	{#if form[subfield] && form[subfield].component }
+	{#if form[subfield] && form[subfield].visible && form[subfield].component }
 	<div class="column {form[subfield].fieldSize?('is-'+form[subfield].fieldSize):''} ">
 		<UIField
 			controls={[form[subfield]]}
@@ -318,7 +336,7 @@
 	{/each}
 </div>
 {:else }
-{#if form[field] && form[field].component }
+{#if form[field] && form[field].visible && form[field].component }
 <UIField
 	controls={[form[field]]}
 	on:change={onFieldChange}
