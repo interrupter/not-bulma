@@ -60,7 +60,7 @@
 		return field;
 	}
 
-	function collectData() {
+	export function collectData() {
 		let result = {};
 		fields.flat().forEach((fieldname) => {
 			if (Object.prototype.hasOwnProperty.call(form, fieldname) && form[fieldname].enabled && form[fieldname].visible) {
@@ -285,6 +285,15 @@
 	export function setInvisibleFields(fieldsList){
 		setFieldsVisibility(fieldsList, false);
 	}
+
+	export function setFieldValue(fieldName, value){
+		if(Object.prototype.hasOwnProperty.call(form, fieldName)){
+			form[fieldName].value = value;
+			form = form;
+			onFieldChange({detail:{field:fieldName, value}});
+		}
+	}
+
 </script>
 
 <div class="pageloader {loading?'is-active':''}"><span class="title">{WAITING_TEXT}</span></div>
