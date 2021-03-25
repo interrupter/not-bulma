@@ -17557,7 +17557,7 @@ var notBulma = (function (exports) {
 		return child_ctx;
 	}
 
-	// (295:0) {:else}
+	// (296:0) {:else}
 	function create_else_block$g(ctx) {
 		let t0;
 		let t1;
@@ -17565,9 +17565,9 @@ var notBulma = (function (exports) {
 		let t3;
 		let if_block3_anchor;
 		let current;
-		let if_block0 = /*title*/ ctx[5] && create_if_block_13$1(ctx);
-		let if_block1 = /*description*/ ctx[6] && create_if_block_12$1(ctx);
-		let if_block2 = /*options*/ ctx[2].buttonsFirst && create_if_block_8$2(ctx);
+		let if_block0 = /*title*/ ctx[5] && create_if_block_15(ctx);
+		let if_block1 = /*description*/ ctx[6] && create_if_block_14(ctx);
+		let if_block2 = /*options*/ ctx[2].buttonsFirst && create_if_block_10$1(ctx);
 		let each_value = /*fields*/ ctx[1];
 		let each_blocks = [];
 
@@ -17620,7 +17620,7 @@ var notBulma = (function (exports) {
 					if (if_block0) {
 						if_block0.p(ctx, dirty);
 					} else {
-						if_block0 = create_if_block_13$1(ctx);
+						if_block0 = create_if_block_15(ctx);
 						if_block0.c();
 						if_block0.m(t0.parentNode, t0);
 					}
@@ -17633,7 +17633,7 @@ var notBulma = (function (exports) {
 					if (if_block1) {
 						if_block1.p(ctx, dirty);
 					} else {
-						if_block1 = create_if_block_12$1(ctx);
+						if_block1 = create_if_block_14(ctx);
 						if_block1.c();
 						if_block1.m(t1.parentNode, t1);
 					}
@@ -17646,7 +17646,7 @@ var notBulma = (function (exports) {
 					if (if_block2) {
 						if_block2.p(ctx, dirty);
 					} else {
-						if_block2 = create_if_block_8$2(ctx);
+						if_block2 = create_if_block_10$1(ctx);
 						if_block2.c();
 						if_block2.m(t2.parentNode, t2);
 					}
@@ -17728,7 +17728,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (291:0) {#if success}
+	// (292:0) {#if success}
 	function create_if_block$i(ctx) {
 		let div;
 		let h3;
@@ -17758,8 +17758,8 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (296:0) {#if title }
-	function create_if_block_13$1(ctx) {
+	// (297:0) {#if title }
+	function create_if_block_15(ctx) {
 		let h5;
 		let t;
 
@@ -17782,8 +17782,8 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (299:0) {#if description }
-	function create_if_block_12$1(ctx) {
+	// (300:0) {#if description }
+	function create_if_block_14(ctx) {
 		let h6;
 		let t;
 
@@ -17806,15 +17806,15 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (303:0) {#if options.buttonsFirst }
-	function create_if_block_8$2(ctx) {
+	// (304:0) {#if options.buttonsFirst }
+	function create_if_block_10$1(ctx) {
 		let div;
 		let t0;
 		let t1;
 		let if_block2_anchor;
-		let if_block0 = /*cancel*/ ctx[8].enabled && create_if_block_11$1(ctx);
-		let if_block1 = /*submit*/ ctx[7].enabled && create_if_block_10$1(ctx);
-		let if_block2 = /*formErrors*/ ctx[12].length > 0 && create_if_block_9$2(ctx);
+		let if_block0 = /*cancel*/ ctx[8].enabled && create_if_block_13$1(ctx);
+		let if_block1 = /*submit*/ ctx[7].enabled && create_if_block_12$1(ctx);
+		let if_block2 = /*formErrors*/ ctx[12].length > 0 && create_if_block_11$1(ctx);
 
 		return {
 			c() {
@@ -17841,7 +17841,7 @@ var notBulma = (function (exports) {
 					if (if_block0) {
 						if_block0.p(ctx, dirty);
 					} else {
-						if_block0 = create_if_block_11$1(ctx);
+						if_block0 = create_if_block_13$1(ctx);
 						if_block0.c();
 						if_block0.m(div, t0);
 					}
@@ -17854,7 +17854,7 @@ var notBulma = (function (exports) {
 					if (if_block1) {
 						if_block1.p(ctx, dirty);
 					} else {
-						if_block1 = create_if_block_10$1(ctx);
+						if_block1 = create_if_block_12$1(ctx);
 						if_block1.c();
 						if_block1.m(div, null);
 					}
@@ -17867,7 +17867,7 @@ var notBulma = (function (exports) {
 					if (if_block2) {
 						if_block2.p(ctx, dirty);
 					} else {
-						if_block2 = create_if_block_9$2(ctx);
+						if_block2 = create_if_block_11$1(ctx);
 						if_block2.c();
 						if_block2.m(if_block2_anchor.parentNode, if_block2_anchor);
 					}
@@ -17887,8 +17887,8 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (305:1) {#if cancel.enabled}
-	function create_if_block_11$1(ctx) {
+	// (306:1) {#if cancel.enabled}
+	function create_if_block_13$1(ctx) {
 		let button;
 		let t_value = /*cancel*/ ctx[8].caption + "";
 		let t;
@@ -17930,8 +17930,8 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (308:1) {#if submit.enabled}
-	function create_if_block_10$1(ctx) {
+	// (309:1) {#if submit.enabled}
+	function create_if_block_12$1(ctx) {
 		let button;
 		let t_value = /*submit*/ ctx[7].caption + "";
 		let t;
@@ -17978,8 +17978,8 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (313:0) {#if formErrors.length > 0 }
-	function create_if_block_9$2(ctx) {
+	// (314:0) {#if formErrors.length > 0 }
+	function create_if_block_11$1(ctx) {
 		let div;
 		let t_value = /*formErrors*/ ctx[12].join(", ") + "";
 		let t;
@@ -18003,7 +18003,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (347:0) {:else}
+	// (352:0) {:else}
 	function create_else_block_2$2(ctx) {
 		let div;
 		let t0;
@@ -18036,54 +18036,63 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (339:0) {#if form[field] && form[field].visible && form[field].component }
-	function create_if_block_7$2(ctx) {
-		let uifield;
+	// (342:0) {#if form[field] && form[field].component }
+	function create_if_block_8$2(ctx) {
+		let if_block_anchor;
 		let current;
-
-		uifield = new Field({
-				props: {
-					controls: [/*form*/ ctx[11][/*field*/ ctx[39]]],
-					name: /*field*/ ctx[39],
-					horizontal: /*options*/ ctx[2].horizontal,
-					label: /*form*/ ctx[11][/*field*/ ctx[39]].label
-				}
-			});
-
-		uifield.$on("change", /*onFieldChange*/ ctx[15]);
+		let if_block = /*form*/ ctx[11][/*field*/ ctx[39]].visible && create_if_block_9$2(ctx);
 
 		return {
 			c() {
-				create_component(uifield.$$.fragment);
+				if (if_block) if_block.c();
+				if_block_anchor = empty();
 			},
 			m(target, anchor) {
-				mount_component(uifield, target, anchor);
+				if (if_block) if_block.m(target, anchor);
+				insert(target, if_block_anchor, anchor);
 				current = true;
 			},
 			p(ctx, dirty) {
-				const uifield_changes = {};
-				if (dirty[0] & /*form, fields*/ 2050) uifield_changes.controls = [/*form*/ ctx[11][/*field*/ ctx[39]]];
-				if (dirty[0] & /*fields*/ 2) uifield_changes.name = /*field*/ ctx[39];
-				if (dirty[0] & /*options*/ 4) uifield_changes.horizontal = /*options*/ ctx[2].horizontal;
-				if (dirty[0] & /*form, fields*/ 2050) uifield_changes.label = /*form*/ ctx[11][/*field*/ ctx[39]].label;
-				uifield.$set(uifield_changes);
+				if (/*form*/ ctx[11][/*field*/ ctx[39]].visible) {
+					if (if_block) {
+						if_block.p(ctx, dirty);
+
+						if (dirty[0] & /*form, fields*/ 2050) {
+							transition_in(if_block, 1);
+						}
+					} else {
+						if_block = create_if_block_9$2(ctx);
+						if_block.c();
+						transition_in(if_block, 1);
+						if_block.m(if_block_anchor.parentNode, if_block_anchor);
+					}
+				} else if (if_block) {
+					group_outros();
+
+					transition_out(if_block, 1, 1, () => {
+						if_block = null;
+					});
+
+					check_outros();
+				}
 			},
 			i(local) {
 				if (current) return;
-				transition_in(uifield.$$.fragment, local);
+				transition_in(if_block);
 				current = true;
 			},
 			o(local) {
-				transition_out(uifield.$$.fragment, local);
+				transition_out(if_block);
 				current = false;
 			},
 			d(detaching) {
-				destroy_component(uifield, detaching);
+				if (if_block) if_block.d(detaching);
+				if (detaching) detach(if_block_anchor);
 			}
 		};
 	}
 
-	// (320:0) {#if Array.isArray(field) }
+	// (321:0) {#if Array.isArray(field) }
 	function create_if_block_5$3(ctx) {
 		let div;
 		let current;
@@ -18170,7 +18179,54 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (333:1) {:else}
+	// (343:0) {#if form[field].visible}
+	function create_if_block_9$2(ctx) {
+		let uifield;
+		let current;
+
+		uifield = new Field({
+				props: {
+					controls: [/*form*/ ctx[11][/*field*/ ctx[39]]],
+					name: /*field*/ ctx[39],
+					horizontal: /*options*/ ctx[2].horizontal,
+					label: /*form*/ ctx[11][/*field*/ ctx[39]].label
+				}
+			});
+
+		uifield.$on("change", /*onFieldChange*/ ctx[15]);
+
+		return {
+			c() {
+				create_component(uifield.$$.fragment);
+			},
+			m(target, anchor) {
+				mount_component(uifield, target, anchor);
+				current = true;
+			},
+			p(ctx, dirty) {
+				const uifield_changes = {};
+				if (dirty[0] & /*form, fields*/ 2050) uifield_changes.controls = [/*form*/ ctx[11][/*field*/ ctx[39]]];
+				if (dirty[0] & /*fields*/ 2) uifield_changes.name = /*field*/ ctx[39];
+				if (dirty[0] & /*options*/ 4) uifield_changes.horizontal = /*options*/ ctx[2].horizontal;
+				if (dirty[0] & /*form, fields*/ 2050) uifield_changes.label = /*form*/ ctx[11][/*field*/ ctx[39]].label;
+				uifield.$set(uifield_changes);
+			},
+			i(local) {
+				if (current) return;
+				transition_in(uifield.$$.fragment, local);
+				current = true;
+			},
+			o(local) {
+				transition_out(uifield.$$.fragment, local);
+				current = false;
+			},
+			d(detaching) {
+				destroy_component(uifield, detaching);
+			}
+		};
+	}
+
+	// (336:1) {:else}
 	function create_else_block_1$3(ctx) {
 		let div;
 		let t0;
@@ -18203,8 +18259,64 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (323:1) {#if form[subfield] && form[subfield].visible && form[subfield].component }
+	// (324:1) {#if form[subfield] && form[subfield].component }
 	function create_if_block_6$2(ctx) {
+		let if_block_anchor;
+		let current;
+		let if_block = /*form*/ ctx[11][/*subfield*/ ctx[42]].visible && create_if_block_7$2(ctx);
+
+		return {
+			c() {
+				if (if_block) if_block.c();
+				if_block_anchor = empty();
+			},
+			m(target, anchor) {
+				if (if_block) if_block.m(target, anchor);
+				insert(target, if_block_anchor, anchor);
+				current = true;
+			},
+			p(ctx, dirty) {
+				if (/*form*/ ctx[11][/*subfield*/ ctx[42]].visible) {
+					if (if_block) {
+						if_block.p(ctx, dirty);
+
+						if (dirty[0] & /*form, fields*/ 2050) {
+							transition_in(if_block, 1);
+						}
+					} else {
+						if_block = create_if_block_7$2(ctx);
+						if_block.c();
+						transition_in(if_block, 1);
+						if_block.m(if_block_anchor.parentNode, if_block_anchor);
+					}
+				} else if (if_block) {
+					group_outros();
+
+					transition_out(if_block, 1, 1, () => {
+						if_block = null;
+					});
+
+					check_outros();
+				}
+			},
+			i(local) {
+				if (current) return;
+				transition_in(if_block);
+				current = true;
+			},
+			o(local) {
+				transition_out(if_block);
+				current = false;
+			},
+			d(detaching) {
+				if (if_block) if_block.d(detaching);
+				if (detaching) detach(if_block_anchor);
+			}
+		};
+	}
+
+	// (325:1) {#if form[subfield].visible }
+	function create_if_block_7$2(ctx) {
 		let div;
 		let uifield;
 		let div_class_value;
@@ -18265,7 +18377,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (322:1) {#each field as subfield }
+	// (323:1) {#each field as subfield }
 	function create_each_block_1$4(ctx) {
 		let current_block_type_index;
 		let if_block;
@@ -18275,7 +18387,7 @@ var notBulma = (function (exports) {
 		const if_blocks = [];
 
 		function select_block_type_2(ctx, dirty) {
-			if (/*form*/ ctx[11][/*subfield*/ ctx[42]] && /*form*/ ctx[11][/*subfield*/ ctx[42]].visible && /*form*/ ctx[11][/*subfield*/ ctx[42]].component) return 0;
+			if (/*form*/ ctx[11][/*subfield*/ ctx[42]] && /*form*/ ctx[11][/*subfield*/ ctx[42]].component) return 0;
 			return 1;
 		}
 
@@ -18335,20 +18447,20 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (319:0) {#each fields as field}
+	// (320:0) {#each fields as field}
 	function create_each_block$7(ctx) {
 		let show_if;
 		let current_block_type_index;
 		let if_block;
 		let if_block_anchor;
 		let current;
-		const if_block_creators = [create_if_block_5$3, create_if_block_7$2, create_else_block_2$2];
+		const if_block_creators = [create_if_block_5$3, create_if_block_8$2, create_else_block_2$2];
 		const if_blocks = [];
 
 		function select_block_type_1(ctx, dirty) {
 			if (dirty[0] & /*fields*/ 2) show_if = !!Array.isArray(/*field*/ ctx[39]);
 			if (show_if) return 0;
-			if (/*form*/ ctx[11][/*field*/ ctx[39]] && /*form*/ ctx[11][/*field*/ ctx[39]].visible && /*form*/ ctx[11][/*field*/ ctx[39]].component) return 1;
+			if (/*form*/ ctx[11][/*field*/ ctx[39]] && /*form*/ ctx[11][/*field*/ ctx[39]].component) return 1;
 			return 2;
 		}
 
@@ -18408,7 +18520,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (353:0) {#if !options.buttonsFirst }
+	// (358:0) {#if !options.buttonsFirst }
 	function create_if_block_1$f(ctx) {
 		let t0;
 		let div;
@@ -18485,7 +18597,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (354:0) {#if formErrors.length > 0 }
+	// (359:0) {#if formErrors.length > 0 }
 	function create_if_block_4$9(ctx) {
 		let div;
 		let t_value = /*formErrors*/ ctx[12].join(", ") + "";
@@ -18510,7 +18622,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (358:1) {#if cancel.enabled}
+	// (363:1) {#if cancel.enabled}
 	function create_if_block_3$a(ctx) {
 		let button;
 		let t_value = /*cancel*/ ctx[8].caption + "";
@@ -18553,7 +18665,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (361:1) {#if submit.enabled}
+	// (366:1) {#if submit.enabled}
 	function create_if_block_2$b(ctx) {
 		let button;
 		let t_value = /*submit*/ ctx[7].caption + "";
@@ -18946,10 +19058,12 @@ var notBulma = (function (exports) {
 		}
 
 		function setFieldsVisibility(fieldsList, val) {
-			if (Array.isarray(fieldsList)) {
+			if (Array.isArray(fieldsList)) {
 				Object.keys(form).forEach(fieldName => {
 					$$invalidate(11, form[fieldName].visible = fieldsList.includes(fieldName) ? val : !val, form);
 				});
+
+				$$invalidate(11, form);
 			}
 		}
 

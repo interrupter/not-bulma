@@ -270,10 +270,11 @@
 	}
 
 	export function setFieldsVisibility(fieldsList, val){
-		if(Array.isarray(fieldsList)){
+		if(Array.isArray(fieldsList)){
 			Object.keys(form).forEach(fieldName => {
 				form[fieldName].visible = fieldsList.includes(fieldName)?val:!val;
 			});
+			form=form;
 		}
 	}
 
@@ -320,7 +321,8 @@
 {#if Array.isArray(field) }
 <div class="columns">
 	{#each field as subfield }
-	{#if form[subfield] && form[subfield].visible && form[subfield].component }
+	{#if form[subfield] && form[subfield].component }
+	{#if form[subfield].visible }
 	<div class="column {form[subfield].fieldSize?('is-'+form[subfield].fieldSize):''} ">
 		<UIField
 			controls={[form[subfield]]}
@@ -330,13 +332,15 @@
 			label={form[subfield].label}
 			/>
 	</div>
+	{/if}
 	{:else}
 	<div class="column notification is-danger">Subfield '{subfield}' is not registered</div>
 	{/if}
 	{/each}
 </div>
 {:else }
-{#if form[field] && form[field].visible && form[field].component }
+{#if form[field] && form[field].component }
+{#if form[field].visible}
 <UIField
 	controls={[form[field]]}
 	on:change={onFieldChange}
@@ -344,6 +348,7 @@
 	horizontal={options.horizontal}
 	label={form[field].label}
 	/>
+{/if}
 {:else}
 <div class="notification is-danger">Field '{field}' is not registered</div>
 {/if}
@@ -363,5 +368,4 @@
 	{/if}
 </div>
 {/if}
-
 {/if}
