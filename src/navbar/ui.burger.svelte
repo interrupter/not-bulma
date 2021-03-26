@@ -1,6 +1,14 @@
 <script>
-  import { createEventDispatcher } from 'svelte';
+
+  const COMPONENT_NAME = 'top-navbar-burger';
+
+  import { createEventDispatcher, onMount } from 'svelte';
 	const dispatch = createEventDispatcher();
+
+  import {notCommon} from '../frame';
+
+  export let events = {};
+  export let register = notCommon.registerWidgetEvents.bind(notCommon);
 
   export let closed = true;
 
@@ -10,6 +18,22 @@
     dispatch('toggle', {closed} );
     return false;
   }
+
+  function getStandartUpdateEventName(){
+    return COMPONENT_NAME + ':update';
+  }
+
+  export let onUpdate = (data)=>{
+    console.log(getStandartUpdateEventName(), data);
+    closed = data.closed;
+  };
+
+  onMount(() => {
+    if (!Object.prototype.hasOwnProperty(events, getStandartUpdateEventName())){
+      events[getStandartUpdateEventName()] = onUpdate;
+    }
+    register(events);
+  });
 
 </script>
 

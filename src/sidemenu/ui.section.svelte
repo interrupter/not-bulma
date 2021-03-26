@@ -10,8 +10,9 @@
   $: sectionItems = items.filter(item => section.id === item.section );
 </script>
 
-{#if section}
-<p class="menu-label">
+{#if section }
+{#if sectionItems.length || section.component || section.tag || section.indicator }
+<p class="menu-label {section.classes}">
   {#if (section.type==='component' && section.component && COMPONENTS.contains(section.component)) }
   <svelte:component
     this={COMPONENTS.get(section.component)}
@@ -28,6 +29,7 @@
     <UIIndicator id={section.id} {...section.indicator } />
   {/if}
 </p>
+{/if}
 {/if}
 {#if sectionItems.length }
 <UISideMenuItems {root} items={sectionItems} on:navigate />

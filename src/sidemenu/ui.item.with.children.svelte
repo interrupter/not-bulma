@@ -25,8 +25,8 @@
 
 </script>
 
-<li class="{item.url?'':'is-no-follow-subtitle'}">
-  {#if item.url }
+<li class="{(typeof item.url === 'undefined' || item.url===false)?'':'is-no-follow-subtitle'} {item.classes}">
+  {#if (typeof item.url !== 'undefined' && item.url!==false) }
   <a href="{root}{item.url}" data-href="{item.url}" on:click="{onClick}">
     <UISideMenuItemLabel {item} />
     <UISideMenuTrigger {closed} on:toggle={toggle} />

@@ -18,8 +18,8 @@
 
 </script>
 
-{#if item.url }
-<li>
+{#if (typeof item.url !== 'undefined' && item.url!==false) }
+<li class="{item.classes}">
   <a href="{root}{item.url}" data-href="{item.url}" on:click="{onClick}">
   {item.title}
   {#if item.tag }
@@ -30,7 +30,7 @@
   {/if}
 </a></li>
 {:else }
-<li class="is-no-follow-subtitle">
+<li class="is-no-follow-subtitle {item.classes}">
   {item.title}
   {#if item.tag }
     <UIIndicator id={item.id} {...item.tag} />
