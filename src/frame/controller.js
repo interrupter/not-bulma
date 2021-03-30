@@ -36,6 +36,18 @@ const OPT_DEFAULT_AUTO_NAME = true;
  *	Basic class for user controller
  */
 class notController extends notBase {
+  /**
+	 *	@static {number} PARAMS_LENGTH  number of params in URL path
+	 */
+  static PARAMS_LENGTH = 2;
+  /**
+	 *	@static {string} MODULE_NAME  name of module
+	 */
+  static MODULE_NAME = 'MODULE_NAME';
+  /**
+	 *	@static {string} MODEL_NAME  name of model
+	 */
+	static MODEL_NAME = 'MODEL_NAME';
 	/**
 	 *	@param {notApp} app
 	 */
@@ -387,6 +399,50 @@ class notController extends notBase {
 	refresh(timeout = 0) {
 		this.app.getWorking('router').refresh(timeout);
 	}
+
+  /**
+  * Returns path pattern for router
+  * @params {number} [0] paramsCount   number of params
+  * @return {string}  pattern for controller supported url
+  */
+  static getControllerRoute(paramsCount = 0){
+    let path = [];
+    if(this.MODULE_NAME && this.MODULE_NAME.length > 0){
+      path.push(notCommon.lowerFirstLetter(this.MODULE_NAME));
+    }
+    if(this.MODEL_NAME && this.MODEL_NAME.length > 0){
+      path.push(notCommon.lowerFirstLetter(this.MODEL_NAME));
+    }
+    path = [path.join('/')];
+    for(let i = 0; i < paramsCount; i++){
+      path.push('\/([^\/]+)');
+    }
+    return path.join('');
+  }
+
+  /**
+  * Returns path patterns for router
+  * @params {number} [0] paramsDeep   how many paths with params in the end
+  * @return {string[]}  patterns for controller supported url in order of simplification
+  */
+  static getControllerRoutes(paramsDeep = 0){
+    let routes = [this.getControllerRoute(0)];
+    for(let i = 0; i < paramsDeep; i++){
+      routes.unshift(this.getControllerRoute(i + 1));
+    }
+    return routes;
+  }
+
+  /**
+  * Returns router rule.
+  * @returns {Object} router rule {paths:String[], controller:notController}
+  */
+  static getRoutes(){
+    return {
+      paths: 			this.getControllerRoutes(this.PARAMS_LENGTH),
+      controller: this
+    };
+  }
 
 }
 
