@@ -9,10 +9,13 @@
   $: size2 = subsize?subsize:(size<6?size+1:size);
   $: spacedStyle = (spaced?'is-spaced':'');
 
+  $: resultTitle = `<h${size} class="title ${spacedStyle} is-${size}">${title}</h${size}>`;
+  $: resultSubtitle = `<h${size2} class="subtitle is-${size2}">${subtitle}</h${size2}>`;
+
 </script>
 
-{@html `<h${size} class="title ${spacedStyle} is-{size}">${title}</h${size}>`}
+{@html resultTitle }
 
 {#if subtitle }
-{@html `<h${size2} class="subtitle is-{size2}">${subtitle}</h${size2}>`}
+{@html resultSubtitle }
 {/if}
