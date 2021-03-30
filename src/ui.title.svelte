@@ -11,8 +11,8 @@
 
 </script>
 
-{@html `<h${size} class="title ${spacedStyle}">${title}</h${size}>`}
+{@html `<h${size} class="title ${spacedStyle} is-{size}">${title}</h${size}>`}
 
 {#if subtitle }
-{@html `<h${size2} class="subtitle">${subtitle}</h${size2}>`}
+{@html `<h${size2} class="subtitle is-{size2}">${subtitle}</h${size2}>`}
 {/if}
