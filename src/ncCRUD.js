@@ -172,6 +172,10 @@ class ncCRUD extends notController {
 		} else {
 			this.$destroyUI();
 		}
+		let defData = this.createDefault();
+		if(defData.getData){
+			defData = defData.getData();
+		}
 		let manifest = this.app.getInterfaceManifest()[this.getModelName()];
 		this.ui.create = Form.build({
 			target: this.els.main,
@@ -179,7 +183,7 @@ class ncCRUD extends notController {
 			action: 'create',
 			options: {},
 			validators: this.getOptions('Validators'),
-			data: this.createDefault()
+			data:defData
 		});
 		this.ui.create.$on('submit', (ev) => this.onCreateFormSubmit(ev.detail));
 		this.ui.create.$on('reject', this.goList.bind(this));

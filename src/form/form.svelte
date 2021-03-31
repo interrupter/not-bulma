@@ -38,7 +38,6 @@
 			placeholder: '',
 			enabled: true,
 			visible: true,
-			value: '',
 			required: true,
 			validated: false,
 			valid: false,
@@ -46,10 +45,10 @@
 			variants: []
 		};
 		if (FIELDS.contains(type)) {
-			Object.assign(field, FIELDS.get(type));
+			field = {...field, ...FIELDS.get(type)};
 		}
 		if (mutation) {
-			Object.assign(field, mutation);
+			field = {...field, ...mutation};
 		}
 		if (
 			Object.prototype.hasOwnProperty.call(field, 'variantsSource') &&
@@ -64,7 +63,9 @@
 		let result = {};
 		fields.flat().forEach((fieldname) => {
 			if (Object.prototype.hasOwnProperty.call(form, fieldname) && form[fieldname].enabled && form[fieldname].visible) {
-				result[fieldname] = form[fieldname].value;
+				if(typeof form[fieldname].value !== 'undefined'){
+					result[fieldname] = form[fieldname].value;
+				}
 			}
 		});
 		return result;
@@ -158,7 +159,6 @@
 		if (Object.prototype.hasOwnProperty.call(options, 'validate') && typeof options.validate === 'function') {
 			validate = options.validate;
 		}
-
 		form = form;
 	});
 

@@ -87,7 +87,7 @@
         {/if}
         {/if}
         {#each variants as variant}
-        <option value="{variant.id}" selected="{value.indexOf(variant.id) > -1}">{variant.title}</option>
+        <option value="{variant.id}" selected="{value && value.indexOf(variant.id) > -1}">{variant.title}</option>
         {/each}
       </select>
       {:else}
