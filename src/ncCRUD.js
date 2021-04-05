@@ -40,10 +40,6 @@ class ncCRUD extends notController {
 		this.route(this.getOptions('params'));
 	}
 
-	getModel(){
-		return this.make[this.getModelName()];
-	}
-
 	setBreadcrumbs(tail) {
 		Breadcrumbs.setTail(tail).update();
 	}

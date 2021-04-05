@@ -112,9 +112,9 @@ class notController extends notBase {
 	 *	Returns current model
 	 *	@return {notRecord}
 	 */
-	getModel() {
-		return this.getWorking('model');
-	}
+   getModel(){
+ 		return this.make[this.getModelName()];
+ 	}
 
 	/**
 	 *	Returns current model name
