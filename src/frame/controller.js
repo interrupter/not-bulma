@@ -110,10 +110,15 @@ class notController extends notBase {
 
 	/**
 	 *	Returns current model
+   *  @param {object} data   model data
 	 *	@return {notRecord}
 	 */
-   getModel(){
- 		return this.make[this.getModelName()];
+  getModel(data = {}){
+ 		return this.getInterface()(data);
+ 	}
+
+  getInterface(){
+ 		return this.app.getInterface(this.getModelName());
  	}
 
 	/**
