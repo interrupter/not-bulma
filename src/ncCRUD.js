@@ -115,7 +115,7 @@ class ncCRUD extends notController {
 	}
 
 	createDefault() {
-		let newRecord = this.getModel()({
+		let newRecord = this.getModel({
 			'_id': null,
 			title: this.getOptions('names.single'),
 			products: []
@@ -202,7 +202,7 @@ class ncCRUD extends notController {
 		}
 		let manifest = this.app.getInterfaceManifest()[this.getModelName()];
 		query[idField] = params[0];
-		this.getModel()(query)['$get']()
+		this.getModel(query)['$get']()
 			.then((res) => {
 				if (res.status === 'ok') {
 					let title = this.getItemTitle(res.result);
@@ -245,7 +245,7 @@ class ncCRUD extends notController {
 		}
 		let manifest = this.app.getInterfaceManifest()[this.getModelName()];
 		query[idField] = params[0];
-		this.getModel()(query).$getRaw().then((res) => {
+		this.getModel(query).$getRaw().then((res) => {
 			if (res.status === 'ok') {
 				let title = this.getItemTitle(res.result);
 				this.setBreadcrumbs([{
@@ -284,7 +284,7 @@ class ncCRUD extends notController {
 		}]);
 
 		if (confirm('Удалить запись?')) {
-			this.getModel()({
+			this.getModel({
 				_id: params[0]
 			}).$delete()
 				.then(() => {
@@ -314,7 +314,7 @@ class ncCRUD extends notController {
 		const DEFAULT_OPTIONS_TABLE = {
 			interface: {
 				combined: true,
-				factory: this.getModel()
+				factory: this.getInterface()
 			},
 			fields: 			undefined,
 			showSelect: 	undefined,
@@ -372,7 +372,7 @@ class ncCRUD extends notController {
 
 	onCreateFormSubmit(item) {
 		this.ui.create.setLoading();
-		this.getModel()(item).$create()
+		this.getModel(item).$create()
 			.then((res) => {
 				this.log(res);
 				this.showResult(this.ui.create, res);
@@ -387,7 +387,7 @@ class ncCRUD extends notController {
 
 	onUpdateFormSubmit(item) {
 		this.ui.update.setLoading();
-		this.getModel()(item).$update()
+		this.getModel(item).$update()
 			.then((res) => {
 				this.showResult(this.ui.update, res);
 				if (!notCommon.isError(res) && !res.error) {
