@@ -142,8 +142,12 @@ export default class notApp extends notBase {
 		return this.getWorking('WS_CLIENT');
 	}
 
-	getModel(name){
-		return this.getWorking(`interfaces.${name}`);
+	getInterface(name){
+		return this.getInterfaces()[name];
+	}
+
+	getModel(name, data = {}){
+		return this.getInterface(name)(data);
 	}
 
 }
