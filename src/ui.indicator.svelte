@@ -47,7 +47,7 @@
   }
 
   onMount(()=>{
-    if (!Object.prototype.hasOwnProperty(events, getStandartUpdateEventName())){
+    if (!Object.prototype.hasOwnProperty.call(events, getStandartUpdateEventName())){
       events[getStandartUpdateEventName()] = onUpdate;
     }
     register(events);

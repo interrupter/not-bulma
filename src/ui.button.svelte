@@ -14,7 +14,7 @@
   export let classes = '';
   export let icon = false;
   export let iconSide = 'right';
-  export let action = ()=>{ return true; }
+  export let action = ()=>{ return true; };
 </script>
 
 

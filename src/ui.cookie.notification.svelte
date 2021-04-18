@@ -7,7 +7,7 @@
   onMount(()=>{
     let cookieDate = localStorage.getItem('cookie_date');
     if( !cookieDate || (+cookieDate + 31536000000) < Date.now() ){
-        show = true;
+      show = true;
     }
   });
 

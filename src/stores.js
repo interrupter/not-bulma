@@ -1,37 +1,37 @@
 import {
-	writable
+  writable
 } from 'svelte/store';
 
 const ALL = {};
 
 function exist(key) {
-	return Object.prototype.hasOwnProperty.call(ALL, key);
+  return Object.prototype.hasOwnProperty.call(ALL, key);
 }
 
 function get(key) {
-	if (exist(key)) {
-		return ALL[key];
-	} else {
-		return false;
-	}
+  if (exist(key)) {
+    return ALL[key];
+  } else {
+    return false;
+  }
 }
 
 function create(key, props = {
-	'raw': [],
-	'filtered': [],
-	'selected': {}
+  'raw': [],
+  'filtered': [],
+  'selected': {}
 }) {
-	if (!exist(key)) {
-		if (Object.keys(props).length > 0) {
-			ALL[key] = {};
-			Object.keys(props).forEach((name) => {
-				ALL[key][name] = writable(props[name]);
-			});
-		} else {
-			throw new Error('store\'s props wasn\'t specified');
-		}
-	}
-	return ALL[key];
+  if (!exist(key)) {
+    if (Object.keys(props).length > 0) {
+      ALL[key] = {};
+      Object.keys(props).forEach((name) => {
+        ALL[key][name] = writable(props[name]);
+      });
+    } else {
+      throw new Error('store\'s props wasn\'t specified');
+    }
+  }
+  return ALL[key];
 }
 
 /**
@@ -43,17 +43,17 @@ function create(key, props = {
  */
 
 function fake(val) {
-	return {
-		subscribe(f) {
-			f(val);
-			return () => {};
-		},
-		set() {}
-	};
+  return {
+    subscribe(f) {
+      f(val);
+      return () => {};
+    },
+    set() {}
+  };
 }
 
 export {
-	create,
-	get,
-	fake
+  create,
+  get,
+  fake
 };

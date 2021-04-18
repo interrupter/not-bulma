@@ -3,11 +3,12 @@
   import UICommon from '../common.js';
 
   import {createEventDispatcher} from 'svelte';
-	let dispatch = createEventDispatcher();
+let dispatch = createEventDispatcher();
 
   export let inputStarted = false;
   export let value = [];
   export let fieldname = 'checkbox-list';
+  export let placeholder = '';
   export let readonly = false;
   export let disabled = false;
   export let valid = true;
@@ -24,12 +25,12 @@
   function onBlur(ev){
     let id = parseInt(ev.currentTarget.dataset.id);
     let copy = [...value];
-    copy.find(itm => itm.id == id ).value = ev.currentTarget.checked
+    copy.find(itm => itm.id == id ).value = ev.currentTarget.checked;
     let data = {
       id,
-  		field: fieldname,
-  		value: copy,
-  	};
+      field: fieldname,
+      value: copy,
+    };
     inputStarted = true;
     dispatch('change', data);
     return true;
@@ -38,12 +39,12 @@
   function onInput(ev){
     let id = parseInt(ev.currentTarget.dataset.id);
     let copy = [...value];
-    copy.find(itm => itm.id === id ).value = ev.currentTarget.checked
+    copy.find(itm => itm.id === id ).value = ev.currentTarget.checked;
     let data = {
       id,
-  		field: fieldname,
-  		value: copy,
-  	};
+      field: fieldname,
+      value: copy,
+    };
     inputStarted = true;
     dispatch('change', data);
     return true;

@@ -3,7 +3,7 @@
   import UICommon from '../common.js';
 
   import {createEventDispatcher} from 'svelte';
-	let dispatch = createEventDispatcher();
+let dispatch = createEventDispatcher();
 
   export let inputStarted = false;
   export let value = '';
@@ -26,24 +26,24 @@
   $: validationClasses = (valid===true || !inputStarted)?UICommon.CLASS_OK:UICommon.CLASS_ERR;
 
   function onBlur(ev){
-  	let data = {
-  		field: fieldname,
-  		value: ev.target.type === 'checkbox' ? ev.target.checked:ev.target.value
-  	};
+    let data = {
+      field: fieldname,
+      value: ev.target.type === 'checkbox' ? ev.target.checked:ev.target.value
+    };
     inputStarted = true;
     dispatch('change', data);
     return true;
   }
 
-  function onInput(ev){
-  	let data = {
-  		field: fieldname,
+  /*function onInput(ev){
+    let data = {
+      field: fieldname,
       value: ev.currentTarget.value
-  	};
+    };
     inputStarted = true;
     dispatch('change', data);
     return true;
-  }
+  }*/
 
 </script>
 

@@ -16,13 +16,13 @@
   export let iconSide = 'right';
   export let action = () => {
     return true;
-  }
+  };
 
   $: {
     classes = (state && state.length > 0 ? (` is-${state} `) : '') +
     (light ? (` is-light `) : '') + (type && type.length > 0 ? (` is-${type} `) : '') +
     (size && size.length > 0 ? (` is-${size} `) : '');
-  };
+  }
 </script>
 
 <a on:click="{action}" href="{url}" class="button {classes} {state?`is-${state}`:''} {inverted?`is-inverted`:''} {outlined?`is-outlined`:''} {raised?`is-raised`:''} {rounded?`is-rounded`:''} {light?`is-light`:''} {loading?`is-loading`:''} {color?`is-${color}`:''} {type?`is-${type}`:''} {size?`is-${size}`:''}">

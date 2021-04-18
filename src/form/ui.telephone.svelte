@@ -2,53 +2,53 @@
 
 import UICommon from '../common.js';
 
-  import {createEventDispatcher} from 'svelte';
-	let dispatch = createEventDispatcher();
+import {createEventDispatcher} from 'svelte';
+let dispatch = createEventDispatcher();
 
-  export let inputStarted = false;
-  export let value = '';
-  export let placeholder = '+7 (987) 654-32-10';
-  export let fieldname = 'telephone';
-  export let icon = false;
-  export let required = true;
-  export let readonly = false;
-  export let valid = true;
-  export let validated = false;
-  export let errors = false;
-  export let formErrors = false;
-  export let formLevelError = false;
+export let inputStarted = false;
+export let value = '';
+export let placeholder = '+7 (987) 654-32-10';
+export let fieldname = 'telephone';
+export let icon = false;
+export let required = true;
+export let readonly = false;
+export let valid = true;
+export let validated = false;
+export let errors = false;
+export let formErrors = false;
+export let formLevelError = false;
 
-  $: iconClasses = (icon? ' has-icons-left ':'') + ' has-icons-right ';
-  $: allErrors = [].concat(errors?errors:[], formErrors?formErrors:[]);
-  $: helper = allErrors?allErrors.join(', '): placeholder;
-  $: invalid = ((valid===false) || (formLevelError));
-  $: validationClasses = (valid===true || !inputStarted)?UICommon.CLASS_OK:UICommon.CLASS_ERR;
+$: iconClasses = (icon? ' has-icons-left ':'') + ' has-icons-right ';
+$: allErrors = [].concat(errors?errors:[], formErrors?formErrors:[]);
+$: helper = allErrors?allErrors.join(', '): placeholder;
+$: invalid = ((valid===false) || (formLevelError));
+$: validationClasses = (valid===true || !inputStarted)?UICommon.CLASS_OK:UICommon.CLASS_ERR;
 
-  function onBlur(ev){
-    ev.preventDefault();
-    let val = UICommon.formatPhone(ev.currentTarget.value);
-  	let data = {
-  		field: fieldname,
-  		value: val
-  	};
-    value = val;
-    inputStarted = true;
-    dispatch('change', data);
-    return false;
-  }
+function onBlur(ev){
+  ev.preventDefault();
+  let val = UICommon.formatPhone(ev.currentTarget.value);
+  let data = {
+    field: fieldname,
+    value: val
+  };
+  value = val;
+  inputStarted = true;
+  dispatch('change', data);
+  return false;
+}
 
-  function onInput(ev){
-    ev.preventDefault();
-    let val = UICommon.formatPhone(ev.currentTarget.value);
-  	let data = {
-  		field: fieldname,
-      value: val
-  	};
-    value = val;
-    inputStarted = true;
-    dispatch('change', data);
-    return false;
-  }
+function onInput(ev){
+  ev.preventDefault();
+  let val = UICommon.formatPhone(ev.currentTarget.value);
+  let data = {
+    field: fieldname,
+    value: val
+  };
+  value = val;
+  inputStarted = true;
+  dispatch('change', data);
+  return false;
+}
 
 </script>
 

@@ -30,80 +30,76 @@
 
 	onMount(() => {
 
-		if(showSelect){
-			Stores.get(id).selected.subscribe(value => {
-				selected = value;
-			});
-		}
+	  if(showSelect){
+	    Stores.get(id).selected.subscribe(value => {
+	      selected = value;
+	    });
+	  }
 
-		Stores.get(id).refined.subscribe(value => {
-			items = value;
-			if(showSelect){
-				for(let itemId in selected){
-					if(! items.some(item => getItemId(item) === itemId)){
-						delete selected[itemId];
-					}else{
-						if(!Object.prototype.hasOwnProperty.call(selected, itemId)){
-							selected[itemId] = false;
-						}
-					}
-				}
-				selected=selected;
-			}
-		});
+	  Stores.get(id).refined.subscribe(value => {
+	    items = value;
+	    if(showSelect){
+	      for(let itemId in selected){
+	        if(! items.some(item => getItemId(item) === itemId)){
+	          delete selected[itemId];
+	        }else{
+	          if(!Object.prototype.hasOwnProperty.call(selected, itemId)){
+	            selected[itemId] = false;
+	          }
+	        }
+	      }
+	      selected=selected;
+	    }
+	  });
 
-		Stores.get(id).state.subscribe(value => {
-			state = value;
-		});
+	  Stores.get(id).state.subscribe(value => {
+	    state = value;
+	  });
 
 	});
 
-	function getActivePageIndex(){
-		return items.findIndex(item => item.active );
-	}
-
 	function onSearchInput(ev){
-		try{
-			let data = ev.currentTarget.value.trim();
-			dispatch('searchChange', data);
-		}catch(e){
-			return;
-		}
+	  try{
+	    let data = ev.currentTarget.value.trim();
+	    dispatch('searchChange', data);
+	  }catch(e){
+	    return;
+	  }
 	}
 
 	function goPrev(){
-		dispatch('goToPrevPage');
+	  dispatch('goToPrevPage');
 	}
 
 	function goNext(){
-		dispatch('goToNextPage');
+	  dispatch('goToNextPage');
 	}
 
 	function goTo(e){
-		e.preventDefault();
-		let el = e.target;
-		dispatch('goToPage', parseInt(el.dataset.page));
-		return false;
+	  e.preventDefault();
+	  let el = e.target;
+	  dispatch('goToPage', parseInt(el.dataset.page));
+	  return false;
 	}
 
 	function onRowSelect(e){
-		e.preventDefault();
-		let itemId = e.currentTarget.dataset.id;
-		Stores.get(id).selected.update((value)=>{return value;});
-		dispatch('rowSelectChange', {
-			id: 			itemId,
-			selected: selected[itemId]
-		});
-		return false;
+	  e.preventDefault();
+	  let itemId = e.currentTarget.dataset.id;
+	  Stores.get(id).selected.update((value)=>{return value;});
+	  dispatch('rowSelectChange', {
+	    id: 			itemId,
+	    selected: selected[itemId]
+	  });
+	  return false;
 	}
 
-	function onSelectAll(e){
-		Stores.get(id).selected.update((value)=>{
-			items.forEach(item => {
-				value[getItemId(item)] = selectAll;
-			});
-			return value;
-		});
+	function onSelectAll(){
+	  Stores.get(id).selected.update((value)=>{
+	    items.forEach(item => {
+	      value[getItemId(item)] = selectAll;
+	    });
+	    return value;
+	  });
 	}
 
 </script>

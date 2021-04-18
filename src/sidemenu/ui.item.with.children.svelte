@@ -1,6 +1,6 @@
 <script>
   import { createEventDispatcher } from 'svelte';
-	const dispatch = createEventDispatcher();
+const dispatch = createEventDispatcher();
 
   import UISideMenuTrigger from './ui.trigger.svelte';
   import UISideMenuItems from './ui.items.svelte';
@@ -15,13 +15,13 @@
   }
 
   function onClick(ev){
-		ev.preventDefault();
-		dispatch('navigate', {
-			full: ev.target.getAttribute('href'),
-			short: ev.target.dataset.href
-		});
-		return false;
-	}
+    ev.preventDefault();
+    dispatch('navigate', {
+      full: ev.target.getAttribute('href'),
+      short: ev.target.dataset.href
+    });
+    return false;
+}
 
 </script>
 

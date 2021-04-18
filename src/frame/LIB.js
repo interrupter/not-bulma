@@ -7,5 +7,5 @@ import Lib from '../lib.js';
 const COMPONENTS = new Lib();
 
 export {
-	COMPONENTS
+  COMPONENTS
 };

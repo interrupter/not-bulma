@@ -8,25 +8,25 @@
 	export let navigate = null;
 
 	function onClick(ev, element) {
-		if(Object.prototype.hasOwnProperty.call(element, 'action')){
-			return element.action(ev, element);
-		}
-		ev.preventDefault();
-		if (typeof navigate === 'function') {
-			navigate({
-				full: ev.target.getAttribute('href'),
-				short: ev.target.dataset.href
-			});
-		}
-		return false;
+	  if(Object.prototype.hasOwnProperty.call(element, 'action')){
+	    return element.action(ev, element);
+	  }
+	  ev.preventDefault();
+	  if (typeof navigate === 'function') {
+	    navigate({
+	      full: ev.target.getAttribute('href'),
+	      short: ev.target.dataset.href
+	    });
+	  }
+	  return false;
 	}
 
 	let sectionsItemsCount = {};
 
 	beforeUpdate(()=>{
-		for(let section of sections){
-			sectionsItemsCount[section.id] = items.filter(t => t.section === section.id).length;
-		}
+	  for(let section of sections){
+	    sectionsItemsCount[section.id] = items.filter(t => t.section === section.id).length;
+	  }
 	});
 </script>
 

@@ -19,7 +19,7 @@
 {item.title}
 {/if}
 {#if item.tag }
-  <UIIndicator id={item.id} {...item.tag} />
+  <UITag id={item.id} {...item.tag} />
 {/if}
 {#if item.indicator }
   <UIIndicator id={item.id} {...item.indicator } />

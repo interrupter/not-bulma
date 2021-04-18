@@ -1,10 +1,10 @@
 <script>
 
   import UICommon from '../common.js';
-  import UILabel from './ui.label.svelte';
+//  import UILabel from './ui.label.svelte';
 
   import {createEventDispatcher} from 'svelte';
-	let dispatch = createEventDispatcher();
+let dispatch = createEventDispatcher();
 
   export let inputStarted = false;
   export let value = '';
@@ -21,25 +21,25 @@
 
   $: iconClasses = (icon? ' has-icons-left ':'') + ' has-icons-right ';
   $: allErrors = [].concat(errors?errors:[], formErrors?formErrors:[]);
-  $: helper = allErrors?allErrors.join(', '): (multi?placeholder[activeSubKey]:placeholder);
+  $: helper = allErrors?allErrors.join(', '): placeholder;
   $: invalid = ((valid===false) || (formLevelError));
   $: validationClasses = (valid===true || !inputStarted)?UICommon.CLASS_OK:UICommon.CLASS_ERR;
 
-  function onBlur(ev){
-  	let data = {
-  		field: fieldname,
-  		value
-  	};
+  function onBlur(/*ev*/){
+    let data = {
+      field: fieldname,
+      value
+    };
     inputStarted = true;
     dispatch('change', data);
     return true;
   }
 
   function onInput(ev){
-  	let data = {
-  		field: fieldname,
+    let data = {
+      field: fieldname,
       value: ev.currentTarget.value
-  	};
+    };
     inputStarted = true;
     dispatch('change', data);
     return true;

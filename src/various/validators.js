@@ -6,8 +6,8 @@ const Validators = {
       let errors = [];
       if(value!==''){
         if (!Form.validator.isLength(value, {
-            min: 3
-          })) {
+          min: 3
+        })) {
           errors.push('Минимальная длина 3 знаков');
         }
       }
@@ -15,7 +15,7 @@ const Validators = {
     }
   },
   forms:{
-    search(form) {
+    search(/*form*/) {
       let errors = {
         clean: true,
         fields: {},

@@ -4,14 +4,8 @@
   } from 'svelte';
   const dispatch = createEventDispatcher();
 
-  import {
-    COMPONENTS
-  } from '../frame/LIB.js';
-
   import SideMenu from '../sidemenu.js';
 
-  import UITag from '../ui.tag.svelte';
-  import UIIcon from '../ui.icon.svelte';
   import UIBrand from './ui.brand.svelte';
   import UINavbarItem from './ui.item.svelte';
   import UINavbarSection from './ui.section.svelte';

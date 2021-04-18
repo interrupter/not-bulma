@@ -22,7 +22,7 @@
   let positionStyle = '';
 
   onMount(()=>{
-    position = '';
+    positionStyle = '';
   });
 
 </script>

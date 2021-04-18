@@ -31,7 +31,7 @@
   export let formErrors = false;
   export let formLevelError = false;
 
-  export let searchFunction = (term)=>{return [];};
+  export let searchFunction = (/*term*/)=>{return [];};
 
   $: iconClasses = (icon? ' has-icons-left ':'') + ' has-icons-right ';
   $: allErrors = [].concat(errors ? errors : [], formErrors ? formErrors : []);

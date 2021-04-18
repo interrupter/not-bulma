@@ -17,9 +17,10 @@ var notBulma = (function (exports) {
 
 	// https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
 	var global_1 =
-	  /* global globalThis -- safe */
+	  // eslint-disable-next-line es/no-global-this -- safe
 	  check(typeof globalThis == 'object' && globalThis) ||
 	  check(typeof window == 'object' && window) ||
+	  // eslint-disable-next-line no-restricted-globals -- safe
 	  check(typeof self == 'object' && self) ||
 	  check(typeof commonjsGlobal == 'object' && commonjsGlobal) ||
 	  // eslint-disable-next-line no-new-func -- fallback
@@ -151,12 +152,14 @@ var notBulma = (function (exports) {
 
 	// `IsArray` abstract operation
 	// https://tc39.es/ecma262/#sec-isarray
+	// eslint-disable-next-line es/no-array-isarray -- safe
 	var isArray = Array.isArray || function isArray(arg) {
 	  return classofRaw(arg) == 'Array';
 	};
 
 	// Detect IE8's incomplete defineProperty implementation
 	var descriptors = !fails(function () {
+	  // eslint-disable-next-line es/no-object-defineproperty -- required for testing
 	  return Object.defineProperty({}, 1, { get: function () { return 7; } })[1] != 7;
 	});
 
@@ -170,6 +173,7 @@ var notBulma = (function (exports) {
 
 	// Thank's IE8 for his funny defineProperty
 	var ie8DomDefine = !descriptors && !fails(function () {
+	  // eslint-disable-next-line es/no-object-defineproperty -- requied for testing
 	  return Object.defineProperty(documentCreateElement('div'), 'a', {
 	    get: function () { return 7; }
 	  }).a != 7;
@@ -194,16 +198,17 @@ var notBulma = (function (exports) {
 	  throw TypeError("Can't convert object to primitive value");
 	};
 
-	var nativeDefineProperty$1 = Object.defineProperty;
+	// eslint-disable-next-line es/no-object-defineproperty -- safe
+	var $defineProperty$1 = Object.defineProperty;
 
 	// `Object.defineProperty` method
 	// https://tc39.es/ecma262/#sec-object.defineproperty
-	var f$7 = descriptors ? nativeDefineProperty$1 : function defineProperty(O, P, Attributes) {
+	var f$7 = descriptors ? $defineProperty$1 : function defineProperty(O, P, Attributes) {
 	  anObject(O);
 	  P = toPrimitive(P, true);
 	  anObject(Attributes);
 	  if (ie8DomDefine) try {
-	    return nativeDefineProperty$1(O, P, Attributes);
+	    return $defineProperty$1(O, P, Attributes);
 	  } catch (error) { /* empty */ }
 	  if ('get' in Attributes || 'set' in Attributes) throw TypeError('Accessors not supported');
 	  if ('value' in Attributes) O[P] = Attributes.value;
@@ -247,7 +252,7 @@ var notBulma = (function (exports) {
 	(module.exports = function (key, value) {
 	  return sharedStore[key] || (sharedStore[key] = value !== undefined ? value : {});
 	})('versions', []).push({
-	  version: '3.9.1',
+	  version: '3.10.1',
 	  mode: 'global',
 	  copyright: '© 2021 Denis Pushkarev (zloirock.ru)'
 	});
@@ -299,16 +304,19 @@ var notBulma = (function (exports) {
 
 	var engineV8Version = version && +version;
 
+	// eslint-disable-next-line es/no-object-getownpropertysymbols -- required for testing
 	var nativeSymbol = !!Object.getOwnPropertySymbols && !fails(function () {
-	  /* global Symbol -- required for testing */
+	  // eslint-disable-next-line es/no-symbol -- required for testing
 	  return !Symbol.sham &&
 	    // Chrome 38 Symbol has incorrect toString conversion
 	    // Chrome 38-40 symbols are not inherited from DOM collections prototypes to instances
 	    (engineIsNode ? engineV8Version === 38 : engineV8Version > 37 && engineV8Version < 41);
 	});
 
+	/* eslint-disable es/no-symbol -- required for testing */
+
+
 	var useSymbolAsUid = nativeSymbol
-	  /* global Symbol -- safe */
 	  && !Symbol.sham
 	  && typeof Symbol.iterator == 'symbol';
 
@@ -427,6 +435,7 @@ var notBulma = (function (exports) {
 	// https://tc39.es/ecma262/#sec-array.prototype.foreach
 	var arrayForEach = !STRICT_METHOD$1 ? function forEach(callbackfn /* , thisArg */) {
 	  return $forEach$1(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);
+	// eslint-disable-next-line es/no-array-prototype-foreach -- safe
 	} : [].forEach;
 
 	for (var COLLECTION_NAME$1 in domIterables) {
@@ -440,18 +449,19 @@ var notBulma = (function (exports) {
 	  }
 	}
 
-	var nativePropertyIsEnumerable$1 = {}.propertyIsEnumerable;
+	var $propertyIsEnumerable$1 = {}.propertyIsEnumerable;
+	// eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
 	var getOwnPropertyDescriptor$3 = Object.getOwnPropertyDescriptor;
 
 	// Nashorn ~ JDK8 bug
-	var NASHORN_BUG = getOwnPropertyDescriptor$3 && !nativePropertyIsEnumerable$1.call({ 1: 2 }, 1);
+	var NASHORN_BUG = getOwnPropertyDescriptor$3 && !$propertyIsEnumerable$1.call({ 1: 2 }, 1);
 
 	// `Object.prototype.propertyIsEnumerable` method implementation
 	// https://tc39.es/ecma262/#sec-object.prototype.propertyisenumerable
 	var f$6 = NASHORN_BUG ? function propertyIsEnumerable(V) {
 	  var descriptor = getOwnPropertyDescriptor$3(this, V);
 	  return !!descriptor && descriptor.enumerable;
-	} : nativePropertyIsEnumerable$1;
+	} : $propertyIsEnumerable$1;
 
 	var objectPropertyIsEnumerable = {
 		f: f$6
@@ -465,15 +475,16 @@ var notBulma = (function (exports) {
 	  return indexedObject(requireObjectCoercible(it));
 	};
 
-	var nativeGetOwnPropertyDescriptor$2 = Object.getOwnPropertyDescriptor;
+	// eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
+	var $getOwnPropertyDescriptor$1 = Object.getOwnPropertyDescriptor;
 
 	// `Object.getOwnPropertyDescriptor` method
 	// https://tc39.es/ecma262/#sec-object.getownpropertydescriptor
-	var f$5 = descriptors ? nativeGetOwnPropertyDescriptor$2 : function getOwnPropertyDescriptor(O, P) {
+	var f$5 = descriptors ? $getOwnPropertyDescriptor$1 : function getOwnPropertyDescriptor(O, P) {
 	  O = toIndexedObject(O);
 	  P = toPrimitive(P, true);
 	  if (ie8DomDefine) try {
-	    return nativeGetOwnPropertyDescriptor$2(O, P);
+	    return $getOwnPropertyDescriptor$1(O, P);
 	  } catch (error) { /* empty */ }
 	  if (has$1(O, P)) return createPropertyDescriptor(!objectPropertyIsEnumerable.f.call(O, P), O[P]);
 	};
@@ -668,6 +679,7 @@ var notBulma = (function (exports) {
 
 	// `Object.getOwnPropertyNames` method
 	// https://tc39.es/ecma262/#sec-object.getownpropertynames
+	// eslint-disable-next-line es/no-object-getownpropertynames -- safe
 	var f$4 = Object.getOwnPropertyNames || function getOwnPropertyNames(O) {
 	  return objectKeysInternal(O, hiddenKeys);
 	};
@@ -676,6 +688,7 @@ var notBulma = (function (exports) {
 		f: f$4
 	};
 
+	// eslint-disable-next-line es/no-object-getownpropertysymbols -- safe
 	var f$3 = Object.getOwnPropertySymbols;
 
 	var objectGetOwnPropertySymbols = {
@@ -775,6 +788,7 @@ var notBulma = (function (exports) {
 
 	// `Object.keys` method
 	// https://tc39.es/ecma262/#sec-object.keys
+	// eslint-disable-next-line es/no-object-keys -- safe
 	var objectKeys = Object.keys || function keys(O) {
 	  return objectKeysInternal(O, enumBugKeys);
 	};
@@ -1509,7 +1523,7 @@ var notBulma = (function (exports) {
 	        on_disconnect: [],
 	        before_update: [],
 	        after_update: [],
-	        context: new Map(parent_component ? parent_component.$$.context : []),
+	        context: new Map(parent_component ? parent_component.$$.context : options.context || []),
 	        // everything else
 	        callbacks: blank_object(),
 	        dirty,
@@ -1577,7 +1591,7 @@ var notBulma = (function (exports) {
 	    }
 	}
 
-	/* src/ui.box.svelte generated by Svelte v3.35.0 */
+	/* src/ui.box.svelte generated by Svelte v3.37.0 */
 
 	function create_fragment$Y(ctx) {
 		let div;
@@ -1654,7 +1668,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/ui.block.svelte generated by Svelte v3.35.0 */
+	/* src/ui.block.svelte generated by Svelte v3.37.0 */
 
 	function create_fragment$X(ctx) {
 		let div;
@@ -1731,7 +1745,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/ui.content.svelte generated by Svelte v3.35.0 */
+	/* src/ui.content.svelte generated by Svelte v3.37.0 */
 
 	function create_fragment$W(ctx) {
 		let div;
@@ -1808,11 +1822,10 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/ui.title.svelte generated by Svelte v3.35.0 */
+	/* src/ui.title.svelte generated by Svelte v3.37.0 */
 
 	function create_if_block$D(ctx) {
 		let html_tag;
-		let raw_value = `<h${/*size2*/ ctx[3]} class="subtitle">${/*subtitle*/ ctx[1]}</h${/*size2*/ ctx[3]}>` + "";
 		let html_anchor;
 
 		return {
@@ -1821,11 +1834,11 @@ var notBulma = (function (exports) {
 				html_tag = new HtmlTag(html_anchor);
 			},
 			m(target, anchor) {
-				html_tag.m(raw_value, target, anchor);
+				html_tag.m(/*resultSubtitle*/ ctx[2], target, anchor);
 				insert(target, html_anchor, anchor);
 			},
 			p(ctx, dirty) {
-				if (dirty & /*size2, subtitle*/ 10 && raw_value !== (raw_value = `<h${/*size2*/ ctx[3]} class="subtitle">${/*subtitle*/ ctx[1]}</h${/*size2*/ ctx[3]}>` + "")) html_tag.p(raw_value);
+				if (dirty & /*resultSubtitle*/ 4) html_tag.p(/*resultSubtitle*/ ctx[2]);
 			},
 			d(detaching) {
 				if (detaching) detach(html_anchor);
@@ -1836,10 +1849,9 @@ var notBulma = (function (exports) {
 
 	function create_fragment$V(ctx) {
 		let html_tag;
-		let raw_value = `<h${/*size*/ ctx[2]} class="title ${/*spacedStyle*/ ctx[4]}">${/*title*/ ctx[0]}</h${/*size*/ ctx[2]}>` + "";
 		let t;
 		let if_block_anchor;
-		let if_block = /*subtitle*/ ctx[1] && create_if_block$D(ctx);
+		let if_block = /*subtitle*/ ctx[0] && create_if_block$D(ctx);
 
 		return {
 			c() {
@@ -1849,15 +1861,15 @@ var notBulma = (function (exports) {
 				html_tag = new HtmlTag(t);
 			},
 			m(target, anchor) {
-				html_tag.m(raw_value, target, anchor);
+				html_tag.m(/*resultTitle*/ ctx[1], target, anchor);
 				insert(target, t, anchor);
 				if (if_block) if_block.m(target, anchor);
 				insert(target, if_block_anchor, anchor);
 			},
 			p(ctx, [dirty]) {
-				if (dirty & /*size, spacedStyle, title*/ 21 && raw_value !== (raw_value = `<h${/*size*/ ctx[2]} class="title ${/*spacedStyle*/ ctx[4]}">${/*title*/ ctx[0]}</h${/*size*/ ctx[2]}>` + "")) html_tag.p(raw_value);
+				if (dirty & /*resultTitle*/ 2) html_tag.p(/*resultTitle*/ ctx[1]);
 
-				if (/*subtitle*/ ctx[1]) {
+				if (/*subtitle*/ ctx[0]) {
 					if (if_block) {
 						if_block.p(ctx, dirty);
 					} else {
@@ -1883,6 +1895,8 @@ var notBulma = (function (exports) {
 
 	function instance$V($$self, $$props, $$invalidate) {
 		let spacedStyle;
+		let resultTitle;
+		let resultSubtitle;
 		let { title = "" } = $$props;
 		let { subtitle } = $$props;
 		let { size = 1 } = $$props;
@@ -1891,24 +1905,42 @@ var notBulma = (function (exports) {
 		let size2;
 
 		$$self.$$set = $$props => {
-			if ("title" in $$props) $$invalidate(0, title = $$props.title);
-			if ("subtitle" in $$props) $$invalidate(1, subtitle = $$props.subtitle);
-			if ("size" in $$props) $$invalidate(2, size = $$props.size);
+			if ("title" in $$props) $$invalidate(3, title = $$props.title);
+			if ("subtitle" in $$props) $$invalidate(0, subtitle = $$props.subtitle);
+			if ("size" in $$props) $$invalidate(4, size = $$props.size);
 			if ("subsize" in $$props) $$invalidate(5, subsize = $$props.subsize);
 			if ("spaced" in $$props) $$invalidate(6, spaced = $$props.spaced);
 		};
 
 		$$self.$$.update = () => {
-			if ($$self.$$.dirty & /*subsize, size*/ 36) {
-				$$invalidate(3, size2 = subsize ? subsize : size < 6 ? size + 1 : size);
+			if ($$self.$$.dirty & /*subsize, size*/ 48) {
+				$$invalidate(7, size2 = subsize ? subsize : size < 6 ? size + 1 : size);
 			}
 
 			if ($$self.$$.dirty & /*spaced*/ 64) {
-				$$invalidate(4, spacedStyle = spaced ? "is-spaced" : "");
+				$$invalidate(8, spacedStyle = spaced ? "is-spaced" : "");
+			}
+
+			if ($$self.$$.dirty & /*size, spacedStyle, title*/ 280) {
+				$$invalidate(1, resultTitle = `<h${size} class="title ${spacedStyle} is-${size}">${title}</h${size}>`);
+			}
+
+			if ($$self.$$.dirty & /*size2, subtitle*/ 129) {
+				$$invalidate(2, resultSubtitle = `<h${size2} class="subtitle is-${size2}">${subtitle}</h${size2}>`);
 			}
 		};
 
-		return [title, subtitle, size, size2, spacedStyle, subsize, spaced];
+		return [
+			subtitle,
+			resultTitle,
+			resultSubtitle,
+			title,
+			size,
+			subsize,
+			spaced,
+			size2,
+			spacedStyle
+		];
 	}
 
 	class Ui_title extends SvelteComponent {
@@ -1916,9 +1948,9 @@ var notBulma = (function (exports) {
 			super();
 
 			init(this, options, instance$V, create_fragment$V, safe_not_equal, {
-				title: 0,
-				subtitle: 1,
-				size: 2,
+				title: 3,
+				subtitle: 0,
+				size: 4,
 				subsize: 5,
 				spaced: 6
 			});
@@ -1935,7 +1967,7 @@ var notBulma = (function (exports) {
 	    };
 	}
 
-	/* src/ui.overlay.svelte generated by Svelte v3.35.0 */
+	/* src/ui.overlay.svelte generated by Svelte v3.37.0 */
 
 	function create_if_block$C(ctx) {
 		let div;
@@ -2145,6 +2177,11 @@ var notBulma = (function (exports) {
 			dispatch("reject", data);
 		}
 
+		/*
+		function resolveOverlay(data = {}) {
+		  dispatch('resolve', data);
+		}
+	*/
 		onMount(() => {
 			$$invalidate(7, overflowSave = document.body.style.overflow);
 		});
@@ -2200,7 +2237,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/ui.breadcrumbs.svelte generated by Svelte v3.35.0 */
+	/* src/ui.breadcrumbs.svelte generated by Svelte v3.37.0 */
 
 	function get_each_context$g(ctx, list, i) {
 		const child_ctx = ctx.slice();
@@ -2495,7 +2532,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/ui.progress.svelte generated by Svelte v3.35.0 */
+	/* src/ui.progress.svelte generated by Svelte v3.37.0 */
 
 	function create_fragment$S(ctx) {
 		let progress;
@@ -2615,6 +2652,7 @@ var notBulma = (function (exports) {
 
 	// `Object.defineProperties` method
 	// https://tc39.es/ecma262/#sec-object.defineproperties
+	// eslint-disable-next-line es/no-object-defineproperties -- safe
 	var objectDefineProperties = descriptors ? Object.defineProperties : function defineProperties(O, Properties) {
 	  anObject(O);
 	  var keys = objectKeys(Properties);
@@ -2720,6 +2758,7 @@ var notBulma = (function (exports) {
 	var correctPrototypeGetter = !fails(function () {
 	  function F() { /* empty */ }
 	  F.prototype.constructor = null;
+	  // eslint-disable-next-line es/no-object-getprototypeof -- required for testing
 	  return Object.getPrototypeOf(new F()) !== F.prototype;
 	});
 
@@ -2728,6 +2767,7 @@ var notBulma = (function (exports) {
 
 	// `Object.getPrototypeOf` method
 	// https://tc39.es/ecma262/#sec-object.getprototypeof
+	// eslint-disable-next-line es/no-object-getprototypeof -- safe
 	var objectGetPrototypeOf = correctPrototypeGetter ? Object.getPrototypeOf : function (O) {
 	  O = toObject(O);
 	  if (has$1(O, IE_PROTO)) return O[IE_PROTO];
@@ -2745,6 +2785,7 @@ var notBulma = (function (exports) {
 	// https://tc39.es/ecma262/#sec-%iteratorprototype%-object
 	var IteratorPrototype$2, PrototypeOfArrayIteratorPrototype, arrayIterator;
 
+	/* eslint-disable es/no-array-prototype-keys -- safe */
 	if ([].keys) {
 	  arrayIterator = [].keys();
 	  // Safari 8 has buggy iterators w/o `next`
@@ -2814,11 +2855,13 @@ var notBulma = (function (exports) {
 	// `Object.setPrototypeOf` method
 	// https://tc39.es/ecma262/#sec-object.setprototypeof
 	// Works with __proto__ only. Old v8 can't work with null proto objects.
+	// eslint-disable-next-line es/no-object-setprototypeof -- safe
 	var objectSetPrototypeOf = Object.setPrototypeOf || ('__proto__' in {} ? function () {
 	  var CORRECT_SETTER = false;
 	  var test = {};
 	  var setter;
 	  try {
+	    // eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
 	    setter = Object.getOwnPropertyDescriptor(Object.prototype, '__proto__').set;
 	    setter.call(test, []);
 	    CORRECT_SETTER = test instanceof Array;
@@ -3089,7 +3132,9 @@ var notBulma = (function (exports) {
 	  redefine(Object.prototype, 'toString', objectToString, { unsafe: true });
 	}
 
-	var nativeGetOwnPropertyNames$1 = objectGetOwnPropertyNames.f;
+	/* eslint-disable es/no-object-getownpropertynames -- safe */
+
+	var $getOwnPropertyNames$1 = objectGetOwnPropertyNames.f;
 
 	var toString$1 = {}.toString;
 
@@ -3098,7 +3143,7 @@ var notBulma = (function (exports) {
 
 	var getWindowNames = function (it) {
 	  try {
-	    return nativeGetOwnPropertyNames$1(it);
+	    return $getOwnPropertyNames$1(it);
 	  } catch (error) {
 	    return windowNames.slice();
 	  }
@@ -3108,7 +3153,7 @@ var notBulma = (function (exports) {
 	var f$1 = function getOwnPropertyNames(it) {
 	  return windowNames && toString$1.call(it) == '[object Window]'
 	    ? getWindowNames(it)
-	    : nativeGetOwnPropertyNames$1(toIndexedObject(it));
+	    : $getOwnPropertyNames$1(toIndexedObject(it));
 	};
 
 	var objectGetOwnPropertyNamesExternal = {
@@ -3610,10 +3655,7 @@ var notBulma = (function (exports) {
 	};
 
 	var nativeExec = RegExp.prototype.exec;
-	// This always refers to the native implementation, because the
-	// String#replace polyfill uses ./fix-regexp-well-known-symbol-logic.js,
-	// which loads this file before patching the method.
-	var nativeReplace = String.prototype.replace;
+	var nativeReplace = shared('native-string-replace', String.prototype.replace);
 
 	var patchedExec = nativeExec;
 
@@ -3707,7 +3749,6 @@ var notBulma = (function (exports) {
 
 
 
-
 	var SPECIES$3 = wellKnownSymbol('species');
 
 	var REPLACE_SUPPORTS_NAMED_GROUPS = !fails(function () {
@@ -3726,6 +3767,7 @@ var notBulma = (function (exports) {
 	// IE <= 11 replaces $0 with the whole match, as if it was $&
 	// https://stackoverflow.com/questions/6024666/getting-ie-to-replace-a-regex-with-the-literal-string-0
 	var REPLACE_KEEPS_$0 = (function () {
+	  // eslint-disable-next-line regexp/prefer-escape-replacement-dollar-char -- required for testing
 	  return 'a'.replace(/./, '$0') === '$0';
 	})();
 
@@ -3795,7 +3837,7 @@ var notBulma = (function (exports) {
 	  ) {
 	    var nativeRegExpMethod = /./[SYMBOL];
 	    var methods = exec(SYMBOL, ''[KEY], function (nativeMethod, regexp, str, arg2, forceStringMethod) {
-	      if (regexp.exec === regexpExec) {
+	      if (regexp.exec === RegExp.prototype.exec) {
 	        if (DELEGATES_TO_SYMBOL && !forceStringMethod) {
 	          // The native String method already delegates to @@method (this
 	          // polyfilled function), leasing to infinite recursion.
@@ -4161,7 +4203,7 @@ var notBulma = (function (exports) {
 	  iteratorWithReturn[ITERATOR] = function () {
 	    return this;
 	  };
-	  // eslint-disable-next-line no-throw-literal -- required for testing
+	  // eslint-disable-next-line es/no-array-from, no-throw-literal -- required for testing
 	  Array.from(iteratorWithReturn, function () { throw 2; });
 	} catch (error) { /* empty */ }
 
@@ -4183,6 +4225,7 @@ var notBulma = (function (exports) {
 	};
 
 	var INCORRECT_ITERATION$1 = !checkCorrectnessOfIteration(function (iterable) {
+	  // eslint-disable-next-line es/no-array-from -- required for testing
 	  Array.from(iterable);
 	});
 
@@ -4221,14 +4264,16 @@ var notBulma = (function (exports) {
 	  return { value: point, done: false };
 	});
 
-	var nativeAssign = Object.assign;
+	// eslint-disable-next-line es/no-object-assign -- safe
+	var $assign = Object.assign;
+	// eslint-disable-next-line es/no-object-defineproperty -- required for testing
 	var defineProperty$1 = Object.defineProperty;
 
 	// `Object.assign` method
 	// https://tc39.es/ecma262/#sec-object.assign
-	var objectAssign = !nativeAssign || fails(function () {
+	var objectAssign = !$assign || fails(function () {
 	  // should have correct order of operations (Edge bug)
-	  if (descriptors && nativeAssign({ b: 1 }, nativeAssign(defineProperty$1({}, 'a', {
+	  if (descriptors && $assign({ b: 1 }, $assign(defineProperty$1({}, 'a', {
 	    enumerable: true,
 	    get: function () {
 	      defineProperty$1(this, 'b', {
@@ -4240,12 +4285,12 @@ var notBulma = (function (exports) {
 	  // should work with symbols and should have deterministic property order (V8 bug)
 	  var A = {};
 	  var B = {};
-	  /* global Symbol -- required for testing */
+	  // eslint-disable-next-line es/no-symbol -- safe
 	  var symbol = Symbol();
 	  var alphabet = 'abcdefghijklmnopqrst';
 	  A[symbol] = 7;
 	  alphabet.split('').forEach(function (chr) { B[chr] = chr; });
-	  return nativeAssign({}, A)[symbol] != 7 || objectKeys(nativeAssign({}, B)).join('') != alphabet;
+	  return $assign({}, A)[symbol] != 7 || objectKeys($assign({}, B)).join('') != alphabet;
 	}) ? function assign(target, source) { // eslint-disable-line no-unused-vars -- required for `.length`
 	  var T = toObject(target);
 	  var argumentsLength = arguments.length;
@@ -4263,10 +4308,11 @@ var notBulma = (function (exports) {
 	      if (!descriptors || propertyIsEnumerable.call(S, key)) T[key] = S[key];
 	    }
 	  } return T;
-	} : nativeAssign;
+	} : $assign;
 
 	// `Object.assign` method
 	// https://tc39.es/ecma262/#sec-object.assign
+	// eslint-disable-next-line es/no-object-assign -- required for testing
 	_export({ target: 'Object', stat: true, forced: Object.assign !== objectAssign }, {
 	  assign: objectAssign
 	});
@@ -4360,7 +4406,7 @@ var notBulma = (function (exports) {
 	  return C === undefined || (S = anObject(C)[SPECIES$1]) == undefined ? defaultConstructor : aFunction$1(S);
 	};
 
-	var engineIsIos = /(iphone|ipod|ipad).*applewebkit/i.test(engineUserAgent);
+	var engineIsIos = /(?:iphone|ipod|ipad).*applewebkit/i.test(engineUserAgent);
 
 	var location$1 = global_1.location;
 	var set = global_1.setImmediate;
@@ -5235,10 +5281,10 @@ var notBulma = (function (exports) {
 	      return str;
 	    }
 	    /**
-	    *	Builds URL with structure like prefix/module/model/id/action
+	    *  Builds URL with structure like prefix/module/model/id/action
 	    * If some part absent or set to false it will be excluded from result
 	    *
-	    *	@return {string}	url path
+	    *  @return {string}  url path
 	    */
 
 	  }, {
@@ -5985,6 +6031,7 @@ var notBulma = (function (exports) {
 
 	// `SameValue` abstract operation
 	// https://tc39.es/ecma262/#sec-samevalue
+	// eslint-disable-next-line es/no-object-is -- safe
 	var sameValue = Object.is || function is(x, y) {
 	  // eslint-disable-next-line no-self-compare -- NaN check
 	  return x === y ? x !== 0 || 1 / x === 1 / y : x != x && y != y;
@@ -6646,10 +6693,10 @@ var notBulma = (function (exports) {
 	      }
 	    }
 	    /*
-	    	CORE OBJECT
-	    		DATA - information
-	    		OPTIONS - how to work
-	    		WORKING - temporarily generated in proccess
+	      CORE OBJECT
+	        DATA - information
+	        OPTIONS - how to work
+	        WORKING - temporarily generated in proccess
 	    */
 
 	  }, {
@@ -6912,7 +6959,7 @@ var notBulma = (function (exports) {
 	      return this;
 	    }
 	    /**
-	    *	Refreshes page
+	    *  Refreshes page
 	    * @param {integer} timeout time to wait in ms
 	    */
 
@@ -7158,11 +7205,11 @@ var notBulma = (function (exports) {
 	      return this.queue.length === 0;
 	    }
 	    /**
-	     * Исполнитель запросов
-	     * @param      {function}   action      должна возвращать Promise
-	     * @param      {function}   afterEmpty  будет выполнена когда очурудь опустеет и будет свободна. полезна при пачке однотипных заданий
-	     * @returns    {Promise}  результат функции
-	     **/
+	    * Исполнитель запросов
+	    * @param      {function}   action      должна возвращать Promise
+	    * @param      {function}   afterEmpty  будет выполнена когда очурудь опустеет и будет свободна. полезна при пачке однотипных заданий
+	    * @returns    {Promise}  результат функции
+	    **/
 
 	  }, {
 	    key: "run",
@@ -7320,9 +7367,9 @@ var notBulma = (function (exports) {
 	    this.lib = {};
 	  }
 	  /**
-	   *
-	   * @params {string}  mode what to do if element exists [replace|add|skip]
-	   */
+	  *
+	  * @params {string}  mode what to do if element exists [replace|add|skip]
+	  */
 
 
 	  createClass(Lib, [{
@@ -7615,9 +7662,19 @@ var notBulma = (function (exports) {
 	      try {
 	        var actionData = this.getActionData(actionName),
 	            requestParams = this.collectRequestData(actionData);
-	        return notCommon$1.getApp().getWS().sendRequest(this.getWSRequestName(record, actionData, actionName), Object.assign({}, requestParams, record.getData())).then(function (response) {
-	          return response.payload;
-	        });
+	        var WS = notCommon$1.getApp().getWS();
+	        var messageName = this.getWSRequestName(actionName);
+	        var payload = Object.assign({}, requestParams, record.getData());
+
+	        if (Object.prototype.hasOwnProperty.call(actionData, 'type') && typeof actionData.type === 'string' && actionData.type.length && actionData.type !== 'request') {
+	          return WS.sendMessage(actionData.type, messageName, payload).then(function (response) {
+	            return response.payload;
+	          });
+	        } else {
+	          return WS.sendRequest(messageName, payload).then(function (response) {
+	            return response.payload;
+	          });
+	        }
 	      } catch (e) {
 	        notCommon$1.error(e);
 	        notCommon$1.report(e);
@@ -7628,11 +7685,29 @@ var notBulma = (function (exports) {
 	    value: function request() {
 	      var actionData = this.getActionData(arguments[1]);
 
-	      if (actionData.ws === true) {
-	        return this.requestWS.apply(this, arguments);
-	      } else {
-	        return this.requestHTTP.apply(this, arguments);
+	      switch (this.selectTransport(actionData)) {
+	        case 'ws':
+	          return this.requestWS.apply(this, arguments);
+
+	        case 'http':
+	          return this.requestHTTP.apply(this, arguments);
+
+	        default:
+	          throw new Error('Offline');
 	      }
+	    }
+	  }, {
+	    key: "selectTransport",
+	    value: function selectTransport(actionData) {
+	      if (actionData.ws === true && notCommon$1.getApp().getWS().isConnected()) {
+	        return 'ws'; //for ws/wss
+	      }
+
+	      if (Object.prototype.hasOwnProperty.call(actionData, 'method')) {
+	        return 'http'; //for http/https
+	      }
+
+	      return false; //for offline
 	    }
 	  }, {
 	    key: "getModelName",
@@ -7699,10 +7774,9 @@ var notBulma = (function (exports) {
 	    }
 	  }, {
 	    key: "getWSRequestName",
-	    value: function getWSRequestName(record, actionData, actionName) {
-	      var data = record.getData && typeof record.getData === 'function' ? record.getData() : record;
-	      var line = Object.prototype.hasOwnProperty.call(actionData, 'postFix') ? this.parseLine(actionData.postFix, data, actionName) : '';
-	      return line;
+	    value: function getWSRequestName(actionName) {
+	      var modelName = this.manifest.model;
+	      return "".concat(modelName, ".").concat(actionName);
 	    }
 	  }, {
 	    key: "encodeRequest",
@@ -8072,9 +8146,9 @@ var notBulma = (function (exports) {
 	    /*
 	    ->
 	    {
-	    	'keyPath': value,
-	    	'key.subPath': value2,
-	    	'keyPath.0.title': value3
+	      'keyPath': value,
+	      'key.subPath': value2,
+	      'keyPath.0.title': value3
 	    }
 	    <- ok, with bunch of onChange events triggered
 	    */
@@ -8341,6 +8415,17 @@ var notBulma = (function (exports) {
 	    value: function getWS() {
 	      return this.getWorking('WS_CLIENT');
 	    }
+	  }, {
+	    key: "getInterface",
+	    value: function getInterface(name) {
+	      return this.getInterfaces()[name];
+	    }
+	  }, {
+	    key: "getModel",
+	    value: function getModel(name) {
+	      var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+	      return this.getInterface(name)(data);
+	    }
 	  }]);
 
 	  return notApp;
@@ -8374,38 +8459,38 @@ var notBulma = (function (exports) {
 
 	function _isNativeReflectConstruct$4() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 	/**
-	 * @const {string}	OPT_DEFAULT_ACTION_NAME			default action name
+	 * @const {string}  OPT_DEFAULT_ACTION_NAME      default action name
 	 */
 
 	var OPT_DEFAULT_ACTION_NAME = 'default';
 	/**
-	 * @const {string}	OPT_DEFAULT_CONTAINER_SELECTOR	selector of container HTML
-	 *													element
+	 * @const {string}  OPT_DEFAULT_CONTAINER_SELECTOR  selector of container HTML
+	 *                          element
 	 */
 
 	var OPT_DEFAULT_CONTAINER_SELECTOR = 'main.content';
 	/**
-	 * @const {string}	OPT_DEFAULT_PLURAL_NAME	default plural name of entities
+	 * @const {string}  OPT_DEFAULT_PLURAL_NAME  default plural name of entities
 	 */
 
 	var OPT_DEFAULT_PLURAL_NAME = 'Models';
 	/**
-	 * @const {string}	OPT_DEFAULT_SINGLE_NAME	default single name of entities
+	 * @const {string}  OPT_DEFAULT_SINGLE_NAME  default single name of entities
 	 */
 
 	var OPT_DEFAULT_SINGLE_NAME = 'Model';
 	/**
-	 * @const {string}	OPT_DEFAULT_MODULE_NAME	default module name
+	 * @const {string}  OPT_DEFAULT_MODULE_NAME  default module name
 	 */
 
 	var OPT_DEFAULT_MODULE_NAME = 'main';
 	/**
-	 * @const {boolean}	OPT_DEFAULT_AUTO_NAME	if shoould be used auto name generator
+	 * @const {boolean}  OPT_DEFAULT_AUTO_NAME  if shoould be used auto name generator
 	 */
 
 	var OPT_DEFAULT_AUTO_NAME = true;
 	/*
-	 *	Basic class for user controller
+	 *  Basic class for user controller
 	 */
 
 	var notController$1 = /*#__PURE__*/function (_notBase) {
@@ -8414,7 +8499,19 @@ var notBulma = (function (exports) {
 	  var _super = _createSuper$4(notController);
 
 	  /**
-	   *	@param {notApp} app
+	   *  @static {number} PARAMS_LENGTH  number of params in URL path
+	   */
+
+	  /**
+	   *  @static {string} MODULE_NAME  name of module
+	   */
+
+	  /**
+	   *  @static {string} MODEL_NAME  name of model
+	   */
+
+	  /**
+	   *  @param {notApp} app
 	   */
 	  function notController(app, name) {
 	    var _this;
@@ -8452,7 +8549,7 @@ var notBulma = (function (exports) {
 
 	    _this.setURLPrefix(app.getOptions('router.root'));
 	    /*
-	    	сразу делаем доступными модели notRecord из nc`ControllerName` будут доступны как this.nr`ModelName`
+	      сразу делаем доступными модели notRecord из nc`ControllerName` будут доступны как this.nr`ModelName`
 	    */
 
 
@@ -8468,8 +8565,8 @@ var notBulma = (function (exports) {
 	    return possibleConstructorReturn(_this, assertThisInitialized(_this));
 	  }
 	  /**
-	   *	Returns current notApp
-	   *	@return {notApp}
+	   *  Returns current notApp
+	   *  @return {notApp}
 	   */
 
 
@@ -8479,9 +8576,9 @@ var notBulma = (function (exports) {
 	      return notCommon$1.getApp();
 	    }
 	    /**
-	     *	Sets default controller model
-	     *	@param {notRecord}	model	notRecord interface object
-	     *	@return {notController}
+	     *  Sets default controller model
+	     *  @param {notRecord}  model  notRecord interface object
+	     *  @return {notController}
 	     */
 
 	  }, {
@@ -8491,18 +8588,25 @@ var notBulma = (function (exports) {
 	      return this;
 	    }
 	    /**
-	     *	Returns current model
-	     *	@return {notRecord}
+	     *  Returns current model
+	     *  @param {object} data   model data
+	     *  @return {notRecord}
 	     */
 
 	  }, {
 	    key: "getModel",
 	    value: function getModel() {
-	      return this.getWorking('model');
+	      var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+	      return this.getInterface()(data);
+	    }
+	  }, {
+	    key: "getInterface",
+	    value: function getInterface() {
+	      return this.app.getInterface(this.getModelName());
 	    }
 	    /**
-	     *	Returns current model name
-	     *	@return {notRecord}
+	     *  Returns current model name
+	     *  @return {notRecord}
 	     */
 
 	  }, {
@@ -8511,9 +8615,9 @@ var notBulma = (function (exports) {
 	      return this.getWorking('modelName');
 	    }
 	    /**
-	     *	Sets default controller model name
-	     *	@param {string}	modelName	notRecord interface object
-	     *	@return {notController}
+	     *  Sets default controller model name
+	     *  @param {string}  modelName  notRecord interface object
+	     *  @return {notController}
 	     */
 
 	  }, {
@@ -8523,8 +8627,8 @@ var notBulma = (function (exports) {
 	      return this;
 	    }
 	    /**
-	     *	Returns current model primary ID field name
-	     *	@return {notRecord}
+	     *  Returns current model primary ID field name
+	     *  @return {notRecord}
 	     */
 
 	  }, {
@@ -8533,8 +8637,8 @@ var notBulma = (function (exports) {
 	      return this.getWorking('modelIDFieldName', '_id');
 	    }
 	    /**
-	     *	Sets current model primary ID field name
-	     *	@return {notRecord}
+	     *  Sets current model primary ID field name
+	     *  @return {notRecord}
 	     */
 
 	  }, {
@@ -8544,9 +8648,9 @@ var notBulma = (function (exports) {
 	      return this.setWorking('modelIDFieldName', val);
 	    }
 	    /**
-	     *	Marks this controller as ready
-	     *	emits "ready"/"busy" events
-	     *	@param {Boolean}	val	true/false
+	     *  Marks this controller as ready
+	     *  emits "ready"/"busy" events
+	     *  @param {Boolean}  val  true/false
 	     */
 
 	  }, {
@@ -8557,9 +8661,9 @@ var notBulma = (function (exports) {
 	      val ? this.emit('ready') : this.emit('busy');
 	    }
 	    /**
-	     *	Sets module URL prefix
-	     *	@param {sting} val URL prefix
-	     *	@return {notController} this
+	     *  Sets module URL prefix
+	     *  @param {sting} val URL prefix
+	     *  @return {notController} this
 	     */
 
 	  }, {
@@ -8570,8 +8674,8 @@ var notBulma = (function (exports) {
 	      return this;
 	    }
 	    /**
-	     *	Returns module url prefix
-	     *	@return	{string} prefix
+	     *  Returns module url prefix
+	     *  @return  {string} prefix
 	     */
 
 	  }, {
@@ -8580,9 +8684,9 @@ var notBulma = (function (exports) {
 	      return this.getOptions('urlPrefix');
 	    }
 	    /**
-	     *	Sets module name
-	     *	@param {sting} val name of the module
-	     *	@return {notController} this
+	     *  Sets module name
+	     *  @param {sting} val name of the module
+	     *  @return {notController} this
 	     */
 
 	  }, {
@@ -8593,8 +8697,8 @@ var notBulma = (function (exports) {
 	      return this;
 	    }
 	    /**
-	     *	Returns module name
-	     *	@return	{string} module name
+	     *  Returns module name
+	     *  @return  {string} module name
 	     */
 
 	  }, {
@@ -8603,8 +8707,8 @@ var notBulma = (function (exports) {
 	      return this.getOptions('moduleName');
 	    }
 	    /**
-	     *	Returns this module path prefix
-	     *	@return {string}	path to module dir
+	     *  Returns this module path prefix
+	     *  @return {string}  path to module dir
 	     */
 
 	  }, {
@@ -8613,8 +8717,8 @@ var notBulma = (function (exports) {
 	      return [notCommon$1.getApp().getOptions('paths.modules'), this.getModuleName()].join('/');
 	    }
 	    /**
-	     *	Returns this model URL with URL prefix
-	     *	@return {string}	url path
+	     *  Returns this model URL with URL prefix
+	     *  @return {string}  url path
 	     */
 
 	  }, {
@@ -8627,10 +8731,10 @@ var notBulma = (function (exports) {
 	      });
 	    }
 	    /**
-	     *	Returns this model action URL with URL prefix
-	     * @param  {string} 	id 			some identificator of model
-	     * @param  {string} 	action 	action name
-	     *	@return {string}	url path
+	     *  Returns this model action URL with URL prefix
+	     * @param  {string}   id       some identificator of model
+	     * @param  {string}   action   action name
+	     *  @return {string}  url path
 	     */
 
 	  }, {
@@ -8651,9 +8755,9 @@ var notBulma = (function (exports) {
 	      return notCommon$1.buildURL(val);
 	    }
 	    /**
-	     *	Updates working name
-	     *	@param {sting} val name of the module
-	     *	@return {notController} this
+	     *  Updates working name
+	     *  @param {sting} val name of the module
+	     *  @return {notController} this
 	     */
 
 	  }, {
@@ -8664,9 +8768,9 @@ var notBulma = (function (exports) {
 	      }
 	    }
 	    /**
-	     *	Sets object name
-	     *	@param {sting} val name of the object
-	     *	@return {notController} this
+	     *  Sets object name
+	     *  @param {sting} val name of the object
+	     *  @return {notController} this
 	     */
 
 	  }, {
@@ -8677,10 +8781,10 @@ var notBulma = (function (exports) {
 	      return this;
 	    }
 	    /**
-	     *	Preload records from server, using listAll method,
-	     *	returns Promise
-	     *	@param {object}	list	map of preloaded records
-	     *	@return {Promise}
+	     *  Preload records from server, using listAll method,
+	     *  returns Promise
+	     *  @param {object}  list  map of preloaded records
+	     *  @return {Promise}
 	     */
 
 	  }, {
@@ -8739,9 +8843,9 @@ var notBulma = (function (exports) {
 	      this.emit('afterRender');
 	    }
 	    /**
-	     *	Transform route name in action name
-	     *	@param {String} 	name tranform action name
-	     *	@return {String}
+	     *  Transform route name in action name
+	     *  @param {String}   name tranform action name
+	     *  @return {String}
 	     */
 
 	  }, {
@@ -8751,8 +8855,8 @@ var notBulma = (function (exports) {
 	      return 'run' + notCommon$1.capitalizeFirstLetter(name);
 	    }
 	    /**
-	     *	Get default controller action name
-	     *	@return {String} default action from options
+	     *  Get default controller action name
+	     *  @return {String} default action from options
 	     */
 
 	  }, {
@@ -8761,9 +8865,9 @@ var notBulma = (function (exports) {
 	      return this.getActionName(this.getOptions('defaultAction', OPT_DEFAULT_ACTION_NAME));
 	    }
 	    /**
-	     *	Route params into specific run[Route_name] function
-	     *	@param {array} 	params 	controller input params
-	     *	@return {undefined}
+	     *  Route params into specific run[Route_name] function
+	     *  @param {array}   params   controller input params
+	     *  @return {undefined}
 	     */
 
 	  }, {
@@ -8783,8 +8887,8 @@ var notBulma = (function (exports) {
 	      }
 	    }
 	    /**
-	     *	Return application options
-	     *	@return {object}
+	     *  Return application options
+	     *  @return {object}
 	     */
 
 	  }, {
@@ -8797,9 +8901,9 @@ var notBulma = (function (exports) {
 	      }
 	    }
 	    /**
-	     *	Returns module options
-	     *	@param	{string} 	moduleName		name of the module which options requested
-	     *	@return {object}
+	     *  Returns module options
+	     *  @param  {string}   moduleName    name of the module which options requested
+	     *  @return {object}
 	     */
 
 	  }, {
@@ -8812,9 +8916,9 @@ var notBulma = (function (exports) {
 	      }
 	    }
 	    /**
-	     *	Returns module services
-	     *	@param	{string} 	moduleName		name of the module which services requested
-	     *	@return {object}
+	     *  Returns module services
+	     *  @param  {string}   moduleName    name of the module which services requested
+	     *  @return {object}
 	     */
 
 	  }, {
@@ -8827,9 +8931,9 @@ var notBulma = (function (exports) {
 	      }
 	    }
 	    /**
-	     *	Returns module components
-	     *	@param	{string} 	moduleName		name of the module which components requested
-	     *	@return {object}
+	     *  Returns module components
+	     *  @param  {string}   moduleName    name of the module which components requested
+	     *  @return {object}
 	     */
 
 	  }, {
@@ -8842,8 +8946,8 @@ var notBulma = (function (exports) {
 	      }
 	    }
 	    /**
-	     *	Refreshes current URL, re-run all action
-	     *	@param {integer} timeout time to wait in ms
+	     *  Refreshes current URL, re-run all action
+	     *  @param {integer} timeout time to wait in ms
 	     */
 
 	  }, {
@@ -8852,10 +8956,75 @@ var notBulma = (function (exports) {
 	      var timeout = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
 	      this.app.getWorking('router').refresh(timeout);
 	    }
+	    /**
+	    * Returns path pattern for router
+	    * @params {number} [0] paramsCount   number of params
+	    * @return {string}  pattern for controller supported url
+	    */
+
+	  }], [{
+	    key: "getControllerRoute",
+	    value: function getControllerRoute() {
+	      var paramsCount = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+	      var path = [];
+
+	      if (this.MODULE_NAME && this.MODULE_NAME.length > 0) {
+	        path.push(notCommon$1.lowerFirstLetter(this.MODULE_NAME));
+	      }
+
+	      if (this.MODEL_NAME && this.MODEL_NAME.length > 0) {
+	        path.push(notCommon$1.lowerFirstLetter(this.MODEL_NAME));
+	      }
+
+	      path = [path.join('/')];
+
+	      for (var i = 0; i < paramsCount; i++) {
+	        path.push('\/([^\/]+)');
+	      }
+
+	      return path.join('');
+	    }
+	    /**
+	    * Returns path patterns for router
+	    * @params {number} [0] paramsDeep   how many paths with params in the end
+	    * @return {string[]}  patterns for controller supported url in order of simplification
+	    */
+
+	  }, {
+	    key: "getControllerRoutes",
+	    value: function getControllerRoutes() {
+	      var paramsDeep = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+	      var routes = [this.getControllerRoute(0)];
+
+	      for (var i = 0; i < paramsDeep; i++) {
+	        routes.unshift(this.getControllerRoute(i + 1));
+	      }
+
+	      return routes;
+	    }
+	    /**
+	    * Returns router rule.
+	    * @returns {Object} router rule {paths:String[], controller:notController}
+	    */
+
+	  }, {
+	    key: "getRoutes",
+	    value: function getRoutes() {
+	      return {
+	        paths: this.getControllerRoutes(this.PARAMS_LENGTH),
+	        controller: this
+	      };
+	    }
 	  }]);
 
 	  return notController;
 	}(notBase$1);
+
+	defineProperty$3(notController$1, "PARAMS_LENGTH", 2);
+
+	defineProperty$3(notController$1, "MODULE_NAME", 'MODULE_NAME');
+
+	defineProperty$3(notController$1, "MODEL_NAME", 'MODEL_NAME');
 
 	//import 'babel-polyfill/dist/polyfill';
 
@@ -8873,7 +9042,7 @@ var notBulma = (function (exports) {
 		COMPONENTS: COMPONENTS$1
 	});
 
-	/* src/ui.user.card.svelte generated by Svelte v3.35.0 */
+	/* src/ui.user.card.svelte generated by Svelte v3.37.0 */
 
 	function create_fragment$R(ctx) {
 		let article;
@@ -8985,7 +9154,7 @@ var notBulma = (function (exports) {
 		}
 
 		onMount(() => {
-			if (!Object.prototype.hasOwnProperty(events, getStandartUpdateEventName())) {
+			if (!Object.prototype.hasOwnProperty.call(events, getStandartUpdateEventName())) {
 				$$invalidate(4, events[getStandartUpdateEventName()] = onUpdate, events);
 			}
 
@@ -9021,7 +9190,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/ui.error.svelte generated by Svelte v3.35.0 */
+	/* src/ui.error.svelte generated by Svelte v3.37.0 */
 
 	function create_fragment$Q(ctx) {
 		let article;
@@ -9085,7 +9254,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/ui.success.svelte generated by Svelte v3.35.0 */
+	/* src/ui.success.svelte generated by Svelte v3.37.0 */
 
 	function create_fragment$P(ctx) {
 		let article;
@@ -9149,7 +9318,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/ui.indicator.svelte generated by Svelte v3.35.0 */
+	/* src/ui.indicator.svelte generated by Svelte v3.37.0 */
 
 	function create_fragment$O(ctx) {
 		let span;
@@ -9227,7 +9396,7 @@ var notBulma = (function (exports) {
 		}
 
 		onMount(() => {
-			if (!Object.prototype.hasOwnProperty(events, getStandartUpdateEventName())) {
+			if (!Object.prototype.hasOwnProperty.call(events, getStandartUpdateEventName())) {
 				$$invalidate(11, events[getStandartUpdateEventName()] = onUpdate, events);
 			}
 
@@ -9299,7 +9468,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/sidemenu/ui.trigger.svelte generated by Svelte v3.35.0 */
+	/* src/sidemenu/ui.trigger.svelte generated by Svelte v3.37.0 */
 
 	function create_fragment$N(ctx) {
 		let span;
@@ -9386,7 +9555,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/ui.icon.font.svelte generated by Svelte v3.35.0 */
+	/* src/ui.icon.font.svelte generated by Svelte v3.37.0 */
 
 	function create_else_block$v(ctx) {
 		let span;
@@ -9531,7 +9700,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/ui.tag.svelte generated by Svelte v3.35.0 */
+	/* src/ui.tag.svelte generated by Svelte v3.37.0 */
 
 	function create_if_block$z(ctx) {
 		let span;
@@ -9635,7 +9804,7 @@ var notBulma = (function (exports) {
 		}
 
 		onMount(() => {
-			if (!Object.prototype.hasOwnProperty(events, getStandartUpdateEventName())) {
+			if (!Object.prototype.hasOwnProperty.call(events, getStandartUpdateEventName())) {
 				$$invalidate(12, events[getStandartUpdateEventName()] = onUpdate, events);
 			}
 
@@ -9707,7 +9876,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/sidemenu/ui.item.label.svelte generated by Svelte v3.35.0 */
+	/* src/sidemenu/ui.item.label.svelte generated by Svelte v3.37.0 */
 
 	function create_else_block$u(ctx) {
 		let t_value = /*item*/ ctx[0].title + "";
@@ -9856,43 +10025,43 @@ var notBulma = (function (exports) {
 
 	// (21:0) {#if item.tag }
 	function create_if_block_1$p(ctx) {
-		let uiindicator;
+		let uitag;
 		let current;
-		const uiindicator_spread_levels = [{ id: /*item*/ ctx[0].id }, /*item*/ ctx[0].tag];
-		let uiindicator_props = {};
+		const uitag_spread_levels = [{ id: /*item*/ ctx[0].id }, /*item*/ ctx[0].tag];
+		let uitag_props = {};
 
-		for (let i = 0; i < uiindicator_spread_levels.length; i += 1) {
-			uiindicator_props = assign(uiindicator_props, uiindicator_spread_levels[i]);
+		for (let i = 0; i < uitag_spread_levels.length; i += 1) {
+			uitag_props = assign(uitag_props, uitag_spread_levels[i]);
 		}
 
-		uiindicator = new Ui_indicator({ props: uiindicator_props });
+		uitag = new Ui_tag$1({ props: uitag_props });
 
 		return {
 			c() {
-				create_component(uiindicator.$$.fragment);
+				create_component(uitag.$$.fragment);
 			},
 			m(target, anchor) {
-				mount_component(uiindicator, target, anchor);
+				mount_component(uitag, target, anchor);
 				current = true;
 			},
 			p(ctx, dirty) {
-				const uiindicator_changes = (dirty & /*item*/ 1)
-				? get_spread_update(uiindicator_spread_levels, [{ id: /*item*/ ctx[0].id }, get_spread_object(/*item*/ ctx[0].tag)])
+				const uitag_changes = (dirty & /*item*/ 1)
+				? get_spread_update(uitag_spread_levels, [{ id: /*item*/ ctx[0].id }, get_spread_object(/*item*/ ctx[0].tag)])
 				: {};
 
-				uiindicator.$set(uiindicator_changes);
+				uitag.$set(uitag_changes);
 			},
 			i(local) {
 				if (current) return;
-				transition_in(uiindicator.$$.fragment, local);
+				transition_in(uitag.$$.fragment, local);
 				current = true;
 			},
 			o(local) {
-				transition_out(uiindicator.$$.fragment, local);
+				transition_out(uitag.$$.fragment, local);
 				current = false;
 			},
 			d(detaching) {
-				destroy_component(uiindicator, detaching);
+				destroy_component(uitag, detaching);
 			}
 		};
 	}
@@ -10095,7 +10264,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/sidemenu/ui.item.with.children.svelte generated by Svelte v3.35.0 */
+	/* src/sidemenu/ui.item.with.children.svelte generated by Svelte v3.37.0 */
 
 	function create_else_block$t(ctx) {
 		let uisidemenuitemlabel;
@@ -10364,7 +10533,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/sidemenu/ui.item.without.children.svelte generated by Svelte v3.35.0 */
+	/* src/sidemenu/ui.item.without.children.svelte generated by Svelte v3.37.0 */
 
 	function create_else_block$s(ctx) {
 		let li;
@@ -10867,7 +11036,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/sidemenu/ui.items.svelte generated by Svelte v3.35.0 */
+	/* src/sidemenu/ui.items.svelte generated by Svelte v3.37.0 */
 
 	function get_each_context$f(ctx, list, i) {
 		const child_ctx = ctx.slice();
@@ -11151,7 +11320,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/sidemenu/ui.section.svelte generated by Svelte v3.35.0 */
+	/* src/sidemenu/ui.section.svelte generated by Svelte v3.37.0 */
 
 	function create_if_block_1$n(ctx) {
 		let if_block_anchor;
@@ -11708,7 +11877,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/sidemenu/ui.side.menu.svelte generated by Svelte v3.35.0 */
+	/* src/sidemenu/ui.side.menu.svelte generated by Svelte v3.37.0 */
 
 	function get_each_context$e(ctx, list, i) {
 		const child_ctx = ctx.slice();
@@ -12467,7 +12636,7 @@ var notBulma = (function (exports) {
 	  }
 	});
 
-	/* src/ui.icon.svelte generated by Svelte v3.35.0 */
+	/* src/ui.icon.svelte generated by Svelte v3.37.0 */
 
 	function create_if_block_2$g(ctx) {
 		let figure;
@@ -12719,7 +12888,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/sidemenu/ui.burger.svelte generated by Svelte v3.35.0 */
+	/* src/sidemenu/ui.burger.svelte generated by Svelte v3.37.0 */
 
 	function create_else_block$p(ctx) {
 		let uiicon;
@@ -12936,7 +13105,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/ui.booleans.svelte generated by Svelte v3.35.0 */
+	/* src/ui.booleans.svelte generated by Svelte v3.37.0 */
 
 	function get_each_context$d(ctx, list, i) {
 		const child_ctx = ctx.slice();
@@ -13111,7 +13280,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/ui.button.svelte generated by Svelte v3.35.0 */
+	/* src/ui.button.svelte generated by Svelte v3.37.0 */
 
 	function create_else_block$n(ctx) {
 		let t;
@@ -13446,7 +13615,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/ui.buttons.svelte generated by Svelte v3.35.0 */
+	/* src/ui.buttons.svelte generated by Svelte v3.37.0 */
 
 	function get_each_context$c(ctx, list, i) {
 		const child_ctx = ctx.slice();
@@ -13607,7 +13776,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/ui.images.svelte generated by Svelte v3.35.0 */
+	/* src/ui.images.svelte generated by Svelte v3.37.0 */
 
 	function get_each_context$b(ctx, list, i) {
 		const child_ctx = ctx.slice();
@@ -13831,7 +14000,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/ui.link.svelte generated by Svelte v3.35.0 */
+	/* src/ui.link.svelte generated by Svelte v3.37.0 */
 
 	function create_else_block$l(ctx) {
 		let t;
@@ -14096,8 +14265,6 @@ var notBulma = (function (exports) {
 			return true;
 		} } = $$props;
 
-		
-
 		$$self.$$set = $$props => {
 			if ("title" in $$props) $$invalidate(1, title = $$props.title);
 			if ("url" in $$props) $$invalidate(2, url = $$props.url);
@@ -14170,7 +14337,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/ui.links.svelte generated by Svelte v3.35.0 */
+	/* src/ui.links.svelte generated by Svelte v3.37.0 */
 
 	function get_each_context$a(ctx, list, i) {
 		const child_ctx = ctx.slice();
@@ -14318,7 +14485,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/ui.icon.floating.svelte generated by Svelte v3.35.0 */
+	/* src/ui.icon.floating.svelte generated by Svelte v3.37.0 */
 
 	function create_fragment$w(ctx) {
 		let div;
@@ -14338,7 +14505,7 @@ var notBulma = (function (exports) {
 				div = element("div");
 				create_component(uibutton.$$.fragment);
 				attr(div, "class", "is-fab svelte-1haul9u");
-				attr(div, "style", positionStyle);
+				attr(div, "style", /*positionStyle*/ ctx[1]);
 			},
 			m(target, anchor) {
 				insert(target, div, anchor);
@@ -14354,6 +14521,10 @@ var notBulma = (function (exports) {
 				: {};
 
 				uibutton.$set(uibutton_changes);
+
+				if (!current || dirty & /*positionStyle*/ 2) {
+					attr(div, "style", /*positionStyle*/ ctx[1]);
+				}
 			},
 			i(local) {
 				if (current) return;
@@ -14371,8 +14542,6 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	let positionStyle = "";
-
 	function toggle() {
 		
 	}
@@ -14385,15 +14554,17 @@ var notBulma = (function (exports) {
 			size: "medium"
 		} } = $$props;
 
+		let positionStyle = "";
+
 		onMount(() => {
-			position = "";
+			$$invalidate(1, positionStyle = "");
 		});
 
 		$$self.$$set = $$props => {
 			if ("trigger" in $$props) $$invalidate(0, trigger = $$props.trigger);
 		};
 
-		return [trigger];
+		return [trigger, positionStyle];
 	}
 
 	class Ui_icon_floating extends SvelteComponent {
@@ -14403,7 +14574,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/ui.cookie.notification.svelte generated by Svelte v3.35.0 */
+	/* src/ui.cookie.notification.svelte generated by Svelte v3.37.0 */
 
 	function create_if_block$n(ctx) {
 		let div;
@@ -14532,9 +14703,9 @@ var notBulma = (function (exports) {
 	    key: "formatPhone",
 	    value:
 	    /**
-	     *	Reformats input from any string to strict phone format
-	     *	@param {string}		phone		free style phone number
-	     *	@returns {string}					phone number
+	     *  Reformats input from any string to strict phone format
+	     *  @param {string}    phone    free style phone number
+	     *  @returns {string}          phone number
 	     **/
 	    function formatPhone(val) {
 	      var filler = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.FILLER;
@@ -14663,58 +14834,7 @@ var notBulma = (function (exports) {
 	  HOURS: ['час', 'часа', 'часов']
 	});
 
-	/* src/form/ui.label.svelte generated by Svelte v3.35.0 */
-
-	function create_fragment$u(ctx) {
-		let label_1;
-		let t;
-
-		return {
-			c() {
-				label_1 = element("label");
-				t = text(/*label*/ ctx[1]);
-				attr(label_1, "class", "label");
-				attr(label_1, "for", /*id*/ ctx[0]);
-			},
-			m(target, anchor) {
-				insert(target, label_1, anchor);
-				append(label_1, t);
-			},
-			p(ctx, [dirty]) {
-				if (dirty & /*label*/ 2) set_data(t, /*label*/ ctx[1]);
-
-				if (dirty & /*id*/ 1) {
-					attr(label_1, "for", /*id*/ ctx[0]);
-				}
-			},
-			i: noop,
-			o: noop,
-			d(detaching) {
-				if (detaching) detach(label_1);
-			}
-		};
-	}
-
-	function instance$u($$self, $$props, $$invalidate) {
-		let { id } = $$props;
-		let { label = "label" } = $$props;
-
-		$$self.$$set = $$props => {
-			if ("id" in $$props) $$invalidate(0, id = $$props.id);
-			if ("label" in $$props) $$invalidate(1, label = $$props.label);
-		};
-
-		return [id, label];
-	}
-
-	class Ui_label extends SvelteComponent {
-		constructor(options) {
-			super();
-			init(this, options, instance$u, create_fragment$u, safe_not_equal, { id: 0, label: 1 });
-		}
-	}
-
-	/* src/form/ui.textfield.svelte generated by Svelte v3.35.0 */
+	/* src/form/ui.textfield.svelte generated by Svelte v3.37.0 */
 
 	function create_if_block_4$b(ctx) {
 		let span;
@@ -14860,7 +14980,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	function create_fragment$t(ctx) {
+	function create_fragment$u(ctx) {
 		let div;
 		let input;
 		let input_id_value;
@@ -15045,7 +15165,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	function instance$t($$self, $$props, $$invalidate) {
+	function instance$u($$self, $$props, $$invalidate) {
 		let iconClasses;
 		let allErrors;
 		let helper;
@@ -15065,7 +15185,7 @@ var notBulma = (function (exports) {
 		let { formErrors = false } = $$props;
 		let { formLevelError = false } = $$props;
 
-		function onBlur(ev) {
+		function onBlur() /*ev*/ {
 			let data = { field: fieldname, value };
 			$$invalidate(0, inputStarted = true);
 			dispatch("change", data);
@@ -15113,9 +15233,7 @@ var notBulma = (function (exports) {
 			}
 
 			if ($$self.$$.dirty & /*allErrors, placeholder*/ 262148) {
-				$$invalidate(10, helper = allErrors
-				? allErrors.join(", ")
-				: multi ? placeholder[activeSubKey] : placeholder);
+				$$invalidate(10, helper = allErrors ? allErrors.join(", ") : placeholder);
 			}
 
 			if ($$self.$$.dirty & /*valid, formLevelError*/ 131200) {
@@ -15157,7 +15275,7 @@ var notBulma = (function (exports) {
 		constructor(options) {
 			super();
 
-			init(this, options, instance$t, create_fragment$t, safe_not_equal, {
+			init(this, options, instance$u, create_fragment$u, safe_not_equal, {
 				inputStarted: 0,
 				value: 1,
 				placeholder: 2,
@@ -15174,7 +15292,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* node_modules/simple-svelte-autocomplete/src/SimpleAutocomplete.svelte generated by Svelte v3.35.0 */
+	/* node_modules/simple-svelte-autocomplete/src/SimpleAutocomplete.svelte generated by Svelte v3.37.0 */
 
 	function get_each_context$9(ctx, list, i) {
 		const child_ctx = ctx.slice();
@@ -15532,7 +15650,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	function create_fragment$s(ctx) {
+	function create_fragment$t(ctx) {
 		let div1;
 		let input_1;
 		let input_1_class_value;
@@ -15717,7 +15835,7 @@ var notBulma = (function (exports) {
 		return result;
 	}
 
-	function instance$s($$self, $$props, $$invalidate) {
+	function instance$t($$self, $$props, $$invalidate) {
 		let showList;
 		let { items = [] } = $$props;
 		let { labelFieldName = undefined } = $$props;
@@ -16395,8 +16513,8 @@ var notBulma = (function (exports) {
 			init(
 				this,
 				options,
-				instance$s,
-				create_fragment$s,
+				instance$t,
+				create_fragment$t,
 				safe_not_equal,
 				{
 					items: 27,
@@ -16434,7 +16552,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/form/ui.autocomplete.svelte generated by Svelte v3.35.0 */
+	/* src/form/ui.autocomplete.svelte generated by Svelte v3.37.0 */
 
 	function create_else_block$i(ctx) {
 		let div;
@@ -16621,7 +16739,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	function create_fragment$r(ctx) {
+	function create_fragment$s(ctx) {
 		let current_block_type_index;
 		let if_block;
 		let if_block_anchor;
@@ -16690,7 +16808,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	function instance$r($$self, $$props, $$invalidate) {
+	function instance$s($$self, $$props, $$invalidate) {
 		let allErrors;
 		let helper;
 		let validationClasses;
@@ -16715,7 +16833,7 @@ var notBulma = (function (exports) {
 		let { formErrors = false } = $$props;
 		let { formLevelError = false } = $$props;
 
-		let { searchFunction = term => {
+		let { searchFunction = () => /*term*/ {
 			return [];
 		} } = $$props;
 
@@ -16807,7 +16925,7 @@ var notBulma = (function (exports) {
 		constructor(options) {
 			super();
 
-			init(this, options, instance$r, create_fragment$r, safe_not_equal, {
+			init(this, options, instance$s, create_fragment$s, safe_not_equal, {
 				idField: 2,
 				labelField: 3,
 				minCharactersToSearch: 4,
@@ -16832,6 +16950,57 @@ var notBulma = (function (exports) {
 		}
 	}
 
+	/* src/form/ui.label.svelte generated by Svelte v3.37.0 */
+
+	function create_fragment$r(ctx) {
+		let label_1;
+		let t;
+
+		return {
+			c() {
+				label_1 = element("label");
+				t = text(/*label*/ ctx[1]);
+				attr(label_1, "class", "label");
+				attr(label_1, "for", /*id*/ ctx[0]);
+			},
+			m(target, anchor) {
+				insert(target, label_1, anchor);
+				append(label_1, t);
+			},
+			p(ctx, [dirty]) {
+				if (dirty & /*label*/ 2) set_data(t, /*label*/ ctx[1]);
+
+				if (dirty & /*id*/ 1) {
+					attr(label_1, "for", /*id*/ ctx[0]);
+				}
+			},
+			i: noop,
+			o: noop,
+			d(detaching) {
+				if (detaching) detach(label_1);
+			}
+		};
+	}
+
+	function instance$r($$self, $$props, $$invalidate) {
+		let { id } = $$props;
+		let { label = "label" } = $$props;
+
+		$$self.$$set = $$props => {
+			if ("id" in $$props) $$invalidate(0, id = $$props.id);
+			if ("label" in $$props) $$invalidate(1, label = $$props.label);
+		};
+
+		return [id, label];
+	}
+
+	class Ui_label extends SvelteComponent {
+		constructor(options) {
+			super();
+			init(this, options, instance$r, create_fragment$r, safe_not_equal, { id: 0, label: 1 });
+		}
+	}
+
 	var FIELDS = new Lib();
 	var COMPONENTS = new Lib();
 	var VARIANTS = new Lib();
@@ -16843,7 +17012,7 @@ var notBulma = (function (exports) {
 		VARIANTS: VARIANTS
 	});
 
-	/* src/form/field.svelte generated by Svelte v3.35.0 */
+	/* src/form/field.svelte generated by Svelte v3.37.0 */
 
 	function get_each_context_2$2(ctx, list, i) {
 		const child_ctx = ctx.slice();
@@ -16863,7 +17032,7 @@ var notBulma = (function (exports) {
 		return child_ctx;
 	}
 
-	// (82:0) {:else}
+	// (80:0) {:else}
 	function create_else_block$h(ctx) {
 		let div;
 		let div_class_value;
@@ -16955,7 +17124,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (71:0) {#if horizontal}
+	// (69:0) {#if horizontal}
 	function create_if_block_1$g(ctx) {
 		let div2;
 		let div0;
@@ -17082,7 +17251,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (63:0) {#if hidden }
+	// (61:0) {#if hidden }
 	function create_if_block$j(ctx) {
 		let each_1_anchor;
 		let current;
@@ -17166,7 +17335,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (84:2) {#each controls as control}
+	// (82:2) {#each controls as control}
 	function create_each_block_2$2(ctx) {
 		let uilabel;
 		let t;
@@ -17275,7 +17444,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (77:4) {#each controls as control}
+	// (75:4) {#each controls as control}
 	function create_each_block_1$5(ctx) {
 		let switch_instance;
 		let switch_instance_anchor;
@@ -17360,7 +17529,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (65:0) {#each controls as control}
+	// (63:0) {#each controls as control}
 	function create_each_block$8(ctx) {
 		let switch_instance;
 		let switch_instance_anchor;
@@ -17620,21 +17789,21 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/form/form.svelte generated by Svelte v3.35.0 */
+	/* src/form/form.svelte generated by Svelte v3.37.0 */
 
 	function get_each_context$7(ctx, list, i) {
 		const child_ctx = ctx.slice();
-		child_ctx[40] = list[i];
+		child_ctx[38] = list[i];
 		return child_ctx;
 	}
 
 	function get_each_context_1$4(ctx, list, i) {
 		const child_ctx = ctx.slice();
-		child_ctx[43] = list[i];
+		child_ctx[41] = list[i];
 		return child_ctx;
 	}
 
-	// (305:0) {:else}
+	// (303:0) {:else}
 	function create_else_block$g(ctx) {
 		let t0;
 		let t1;
@@ -17805,7 +17974,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (301:0) {#if success}
+	// (299:0) {#if success}
 	function create_if_block$i(ctx) {
 		let div;
 		let h3;
@@ -17835,7 +18004,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (306:0) {#if title }
+	// (304:0) {#if title }
 	function create_if_block_15(ctx) {
 		let h5;
 		let t;
@@ -17859,7 +18028,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (309:0) {#if description }
+	// (307:0) {#if description }
 	function create_if_block_14(ctx) {
 		let h6;
 		let t;
@@ -17883,7 +18052,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (313:0) {#if options.buttonsFirst }
+	// (311:0) {#if options.buttonsFirst }
 	function create_if_block_10$1(ctx) {
 		let div;
 		let t0;
@@ -17964,7 +18133,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (315:1) {#if cancel.enabled}
+	// (313:1) {#if cancel.enabled}
 	function create_if_block_13$1(ctx) {
 		let button;
 		let t_value = /*cancel*/ ctx[8].caption + "";
@@ -18007,7 +18176,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (318:1) {#if submit.enabled}
+	// (316:1) {#if submit.enabled}
 	function create_if_block_12$1(ctx) {
 		let button;
 		let t_value = /*submit*/ ctx[7].caption + "";
@@ -18055,7 +18224,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (323:0) {#if formErrors.length > 0 }
+	// (321:0) {#if formErrors.length > 0 }
 	function create_if_block_11$1(ctx) {
 		let div;
 		let t_value = /*formErrors*/ ctx[12].join(", ") + "";
@@ -18080,11 +18249,11 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (361:0) {:else}
+	// (359:0) {:else}
 	function create_else_block_2$2(ctx) {
 		let div;
 		let t0;
-		let t1_value = /*field*/ ctx[40] + "";
+		let t1_value = /*field*/ ctx[38] + "";
 		let t1;
 		let t2;
 
@@ -18103,7 +18272,7 @@ var notBulma = (function (exports) {
 				append(div, t2);
 			},
 			p(ctx, dirty) {
-				if (dirty[0] & /*fields*/ 2 && t1_value !== (t1_value = /*field*/ ctx[40] + "")) set_data(t1, t1_value);
+				if (dirty[0] & /*fields*/ 2 && t1_value !== (t1_value = /*field*/ ctx[38] + "")) set_data(t1, t1_value);
 			},
 			i: noop,
 			o: noop,
@@ -18113,11 +18282,11 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (351:0) {#if form[field] && form[field].component }
+	// (349:0) {#if form[field] && form[field].component }
 	function create_if_block_8$2(ctx) {
 		let if_block_anchor;
 		let current;
-		let if_block = /*form*/ ctx[11][/*field*/ ctx[40]].visible && create_if_block_9$2(ctx);
+		let if_block = /*form*/ ctx[11][/*field*/ ctx[38]].visible && create_if_block_9$2(ctx);
 
 		return {
 			c() {
@@ -18130,7 +18299,7 @@ var notBulma = (function (exports) {
 				current = true;
 			},
 			p(ctx, dirty) {
-				if (/*form*/ ctx[11][/*field*/ ctx[40]].visible) {
+				if (/*form*/ ctx[11][/*field*/ ctx[38]].visible) {
 					if (if_block) {
 						if_block.p(ctx, dirty);
 
@@ -18169,11 +18338,11 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (330:0) {#if Array.isArray(field) }
+	// (328:0) {#if Array.isArray(field) }
 	function create_if_block_5$3(ctx) {
 		let div;
 		let current;
-		let each_value_1 = /*field*/ ctx[40];
+		let each_value_1 = /*field*/ ctx[38];
 		let each_blocks = [];
 
 		for (let i = 0; i < each_value_1.length; i += 1) {
@@ -18205,7 +18374,7 @@ var notBulma = (function (exports) {
 			},
 			p(ctx, dirty) {
 				if (dirty[0] & /*form, fields, options, onFieldChange*/ 34822) {
-					each_value_1 = /*field*/ ctx[40];
+					each_value_1 = /*field*/ ctx[38];
 					let i;
 
 					for (i = 0; i < each_value_1.length; i += 1) {
@@ -18256,17 +18425,17 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (352:0) {#if form[field].visible}
+	// (350:0) {#if form[field].visible}
 	function create_if_block_9$2(ctx) {
 		let uifield;
 		let current;
 
 		uifield = new Field({
 				props: {
-					controls: [/*form*/ ctx[11][/*field*/ ctx[40]]],
-					name: /*field*/ ctx[40],
+					controls: [/*form*/ ctx[11][/*field*/ ctx[38]]],
+					name: /*field*/ ctx[38],
 					horizontal: /*options*/ ctx[2].horizontal,
-					label: /*form*/ ctx[11][/*field*/ ctx[40]].label
+					label: /*form*/ ctx[11][/*field*/ ctx[38]].label
 				}
 			});
 
@@ -18282,10 +18451,10 @@ var notBulma = (function (exports) {
 			},
 			p(ctx, dirty) {
 				const uifield_changes = {};
-				if (dirty[0] & /*form, fields*/ 2050) uifield_changes.controls = [/*form*/ ctx[11][/*field*/ ctx[40]]];
-				if (dirty[0] & /*fields*/ 2) uifield_changes.name = /*field*/ ctx[40];
+				if (dirty[0] & /*form, fields*/ 2050) uifield_changes.controls = [/*form*/ ctx[11][/*field*/ ctx[38]]];
+				if (dirty[0] & /*fields*/ 2) uifield_changes.name = /*field*/ ctx[38];
 				if (dirty[0] & /*options*/ 4) uifield_changes.horizontal = /*options*/ ctx[2].horizontal;
-				if (dirty[0] & /*form, fields*/ 2050) uifield_changes.label = /*form*/ ctx[11][/*field*/ ctx[40]].label;
+				if (dirty[0] & /*form, fields*/ 2050) uifield_changes.label = /*form*/ ctx[11][/*field*/ ctx[38]].label;
 				uifield.$set(uifield_changes);
 			},
 			i(local) {
@@ -18303,11 +18472,11 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (345:1) {:else}
+	// (343:1) {:else}
 	function create_else_block_1$3(ctx) {
 		let div;
 		let t0;
-		let t1_value = /*subfield*/ ctx[43] + "";
+		let t1_value = /*subfield*/ ctx[41] + "";
 		let t1;
 		let t2;
 
@@ -18326,7 +18495,7 @@ var notBulma = (function (exports) {
 				append(div, t2);
 			},
 			p(ctx, dirty) {
-				if (dirty[0] & /*fields*/ 2 && t1_value !== (t1_value = /*subfield*/ ctx[43] + "")) set_data(t1, t1_value);
+				if (dirty[0] & /*fields*/ 2 && t1_value !== (t1_value = /*subfield*/ ctx[41] + "")) set_data(t1, t1_value);
 			},
 			i: noop,
 			o: noop,
@@ -18336,11 +18505,11 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (333:1) {#if form[subfield] && form[subfield].component }
+	// (331:1) {#if form[subfield] && form[subfield].component }
 	function create_if_block_6$2(ctx) {
 		let if_block_anchor;
 		let current;
-		let if_block = /*form*/ ctx[11][/*subfield*/ ctx[43]].visible && create_if_block_7$2(ctx);
+		let if_block = /*form*/ ctx[11][/*subfield*/ ctx[41]].visible && create_if_block_7$2(ctx);
 
 		return {
 			c() {
@@ -18353,7 +18522,7 @@ var notBulma = (function (exports) {
 				current = true;
 			},
 			p(ctx, dirty) {
-				if (/*form*/ ctx[11][/*subfield*/ ctx[43]].visible) {
+				if (/*form*/ ctx[11][/*subfield*/ ctx[41]].visible) {
 					if (if_block) {
 						if_block.p(ctx, dirty);
 
@@ -18392,7 +18561,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (334:1) {#if form[subfield].visible }
+	// (332:1) {#if form[subfield].visible }
 	function create_if_block_7$2(ctx) {
 		let div;
 		let uifield;
@@ -18401,10 +18570,10 @@ var notBulma = (function (exports) {
 
 		uifield = new Field({
 				props: {
-					controls: [/*form*/ ctx[11][/*subfield*/ ctx[43]]],
-					name: /*subfield*/ ctx[43],
+					controls: [/*form*/ ctx[11][/*subfield*/ ctx[41]]],
+					name: /*subfield*/ ctx[41],
 					horizontal: /*options*/ ctx[2].horizontal,
-					label: /*form*/ ctx[11][/*subfield*/ ctx[43]].label
+					label: /*form*/ ctx[11][/*subfield*/ ctx[41]].label
 				}
 			});
 
@@ -18415,8 +18584,8 @@ var notBulma = (function (exports) {
 				div = element("div");
 				create_component(uifield.$$.fragment);
 
-				attr(div, "class", div_class_value = "column " + (/*form*/ ctx[11][/*subfield*/ ctx[43]].fieldSize
-				? "is-" + /*form*/ ctx[11][/*subfield*/ ctx[43]].fieldSize
+				attr(div, "class", div_class_value = "column " + (/*form*/ ctx[11][/*subfield*/ ctx[41]].fieldSize
+				? "is-" + /*form*/ ctx[11][/*subfield*/ ctx[41]].fieldSize
 				: "") + " ");
 			},
 			m(target, anchor) {
@@ -18426,14 +18595,14 @@ var notBulma = (function (exports) {
 			},
 			p(ctx, dirty) {
 				const uifield_changes = {};
-				if (dirty[0] & /*form, fields*/ 2050) uifield_changes.controls = [/*form*/ ctx[11][/*subfield*/ ctx[43]]];
-				if (dirty[0] & /*fields*/ 2) uifield_changes.name = /*subfield*/ ctx[43];
+				if (dirty[0] & /*form, fields*/ 2050) uifield_changes.controls = [/*form*/ ctx[11][/*subfield*/ ctx[41]]];
+				if (dirty[0] & /*fields*/ 2) uifield_changes.name = /*subfield*/ ctx[41];
 				if (dirty[0] & /*options*/ 4) uifield_changes.horizontal = /*options*/ ctx[2].horizontal;
-				if (dirty[0] & /*form, fields*/ 2050) uifield_changes.label = /*form*/ ctx[11][/*subfield*/ ctx[43]].label;
+				if (dirty[0] & /*form, fields*/ 2050) uifield_changes.label = /*form*/ ctx[11][/*subfield*/ ctx[41]].label;
 				uifield.$set(uifield_changes);
 
-				if (!current || dirty[0] & /*form, fields*/ 2050 && div_class_value !== (div_class_value = "column " + (/*form*/ ctx[11][/*subfield*/ ctx[43]].fieldSize
-				? "is-" + /*form*/ ctx[11][/*subfield*/ ctx[43]].fieldSize
+				if (!current || dirty[0] & /*form, fields*/ 2050 && div_class_value !== (div_class_value = "column " + (/*form*/ ctx[11][/*subfield*/ ctx[41]].fieldSize
+				? "is-" + /*form*/ ctx[11][/*subfield*/ ctx[41]].fieldSize
 				: "") + " ")) {
 					attr(div, "class", div_class_value);
 				}
@@ -18454,7 +18623,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (332:1) {#each field as subfield }
+	// (330:1) {#each field as subfield }
 	function create_each_block_1$4(ctx) {
 		let current_block_type_index;
 		let if_block;
@@ -18464,7 +18633,7 @@ var notBulma = (function (exports) {
 		const if_blocks = [];
 
 		function select_block_type_2(ctx, dirty) {
-			if (/*form*/ ctx[11][/*subfield*/ ctx[43]] && /*form*/ ctx[11][/*subfield*/ ctx[43]].component) return 0;
+			if (/*form*/ ctx[11][/*subfield*/ ctx[41]] && /*form*/ ctx[11][/*subfield*/ ctx[41]].component) return 0;
 			return 1;
 		}
 
@@ -18524,7 +18693,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (329:0) {#each fields as field}
+	// (327:0) {#each fields as field}
 	function create_each_block$7(ctx) {
 		let show_if;
 		let current_block_type_index;
@@ -18535,9 +18704,9 @@ var notBulma = (function (exports) {
 		const if_blocks = [];
 
 		function select_block_type_1(ctx, dirty) {
-			if (dirty[0] & /*fields*/ 2) show_if = !!Array.isArray(/*field*/ ctx[40]);
+			if (dirty[0] & /*fields*/ 2) show_if = !!Array.isArray(/*field*/ ctx[38]);
 			if (show_if) return 0;
-			if (/*form*/ ctx[11][/*field*/ ctx[40]] && /*form*/ ctx[11][/*field*/ ctx[40]].component) return 1;
+			if (/*form*/ ctx[11][/*field*/ ctx[38]] && /*form*/ ctx[11][/*field*/ ctx[38]].component) return 1;
 			return 2;
 		}
 
@@ -18597,7 +18766,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (367:0) {#if !options.buttonsFirst }
+	// (365:0) {#if !options.buttonsFirst }
 	function create_if_block_1$f(ctx) {
 		let t0;
 		let div;
@@ -18674,7 +18843,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (368:0) {#if formErrors.length > 0 }
+	// (366:0) {#if formErrors.length > 0 }
 	function create_if_block_4$9(ctx) {
 		let div;
 		let t_value = /*formErrors*/ ctx[12].join(", ") + "";
@@ -18699,7 +18868,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (372:1) {#if cancel.enabled}
+	// (370:1) {#if cancel.enabled}
 	function create_if_block_3$a(ctx) {
 		let button;
 		let t_value = /*cancel*/ ctx[8].caption + "";
@@ -18742,7 +18911,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (375:1) {#if submit.enabled}
+	// (373:1) {#if submit.enabled}
 	function create_if_block_2$b(ctx) {
 		let button;
 		let t_value = /*submit*/ ctx[7].caption + "";
@@ -18890,6 +19059,7 @@ var notBulma = (function (exports) {
 		let validate = () => {
 			return { clean: true };
 		};
+
 		let formErrors = [];
 		let formHasErrors = false;
 		let fieldsHasErrors = false;
@@ -18901,7 +19071,6 @@ var notBulma = (function (exports) {
 				placeholder: "",
 				enabled: true,
 				visible: true,
-				value: "",
 				required: true,
 				validated: false,
 				valid: false,
@@ -18910,11 +19079,11 @@ var notBulma = (function (exports) {
 			};
 
 			if (FIELDS.contains(type)) {
-				Object.assign(field, FIELDS.get(type));
+				field = { ...field, ...FIELDS.get(type) };
 			}
 
 			if (mutation) {
-				Object.assign(field, mutation);
+				field = { ...field, ...mutation };
 			}
 
 			if (Object.prototype.hasOwnProperty.call(field, "variantsSource") && VARIANTS.contains(field.variantsSource)) {
@@ -18929,7 +19098,9 @@ var notBulma = (function (exports) {
 
 			fields.flat().forEach(fieldname => {
 				if (Object.prototype.hasOwnProperty.call(form, fieldname) && form[fieldname].enabled && form[fieldname].visible) {
-					result[fieldname] = form[fieldname].value;
+					if (typeof form[fieldname].value !== "undefined") {
+						result[fieldname] = form[fieldname].value;
+					}
 				}
 			});
 
@@ -18985,7 +19156,7 @@ var notBulma = (function (exports) {
 			$$invalidate(11, form);
 		}
 
-		function setFormFieldValid(fieldName, value) {
+		function setFormFieldValid(fieldName) {
 			$$invalidate(11, form[fieldName].formErrors = false, form);
 			$$invalidate(11, form[fieldName].validated = true, form);
 			$$invalidate(11, form[fieldName].valid = true, form);
@@ -19049,6 +19220,14 @@ var notBulma = (function (exports) {
 			$$invalidate(32, formHasErrors = true);
 		}
 
+		/*function removeFormErrors(err) {
+	  if (Array.isArray(formErrors)) {
+	    formErrors.splice(0, formErrors.length);
+	    formErrors = formErrors;
+	  } else {
+	    formErrors = false;
+	  }
+	}*/
 		function onFieldChange(ev) {
 			let data = ev.detail;
 
@@ -19323,7 +19502,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/form/ui.checkbox.svelte generated by Svelte v3.35.0 */
+	/* src/form/ui.checkbox.svelte generated by Svelte v3.37.0 */
 
 	function create_else_block$f(ctx) {
 		let t;
@@ -19667,17 +19846,17 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/form/ui.checkbox.list.svelte generated by Svelte v3.35.0 */
+	/* src/form/ui.checkbox.list.svelte generated by Svelte v3.37.0 */
 
 	function get_each_context$6(ctx, list, i) {
 		const child_ctx = ctx.slice();
-		child_ctx[18] = list[i];
-		child_ctx[19] = list;
-		child_ctx[20] = i;
+		child_ctx[19] = list[i];
+		child_ctx[20] = list;
+		child_ctx[21] = i;
 		return child_ctx;
 	}
 
-	// (55:2) {#each value as item(item.id) }
+	// (56:2) {#each value as item(item.id) }
 	function create_each_block$6(key_1, ctx) {
 		let label;
 		let input;
@@ -19689,7 +19868,7 @@ var notBulma = (function (exports) {
 		let input_aria_describedby_value;
 		let input_disabled_value;
 		let t0;
-		let t1_value = /*item*/ ctx[18].label + "";
+		let t1_value = /*item*/ ctx[19].label + "";
 		let t1;
 		let t2;
 		let label_disabled_value;
@@ -19698,7 +19877,7 @@ var notBulma = (function (exports) {
 		let dispose;
 
 		function input_change_handler() {
-			/*input_change_handler*/ ctx[16].call(input, /*each_value*/ ctx[19], /*item_index*/ ctx[20]);
+			/*input_change_handler*/ ctx[17].call(input, /*each_value*/ ctx[20], /*item_index*/ ctx[21]);
 		}
 
 		return {
@@ -19710,25 +19889,25 @@ var notBulma = (function (exports) {
 				t0 = space();
 				t1 = text(t1_value);
 				t2 = space();
-				attr(input, "data-id", input_data_id_value = /*item*/ ctx[18].id);
-				attr(input, "id", input_id_value = "form-field-checkboxlist-" + (/*fieldname*/ ctx[2] + "_" + /*item*/ ctx[18].id));
+				attr(input, "data-id", input_data_id_value = /*item*/ ctx[19].id);
+				attr(input, "id", input_id_value = "form-field-checkboxlist-" + (/*fieldname*/ ctx[2] + "_" + /*item*/ ctx[19].id));
 				attr(input, "type", "checkbox");
-				attr(input, "placeholder", input_placeholder_value = /*item*/ ctx[18].placeholder);
-				attr(input, "name", input_name_value = /*fieldname*/ ctx[2] + "_" + /*item*/ ctx[18].id);
+				attr(input, "placeholder", input_placeholder_value = /*item*/ ctx[19].placeholder);
+				attr(input, "name", input_name_value = /*fieldname*/ ctx[2] + "_" + /*item*/ ctx[19].id);
 				input.readOnly = /*readonly*/ ctx[3];
 				attr(input, "invalid", /*invalid*/ ctx[8]);
-				attr(input, "aria-controls", input_aria_controls_value = "input-field-helper-" + (/*fieldname*/ ctx[2] + "_" + /*item*/ ctx[18].id));
-				attr(input, "aria-describedby", input_aria_describedby_value = "input-field-helper-" + (/*fieldname*/ ctx[2] + "_" + /*item*/ ctx[18].id));
-				input.disabled = input_disabled_value = /*disabled*/ ctx[4] || /*item*/ ctx[18].disabled;
+				attr(input, "aria-controls", input_aria_controls_value = "input-field-helper-" + (/*fieldname*/ ctx[2] + "_" + /*item*/ ctx[19].id));
+				attr(input, "aria-describedby", input_aria_describedby_value = "input-field-helper-" + (/*fieldname*/ ctx[2] + "_" + /*item*/ ctx[19].id));
+				input.disabled = input_disabled_value = /*disabled*/ ctx[4] || /*item*/ ctx[19].disabled;
 				attr(label, "class", "checkbox pr-2");
-				attr(label, "disabled", label_disabled_value = /*disabled*/ ctx[4] || /*item*/ ctx[18].disabled);
-				attr(label, "for", label_for_value = "form-field-checkbox-" + (/*fieldname*/ ctx[2] + "_" + /*item*/ ctx[18].id));
+				attr(label, "disabled", label_disabled_value = /*disabled*/ ctx[4] || /*item*/ ctx[19].disabled);
+				attr(label, "for", label_for_value = "form-field-checkbox-" + (/*fieldname*/ ctx[2] + "_" + /*item*/ ctx[19].id));
 				this.first = label;
 			},
 			m(target, anchor) {
 				insert(target, label, anchor);
 				append(label, input);
-				input.checked = /*item*/ ctx[18].value;
+				input.checked = /*item*/ ctx[19].value;
 				append(label, t0);
 				append(label, t1);
 				append(label, t2);
@@ -19746,19 +19925,19 @@ var notBulma = (function (exports) {
 			p(new_ctx, dirty) {
 				ctx = new_ctx;
 
-				if (dirty & /*value*/ 2 && input_data_id_value !== (input_data_id_value = /*item*/ ctx[18].id)) {
+				if (dirty & /*value*/ 2 && input_data_id_value !== (input_data_id_value = /*item*/ ctx[19].id)) {
 					attr(input, "data-id", input_data_id_value);
 				}
 
-				if (dirty & /*fieldname, value*/ 6 && input_id_value !== (input_id_value = "form-field-checkboxlist-" + (/*fieldname*/ ctx[2] + "_" + /*item*/ ctx[18].id))) {
+				if (dirty & /*fieldname, value*/ 6 && input_id_value !== (input_id_value = "form-field-checkboxlist-" + (/*fieldname*/ ctx[2] + "_" + /*item*/ ctx[19].id))) {
 					attr(input, "id", input_id_value);
 				}
 
-				if (dirty & /*value*/ 2 && input_placeholder_value !== (input_placeholder_value = /*item*/ ctx[18].placeholder)) {
+				if (dirty & /*value*/ 2 && input_placeholder_value !== (input_placeholder_value = /*item*/ ctx[19].placeholder)) {
 					attr(input, "placeholder", input_placeholder_value);
 				}
 
-				if (dirty & /*fieldname, value*/ 6 && input_name_value !== (input_name_value = /*fieldname*/ ctx[2] + "_" + /*item*/ ctx[18].id)) {
+				if (dirty & /*fieldname, value*/ 6 && input_name_value !== (input_name_value = /*fieldname*/ ctx[2] + "_" + /*item*/ ctx[19].id)) {
 					attr(input, "name", input_name_value);
 				}
 
@@ -19770,29 +19949,29 @@ var notBulma = (function (exports) {
 					attr(input, "invalid", /*invalid*/ ctx[8]);
 				}
 
-				if (dirty & /*fieldname, value*/ 6 && input_aria_controls_value !== (input_aria_controls_value = "input-field-helper-" + (/*fieldname*/ ctx[2] + "_" + /*item*/ ctx[18].id))) {
+				if (dirty & /*fieldname, value*/ 6 && input_aria_controls_value !== (input_aria_controls_value = "input-field-helper-" + (/*fieldname*/ ctx[2] + "_" + /*item*/ ctx[19].id))) {
 					attr(input, "aria-controls", input_aria_controls_value);
 				}
 
-				if (dirty & /*fieldname, value*/ 6 && input_aria_describedby_value !== (input_aria_describedby_value = "input-field-helper-" + (/*fieldname*/ ctx[2] + "_" + /*item*/ ctx[18].id))) {
+				if (dirty & /*fieldname, value*/ 6 && input_aria_describedby_value !== (input_aria_describedby_value = "input-field-helper-" + (/*fieldname*/ ctx[2] + "_" + /*item*/ ctx[19].id))) {
 					attr(input, "aria-describedby", input_aria_describedby_value);
 				}
 
-				if (dirty & /*disabled, value*/ 18 && input_disabled_value !== (input_disabled_value = /*disabled*/ ctx[4] || /*item*/ ctx[18].disabled)) {
+				if (dirty & /*disabled, value*/ 18 && input_disabled_value !== (input_disabled_value = /*disabled*/ ctx[4] || /*item*/ ctx[19].disabled)) {
 					input.disabled = input_disabled_value;
 				}
 
 				if (dirty & /*value*/ 2) {
-					input.checked = /*item*/ ctx[18].value;
+					input.checked = /*item*/ ctx[19].value;
 				}
 
-				if (dirty & /*value*/ 2 && t1_value !== (t1_value = /*item*/ ctx[18].label + "")) set_data(t1, t1_value);
+				if (dirty & /*value*/ 2 && t1_value !== (t1_value = /*item*/ ctx[19].label + "")) set_data(t1, t1_value);
 
-				if (dirty & /*disabled, value*/ 18 && label_disabled_value !== (label_disabled_value = /*disabled*/ ctx[4] || /*item*/ ctx[18].disabled)) {
+				if (dirty & /*disabled, value*/ 18 && label_disabled_value !== (label_disabled_value = /*disabled*/ ctx[4] || /*item*/ ctx[19].disabled)) {
 					attr(label, "disabled", label_disabled_value);
 				}
 
-				if (dirty & /*fieldname, value*/ 6 && label_for_value !== (label_for_value = "form-field-checkbox-" + (/*fieldname*/ ctx[2] + "_" + /*item*/ ctx[18].id))) {
+				if (dirty & /*fieldname, value*/ 6 && label_for_value !== (label_for_value = "form-field-checkbox-" + (/*fieldname*/ ctx[2] + "_" + /*item*/ ctx[19].id))) {
 					attr(label, "for", label_for_value);
 				}
 			},
@@ -19804,7 +19983,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (79:2) {:else}
+	// (80:2) {:else}
 	function create_else_block$e(ctx) {
 		let t;
 
@@ -19822,7 +20001,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (77:2) {#if !(validated && valid) && (inputStarted) }
+	// (78:2) {#if !(validated && valid) && (inputStarted) }
 	function create_if_block$g(ctx) {
 		let t;
 
@@ -19851,7 +20030,7 @@ var notBulma = (function (exports) {
 		let p_class_value;
 		let p_id_value;
 		let each_value = /*value*/ ctx[1];
-		const get_key = ctx => /*item*/ ctx[18].id;
+		const get_key = ctx => /*item*/ ctx[19].id;
 
 		for (let i = 0; i < each_value.length; i += 1) {
 			let child_ctx = get_each_context$6(ctx, each_value, i);
@@ -19944,6 +20123,7 @@ var notBulma = (function (exports) {
 		let { inputStarted = false } = $$props;
 		let { value = [] } = $$props;
 		let { fieldname = "checkbox-list" } = $$props;
+		let { placeholder = "" } = $$props;
 		let { readonly = false } = $$props;
 		let { disabled = false } = $$props;
 		let { valid = true } = $$props;
@@ -19981,25 +20161,26 @@ var notBulma = (function (exports) {
 			if ("inputStarted" in $$props) $$invalidate(0, inputStarted = $$props.inputStarted);
 			if ("value" in $$props) $$invalidate(1, value = $$props.value);
 			if ("fieldname" in $$props) $$invalidate(2, fieldname = $$props.fieldname);
+			if ("placeholder" in $$props) $$invalidate(12, placeholder = $$props.placeholder);
 			if ("readonly" in $$props) $$invalidate(3, readonly = $$props.readonly);
 			if ("disabled" in $$props) $$invalidate(4, disabled = $$props.disabled);
 			if ("valid" in $$props) $$invalidate(5, valid = $$props.valid);
 			if ("validated" in $$props) $$invalidate(6, validated = $$props.validated);
-			if ("errors" in $$props) $$invalidate(12, errors = $$props.errors);
-			if ("formErrors" in $$props) $$invalidate(13, formErrors = $$props.formErrors);
-			if ("formLevelError" in $$props) $$invalidate(14, formLevelError = $$props.formLevelError);
+			if ("errors" in $$props) $$invalidate(13, errors = $$props.errors);
+			if ("formErrors" in $$props) $$invalidate(14, formErrors = $$props.formErrors);
+			if ("formLevelError" in $$props) $$invalidate(15, formLevelError = $$props.formLevelError);
 		};
 
 		$$self.$$.update = () => {
-			if ($$self.$$.dirty & /*errors, formErrors*/ 12288) {
-				$$invalidate(15, allErrors = [].concat(errors ? errors : [], formErrors ? formErrors : []));
+			if ($$self.$$.dirty & /*errors, formErrors*/ 24576) {
+				$$invalidate(16, allErrors = [].concat(errors ? errors : [], formErrors ? formErrors : []));
 			}
 
-			if ($$self.$$.dirty & /*allErrors*/ 32768) {
+			if ($$self.$$.dirty & /*allErrors, placeholder*/ 69632) {
 				$$invalidate(7, helper = allErrors ? allErrors.join(", ") : placeholder);
 			}
 
-			if ($$self.$$.dirty & /*valid, formLevelError*/ 16416) {
+			if ($$self.$$.dirty & /*valid, formLevelError*/ 32800) {
 				$$invalidate(8, invalid = valid === false || formLevelError);
 			}
 
@@ -20023,6 +20204,7 @@ var notBulma = (function (exports) {
 			validationClasses,
 			onBlur,
 			onInput,
+			placeholder,
 			errors,
 			formErrors,
 			formLevelError,
@@ -20039,18 +20221,19 @@ var notBulma = (function (exports) {
 				inputStarted: 0,
 				value: 1,
 				fieldname: 2,
+				placeholder: 12,
 				readonly: 3,
 				disabled: 4,
 				valid: 5,
 				validated: 6,
-				errors: 12,
-				formErrors: 13,
-				formLevelError: 14
+				errors: 13,
+				formErrors: 14,
+				formLevelError: 15
 			});
 		}
 	}
 
-	/* src/form/ui.color.svelte generated by Svelte v3.35.0 */
+	/* src/form/ui.color.svelte generated by Svelte v3.37.0 */
 
 	function create_if_block_4$8(ctx) {
 		let span;
@@ -20512,7 +20695,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/form/ui.date.svelte generated by Svelte v3.35.0 */
+	/* src/form/ui.date.svelte generated by Svelte v3.37.0 */
 
 	function create_if_block_4$7(ctx) {
 		let span;
@@ -20974,7 +21157,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/form/ui.email.svelte generated by Svelte v3.35.0 */
+	/* src/form/ui.email.svelte generated by Svelte v3.37.0 */
 
 	function create_if_block_4$6(ctx) {
 		let span;
@@ -21436,7 +21619,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/form/ui.hidden.svelte generated by Svelte v3.35.0 */
+	/* src/form/ui.hidden.svelte generated by Svelte v3.37.0 */
 
 	function create_fragment$j(ctx) {
 		let input;
@@ -21521,7 +21704,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/form/ui.password.svelte generated by Svelte v3.35.0 */
+	/* src/form/ui.password.svelte generated by Svelte v3.37.0 */
 
 	function create_if_block_4$5(ctx) {
 		let span;
@@ -21983,7 +22166,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/form/ui.radio.svelte generated by Svelte v3.35.0 */
+	/* src/form/ui.radio.svelte generated by Svelte v3.37.0 */
 
 	class Ui_radio extends SvelteComponent {
 		constructor(options) {
@@ -21992,7 +22175,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/form/ui.radiogroup.svelte generated by Svelte v3.35.0 */
+	/* src/form/ui.radiogroup.svelte generated by Svelte v3.37.0 */
 
 	class Ui_radiogroup extends SvelteComponent {
 		constructor(options) {
@@ -22001,7 +22184,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/form/ui.range.svelte generated by Svelte v3.35.0 */
+	/* src/form/ui.range.svelte generated by Svelte v3.37.0 */
 
 	class Ui_range extends SvelteComponent {
 		constructor(options) {
@@ -22010,7 +22193,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/form/ui.select.svelte generated by Svelte v3.35.0 */
+	/* src/form/ui.select.svelte generated by Svelte v3.37.0 */
 
 	function get_each_context_1$3(ctx, list, i) {
 		const child_ctx = ctx.slice();
@@ -22491,7 +22674,7 @@ var notBulma = (function (exports) {
 				t = text(t_value);
 				option.__value = option_value_value = /*variant*/ ctx[25].id;
 				option.value = option.__value;
-				option.selected = option_selected_value = /*value*/ ctx[1].indexOf(/*variant*/ ctx[25].id) > -1;
+				option.selected = option_selected_value = /*value*/ ctx[1] && /*value*/ ctx[1].indexOf(/*variant*/ ctx[25].id) > -1;
 			},
 			m(target, anchor) {
 				insert(target, option, anchor);
@@ -22505,7 +22688,7 @@ var notBulma = (function (exports) {
 					option.value = option.__value;
 				}
 
-				if (dirty & /*value, variants, CLEAR_MACRO*/ 6 && option_selected_value !== (option_selected_value = /*value*/ ctx[1].indexOf(/*variant*/ ctx[25].id) > -1)) {
+				if (dirty & /*value, variants, CLEAR_MACRO*/ 6 && option_selected_value !== (option_selected_value = /*value*/ ctx[1] && /*value*/ ctx[1].indexOf(/*variant*/ ctx[25].id) > -1)) {
 					option.selected = option_selected_value;
 				}
 			},
@@ -22976,7 +23159,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/form/ui.slider.svelte generated by Svelte v3.35.0 */
+	/* src/form/ui.slider.svelte generated by Svelte v3.37.0 */
 
 	class Ui_slider extends SvelteComponent {
 		constructor(options) {
@@ -22985,7 +23168,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/form/ui.switch.svelte generated by Svelte v3.35.0 */
+	/* src/form/ui.switch.svelte generated by Svelte v3.37.0 */
 
 	function create_else_block$8(ctx) {
 		let t;
@@ -23325,7 +23508,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/form/ui.tag.svelte generated by Svelte v3.35.0 */
+	/* src/form/ui.tag.svelte generated by Svelte v3.37.0 */
 
 	function get_each_context$4(ctx, list, i) {
 		const child_ctx = ctx.slice();
@@ -23644,7 +23827,7 @@ var notBulma = (function (exports) {
 		let { error = false } = $$props;
 		let { readonly = false } = $$props;
 
-		let { beforeAdd = (item, list) => {
+		let { beforeAdd = () => /*item, list*/ {
 			return true;
 		} } = $$props;
 
@@ -23711,7 +23894,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/form/ui.telephone.svelte generated by Svelte v3.35.0 */
+	/* src/form/ui.telephone.svelte generated by Svelte v3.37.0 */
 
 	function create_if_block_4$3(ctx) {
 		let span;
@@ -24171,7 +24354,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/form/ui.textarea.svelte generated by Svelte v3.35.0 */
+	/* src/form/ui.textarea.svelte generated by Svelte v3.37.0 */
 
 	function create_if_block_4$2(ctx) {
 		let span;
@@ -24782,7 +24965,7 @@ var notBulma = (function (exports) {
 	// https://tc39.es/ecma262/#sec-array.prototype-@@unscopables
 	addToUnscopables(FIND_INDEX);
 
-	/* src/table/controls/ui.switch.svelte generated by Svelte v3.35.0 */
+	/* src/table/controls/ui.switch.svelte generated by Svelte v3.37.0 */
 
 	function create_fragment$c(ctx) {
 		let input;
@@ -24927,11 +25110,11 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/table/controls/ui.tags.svelte generated by Svelte v3.35.0 */
+	/* src/table/controls/ui.tags.svelte generated by Svelte v3.37.0 */
 
 	function get_each_context$3(ctx, list, i) {
 		const child_ctx = ctx.slice();
-		child_ctx[2] = list[i];
+		child_ctx[1] = list[i];
 		return child_ctx;
 	}
 
@@ -24942,7 +25125,7 @@ var notBulma = (function (exports) {
 		let span_class_value;
 
 		function select_block_type_2(ctx, dirty) {
-			if (/*item*/ ctx[2].url) return create_if_block_2$3;
+			if (/*item*/ ctx[1].url) return create_if_block_2$3;
 			return create_else_block_2;
 		}
 
@@ -24954,7 +25137,7 @@ var notBulma = (function (exports) {
 				span = element("span");
 				if_block.c();
 				t = space();
-				attr(span, "class", span_class_value = "mx-1 tag is-" + /*item*/ ctx[2].color + " " + /*item*/ ctx[2].customClasses + " svelte-9c4k6c");
+				attr(span, "class", span_class_value = "mx-1 tag is-" + /*item*/ ctx[1].color + " " + /*item*/ ctx[1].customClasses + " svelte-9c4k6c");
 			},
 			m(target, anchor) {
 				insert(target, span, anchor);
@@ -24974,7 +25157,7 @@ var notBulma = (function (exports) {
 					}
 				}
 
-				if (dirty & /*values*/ 1 && span_class_value !== (span_class_value = "mx-1 tag is-" + /*item*/ ctx[2].color + " " + /*item*/ ctx[2].customClasses + " svelte-9c4k6c")) {
+				if (dirty & /*values*/ 1 && span_class_value !== (span_class_value = "mx-1 tag is-" + /*item*/ ctx[1].color + " " + /*item*/ ctx[1].customClasses + " svelte-9c4k6c")) {
 					attr(span, "class", span_class_value);
 				}
 			},
@@ -24989,7 +25172,7 @@ var notBulma = (function (exports) {
 	function create_if_block$6(ctx) {
 		let div;
 		let span0;
-		let t0_value = /*item*/ ctx[2].title + "";
+		let t0_value = /*item*/ ctx[1].title + "";
 		let t0;
 		let t1;
 		let span1;
@@ -24997,7 +25180,7 @@ var notBulma = (function (exports) {
 		let t2;
 
 		function select_block_type_1(ctx, dirty) {
-			if (/*item*/ ctx[2].url) return create_if_block_1$6;
+			if (/*item*/ ctx[1].url) return create_if_block_1$6;
 			return create_else_block$5;
 		}
 
@@ -25014,7 +25197,7 @@ var notBulma = (function (exports) {
 				if_block.c();
 				t2 = space();
 				attr(span0, "class", "tag");
-				attr(span1, "class", span1_class_value = "tag is-" + /*item*/ ctx[2].color + " " + /*item*/ ctx[2].customClasses + " svelte-9c4k6c");
+				attr(span1, "class", span1_class_value = "tag is-" + /*item*/ ctx[1].color + " " + /*item*/ ctx[1].customClasses + " svelte-9c4k6c");
 				attr(div, "class", "mx-1 tags has-addons svelte-9c4k6c");
 			},
 			m(target, anchor) {
@@ -25027,7 +25210,7 @@ var notBulma = (function (exports) {
 				append(div, t2);
 			},
 			p(ctx, dirty) {
-				if (dirty & /*values*/ 1 && t0_value !== (t0_value = /*item*/ ctx[2].title + "")) set_data(t0, t0_value);
+				if (dirty & /*values*/ 1 && t0_value !== (t0_value = /*item*/ ctx[1].title + "")) set_data(t0, t0_value);
 
 				if (current_block_type === (current_block_type = select_block_type_1(ctx)) && if_block) {
 					if_block.p(ctx, dirty);
@@ -25041,7 +25224,7 @@ var notBulma = (function (exports) {
 					}
 				}
 
-				if (dirty & /*values*/ 1 && span1_class_value !== (span1_class_value = "tag is-" + /*item*/ ctx[2].color + " " + /*item*/ ctx[2].customClasses + " svelte-9c4k6c")) {
+				if (dirty & /*values*/ 1 && span1_class_value !== (span1_class_value = "tag is-" + /*item*/ ctx[1].color + " " + /*item*/ ctx[1].customClasses + " svelte-9c4k6c")) {
 					attr(span1, "class", span1_class_value);
 				}
 			},
@@ -25054,7 +25237,7 @@ var notBulma = (function (exports) {
 
 	// (35:4) {:else}
 	function create_else_block_2(ctx) {
-		let t_value = /*item*/ ctx[2].title + "";
+		let t_value = /*item*/ ctx[1].title + "";
 		let t;
 
 		return {
@@ -25065,7 +25248,7 @@ var notBulma = (function (exports) {
 				insert(target, t, anchor);
 			},
 			p(ctx, dirty) {
-				if (dirty & /*values*/ 1 && t_value !== (t_value = /*item*/ ctx[2].title + "")) set_data(t, t_value);
+				if (dirty & /*values*/ 1 && t_value !== (t_value = /*item*/ ctx[1].title + "")) set_data(t, t_value);
 			},
 			d(detaching) {
 				if (detaching) detach(t);
@@ -25076,7 +25259,7 @@ var notBulma = (function (exports) {
 	// (33:4) {#if item.url }
 	function create_if_block_2$3(ctx) {
 		let a;
-		let t_value = /*item*/ ctx[2].title + "";
+		let t_value = /*item*/ ctx[1].title + "";
 		let t;
 		let a_href_value;
 		let a_class_value;
@@ -25085,21 +25268,21 @@ var notBulma = (function (exports) {
 			c() {
 				a = element("a");
 				t = text(t_value);
-				attr(a, "href", a_href_value = /*item*/ ctx[2].url);
-				attr(a, "class", a_class_value = "" + (null_to_empty(/*item*/ ctx[2].urlCustomClasses) + " svelte-9c4k6c"));
+				attr(a, "href", a_href_value = /*item*/ ctx[1].url);
+				attr(a, "class", a_class_value = "" + (null_to_empty(/*item*/ ctx[1].urlCustomClasses) + " svelte-9c4k6c"));
 			},
 			m(target, anchor) {
 				insert(target, a, anchor);
 				append(a, t);
 			},
 			p(ctx, dirty) {
-				if (dirty & /*values*/ 1 && t_value !== (t_value = /*item*/ ctx[2].title + "")) set_data(t, t_value);
+				if (dirty & /*values*/ 1 && t_value !== (t_value = /*item*/ ctx[1].title + "")) set_data(t, t_value);
 
-				if (dirty & /*values*/ 1 && a_href_value !== (a_href_value = /*item*/ ctx[2].url)) {
+				if (dirty & /*values*/ 1 && a_href_value !== (a_href_value = /*item*/ ctx[1].url)) {
 					attr(a, "href", a_href_value);
 				}
 
-				if (dirty & /*values*/ 1 && a_class_value !== (a_class_value = "" + (null_to_empty(/*item*/ ctx[2].urlCustomClasses) + " svelte-9c4k6c"))) {
+				if (dirty & /*values*/ 1 && a_class_value !== (a_class_value = "" + (null_to_empty(/*item*/ ctx[1].urlCustomClasses) + " svelte-9c4k6c"))) {
 					attr(a, "class", a_class_value);
 				}
 			},
@@ -25111,7 +25294,7 @@ var notBulma = (function (exports) {
 
 	// (26:6) {:else}
 	function create_else_block$5(ctx) {
-		let t_value = /*item*/ ctx[2].value + "";
+		let t_value = /*item*/ ctx[1].value + "";
 		let t;
 
 		return {
@@ -25122,7 +25305,7 @@ var notBulma = (function (exports) {
 				insert(target, t, anchor);
 			},
 			p(ctx, dirty) {
-				if (dirty & /*values*/ 1 && t_value !== (t_value = /*item*/ ctx[2].value + "")) set_data(t, t_value);
+				if (dirty & /*values*/ 1 && t_value !== (t_value = /*item*/ ctx[1].value + "")) set_data(t, t_value);
 			},
 			d(detaching) {
 				if (detaching) detach(t);
@@ -25133,7 +25316,7 @@ var notBulma = (function (exports) {
 	// (24:6) {#if item.url }
 	function create_if_block_1$6(ctx) {
 		let a;
-		let t_value = /*item*/ ctx[2].value + "";
+		let t_value = /*item*/ ctx[1].value + "";
 		let t;
 		let a_href_value;
 		let a_class_value;
@@ -25142,21 +25325,21 @@ var notBulma = (function (exports) {
 			c() {
 				a = element("a");
 				t = text(t_value);
-				attr(a, "href", a_href_value = /*item*/ ctx[2].url);
-				attr(a, "class", a_class_value = "" + (null_to_empty(/*item*/ ctx[2].urlCustomClasses) + " svelte-9c4k6c"));
+				attr(a, "href", a_href_value = /*item*/ ctx[1].url);
+				attr(a, "class", a_class_value = "" + (null_to_empty(/*item*/ ctx[1].urlCustomClasses) + " svelte-9c4k6c"));
 			},
 			m(target, anchor) {
 				insert(target, a, anchor);
 				append(a, t);
 			},
 			p(ctx, dirty) {
-				if (dirty & /*values*/ 1 && t_value !== (t_value = /*item*/ ctx[2].value + "")) set_data(t, t_value);
+				if (dirty & /*values*/ 1 && t_value !== (t_value = /*item*/ ctx[1].value + "")) set_data(t, t_value);
 
-				if (dirty & /*values*/ 1 && a_href_value !== (a_href_value = /*item*/ ctx[2].url)) {
+				if (dirty & /*values*/ 1 && a_href_value !== (a_href_value = /*item*/ ctx[1].url)) {
 					attr(a, "href", a_href_value);
 				}
 
-				if (dirty & /*values*/ 1 && a_class_value !== (a_class_value = "" + (null_to_empty(/*item*/ ctx[2].urlCustomClasses) + " svelte-9c4k6c"))) {
+				if (dirty & /*values*/ 1 && a_class_value !== (a_class_value = "" + (null_to_empty(/*item*/ ctx[1].urlCustomClasses) + " svelte-9c4k6c"))) {
 					attr(a, "class", a_class_value);
 				}
 			},
@@ -25173,7 +25356,7 @@ var notBulma = (function (exports) {
 		let if_block_anchor;
 
 		function select_block_type(ctx, dirty) {
-			if (show_if == null || dirty & /*values*/ 1) show_if = !!Object.prototype.hasOwnProperty.call(/*item*/ ctx[2], "value");
+			if (show_if == null || dirty & /*values*/ 1) show_if = !!Object.prototype.hasOwnProperty.call(/*item*/ ctx[1], "value");
 			if (show_if) return create_if_block$6;
 			return create_else_block_1$1;
 		}
@@ -25223,7 +25406,7 @@ var notBulma = (function (exports) {
 		let each_1_lookup = new Map();
 		let each_1_anchor;
 		let each_value = /*values*/ ctx[0];
-		const get_key = ctx => /*item*/ ctx[2].id;
+		const get_key = ctx => /*item*/ ctx[1].id;
 
 		for (let i = 0; i < each_value.length; i += 1) {
 			let child_ctx = get_each_context$3(ctx, each_value, i);
@@ -25265,7 +25448,6 @@ var notBulma = (function (exports) {
 	}
 
 	function instance$b($$self, $$props, $$invalidate) {
-		createEventDispatcher();
 		let { values = [] } = $$props;
 
 		$$self.$$set = $$props => {
@@ -25282,35 +25464,35 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/table/notTable.svelte generated by Svelte v3.35.0 */
+	/* src/table/notTable.svelte generated by Svelte v3.37.0 */
 
 	function get_each_context$2(ctx, list, i) {
 		const child_ctx = ctx.slice();
-		child_ctx[24] = list[i];
+		child_ctx[23] = list[i];
 		return child_ctx;
 	}
 
 	function get_each_context_1$1(ctx, list, i) {
 		const child_ctx = ctx.slice();
-		child_ctx[27] = list[i];
-		child_ctx[28] = list;
-		child_ctx[29] = i;
+		child_ctx[26] = list[i];
+		child_ctx[27] = list;
+		child_ctx[28] = i;
 		return child_ctx;
 	}
 
 	function get_each_context_2$1(ctx, list, i) {
 		const child_ctx = ctx.slice();
-		child_ctx[30] = list[i];
+		child_ctx[29] = list[i];
 		return child_ctx;
 	}
 
 	function get_each_context_3$1(ctx, list, i) {
 		const child_ctx = ctx.slice();
-		child_ctx[30] = list[i];
+		child_ctx[29] = list[i];
 		return child_ctx;
 	}
 
-	// (111:0) {#if links.length}
+	// (107:0) {#if links.length}
 	function create_if_block_13(ctx) {
 		let div;
 		let tablelinks;
@@ -25349,7 +25531,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (116:0) {#if actions.length}
+	// (112:0) {#if actions.length}
 	function create_if_block_12(ctx) {
 		let div;
 		let tablebuttons;
@@ -25388,7 +25570,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (121:0) {#if showSearch }
+	// (117:0) {#if showSearch }
 	function create_if_block_11(ctx) {
 		let div1;
 		let div0;
@@ -25435,7 +25617,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (130:2) {#if showSelect }
+	// (126:2) {#if showSelect }
 	function create_if_block_10(ctx) {
 		let th;
 		let input;
@@ -25478,10 +25660,10 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (133:2) {#each fields as field}
+	// (129:2) {#each fields as field}
 	function create_each_block_3$1(ctx) {
 		let th;
-		let t_value = /*field*/ ctx[30].title + "";
+		let t_value = /*field*/ ctx[29].title + "";
 		let t;
 		let th_class_value;
 
@@ -25489,16 +25671,16 @@ var notBulma = (function (exports) {
 			c() {
 				th = element("th");
 				t = text(t_value);
-				attr(th, "class", th_class_value = /*field*/ ctx[30].hideOnMobile ? "is-hidden-touch" : "");
+				attr(th, "class", th_class_value = /*field*/ ctx[29].hideOnMobile ? "is-hidden-touch" : "");
 			},
 			m(target, anchor) {
 				insert(target, th, anchor);
 				append(th, t);
 			},
 			p(ctx, dirty) {
-				if (dirty[0] & /*fields*/ 64 && t_value !== (t_value = /*field*/ ctx[30].title + "")) set_data(t, t_value);
+				if (dirty[0] & /*fields*/ 64 && t_value !== (t_value = /*field*/ ctx[29].title + "")) set_data(t, t_value);
 
-				if (dirty[0] & /*fields*/ 64 && th_class_value !== (th_class_value = /*field*/ ctx[30].hideOnMobile ? "is-hidden-touch" : "")) {
+				if (dirty[0] & /*fields*/ 64 && th_class_value !== (th_class_value = /*field*/ ctx[29].hideOnMobile ? "is-hidden-touch" : "")) {
 					attr(th, "class", th_class_value);
 				}
 			},
@@ -25508,7 +25690,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (140:3) {#if showSelect }
+	// (136:3) {#if showSelect }
 	function create_if_block_9(ctx) {
 		let td;
 		let input;
@@ -25519,7 +25701,7 @@ var notBulma = (function (exports) {
 		let dispose;
 
 		function input_change_handler_1() {
-			/*input_change_handler_1*/ ctx[21].call(input, /*item*/ ctx[27]);
+			/*input_change_handler_1*/ ctx[21].call(input, /*item*/ ctx[26]);
 		}
 
 		return {
@@ -25527,15 +25709,15 @@ var notBulma = (function (exports) {
 				td = element("td");
 				input = element("input");
 				attr(input, "type", "checkbox");
-				attr(input, "id", input_id_value = "table-row-select-" + /*getItemId*/ ctx[11](/*item*/ ctx[27]));
-				attr(input, "data-id", input_data_id_value = /*getItemId*/ ctx[11](/*item*/ ctx[27]));
+				attr(input, "id", input_id_value = "table-row-select-" + /*getItemId*/ ctx[11](/*item*/ ctx[26]));
+				attr(input, "data-id", input_data_id_value = /*getItemId*/ ctx[11](/*item*/ ctx[26]));
 				attr(input, "placeholder", "");
-				attr(input, "name", input_name_value = "row_selected_" + /*getItemId*/ ctx[11](/*item*/ ctx[27]));
+				attr(input, "name", input_name_value = "row_selected_" + /*getItemId*/ ctx[11](/*item*/ ctx[26]));
 			},
 			m(target, anchor) {
 				insert(target, td, anchor);
 				append(td, input);
-				input.checked = /*selected*/ ctx[1][/*getItemId*/ ctx[11](/*item*/ ctx[27])];
+				input.checked = /*selected*/ ctx[1][/*getItemId*/ ctx[11](/*item*/ ctx[26])];
 
 				if (!mounted) {
 					dispose = [
@@ -25549,20 +25731,20 @@ var notBulma = (function (exports) {
 			p(new_ctx, dirty) {
 				ctx = new_ctx;
 
-				if (dirty[0] & /*getItemId, items*/ 2052 && input_id_value !== (input_id_value = "table-row-select-" + /*getItemId*/ ctx[11](/*item*/ ctx[27]))) {
+				if (dirty[0] & /*getItemId, items*/ 2052 && input_id_value !== (input_id_value = "table-row-select-" + /*getItemId*/ ctx[11](/*item*/ ctx[26]))) {
 					attr(input, "id", input_id_value);
 				}
 
-				if (dirty[0] & /*getItemId, items*/ 2052 && input_data_id_value !== (input_data_id_value = /*getItemId*/ ctx[11](/*item*/ ctx[27]))) {
+				if (dirty[0] & /*getItemId, items*/ 2052 && input_data_id_value !== (input_data_id_value = /*getItemId*/ ctx[11](/*item*/ ctx[26]))) {
 					attr(input, "data-id", input_data_id_value);
 				}
 
-				if (dirty[0] & /*getItemId, items*/ 2052 && input_name_value !== (input_name_value = "row_selected_" + /*getItemId*/ ctx[11](/*item*/ ctx[27]))) {
+				if (dirty[0] & /*getItemId, items*/ 2052 && input_name_value !== (input_name_value = "row_selected_" + /*getItemId*/ ctx[11](/*item*/ ctx[26]))) {
 					attr(input, "name", input_name_value);
 				}
 
 				if (dirty[0] & /*selected, getItemId, items*/ 2054) {
-					input.checked = /*selected*/ ctx[1][/*getItemId*/ ctx[11](/*item*/ ctx[27])];
+					input.checked = /*selected*/ ctx[1][/*getItemId*/ ctx[11](/*item*/ ctx[26])];
 				}
 			},
 			d(detaching) {
@@ -25573,9 +25755,9 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (177:4) {:else}
+	// (173:4) {:else}
 	function create_else_block_1(ctx) {
-		let t_value = notPath$1.get(/*field*/ ctx[30].path, /*item*/ ctx[27], /*helpers*/ ctx[5]) + "";
+		let t_value = notPath$1.get(/*field*/ ctx[29].path, /*item*/ ctx[26], /*helpers*/ ctx[5]) + "";
 		let t;
 
 		return {
@@ -25586,7 +25768,7 @@ var notBulma = (function (exports) {
 				insert(target, t, anchor);
 			},
 			p(ctx, dirty) {
-				if (dirty[0] & /*fields, items, helpers*/ 100 && t_value !== (t_value = notPath$1.get(/*field*/ ctx[30].path, /*item*/ ctx[27], /*helpers*/ ctx[5]) + "")) set_data(t, t_value);
+				if (dirty[0] & /*fields, items, helpers*/ 100 && t_value !== (t_value = notPath$1.get(/*field*/ ctx[29].path, /*item*/ ctx[26], /*helpers*/ ctx[5]) + "")) set_data(t, t_value);
 			},
 			i: noop,
 			o: noop,
@@ -25596,7 +25778,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (166:42) 
+	// (162:42) 
 	function create_if_block_8(ctx) {
 		let switch_instance;
 		let switch_instance_anchor;
@@ -25604,18 +25786,18 @@ var notBulma = (function (exports) {
 
 		const switch_instance_spread_levels = [
 			{
-				id: /*getItemId*/ ctx[11](/*item*/ ctx[27])
+				id: /*getItemId*/ ctx[11](/*item*/ ctx[26])
 			},
-			{ fieldname: /*field*/ ctx[30].path },
-			{ disabled: /*field*/ ctx[30].disabled },
-			{ readonly: /*field*/ ctx[30].readonly },
+			{ fieldname: /*field*/ ctx[29].path },
+			{ disabled: /*field*/ ctx[29].disabled },
+			{ readonly: /*field*/ ctx[29].readonly },
 			{
-				value: notPath$1.get(/*field*/ ctx[30].path, /*item*/ ctx[27], /*helpers*/ ctx[5])
+				value: notPath$1.get(/*field*/ ctx[29].path, /*item*/ ctx[26], /*helpers*/ ctx[5])
 			},
-			/*field*/ ctx[30].options
+			/*field*/ ctx[29].options
 		];
 
-		var switch_value = /*field*/ ctx[30].component;
+		var switch_value = /*field*/ ctx[29].component;
 
 		function switch_props(ctx) {
 			let switch_instance_props = {};
@@ -25631,7 +25813,7 @@ var notBulma = (function (exports) {
 			switch_instance = new switch_value(switch_props());
 
 			switch_instance.$on("change", function () {
-				if (is_function(/*field*/ ctx[30].onChange)) /*field*/ ctx[30].onChange.apply(this, arguments);
+				if (is_function(/*field*/ ctx[29].onChange)) /*field*/ ctx[29].onChange.apply(this, arguments);
 			});
 		}
 
@@ -25654,19 +25836,19 @@ var notBulma = (function (exports) {
 				const switch_instance_changes = (dirty[0] & /*getItemId, items, fields, helpers*/ 2148)
 				? get_spread_update(switch_instance_spread_levels, [
 						dirty[0] & /*getItemId, items*/ 2052 && {
-							id: /*getItemId*/ ctx[11](/*item*/ ctx[27])
+							id: /*getItemId*/ ctx[11](/*item*/ ctx[26])
 						},
-						dirty[0] & /*fields*/ 64 && { fieldname: /*field*/ ctx[30].path },
-						dirty[0] & /*fields*/ 64 && { disabled: /*field*/ ctx[30].disabled },
-						dirty[0] & /*fields*/ 64 && { readonly: /*field*/ ctx[30].readonly },
+						dirty[0] & /*fields*/ 64 && { fieldname: /*field*/ ctx[29].path },
+						dirty[0] & /*fields*/ 64 && { disabled: /*field*/ ctx[29].disabled },
+						dirty[0] & /*fields*/ 64 && { readonly: /*field*/ ctx[29].readonly },
 						dirty[0] & /*fields, items, helpers*/ 100 && {
-							value: notPath$1.get(/*field*/ ctx[30].path, /*item*/ ctx[27], /*helpers*/ ctx[5])
+							value: notPath$1.get(/*field*/ ctx[29].path, /*item*/ ctx[26], /*helpers*/ ctx[5])
 						},
-						dirty[0] & /*fields*/ 64 && get_spread_object(/*field*/ ctx[30].options)
+						dirty[0] & /*fields*/ 64 && get_spread_object(/*field*/ ctx[29].options)
 					])
 				: {};
 
-				if (switch_value !== (switch_value = /*field*/ ctx[30].component)) {
+				if (switch_value !== (switch_value = /*field*/ ctx[29].component)) {
 					if (switch_instance) {
 						group_outros();
 						const old_component = switch_instance;
@@ -25682,7 +25864,7 @@ var notBulma = (function (exports) {
 						switch_instance = new switch_value(switch_props());
 
 						switch_instance.$on("change", function () {
-							if (is_function(/*field*/ ctx[30].onChange)) /*field*/ ctx[30].onChange.apply(this, arguments);
+							if (is_function(/*field*/ ctx[29].onChange)) /*field*/ ctx[29].onChange.apply(this, arguments);
 						});
 
 						create_component(switch_instance.$$.fragment);
@@ -25711,23 +25893,23 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (157:39) 
+	// (153:39) 
 	function create_if_block_7(ctx) {
 		let tableswitch;
 		let current;
 
 		tableswitch = new Ui_switch({
 				props: {
-					id: /*getItemId*/ ctx[11](/*item*/ ctx[27]),
-					fieldname: /*field*/ ctx[30].path,
-					value: notPath$1.get(/*field*/ ctx[30].path, /*item*/ ctx[27], /*helpers*/ ctx[5]),
-					disabled: /*field*/ ctx[30].disabled,
-					readonly: /*field*/ ctx[30].readonly
+					id: /*getItemId*/ ctx[11](/*item*/ ctx[26]),
+					fieldname: /*field*/ ctx[29].path,
+					value: notPath$1.get(/*field*/ ctx[29].path, /*item*/ ctx[26], /*helpers*/ ctx[5]),
+					disabled: /*field*/ ctx[29].disabled,
+					readonly: /*field*/ ctx[29].readonly
 				}
 			});
 
 		tableswitch.$on("change", function () {
-			if (is_function(/*field*/ ctx[30].onChange)) /*field*/ ctx[30].onChange.apply(this, arguments);
+			if (is_function(/*field*/ ctx[29].onChange)) /*field*/ ctx[29].onChange.apply(this, arguments);
 		});
 
 		return {
@@ -25741,11 +25923,11 @@ var notBulma = (function (exports) {
 			p(new_ctx, dirty) {
 				ctx = new_ctx;
 				const tableswitch_changes = {};
-				if (dirty[0] & /*getItemId, items*/ 2052) tableswitch_changes.id = /*getItemId*/ ctx[11](/*item*/ ctx[27]);
-				if (dirty[0] & /*fields*/ 64) tableswitch_changes.fieldname = /*field*/ ctx[30].path;
-				if (dirty[0] & /*fields, items, helpers*/ 100) tableswitch_changes.value = notPath$1.get(/*field*/ ctx[30].path, /*item*/ ctx[27], /*helpers*/ ctx[5]);
-				if (dirty[0] & /*fields*/ 64) tableswitch_changes.disabled = /*field*/ ctx[30].disabled;
-				if (dirty[0] & /*fields*/ 64) tableswitch_changes.readonly = /*field*/ ctx[30].readonly;
+				if (dirty[0] & /*getItemId, items*/ 2052) tableswitch_changes.id = /*getItemId*/ ctx[11](/*item*/ ctx[26]);
+				if (dirty[0] & /*fields*/ 64) tableswitch_changes.fieldname = /*field*/ ctx[29].path;
+				if (dirty[0] & /*fields, items, helpers*/ 100) tableswitch_changes.value = notPath$1.get(/*field*/ ctx[29].path, /*item*/ ctx[26], /*helpers*/ ctx[5]);
+				if (dirty[0] & /*fields*/ 64) tableswitch_changes.disabled = /*field*/ ctx[29].disabled;
+				if (dirty[0] & /*fields*/ 64) tableswitch_changes.readonly = /*field*/ ctx[29].readonly;
 				tableswitch.$set(tableswitch_changes);
 			},
 			i(local) {
@@ -25763,14 +25945,14 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (155:36) 
+	// (151:36) 
 	function create_if_block_6(ctx) {
 		let tabletags;
 		let current;
 
 		tabletags = new Ui_tags({
 				props: {
-					values: notPath$1.get(/*field*/ ctx[30].path, /*item*/ ctx[27], /*helpers*/ ctx[5])
+					values: notPath$1.get(/*field*/ ctx[29].path, /*item*/ ctx[26], /*helpers*/ ctx[5])
 				}
 			});
 
@@ -25784,7 +25966,7 @@ var notBulma = (function (exports) {
 			},
 			p(ctx, dirty) {
 				const tabletags_changes = {};
-				if (dirty[0] & /*fields, items, helpers*/ 100) tabletags_changes.values = notPath$1.get(/*field*/ ctx[30].path, /*item*/ ctx[27], /*helpers*/ ctx[5]);
+				if (dirty[0] & /*fields, items, helpers*/ 100) tabletags_changes.values = notPath$1.get(/*field*/ ctx[29].path, /*item*/ ctx[26], /*helpers*/ ctx[5]);
 				tabletags.$set(tabletags_changes);
 			},
 			i(local) {
@@ -25802,14 +25984,14 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (153:40) 
+	// (149:40) 
 	function create_if_block_5$1(ctx) {
 		let tablebooleans;
 		let current;
 
 		tablebooleans = new Ui_booleans({
 				props: {
-					values: notPath$1.get(/*field*/ ctx[30].path, /*item*/ ctx[27], /*helpers*/ ctx[5])
+					values: notPath$1.get(/*field*/ ctx[29].path, /*item*/ ctx[26], /*helpers*/ ctx[5])
 				}
 			});
 
@@ -25823,7 +26005,7 @@ var notBulma = (function (exports) {
 			},
 			p(ctx, dirty) {
 				const tablebooleans_changes = {};
-				if (dirty[0] & /*fields, items, helpers*/ 100) tablebooleans_changes.values = notPath$1.get(/*field*/ ctx[30].path, /*item*/ ctx[27], /*helpers*/ ctx[5]);
+				if (dirty[0] & /*fields, items, helpers*/ 100) tablebooleans_changes.values = notPath$1.get(/*field*/ ctx[29].path, /*item*/ ctx[26], /*helpers*/ ctx[5]);
 				tablebooleans.$set(tablebooleans_changes);
 			},
 			i(local) {
@@ -25841,14 +26023,14 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (151:38) 
+	// (147:38) 
 	function create_if_block_4$1(ctx) {
 		let tableimages;
 		let current;
 
 		tableimages = new Ui_images({
 				props: {
-					values: notPath$1.get(/*field*/ ctx[30].path, /*item*/ ctx[27], /*helpers*/ ctx[5])
+					values: notPath$1.get(/*field*/ ctx[29].path, /*item*/ ctx[26], /*helpers*/ ctx[5])
 				}
 			});
 
@@ -25862,7 +26044,7 @@ var notBulma = (function (exports) {
 			},
 			p(ctx, dirty) {
 				const tableimages_changes = {};
-				if (dirty[0] & /*fields, items, helpers*/ 100) tableimages_changes.values = notPath$1.get(/*field*/ ctx[30].path, /*item*/ ctx[27], /*helpers*/ ctx[5]);
+				if (dirty[0] & /*fields, items, helpers*/ 100) tableimages_changes.values = notPath$1.get(/*field*/ ctx[29].path, /*item*/ ctx[26], /*helpers*/ ctx[5]);
 				tableimages.$set(tableimages_changes);
 			},
 			i(local) {
@@ -25880,14 +26062,14 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (149:39) 
+	// (145:39) 
 	function create_if_block_3$2(ctx) {
 		let tablebuttons;
 		let current;
 
 		tablebuttons = new Ui_buttons({
 				props: {
-					values: notPath$1.get(/*field*/ ctx[30].path, /*item*/ ctx[27], /*helpers*/ ctx[5])
+					values: notPath$1.get(/*field*/ ctx[29].path, /*item*/ ctx[26], /*helpers*/ ctx[5])
 				}
 			});
 
@@ -25901,7 +26083,7 @@ var notBulma = (function (exports) {
 			},
 			p(ctx, dirty) {
 				const tablebuttons_changes = {};
-				if (dirty[0] & /*fields, items, helpers*/ 100) tablebuttons_changes.values = notPath$1.get(/*field*/ ctx[30].path, /*item*/ ctx[27], /*helpers*/ ctx[5]);
+				if (dirty[0] & /*fields, items, helpers*/ 100) tablebuttons_changes.values = notPath$1.get(/*field*/ ctx[29].path, /*item*/ ctx[26], /*helpers*/ ctx[5]);
 				tablebuttons.$set(tablebuttons_changes);
 			},
 			i(local) {
@@ -25919,14 +26101,14 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (147:4) {#if field.type === 'link' }
+	// (143:4) {#if field.type === 'link' }
 	function create_if_block_2$2(ctx) {
 		let tablelinks;
 		let current;
 
 		tablelinks = new Ui_links({
 				props: {
-					values: notPath$1.get(/*field*/ ctx[30].path, /*item*/ ctx[27], /*helpers*/ ctx[5])
+					values: notPath$1.get(/*field*/ ctx[29].path, /*item*/ ctx[26], /*helpers*/ ctx[5])
 				}
 			});
 
@@ -25940,7 +26122,7 @@ var notBulma = (function (exports) {
 			},
 			p(ctx, dirty) {
 				const tablelinks_changes = {};
-				if (dirty[0] & /*fields, items, helpers*/ 100) tablelinks_changes.values = notPath$1.get(/*field*/ ctx[30].path, /*item*/ ctx[27], /*helpers*/ ctx[5]);
+				if (dirty[0] & /*fields, items, helpers*/ 100) tablelinks_changes.values = notPath$1.get(/*field*/ ctx[29].path, /*item*/ ctx[26], /*helpers*/ ctx[5]);
 				tablelinks.$set(tablelinks_changes);
 			},
 			i(local) {
@@ -25958,7 +26140,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (145:3) {#each fields as field}
+	// (141:3) {#each fields as field}
 	function create_each_block_2$1(ctx) {
 		let td;
 		let current_block_type_index;
@@ -25980,13 +26162,13 @@ var notBulma = (function (exports) {
 		const if_blocks = [];
 
 		function select_block_type(ctx, dirty) {
-			if (/*field*/ ctx[30].type === "link") return 0;
-			if (/*field*/ ctx[30].type === "button") return 1;
-			if (/*field*/ ctx[30].type === "image") return 2;
-			if (/*field*/ ctx[30].type === "boolean") return 3;
-			if (/*field*/ ctx[30].type === "tag") return 4;
-			if (/*field*/ ctx[30].type === "switch") return 5;
-			if (/*field*/ ctx[30].type === "component") return 6;
+			if (/*field*/ ctx[29].type === "link") return 0;
+			if (/*field*/ ctx[29].type === "button") return 1;
+			if (/*field*/ ctx[29].type === "image") return 2;
+			if (/*field*/ ctx[29].type === "boolean") return 3;
+			if (/*field*/ ctx[29].type === "tag") return 4;
+			if (/*field*/ ctx[29].type === "switch") return 5;
+			if (/*field*/ ctx[29].type === "component") return 6;
 			return 7;
 		}
 
@@ -25997,7 +26179,7 @@ var notBulma = (function (exports) {
 			c() {
 				td = element("td");
 				if_block.c();
-				attr(td, "class", td_class_value = /*field*/ ctx[30].hideOnMobile ? "is-hidden-touch" : "");
+				attr(td, "class", td_class_value = /*field*/ ctx[29].hideOnMobile ? "is-hidden-touch" : "");
 			},
 			m(target, anchor) {
 				insert(target, td, anchor);
@@ -26031,7 +26213,7 @@ var notBulma = (function (exports) {
 					if_block.m(td, null);
 				}
 
-				if (!current || dirty[0] & /*fields*/ 64 && td_class_value !== (td_class_value = /*field*/ ctx[30].hideOnMobile ? "is-hidden-touch" : "")) {
+				if (!current || dirty[0] & /*fields*/ 64 && td_class_value !== (td_class_value = /*field*/ ctx[29].hideOnMobile ? "is-hidden-touch" : "")) {
 					attr(td, "class", td_class_value);
 				}
 			},
@@ -26051,7 +26233,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (138:2) {#each items as item (item._id)}
+	// (134:2) {#each items as item (item._id)}
 	function create_each_block_1$1(key_1, ctx) {
 		let tr;
 		let t0;
@@ -26165,7 +26347,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (190:2) {#if state.pagination && state.pagination.pages && state.pagination.pages.list }
+	// (186:2) {#if state.pagination && state.pagination.pages && state.pagination.pages.list }
 	function create_if_block$5(ctx) {
 		let each_1_anchor;
 		let each_value = /*state*/ ctx[0].pagination.pages.list;
@@ -26221,10 +26403,10 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (195:3) {:else}
+	// (191:3) {:else}
 	function create_else_block$4(ctx) {
 		let a;
-		let t_value = /*page*/ ctx[24].index + 1 + "";
+		let t_value = /*page*/ ctx[23].index + 1 + "";
 		let t;
 		let a_aria_label_value;
 		let a_data_page_value;
@@ -26237,8 +26419,8 @@ var notBulma = (function (exports) {
 				t = text(t_value);
 				attr(a, "href", "");
 				attr(a, "class", "pagination-link");
-				attr(a, "aria-label", a_aria_label_value = "Страница " + /*page*/ ctx[24].index);
-				attr(a, "data-page", a_data_page_value = /*page*/ ctx[24].index);
+				attr(a, "aria-label", a_aria_label_value = "Страница " + /*page*/ ctx[23].index);
+				attr(a, "data-page", a_data_page_value = /*page*/ ctx[23].index);
 			},
 			m(target, anchor) {
 				insert(target, a, anchor);
@@ -26250,13 +26432,13 @@ var notBulma = (function (exports) {
 				}
 			},
 			p(ctx, dirty) {
-				if (dirty[0] & /*state*/ 1 && t_value !== (t_value = /*page*/ ctx[24].index + 1 + "")) set_data(t, t_value);
+				if (dirty[0] & /*state*/ 1 && t_value !== (t_value = /*page*/ ctx[23].index + 1 + "")) set_data(t, t_value);
 
-				if (dirty[0] & /*state*/ 1 && a_aria_label_value !== (a_aria_label_value = "Страница " + /*page*/ ctx[24].index)) {
+				if (dirty[0] & /*state*/ 1 && a_aria_label_value !== (a_aria_label_value = "Страница " + /*page*/ ctx[23].index)) {
 					attr(a, "aria-label", a_aria_label_value);
 				}
 
-				if (dirty[0] & /*state*/ 1 && a_data_page_value !== (a_data_page_value = /*page*/ ctx[24].index)) {
+				if (dirty[0] & /*state*/ 1 && a_data_page_value !== (a_data_page_value = /*page*/ ctx[23].index)) {
 					attr(a, "data-page", a_data_page_value);
 				}
 			},
@@ -26268,10 +26450,10 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (193:3) {#if page.active}
+	// (189:3) {#if page.active}
 	function create_if_block_1$5(ctx) {
 		let a;
-		let t_value = /*page*/ ctx[24].index + 1 + "";
+		let t_value = /*page*/ ctx[23].index + 1 + "";
 		let t;
 		let a_aria_label_value;
 
@@ -26281,7 +26463,7 @@ var notBulma = (function (exports) {
 				t = text(t_value);
 				attr(a, "href", "");
 				attr(a, "class", "pagination-link is-current");
-				attr(a, "aria-label", a_aria_label_value = "Страница " + /*page*/ ctx[24].index);
+				attr(a, "aria-label", a_aria_label_value = "Страница " + /*page*/ ctx[23].index);
 				attr(a, "aria-current", "page");
 			},
 			m(target, anchor) {
@@ -26289,9 +26471,9 @@ var notBulma = (function (exports) {
 				append(a, t);
 			},
 			p(ctx, dirty) {
-				if (dirty[0] & /*state*/ 1 && t_value !== (t_value = /*page*/ ctx[24].index + 1 + "")) set_data(t, t_value);
+				if (dirty[0] & /*state*/ 1 && t_value !== (t_value = /*page*/ ctx[23].index + 1 + "")) set_data(t, t_value);
 
-				if (dirty[0] & /*state*/ 1 && a_aria_label_value !== (a_aria_label_value = "Страница " + /*page*/ ctx[24].index)) {
+				if (dirty[0] & /*state*/ 1 && a_aria_label_value !== (a_aria_label_value = "Страница " + /*page*/ ctx[23].index)) {
 					attr(a, "aria-label", a_aria_label_value);
 				}
 			},
@@ -26301,13 +26483,13 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (191:2) {#each state.pagination.pages.list as page}
+	// (187:2) {#each state.pagination.pages.list as page}
 	function create_each_block$2(ctx) {
 		let li;
 		let t;
 
 		function select_block_type_1(ctx, dirty) {
-			if (/*page*/ ctx[24].active) return create_if_block_1$5;
+			if (/*page*/ ctx[23].active) return create_if_block_1$5;
 			return create_else_block$4;
 		}
 
@@ -26378,7 +26560,7 @@ var notBulma = (function (exports) {
 		}
 
 		let each_value_1 = /*items*/ ctx[2];
-		const get_key = ctx => /*item*/ ctx[27]._id;
+		const get_key = ctx => /*item*/ ctx[26]._id;
 
 		for (let i = 0; i < each_value_1.length; i += 1) {
 			let child_ctx = get_each_context_1$1(ctx, each_value_1, i);
@@ -26717,7 +26899,7 @@ var notBulma = (function (exports) {
 			return false;
 		}
 
-		function onSelectAll(e) {
+		function onSelectAll() {
 			get(id).selected.update(value => {
 				items.forEach(item => {
 					value[getItemId(item)] = selectAll;
@@ -27748,7 +27930,7 @@ var notBulma = (function (exports) {
 
 	defineProperty$3(Breadcrumbs, "tail", []);
 
-	/* src/navbar/ui.brand.svelte generated by Svelte v3.35.0 */
+	/* src/navbar/ui.brand.svelte generated by Svelte v3.37.0 */
 
 	function create_fragment$9(ctx) {
 		let a;
@@ -27826,7 +28008,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/navbar/ui.item.content.svelte generated by Svelte v3.35.0 */
+	/* src/navbar/ui.item.content.svelte generated by Svelte v3.37.0 */
 
 	function create_else_block$3(ctx) {
 		let t_value = /*item*/ ctx[0].title + "";
@@ -28228,7 +28410,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/navbar/ui.item.svelte generated by Svelte v3.35.0 */
+	/* src/navbar/ui.item.svelte generated by Svelte v3.37.0 */
 
 	function create_if_block_1$3(ctx) {
 		let hr;
@@ -28505,7 +28687,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/navbar/ui.section.svelte generated by Svelte v3.35.0 */
+	/* src/navbar/ui.section.svelte generated by Svelte v3.37.0 */
 
 	function get_each_context$1(ctx, list, i) {
 		const child_ctx = ctx.slice();
@@ -28942,7 +29124,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/navbar/ui.burger.svelte generated by Svelte v3.35.0 */
+	/* src/navbar/ui.burger.svelte generated by Svelte v3.37.0 */
 
 	function create_fragment$5(ctx) {
 		let a;
@@ -29021,12 +29203,11 @@ var notBulma = (function (exports) {
 		}
 
 		let { onUpdate = data => {
-			console.log(getStandartUpdateEventName(), data);
 			$$invalidate(0, closed = data.closed);
 		} } = $$props;
 
 		onMount(() => {
-			if (!Object.prototype.hasOwnProperty(events, getStandartUpdateEventName())) {
+			if (!Object.prototype.hasOwnProperty.call(events, getStandartUpdateEventName())) {
 				$$invalidate(2, events[getStandartUpdateEventName()] = onUpdate, events);
 			}
 
@@ -29056,7 +29237,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/navbar/ui.top.svelte generated by Svelte v3.35.0 */
+	/* src/navbar/ui.top.svelte generated by Svelte v3.37.0 */
 
 	function get_each_context(ctx, list, i) {
 		const child_ctx = ctx.slice();
@@ -29082,7 +29263,7 @@ var notBulma = (function (exports) {
 		return child_ctx;
 	}
 
-	// (73:2) {#if brand }
+	// (67:2) {#if brand }
 	function create_if_block_5(ctx) {
 		let uibrand;
 		let current;
@@ -29125,7 +29306,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (77:2) {#if section.showOnTouch}
+	// (71:2) {#if section.showOnTouch}
 	function create_if_block_4(ctx) {
 		let uinavbaritem;
 		let current;
@@ -29169,7 +29350,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (76:2) {#each sections as section(section.id)}
+	// (70:2) {#each sections as section(section.id)}
 	function create_each_block_3(key_1, ctx) {
 		let first;
 		let if_block_anchor;
@@ -29234,7 +29415,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (82:2) {#if item.showOnTouch}
+	// (76:2) {#if item.showOnTouch}
 	function create_if_block_3(ctx) {
 		let uinavbaritem;
 		let current;
@@ -29278,7 +29459,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (81:2) {#each items as item(item.id)}
+	// (75:2) {#each items as item(item.id)}
 	function create_each_block_2(key_1, ctx) {
 		let first;
 		let if_block_anchor;
@@ -29343,7 +29524,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (86:2) {#if showBurger}
+	// (80:2) {#if showBurger}
 	function create_if_block_2(ctx) {
 		let uinavbarburger;
 		let current;
@@ -29374,7 +29555,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (93:4) {#if item.place === 'start' }
+	// (87:4) {#if item.place === 'start' }
 	function create_if_block_1$1(ctx) {
 		let uinavbaritem;
 		let current;
@@ -29413,7 +29594,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (92:4) {#each items as item}
+	// (86:4) {#each items as item}
 	function create_each_block_1(ctx) {
 		let if_block_anchor;
 		let current;
@@ -29469,7 +29650,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (100:4) {#if (sectionsItemsCount[section.id] || section.indicator || section.tag) && section.place=='end' }
+	// (94:4) {#if (sectionsItemsCount[section.id] || section.indicator || section.tag) && section.place=='end' }
 	function create_if_block$1(ctx) {
 		let uinavbarsection;
 		let current;
@@ -29517,7 +29698,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (99:4) {#each sections as section(section.id) }
+	// (93:4) {#each sections as section(section.id) }
 	function create_each_block(key_1, ctx) {
 		let first;
 		let if_block_anchor;
@@ -36812,7 +36993,7 @@ var notBulma = (function (exports) {
 
 	defineProperty$3(Form, "validator", validator);
 
-	/* src/layout/ui.container.svelte generated by Svelte v3.35.0 */
+	/* src/layout/ui.container.svelte generated by Svelte v3.37.0 */
 
 	function create_fragment$3(ctx) {
 		let div;
@@ -36943,7 +37124,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/layout/ui.footer.svelte generated by Svelte v3.35.0 */
+	/* src/layout/ui.footer.svelte generated by Svelte v3.37.0 */
 
 	function create_fragment$2(ctx) {
 		let footer;
@@ -37020,7 +37201,7 @@ var notBulma = (function (exports) {
 		}
 	}
 
-	/* src/layout/ui.section.svelte generated by Svelte v3.35.0 */
+	/* src/layout/ui.section.svelte generated by Svelte v3.37.0 */
 
 	function create_fragment$1(ctx) {
 		let section;
@@ -37957,11 +38138,6 @@ var notBulma = (function (exports) {
 	      this.route(this.getOptions('params'));
 	    }
 	  }, {
-	    key: "getModel",
-	    value: function getModel() {
-	      return this.make[this.getModelName()];
-	    }
-	  }, {
 	    key: "setBreadcrumbs",
 	    value: function setBreadcrumbs(tail) {
 	      Breadcrumbs.setTail(tail).update();
@@ -38107,7 +38283,7 @@ var notBulma = (function (exports) {
 	  }, {
 	    key: "createDefault",
 	    value: function createDefault() {
-	      var newRecord = this.getModel()({
+	      var newRecord = this.getModel({
 	        '_id': null,
 	        title: this.getOptions('names.single'),
 	        products: []
@@ -38160,7 +38336,7 @@ var notBulma = (function (exports) {
 	      var _runCreate = asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee2() {
 	        var _this4 = this;
 
-	        var manifest;
+	        var defData, manifest;
 	        return regenerator.wrap(function _callee2$(_context2) {
 	          while (1) {
 	            switch (_context2.prev = _context2.next) {
@@ -38185,6 +38361,12 @@ var notBulma = (function (exports) {
 	                this.$destroyUI();
 
 	              case 8:
+	                defData = this.createDefault();
+
+	                if (defData.getData) {
+	                  defData = defData.getData();
+	                }
+
 	                manifest = this.app.getInterfaceManifest()[this.getModelName()];
 	                this.ui.create = Form.build({
 	                  target: this.els.main,
@@ -38192,7 +38374,7 @@ var notBulma = (function (exports) {
 	                  action: 'create',
 	                  options: {},
 	                  validators: this.getOptions('Validators'),
-	                  data: this.createDefault()
+	                  data: defData
 	                });
 	                this.ui.create.$on('submit', function (ev) {
 	                  return _this4.onCreateFormSubmit(ev.detail);
@@ -38200,7 +38382,7 @@ var notBulma = (function (exports) {
 	                this.ui.create.$on('reject', this.goList.bind(this));
 	                this.emit('after:render:create');
 
-	              case 13:
+	              case 15:
 	              case "end":
 	                return _context2.stop();
 	            }
@@ -38248,7 +38430,7 @@ var notBulma = (function (exports) {
 	              case 9:
 	                manifest = this.app.getInterfaceManifest()[this.getModelName()];
 	                query[idField] = params[0];
-	                this.getModel()(query)['$get']().then(function (res) {
+	                this.getModel(query)['$get']().then(function (res) {
 	                  if (res.status === 'ok') {
 	                    var title = _this5.getItemTitle(res.result);
 
@@ -38324,7 +38506,7 @@ var notBulma = (function (exports) {
 	              case 9:
 	                manifest = this.app.getInterfaceManifest()[this.getModelName()];
 	                query[idField] = params[0];
-	                this.getModel()(query).$getRaw().then(function (res) {
+	                this.getModel(query).$getRaw().then(function (res) {
 	                  if (res.status === 'ok') {
 	                    var title = _this6.getItemTitle(res.result);
 
@@ -38388,7 +38570,7 @@ var notBulma = (function (exports) {
 	                }]);
 
 	                if (confirm('Удалить запись?')) {
-	                  this.getModel()({
+	                  this.getModel({
 	                    _id: params[0]
 	                  }).$delete().then(function () {
 	                    _this7.goList();
@@ -38449,7 +38631,7 @@ var notBulma = (function (exports) {
 	                DEFAULT_OPTIONS_TABLE = {
 	                  interface: {
 	                    combined: true,
-	                    factory: this.getModel()
+	                    factory: this.getInterface()
 	                  },
 	                  fields: undefined,
 	                  showSelect: undefined,
@@ -38526,7 +38708,7 @@ var notBulma = (function (exports) {
 	      var _this9 = this;
 
 	      this.ui.create.setLoading();
-	      this.getModel()(item).$create().then(function (res) {
+	      this.getModel(item).$create().then(function (res) {
 	        _this9.log(res);
 
 	        _this9.showResult(_this9.ui.create, res);
@@ -38546,7 +38728,7 @@ var notBulma = (function (exports) {
 	      var _this10 = this;
 
 	      this.ui.update.setLoading();
-	      this.getModel()(item).$update().then(function (res) {
+	      this.getModel(item).$update().then(function (res) {
 	        _this10.showResult(_this10.ui.update, res);
 
 	        if (!notCommon$1.isError(res) && !res.error) {
@@ -38662,7 +38844,9 @@ var notBulma = (function (exports) {
 	    }
 	  },
 	  forms: {
-	    search: function search(form) {
+	    search: function search()
+	    /*form*/
+	    {
 	      var errors = {
 	        clean: true,
 	        fields: {},
@@ -38673,7 +38857,7 @@ var notBulma = (function (exports) {
 	  }
 	};
 
-	/* src/various/filter.svelte generated by Svelte v3.35.0 */
+	/* src/various/filter.svelte generated by Svelte v3.37.0 */
 
 	function create_else_block(ctx) {
 		let uibutton;

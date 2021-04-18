@@ -6,9 +6,9 @@
 	export let navigate = null;
 
 	function onClick(ev) {
-		if (typeof navigate === 'function') {
-			navigate(ev.detail);
-		}
+	  if (typeof navigate === 'function') {
+	    navigate(ev.detail);
+	  }
 	}
 
 </script>

@@ -5,7 +5,7 @@ const COMPONENTS = new Lib();
 const VARIANTS = new Lib();
 
 export {
-	FIELDS,
-	COMPONENTS,
-	VARIANTS
+  FIELDS,
+  COMPONENTS,
+  VARIANTS
 };

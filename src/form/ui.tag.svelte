@@ -14,7 +14,7 @@
   export let variants = [];
   export let error = false;
   export let readonly = false;
-  export let beforeAdd = (item, list)=>{
+  export let beforeAdd = (/*item, list*/)=>{
     return true;
   };
 

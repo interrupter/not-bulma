@@ -1,9 +1,9 @@
 <script>
-
+/*
   import { createEventDispatcher } from 'svelte';
   let dispatch = createEventDispatcher();
-
-  /*
+*/
+/*
   item = {
     id,        //unique
     title,     //some text
@@ -12,7 +12,7 @@
   }
   */
 
-  export let values = [];
+export let values = [];
 
 </script>
 

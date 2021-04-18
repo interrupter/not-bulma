@@ -7,14 +7,14 @@
   let dispatch = createEventDispatcher();
 
   import UIContainer from '../layout/ui.container.svelte';
-  import UIBox from '../ui.box.svelte';
+//  import UIBox from '../ui.box.svelte';
 
   import UIForm from '../form/form.svelte';
   import Form from '../form.js';
   import Validators from './validators.js';
 
   import UIButton from '../ui.button.svelte';
-  import AutoComplete from "simple-svelte-autocomplete";
+//  import AutoComplete from "simple-svelte-autocomplete";
 
   export let show = false;
 
@@ -35,7 +35,7 @@
           return {
             _id: itm._id,
             title: itm.title
-          }
+          };
         });
       }
       return [];
@@ -54,25 +54,25 @@
       value: 2,
       label: 'Тип',
       variants: [{
-          id: 1,
-          value: true,
-          title: 'Артист',
-        },
-        {
-          id: 2,
-          value: true,
-          title: 'Картина',
-        },
-        {
-          id: 3,
-          value: true,
-          title: 'Категория',
-        },
-        {
-          id: 4,
-          value: true,
-          title: 'Коллекция',
-        }
+        id: 1,
+        value: true,
+        title: 'Артист',
+      },
+      {
+        id: 2,
+        value: true,
+        title: 'Картина',
+      },
+      {
+        id: 3,
+        value: true,
+        title: 'Категория',
+      },
+      {
+        id: 4,
+        value: true,
+        title: 'Коллекция',
+      }
       ]
     },
     genre: {
@@ -181,11 +181,11 @@
   let buttons = {
     cancel:{
       caption: 'Скрыть',
-  		enabled: true
+      enabled: true
     },
     submit:{
       caption: 'Искать',
-  		enabled: true
+      enabled: true
     },
   };
 

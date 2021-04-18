@@ -2,13 +2,13 @@
 	let overflowSave = '';
 
 	import {
-		fade
+	  fade
 	} from 'svelte/transition';
 
 	import {
-		createEventDispatcher,
-		onMount,
-		onDestroy
+	  createEventDispatcher,
+	  onMount,
+	  onDestroy
 	} from 'svelte';
 
 	const zIndexStep = 1000;
@@ -22,42 +22,42 @@
 	export let layer = 1;
 
 	$: if(show){
-		document.body.style.overflow = 'hidden';
+	  document.body.style.overflow = 'hidden';
 	}else{
-		document.body.style.overflow = overflowSave;
+	  document.body.style.overflow = overflowSave;
 	}
 
 	function overlayClick(e){
-		if(closeOnClick){
-			closeOverlay(e);
-		}
+	  if(closeOnClick){
+	    closeOverlay(e);
+	  }
 	}
 
 	function closeButtonClick(){
-		rejectOverlay();
+	  rejectOverlay();
 	}
 
 	function closeOverlay(e) {
-		if(e && e.originalTarget && e.originalTarget.classList && e.originalTarget.classList.contains('is-overlay')){
-			rejectOverlay();
-		}
+	  if(e && e.originalTarget && e.originalTarget.classList && e.originalTarget.classList.contains('is-overlay')){
+	    rejectOverlay();
+	  }
 	}
 
 	function rejectOverlay(data = {}) {
-		dispatch('reject', data);
+	  dispatch('reject', data);
 	}
-
+/*
 	function resolveOverlay(data = {}) {
-		dispatch('resolve', data);
+	  dispatch('resolve', data);
 	}
-
+*/
 	onMount(() => {
-		overflowSave = document.body.style.overflow;
+	  overflowSave = document.body.style.overflow;
 
 	});
 
 	onDestroy(() => {
-		document.body.style.overflow = overflowSave;
+	  document.body.style.overflow = overflowSave;
 	});
 </script>
 

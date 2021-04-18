@@ -3,7 +3,7 @@
   const CLEAR_MACRO = '__CLEAR__';
 
   import {createEventDispatcher} from 'svelte';
-	let dispatch = createEventDispatcher();
+let dispatch = createEventDispatcher();
 
   export let inputStarted = false;
   export let value = '';
@@ -30,9 +30,9 @@
 
   function onBlur(ev){
     let data = {
-  		field: fieldname,
-  		value: ev.currentTarget.value
-  	};
+      field: fieldname,
+      value: ev.currentTarget.value
+    };
     if(multiple){
       value = Array.from(ev.target.selectedOptions).map( el => el.value );
       if(value.indexOf(CLEAR_MACRO)>-1){
@@ -50,10 +50,10 @@
   }
 
   function onInput(ev){
-  	let data = {
-  		field: fieldname,
+    let data = {
+      field: fieldname,
       value: ev.currentTarget.value
-  	};
+    };
     if(multiple){
       value = Array.from(ev.target.selectedOptions).map( el => el.value );
       if(value.indexOf(CLEAR_MACRO)>-1){

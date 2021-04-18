@@ -8,13 +8,13 @@
   export let item = {};
 
   function onClick(ev){
-		ev.preventDefault();
-		dispatch('navigate', {
-			full: ev.target.getAttribute('href'),
-			short: ev.target.dataset.href
-		});
-		return false;
-	}
+    ev.preventDefault();
+    dispatch('navigate', {
+      full: ev.target.getAttribute('href'),
+      short: ev.target.dataset.href
+    });
+    return false;
+}
 
 </script>
 
