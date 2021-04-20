@@ -4,25 +4,28 @@ import notBase from './base.js';
 import notRouter from './router.js';
 
 const OPT_CONTROLLER_PREFIX = 'nc',
-  OPT_RECORD_PREFIX = 'nr';
+  OPT_RECORD_PREFIX = 'nr',
+  DEFAULT_WS_CLIENT_NAME = 'main';
 
 export default class notApp extends notBase {
+  static DEFAULT_WS_CLIENT_NAME = DEFAULT_WS_CLIENT_NAME;
   constructor(options) {
     super({
       working:{
-        name: options.name
+        name:                 options.name,
+        interfaces:           {},
+        controllers:          Object.prototype.hasOwnProperty.call(options, 'controllers')?options.controllers:{},
+        initController:       null,
+        currentController:    null,
+        uis:                  {},
+        wsc:                  {},
+        wss:                  {},
+        services:             {}
       },
       options
     });
     this.log('start app');
     notCommon.register('app', this);
-    this.setWorking({
-      interfaces:         {},
-      controllers:         Object.prototype.hasOwnProperty.call(options, 'controllers')?options.controllers:{},
-      initController:     null,
-      currentController:   null,
-      uis:                 {}
-    });
     this.initManifest();
     return this;
   }
@@ -134,12 +137,12 @@ export default class notApp extends notBase {
     return this;
   }
 
-  setWS(WS_CLIENT){
-    return this.setWorking('WS_CLIENT', WS_CLIENT);
+  setWSClient(name = this.DEFAULT_WS_CLIENT_NAME, wsc){
+    return this.setWorking(`wsc.${name}`, wsc);
   }
 
-  getWS(){
-    return this.getWorking('WS_CLIENT');
+  getWSClient(name = this.DEFAULT_WS_CLIENT_NAME){
+    return this.getWorking(`wsc.${name}`);
   }
 
   getInterface(name){
@@ -148,6 +151,10 @@ export default class notApp extends notBase {
 
   getModel(name, data = {}){
     return this.getInterface(name)(data);
+  }
+
+  getService(name){
+    return this.getWorking(`services.${name}`);
   }
 
 }

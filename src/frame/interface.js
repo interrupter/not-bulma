@@ -86,7 +86,7 @@ class notInterface extends notBase {
     try {
       let actionData = this.getActionData(actionName),
         requestParams = this.collectRequestData(actionData);
-      const WS = notCommon.getApp().getWS();
+      const WS = notCommon.getApp().getWSClient();
       const messageName = this.getWSRequestName(actionName);
       const payload = Object.assign({}, requestParams, record.getData());
       if(
@@ -124,7 +124,7 @@ class notInterface extends notBase {
   }
 
   selectTransport(actionData){
-    if(actionData.ws === true && notCommon.getApp().getWS().isConnected()){
+    if(actionData.ws === true && notCommon.getApp().getWSClient().isConnected()){
       return 'ws';//for ws/wss
     }
     if(Object.prototype.hasOwnProperty.call(actionData, 'method')){

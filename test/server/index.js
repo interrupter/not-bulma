@@ -1,22 +1,21 @@
 //пустой not-node сервер для проверки одного модуля
+const log = require('not-log')(module,'test:server');
 try {
   const env = 'test';
-  const path = require('path');
-  const configPath = path.join(__dirname, 'config.json');
+  process.env.NODE_ENV = env;
   const configModule = require('not-config');
+  const confPath = __dirname+'/config';
   //инициализируем доступ к логам
-  require('not-log')(path.join(__dirname, '../../logs/log'));
-  const log = require('not-log')(module);
+
   log.info('Environment', env);
   //иницилизируем доступ к настройкам
-  const configLoaded = configModule.init(configPath);
-  if (configLoaded !== false) {
-    log.info('Config loaded: ', configPath);
-    require('./app.js')();
+  const configLoaded = configModule.init(confPath);
+  if (configLoaded === false) {
+    log.error('Config not loaded: ', confPath);
   } else {
-    log.error('Config not loaded: ', configPath);
+    log.info('Config loaded: ', confPath);
+    require('./app.js')();
   }
-
 } catch (e) {
-  console.error(e);
+  log.error(e);
 }

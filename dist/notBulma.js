@@ -252,7 +252,7 @@ var notBulma = (function (exports) {
 	(module.exports = function (key, value) {
 	  return sharedStore[key] || (sharedStore[key] = value !== undefined ? value : {});
 	})('versions', []).push({
-	  version: '3.10.1',
+	  version: '3.10.2',
 	  mode: 'global',
 	  copyright: '© 2021 Denis Pushkarev (zloirock.ru)'
 	});
@@ -516,6 +516,7 @@ var notBulma = (function (exports) {
 
 	var hiddenKeys$1 = {};
 
+	var OBJECT_ALREADY_INITIALIZED = 'Object already initialized';
 	var WeakMap$1 = global_1.WeakMap;
 	var set$1, get$1, has;
 
@@ -538,6 +539,7 @@ var notBulma = (function (exports) {
 	  var wmhas = store.has;
 	  var wmset = store.set;
 	  set$1 = function (it, metadata) {
+	    if (wmhas.call(store, it)) throw new TypeError(OBJECT_ALREADY_INITIALIZED);
 	    metadata.facade = it;
 	    wmset.call(store, it, metadata);
 	    return metadata;
@@ -552,6 +554,7 @@ var notBulma = (function (exports) {
 	  var STATE = sharedKey('state');
 	  hiddenKeys$1[STATE] = true;
 	  set$1 = function (it, metadata) {
+	    if (has$1(it, STATE)) throw new TypeError(OBJECT_ALREADY_INITIALIZED);
 	    metadata.facade = it;
 	    createNonEnumerableProperty(it, STATE, metadata);
 	    return metadata;
@@ -3670,7 +3673,7 @@ var notBulma = (function (exports) {
 	var UNSUPPORTED_Y = regexpStickyHelpers.UNSUPPORTED_Y || regexpStickyHelpers.BROKEN_CARET;
 
 	// nonparticipating capturing group, copied from es5-shim's String#split patch.
-	// eslint-disable-next-line regexp/no-assertion-capturing-group, regexp/no-empty-group -- required for testing
+	// eslint-disable-next-line regexp/no-assertion-capturing-group, regexp/no-empty-group, regexp/no-lazy-ends -- testing
 	var NPCG_INCLUDED = /()??/.exec('')[1] !== undefined;
 
 	var PATCH = UPDATES_LAST_INDEX_WRONG || NPCG_INCLUDED || UNSUPPORTED_Y;
@@ -4997,7 +5000,7 @@ var notBulma = (function (exports) {
 	  }
 	});
 
-	function _createForOfIteratorHelper$3(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray$3(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+	function _createForOfIteratorHelper$3(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray$3(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
 	function _unsupportedIterableToArray$3(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray$3(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$3(o, minLen); }
 
@@ -7537,7 +7540,7 @@ var notBulma = (function (exports) {
 	  redefine(global_1, NUMBER, NumberWrapper);
 	}
 
-	function _createForOfIteratorHelper$2(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray$2(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+	function _createForOfIteratorHelper$2(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray$2(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
 	function _unsupportedIterableToArray$2(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray$2(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$2(o, minLen); }
 
@@ -7662,7 +7665,7 @@ var notBulma = (function (exports) {
 	      try {
 	        var actionData = this.getActionData(actionName),
 	            requestParams = this.collectRequestData(actionData);
-	        var WS = notCommon$1.getApp().getWS();
+	        var WS = notCommon$1.getApp().getWSClient();
 	        var messageName = this.getWSRequestName(actionName);
 	        var payload = Object.assign({}, requestParams, record.getData());
 
@@ -7699,7 +7702,7 @@ var notBulma = (function (exports) {
 	  }, {
 	    key: "selectTransport",
 	    value: function selectTransport(actionData) {
-	      if (actionData.ws === true && notCommon$1.getApp().getWS().isConnected()) {
+	      if (actionData.ws === true && notCommon$1.getApp().getWSClient().isConnected()) {
 	        return 'ws'; //for ws/wss
 	      }
 
@@ -7991,7 +7994,7 @@ var notBulma = (function (exports) {
 	  return notInterface;
 	}(notBase$1);
 
-	function _createForOfIteratorHelper$1(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray$1(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+	function _createForOfIteratorHelper$1(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray$1(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
 	function _unsupportedIterableToArray$1(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray$1(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$1(o, minLen); }
 
@@ -8233,7 +8236,8 @@ var notBulma = (function (exports) {
 
 	function _isNativeReflectConstruct$5() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 	var OPT_CONTROLLER_PREFIX = 'nc',
-	    OPT_RECORD_PREFIX = 'nr';
+	    OPT_RECORD_PREFIX = 'nr',
+	    DEFAULT_WS_CLIENT_NAME = 'main';
 
 	var notApp$1 = /*#__PURE__*/function (_notBase) {
 	  inherits(notApp, _notBase);
@@ -8247,7 +8251,15 @@ var notBulma = (function (exports) {
 
 	    _this = _super.call(this, {
 	      working: {
-	        name: options.name
+	        name: options.name,
+	        interfaces: {},
+	        controllers: Object.prototype.hasOwnProperty.call(options, 'controllers') ? options.controllers : {},
+	        initController: null,
+	        currentController: null,
+	        uis: {},
+	        wsc: {},
+	        wss: {},
+	        services: {}
 	      },
 	      options: options
 	    });
@@ -8255,14 +8267,6 @@ var notBulma = (function (exports) {
 	    _this.log('start app');
 
 	    notCommon$1.register('app', assertThisInitialized(_this));
-
-	    _this.setWorking({
-	      interfaces: {},
-	      controllers: Object.prototype.hasOwnProperty.call(options, 'controllers') ? options.controllers : {},
-	      initController: null,
-	      currentController: null,
-	      uis: {}
-	    });
 
 	    _this.initManifest();
 
@@ -8406,14 +8410,17 @@ var notBulma = (function (exports) {
 	      return this;
 	    }
 	  }, {
-	    key: "setWS",
-	    value: function setWS(WS_CLIENT) {
-	      return this.setWorking('WS_CLIENT', WS_CLIENT);
+	    key: "setWSClient",
+	    value: function setWSClient() {
+	      var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.DEFAULT_WS_CLIENT_NAME;
+	      var wsc = arguments.length > 1 ? arguments[1] : undefined;
+	      return this.setWorking("wsc.".concat(name), wsc);
 	    }
 	  }, {
-	    key: "getWS",
-	    value: function getWS() {
-	      return this.getWorking('WS_CLIENT');
+	    key: "getWSClient",
+	    value: function getWSClient() {
+	      var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.DEFAULT_WS_CLIENT_NAME;
+	      return this.getWorking("wsc.".concat(name));
 	    }
 	  }, {
 	    key: "getInterface",
@@ -8426,10 +8433,17 @@ var notBulma = (function (exports) {
 	      var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 	      return this.getInterface(name)(data);
 	    }
+	  }, {
+	    key: "getService",
+	    value: function getService(name) {
+	      return this.getWorking("services.".concat(name));
+	    }
 	  }]);
 
 	  return notApp;
 	}(notBase$1);
+
+	defineProperty$3(notApp$1, "DEFAULT_WS_CLIENT_NAME", DEFAULT_WS_CLIENT_NAME);
 
 	function _arrayWithHoles(arr) {
 	  if (Array.isArray(arr)) return arr;
@@ -12104,7 +12118,7 @@ var notBulma = (function (exports) {
 
 	var toConsumableArray = _toConsumableArray;
 
-	function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+	function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
 	function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
@@ -30882,8 +30896,11 @@ var notBulma = (function (exports) {
 	   where the interface "ne0" belongs to the 1st link, "pvc1.3" belongs
 	   to the 5th link, and "interface10" belongs to the 10th organization.
 	 * * */
-	var ipv4Maybe = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/;
-	var ipv6Block = /^[0-9A-F]{1,4}$/i;
+	var IPv4SegmentFormat = '(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])';
+	var IPv4AddressFormat = "(".concat(IPv4SegmentFormat, "[.]){3}").concat(IPv4SegmentFormat);
+	var IPv4AddressRegExp = new RegExp("^".concat(IPv4AddressFormat, "$"));
+	var IPv6SegmentFormat = '(?:[0-9a-fA-F]{1,4})';
+	var IPv6AddressRegExp = new RegExp('^(' + "(?:".concat(IPv6SegmentFormat, ":){7}(?:").concat(IPv6SegmentFormat, "|:)|") + "(?:".concat(IPv6SegmentFormat, ":){6}(?:").concat(IPv4AddressFormat, "|:").concat(IPv6SegmentFormat, "|:)|") + "(?:".concat(IPv6SegmentFormat, ":){5}(?::").concat(IPv4AddressFormat, "|(:").concat(IPv6SegmentFormat, "){1,2}|:)|") + "(?:".concat(IPv6SegmentFormat, ":){4}(?:(:").concat(IPv6SegmentFormat, "){0,1}:").concat(IPv4AddressFormat, "|(:").concat(IPv6SegmentFormat, "){1,3}|:)|") + "(?:".concat(IPv6SegmentFormat, ":){3}(?:(:").concat(IPv6SegmentFormat, "){0,2}:").concat(IPv4AddressFormat, "|(:").concat(IPv6SegmentFormat, "){1,4}|:)|") + "(?:".concat(IPv6SegmentFormat, ":){2}(?:(:").concat(IPv6SegmentFormat, "){0,3}:").concat(IPv4AddressFormat, "|(:").concat(IPv6SegmentFormat, "){1,5}|:)|") + "(?:".concat(IPv6SegmentFormat, ":){1}(?:(:").concat(IPv6SegmentFormat, "){0,4}:").concat(IPv4AddressFormat, "|(:").concat(IPv6SegmentFormat, "){1,6}|:)|") + "(?::((?::".concat(IPv6SegmentFormat, "){0,5}:").concat(IPv4AddressFormat, "|(?::").concat(IPv6SegmentFormat, "){1,7}|:))") + ')(%[0-9a-zA-Z-.:]{1,})?$');
 
 	function isIP(str) {
 	  var version = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
@@ -30892,8 +30909,10 @@ var notBulma = (function (exports) {
 
 	  if (!version) {
 	    return isIP(str, 4) || isIP(str, 6);
-	  } else if (version === '4') {
-	    if (!ipv4Maybe.test(str)) {
+	  }
+
+	  if (version === '4') {
+	    if (!IPv4AddressRegExp.test(str)) {
 	      return false;
 	    }
 
@@ -30901,75 +30920,10 @@ var notBulma = (function (exports) {
 	      return a - b;
 	    });
 	    return parts[3] <= 255;
-	  } else if (version === '6') {
-	    var addressAndZone = [str]; // ipv6 addresses could have scoped architecture
-	    // according to https://tools.ietf.org/html/rfc4007#section-11
+	  }
 
-	    if (str.includes('%')) {
-	      addressAndZone = str.split('%');
-
-	      if (addressAndZone.length !== 2) {
-	        // it must be just two parts
-	        return false;
-	      }
-
-	      if (!addressAndZone[0].includes(':')) {
-	        // the first part must be the address
-	        return false;
-	      }
-
-	      if (addressAndZone[1] === '') {
-	        // the second part must not be empty
-	        return false;
-	      }
-	    }
-
-	    var blocks = addressAndZone[0].split(':');
-	    var foundOmissionBlock = false; // marker to indicate ::
-	    // At least some OS accept the last 32 bits of an IPv6 address
-	    // (i.e. 2 of the blocks) in IPv4 notation, and RFC 3493 says
-	    // that '::ffff:a.b.c.d' is valid for IPv4-mapped IPv6 addresses,
-	    // and '::a.b.c.d' is deprecated, but also valid.
-
-	    var foundIPv4TransitionBlock = isIP(blocks[blocks.length - 1], 4);
-	    var expectedNumberOfBlocks = foundIPv4TransitionBlock ? 7 : 8;
-
-	    if (blocks.length > expectedNumberOfBlocks) {
-	      return false;
-	    } // initial or final ::
-
-
-	    if (str === '::') {
-	      return true;
-	    } else if (str.substr(0, 2) === '::') {
-	      blocks.shift();
-	      blocks.shift();
-	      foundOmissionBlock = true;
-	    } else if (str.substr(str.length - 2) === '::') {
-	      blocks.pop();
-	      blocks.pop();
-	      foundOmissionBlock = true;
-	    }
-
-	    for (var i = 0; i < blocks.length; ++i) {
-	      // test for a :: which can not be at the string start/end
-	      // since those cases have been handled above
-	      if (blocks[i] === '' && i > 0 && i < blocks.length - 1) {
-	        if (foundOmissionBlock) {
-	          return false; // multiple :: in address
-	        }
-
-	        foundOmissionBlock = true;
-	      } else if (foundIPv4TransitionBlock && i === blocks.length - 1) ; else if (!ipv6Block.test(blocks[i])) {
-	        return false;
-	      }
-	    }
-
-	    if (foundOmissionBlock) {
-	      return blocks.length >= 1;
-	    }
-
-	    return blocks.length === expectedNumberOfBlocks;
+	  if (version === '6') {
+	    return !!IPv6AddressRegExp.test(str);
 	  }
 
 	  return false;
@@ -31000,18 +30954,6 @@ var notBulma = (function (exports) {
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-	function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-	function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-	function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-	function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-	function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
 	var default_email_options = {
 	  allow_display_name: false,
 	  require_display_name: false,
@@ -31024,7 +30966,7 @@ var notBulma = (function (exports) {
 
 	/* eslint-disable no-control-regex */
 
-	var splitNameAddress = /^([^\x00-\x1F\x7F-\x9F\cX]+)<(.+)>$/i;
+	var splitNameAddress = /^([^\x00-\x1F\x7F-\x9F\cX]+)</i;
 	var emailUserPart = /^[a-z\d!#\$%&'\*\+\-\/=\?\^_`{\|}~]+$/i;
 	var gmailUserPart = /^[a-z\d]+$/;
 	var quotedEmailUser = /^([\s\x01-\x08\x0b\x0c\x0e-\x1f\x7f\x21\x23-\x5b\x5d-\x7e]|(\\[\x01-\x09\x0b\x0c\x0d-\x7f]))*$/i;
@@ -31041,8 +30983,7 @@ var notBulma = (function (exports) {
 	 */
 
 	function validateDisplayName(display_name) {
-	  var trim_quotes = display_name.match(/^"(.+)"$/i);
-	  var display_name_without_quotes = trim_quotes ? trim_quotes[1] : display_name; // display name with only spaces is not valid
+	  var display_name_without_quotes = display_name.replace(/^"(.+)"$/, '$1'); // display name with only spaces is not valid
 
 	  if (!display_name_without_quotes.trim()) {
 	    return false;
@@ -31054,7 +30995,7 @@ var notBulma = (function (exports) {
 	  if (contains_illegal) {
 	    // if contains illegal characters,
 	    // must to be enclosed in double-quotes, otherwise it's not a valid display name
-	    if (!trim_quotes) {
+	    if (display_name_without_quotes === display_name) {
 	      return false;
 	    } // the quotes in display name must start with character symbol \
 
@@ -31077,17 +31018,14 @@ var notBulma = (function (exports) {
 	    var display_email = str.match(splitNameAddress);
 
 	    if (display_email) {
-	      var display_name;
+	      var display_name = display_email[1]; // Remove display name and angle brackets to get email address
+	      // Can be done in the regex but will introduce a ReDOS (See  #1597 for more info)
 
-	      var _display_email = _slicedToArray(display_email, 3);
-
-	      display_name = _display_email[1];
-	      str = _display_email[2];
-
-	      // sometimes need to trim the last space to get the display name
+	      str = str.replace(display_name, '').replace(/(^<|>$)/g, ''); // sometimes need to trim the last space to get the display name
 	      // because there may be a space between display name and email address
 	      // eg. myname <address@gmail.com>
 	      // the display name is `myname` instead of `myname `, so need to trim the last space
+
 	      if (display_name.endsWith(' ')) {
 	        display_name = display_name.substr(0, display_name.length - 1);
 	      }
@@ -31173,8 +31111,8 @@ var notBulma = (function (exports) {
 	  var pattern = options.allow_utf8_local_part ? emailUserUtf8Part : emailUserPart;
 	  var user_parts = user.split('.');
 
-	  for (var _i2 = 0; _i2 < user_parts.length; _i2++) {
-	    if (!pattern.test(user_parts[_i2])) {
+	  for (var _i = 0; _i < user_parts.length; _i++) {
+	    if (!pattern.test(user_parts[_i])) {
 	      return false;
 	    }
 	  }
@@ -31311,9 +31249,13 @@ var notBulma = (function (exports) {
 	      return false;
 	    }
 
+	    if (split[0] === '' || split[0].substr(0, 1) === ':') {
+	      return false;
+	    }
+
 	    auth = split.shift();
 
-	    if (auth.indexOf(':') === -1 || auth.indexOf(':') >= 0 && auth.split(':').length > 2) {
+	    if (auth.indexOf(':') >= 0 && auth.split(':').length > 2) {
 	      return false;
 	    }
 	  }
@@ -31380,20 +31322,21 @@ var notBulma = (function (exports) {
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var macAddress = /^([0-9a-fA-F][0-9a-fA-F]:){5}([0-9a-fA-F][0-9a-fA-F])$/;
-	var macAddressNoColons = /^([0-9a-fA-F]){12}$/;
-	var macAddressWithHyphen = /^([0-9a-fA-F][0-9a-fA-F]-){5}([0-9a-fA-F][0-9a-fA-F])$/;
-	var macAddressWithSpaces = /^([0-9a-fA-F][0-9a-fA-F]\s){5}([0-9a-fA-F][0-9a-fA-F])$/;
-	var macAddressWithDots = /^([0-9a-fA-F]{4}).([0-9a-fA-F]{4}).([0-9a-fA-F]{4})$/;
+	var macAddress = /^(?:[0-9a-fA-F]{2}([-:\s]))([0-9a-fA-F]{2}\1){4}([0-9a-fA-F]{2})$/;
+	var macAddressNoSeparators = /^([0-9a-fA-F]){12}$/;
+	var macAddressWithDots = /^([0-9a-fA-F]{4}\.){2}([0-9a-fA-F]{4})$/;
 
 	function isMACAddress(str, options) {
 	  (0, _assertString.default)(str);
+	  /**
+	   * @deprecated `no_colons` TODO: remove it in the next major
+	  */
 
-	  if (options && options.no_colons) {
-	    return macAddressNoColons.test(str);
+	  if (options && (options.no_colons || options.no_separators)) {
+	    return macAddressNoSeparators.test(str);
 	  }
 
-	  return macAddress.test(str) || macAddressWithHyphen.test(str) || macAddressWithSpaces.test(str) || macAddressWithDots.test(str);
+	  return macAddress.test(str) || macAddressWithDots.test(str);
 	}
 
 	module.exports = exports.default;
@@ -31415,9 +31358,12 @@ var notBulma = (function (exports) {
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var subnetMaybe = /^\d{1,2}$/;
+	var subnetMaybe = /^\d{1,3}$/;
+	var v4Subnet = 32;
+	var v6Subnet = 128;
 
 	function isIPRange(str) {
+	  var version = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
 	  (0, _assertString.default)(str);
 	  var parts = str.split('/'); // parts[0] -> ip, parts[1] -> subnet
 
@@ -31434,7 +31380,29 @@ var notBulma = (function (exports) {
 	    return false;
 	  }
 
-	  return (0, _isIP.default)(parts[0], 4) && parts[1] <= 32 && parts[1] >= 0;
+	  var isValidIP = (0, _isIP.default)(parts[0], version);
+
+	  if (!isValidIP) {
+	    return false;
+	  } // Define valid subnet according to IP's version
+
+
+	  var expectedSubnet = null;
+
+	  switch (String(version)) {
+	    case '4':
+	      expectedSubnet = v4Subnet;
+	      break;
+
+	    case '6':
+	      expectedSubnet = v6Subnet;
+	      break;
+
+	    default:
+	      expectedSubnet = (0, _isIP.default)(parts[0], '6') ? v6Subnet : v4Subnet;
+	  }
+
+	  return parts[1] <= expectedSubnet && parts[1] >= 0;
 	}
 
 	module.exports = exports.default;
@@ -31579,7 +31547,7 @@ var notBulma = (function (exports) {
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var localeReg = /^[A-z]{2,4}([_-]([A-z]{4}|[\d]{3}))?([_-]([A-z]{2}|[\d]{3}))?$/;
+	var localeReg = /^[A-Za-z]{2,4}([_-]([A-Za-z]{4}|[\d]{3}))?([_-]([A-Za-z]{2}|[\d]{3}))?$/;
 
 	function isLocale(str) {
 	  (0, _assertString.default)(str);
@@ -31656,9 +31624,22 @@ var notBulma = (function (exports) {
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function isAlphanumeric(str) {
+	function isAlphanumeric(_str) {
 	  var locale = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'en-US';
-	  (0, _assertString.default)(str);
+	  var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+	  (0, _assertString.default)(_str);
+	  var str = _str;
+	  var ignore = options.ignore;
+
+	  if (ignore) {
+	    if (ignore instanceof RegExp) {
+	      str = str.replace(ignore, '');
+	    } else if (typeof ignore === 'string') {
+	      str = str.replace(new RegExp("[".concat(ignore.replace(/[-[\]{}()*+?.,\\^$|#\\s]/g, '\\$&'), "]"), 'g'), ''); // escape regex for ignore
+	    } else {
+	      throw new Error('ignore should be instance of a String or RegExp');
+	    }
+	  }
 
 	  if (locale in alpha_1.alphanumeric) {
 	    return alpha_1.alphanumeric[locale].test(str);
@@ -31735,6 +31716,8 @@ var notBulma = (function (exports) {
 	  // BELGIUM
 	  BG: /^\d{9}$/,
 	  // BULGARIA
+	  BR: /^[A-Z]{2}\d{6}$/,
+	  // BRAZIL
 	  BY: /^[A-Z]{2}\d{7}$/,
 	  // BELARUS
 	  CA: /^[A-Z]{2}\d{6}$/,
@@ -31773,6 +31756,8 @@ var notBulma = (function (exports) {
 	  // IRELAND
 	  IN: /^[A-Z]{1}-?\d{7}$/,
 	  // INDIA
+	  IR: /^[A-Z]\d{8}$/,
+	  // IRAN
 	  IS: /^(A)\d{7}$/,
 	  // ICELAND
 	  IT: /^[A-Z0-9]{2}\d{7}$/,
@@ -31787,8 +31772,14 @@ var notBulma = (function (exports) {
 	  // LUXEMBURG
 	  LV: /^[A-Z0-9]{2}\d{7}$/,
 	  // LATVIA
+	  LY: /^[A-Z0-9]{8}$/,
+	  // LIBYA
 	  MT: /^\d{7}$/,
 	  // MALTA
+	  MZ: /^([A-Z]{2}\d{7})|(\d{2}[A-Z]{2}\d{5})$/,
+	  // MOZAMBIQUE
+	  MY: /^[AHK]\d{8}$/,
+	  // MALAYSIA
 	  NL: /^[A-Z]{2}[A-Z0-9]{6}\d$/,
 	  // NETHERLANDS
 	  PO: /^[A-Z]{2}\d{7}$/,
@@ -32417,12 +32408,19 @@ var notBulma = (function (exports) {
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var hslcomma = /^(hsl)a?\(\s*((\+|\-)?([0-9]+(\.[0-9]+)?(e(\+|\-)?[0-9]+)?|\.[0-9]+(e(\+|\-)?[0-9]+)?))(deg|grad|rad|turn|\s*)(\s*,\s*(\+|\-)?([0-9]+(\.[0-9]+)?(e(\+|\-)?[0-9]+)?|\.[0-9]+(e(\+|\-)?[0-9]+)?)%){2}\s*(,\s*((\+|\-)?([0-9]+(\.[0-9]+)?(e(\+|\-)?[0-9]+)?|\.[0-9]+(e(\+|\-)?[0-9]+)?)%?)\s*)?\)$/i;
-	var hslspace = /^(hsl)a?\(\s*((\+|\-)?([0-9]+(\.[0-9]+)?(e(\+|\-)?[0-9]+)?|\.[0-9]+(e(\+|\-)?[0-9]+)?))(deg|grad|rad|turn|\s)(\s*(\+|\-)?([0-9]+(\.[0-9]+)?(e(\+|\-)?[0-9]+)?|\.[0-9]+(e(\+|\-)?[0-9]+)?)%){2}\s*(\/\s*((\+|\-)?([0-9]+(\.[0-9]+)?(e(\+|\-)?[0-9]+)?|\.[0-9]+(e(\+|\-)?[0-9]+)?)%?)\s*)?\)$/i;
+	var hslComma = /^hsla?\(((\+|\-)?([0-9]+(\.[0-9]+)?(e(\+|\-)?[0-9]+)?|\.[0-9]+(e(\+|\-)?[0-9]+)?))(deg|grad|rad|turn)?(,(\+|\-)?([0-9]+(\.[0-9]+)?(e(\+|\-)?[0-9]+)?|\.[0-9]+(e(\+|\-)?[0-9]+)?)%){2}(,((\+|\-)?([0-9]+(\.[0-9]+)?(e(\+|\-)?[0-9]+)?|\.[0-9]+(e(\+|\-)?[0-9]+)?)%?))?\)$/i;
+	var hslSpace = /^hsla?\(((\+|\-)?([0-9]+(\.[0-9]+)?(e(\+|\-)?[0-9]+)?|\.[0-9]+(e(\+|\-)?[0-9]+)?))(deg|grad|rad|turn)?(\s(\+|\-)?([0-9]+(\.[0-9]+)?(e(\+|\-)?[0-9]+)?|\.[0-9]+(e(\+|\-)?[0-9]+)?)%){2}\s?(\/\s((\+|\-)?([0-9]+(\.[0-9]+)?(e(\+|\-)?[0-9]+)?|\.[0-9]+(e(\+|\-)?[0-9]+)?)%?)\s?)?\)$/i;
 
 	function isHSL(str) {
-	  (0, _assertString.default)(str);
-	  return hslcomma.test(str) || hslspace.test(str);
+	  (0, _assertString.default)(str); // Strip duplicate spaces before calling the validation regex (See  #1598 for more info)
+
+	  var strippedStr = str.replace(/\s+/g, ' ').replace(/\s?(hsla?\(|\)|,)\s?/ig, '$1');
+
+	  if (strippedStr.indexOf(',') !== -1) {
+	    return hslComma.test(strippedStr);
+	  }
+
+	  return hslSpace.test(strippedStr);
 	}
 
 	module.exports = exports.default;
@@ -32527,6 +32525,7 @@ var notBulma = (function (exports) {
 	  MR: /^(MR[0-9]{2})\d{23}$/,
 	  MT: /^(MT[0-9]{2})[A-Z]{4}\d{5}[A-Z0-9]{18}$/,
 	  MU: /^(MU[0-9]{2})[A-Z]{4}\d{19}[A-Z]{3}$/,
+	  MZ: /^(MZ[0-9]{2})\d{21}$/,
 	  NL: /^(NL[0-9]{2})[A-Z]{4}\d{10}$/,
 	  NO: /^(NO[0-9]{2})\d{11}$/,
 	  PK: /^(PK[0-9]{2})[A-Z0-9]{4}\d{16}$/,
@@ -32608,6 +32607,33 @@ var notBulma = (function (exports) {
 
 	unwrapExports(isIBAN_1);
 
+	var isISO31661Alpha2_1 = createCommonjsModule(function (module, exports) {
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = isISO31661Alpha2;
+	exports.CountryCodes = void 0;
+
+	var _assertString = _interopRequireDefault(assertString_1);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	// from https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+	var validISO31661Alpha2CountriesCodes = ['AD', 'AE', 'AF', 'AG', 'AI', 'AL', 'AM', 'AO', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AW', 'AX', 'AZ', 'BA', 'BB', 'BD', 'BE', 'BF', 'BG', 'BH', 'BI', 'BJ', 'BL', 'BM', 'BN', 'BO', 'BQ', 'BR', 'BS', 'BT', 'BV', 'BW', 'BY', 'BZ', 'CA', 'CC', 'CD', 'CF', 'CG', 'CH', 'CI', 'CK', 'CL', 'CM', 'CN', 'CO', 'CR', 'CU', 'CV', 'CW', 'CX', 'CY', 'CZ', 'DE', 'DJ', 'DK', 'DM', 'DO', 'DZ', 'EC', 'EE', 'EG', 'EH', 'ER', 'ES', 'ET', 'FI', 'FJ', 'FK', 'FM', 'FO', 'FR', 'GA', 'GB', 'GD', 'GE', 'GF', 'GG', 'GH', 'GI', 'GL', 'GM', 'GN', 'GP', 'GQ', 'GR', 'GS', 'GT', 'GU', 'GW', 'GY', 'HK', 'HM', 'HN', 'HR', 'HT', 'HU', 'ID', 'IE', 'IL', 'IM', 'IN', 'IO', 'IQ', 'IR', 'IS', 'IT', 'JE', 'JM', 'JO', 'JP', 'KE', 'KG', 'KH', 'KI', 'KM', 'KN', 'KP', 'KR', 'KW', 'KY', 'KZ', 'LA', 'LB', 'LC', 'LI', 'LK', 'LR', 'LS', 'LT', 'LU', 'LV', 'LY', 'MA', 'MC', 'MD', 'ME', 'MF', 'MG', 'MH', 'MK', 'ML', 'MM', 'MN', 'MO', 'MP', 'MQ', 'MR', 'MS', 'MT', 'MU', 'MV', 'MW', 'MX', 'MY', 'MZ', 'NA', 'NC', 'NE', 'NF', 'NG', 'NI', 'NL', 'NO', 'NP', 'NR', 'NU', 'NZ', 'OM', 'PA', 'PE', 'PF', 'PG', 'PH', 'PK', 'PL', 'PM', 'PN', 'PR', 'PS', 'PT', 'PW', 'PY', 'QA', 'RE', 'RO', 'RS', 'RU', 'RW', 'SA', 'SB', 'SC', 'SD', 'SE', 'SG', 'SH', 'SI', 'SJ', 'SK', 'SL', 'SM', 'SN', 'SO', 'SR', 'SS', 'ST', 'SV', 'SX', 'SY', 'SZ', 'TC', 'TD', 'TF', 'TG', 'TH', 'TJ', 'TK', 'TL', 'TM', 'TN', 'TO', 'TR', 'TT', 'TV', 'TW', 'TZ', 'UA', 'UG', 'UM', 'US', 'UY', 'UZ', 'VA', 'VC', 'VE', 'VG', 'VI', 'VN', 'VU', 'WF', 'WS', 'YE', 'YT', 'ZA', 'ZM', 'ZW'];
+
+	function isISO31661Alpha2(str) {
+	  (0, _assertString.default)(str);
+	  return validISO31661Alpha2CountriesCodes.indexOf(str.toUpperCase()) >= 0;
+	}
+
+	var CountryCodes = validISO31661Alpha2CountriesCodes;
+	exports.CountryCodes = CountryCodes;
+	});
+
+	unwrapExports(isISO31661Alpha2_1);
+	isISO31661Alpha2_1.CountryCodes;
+
 	var isBIC_1 = createCommonjsModule(function (module, exports) {
 
 	Object.defineProperty(exports, "__esModule", {
@@ -32617,12 +32643,21 @@ var notBulma = (function (exports) {
 
 	var _assertString = _interopRequireDefault(assertString_1);
 
+
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var isBICReg = /^[A-z]{4}[A-z]{2}\w{2}(\w{3})?$/;
+	// https://en.wikipedia.org/wiki/ISO_9362
+	var isBICReg = /^[A-Za-z]{6}[A-Za-z0-9]{2}([A-Za-z0-9]{3})?$/;
 
 	function isBIC(str) {
-	  (0, _assertString.default)(str);
+	  (0, _assertString.default)(str); // toUpperCase() should be removed when a new major version goes out that changes
+	  // the regex to [A-Z] (per the spec).
+
+	  if (isISO31661Alpha2_1.CountryCodes.indexOf(str.slice(4, 6).toUpperCase()) < 0) {
+	    return false;
+	  }
+
 	  return isBICReg.test(str);
 	}
 
@@ -33150,6 +33185,20 @@ var notBulma = (function (exports) {
 	    });
 	    return c === 0;
 	  },
+	  IR: function IR(str) {
+	    if (!str.match(/^\d{10}$/)) return false;
+	    str = "0000".concat(str).substr(str.length - 6);
+	    if (parseInt(str.substr(3, 6), 10) === 0) return false;
+	    var lastNumber = parseInt(str.substr(9, 1), 10);
+	    var sum = 0;
+
+	    for (var i = 0; i < 9; i++) {
+	      sum += parseInt(str.substr(i, 1), 10) * (10 - i);
+	    }
+
+	    sum %= 11;
+	    return sum < 2 && lastNumber === sum || sum >= 2 && lastNumber === 11 - sum;
+	  },
 	  IT: function IT(str) {
 	    if (str.length !== 9) return false;
 	    if (str === 'CA00000AA') return false; // https://it.wikipedia.org/wiki/Carta_d%27identit%C3%A0_elettronica_italiana
@@ -33188,6 +33237,18 @@ var notBulma = (function (exports) {
 	    }
 
 	    return sum % 10 === 0;
+	  },
+	  'ar-LY': function arLY(str) {
+	    // Libya National Identity Number NIN is 12 digits, the first digit is either 1 or 2
+	    var NIN = /^(1|2)\d{11}$/; // sanitize user input
+
+	    var sanitized = str.trim(); // validate the data structure
+
+	    if (!NIN.test(sanitized)) {
+	      return false;
+	    }
+
+	    return true;
 	  },
 	  'ar-TN': function arTN(str) {
 	    var DNI = /^\d{8}$/; // sanitize user input
@@ -33404,18 +33465,23 @@ var notBulma = (function (exports) {
 	 * the thirteen-digit EAN-13, while the
 	 * less commonly used 8-digit EAN-8 barcode was
 	 * introduced for use on small packages.
+	 * Also EAN/UCC-14 is used for Grouping of individual
+	 * trade items above unit level(Intermediate, Carton or Pallet).
+	 * For more info about EAN-14 checkout: https://www.gtin.info/itf-14-barcodes/
 	 * EAN consists of:
 	 * GS1 prefix, manufacturer code, product code and check digit
 	 * Reference: https://en.wikipedia.org/wiki/International_Article_Number
+	 * Reference: https://www.gtin.info/
 	 */
 
 	/**
-	 * Define EAN Lenghts; 8 for EAN-8; 13 for EAN-13
-	 * and Regular Expression for valid EANs (EAN-8, EAN-13),
-	 * with exact numberic matching of 8 or 13 digits [0-9]
+	 * Define EAN Lenghts; 8 for EAN-8; 13 for EAN-13; 14 for EAN-14
+	 * and Regular Expression for valid EANs (EAN-8, EAN-13, EAN-14),
+	 * with exact numberic matching of 8 or 13 or 14 digits [0-9]
 	 */
 	var LENGTH_EAN_8 = 8;
-	var validEanRegex = /^(\d{8}|\d{13})$/;
+	var LENGTH_EAN_14 = 14;
+	var validEanRegex = /^(\d{8}|\d{13}|\d{14})$/;
 	/**
 	 * Get position weight given:
 	 * EAN length and digit index/position
@@ -33426,7 +33492,7 @@ var notBulma = (function (exports) {
 	 */
 
 	function getPositionWeightThroughLengthAndIndex(length, index) {
-	  if (length === LENGTH_EAN_8) {
+	  if (length === LENGTH_EAN_8 || length === LENGTH_EAN_14) {
 	    return index % 2 === 0 ? 3 : 1;
 	  }
 
@@ -33452,7 +33518,7 @@ var notBulma = (function (exports) {
 	}
 	/**
 	 * Check if string is valid EAN:
-	 * Matches EAN-8/EAN-13 regex
+	 * Matches EAN-8/EAN-13/EAN-14 regex
 	 * Has valid check digit.
 	 *
 	 * @param {string} str
@@ -33483,7 +33549,12 @@ var notBulma = (function (exports) {
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var isin = /^[A-Z]{2}[0-9A-Z]{9}[0-9]$/;
+	var isin = /^[A-Z]{2}[0-9A-Z]{9}[0-9]$/; // this link details how the check digit is calculated:
+	// https://www.isin.org/isin-format/. it is a little bit
+	// odd in that it works with digits, not numbers. in order
+	// to make only one pass through the ISIN characters, the
+	// each alpha character is handled as 2 characters within
+	// the loop.
 
 	function isISIN(str) {
 	  (0, _assertString.default)(str);
@@ -33492,34 +33563,50 @@ var notBulma = (function (exports) {
 	    return false;
 	  }
 
-	  var checksumStr = str.replace(/[A-Z]/g, function (character) {
-	    return parseInt(character, 36);
-	  });
-	  var sum = 0;
-	  var digit;
-	  var tmpNum;
-	  var shouldDouble = true;
+	  var double = true;
+	  var sum = 0; // convert values
 
-	  for (var i = checksumStr.length - 2; i >= 0; i--) {
-	    digit = checksumStr.substring(i, i + 1);
-	    tmpNum = parseInt(digit, 10);
+	  for (var i = str.length - 2; i >= 0; i--) {
+	    if (str[i] >= 'A' && str[i] <= 'Z') {
+	      var value = str[i].charCodeAt(0) - 55;
+	      var lo = value % 10;
+	      var hi = Math.trunc(value / 10); // letters have two digits, so handle the low order
+	      // and high order digits separately.
 
-	    if (shouldDouble) {
-	      tmpNum *= 2;
+	      for (var _i = 0, _arr = [lo, hi]; _i < _arr.length; _i++) {
+	        var digit = _arr[_i];
 
-	      if (tmpNum >= 10) {
-	        sum += tmpNum + 1;
-	      } else {
-	        sum += tmpNum;
+	        if (double) {
+	          if (digit >= 5) {
+	            sum += 1 + (digit - 5) * 2;
+	          } else {
+	            sum += digit * 2;
+	          }
+	        } else {
+	          sum += digit;
+	        }
+
+	        double = !double;
 	      }
 	    } else {
-	      sum += tmpNum;
-	    }
+	      var _digit = str[i].charCodeAt(0) - '0'.charCodeAt(0);
 
-	    shouldDouble = !shouldDouble;
+	      if (double) {
+	        if (_digit >= 5) {
+	          sum += 1 + (_digit - 5) * 2;
+	        } else {
+	          sum += _digit * 2;
+	        }
+	      } else {
+	        sum += _digit;
+	      }
+
+	      double = !double;
+	    }
 	  }
 
-	  return parseInt(str.substr(str.length - 1), 10) === (10000 - sum) % 10;
+	  var check = Math.trunc((sum + 9) / 10) * 10 - sum;
+	  return +str[str.length - 1] === check;
 	}
 
 	module.exports = exports.default;
@@ -34130,7 +34217,7 @@ var notBulma = (function (exports) {
 	    checksum += digits[i] * Math.pow(2, 8 - i);
 	  }
 
-	  return checksum % 11 === digits[8];
+	  return checksum % 11 % 10 === digits[8];
 	}
 	/*
 	 * en-GB validation function (should go here if needed)
@@ -34842,6 +34929,98 @@ var notBulma = (function (exports) {
 	  return checksum === parseInt(tin[10], 10);
 	}
 	/*
+	* pt-BR validation function
+	* (Cadastro de Pessoas Físicas (CPF, persons)
+	* Cadastro Nacional de Pessoas Jurídicas (CNPJ, entities)
+	* Both inputs will be validated
+	*/
+
+
+	function ptBrCheck(tin) {
+	  tin = tin.replace(/[^\d]+/g, '');
+	  if (tin === '') return false;
+
+	  if (tin.length === 11) {
+	    var _sum;
+
+	    var ramainder;
+	    _sum = 0;
+	    tin = tin.replace(/[^\d]+/g, '');
+	    if ( // Reject known invalid CPFs
+	    tin === '11111111111' || tin === '22222222222' || tin === '33333333333' || tin === '44444444444' || tin === '55555555555' || tin === '66666666666' || tin === '77777777777' || tin === '88888888888' || tin === '99999999999' || tin === '00000000000') return false;
+
+	    for (var i = 1; i <= 9; i++) {
+	      _sum += parseInt(tin.substring(i - 1, i), 10) * (11 - i);
+	    }
+
+	    ramainder = _sum * 10 % 11;
+	    if (ramainder === 10 || ramainder === 11) ramainder = 0;
+	    if (ramainder !== parseInt(tin.substring(9, 10), 10)) return false;
+	    _sum = 0;
+
+	    for (var _i8 = 1; _i8 <= 10; _i8++) {
+	      _sum += parseInt(tin.substring(_i8 - 1, _i8), 10) * (12 - _i8);
+	    }
+
+	    ramainder = _sum * 10 % 11;
+	    if (ramainder === 10 || ramainder === 11) ramainder = 0;
+	    if (ramainder !== parseInt(tin.substring(10, 11), 10)) return false;
+	    return true;
+	  }
+
+	  if (tin.length !== 14) {
+	    return false;
+	  }
+
+	  if ( // Reject know invalid CNPJs
+	  tin === '00000000000000' || tin === '11111111111111' || tin === '22222222222222' || tin === '33333333333333' || tin === '44444444444444' || tin === '55555555555555' || tin === '66666666666666' || tin === '77777777777777' || tin === '88888888888888' || tin === '99999999999999') {
+	    return false;
+	  }
+
+	  var length = tin.length - 2;
+	  var identifiers = tin.substring(0, length);
+	  var verificators = tin.substring(length);
+	  var sum = 0;
+	  var pos = length - 7;
+
+	  for (var _i9 = length; _i9 >= 1; _i9--) {
+	    sum += identifiers.charAt(length - _i9) * pos;
+	    pos -= 1;
+
+	    if (pos < 2) {
+	      pos = 9;
+	    }
+	  }
+
+	  var result = sum % 11 < 2 ? 0 : 11 - sum % 11;
+
+	  if (result !== parseInt(verificators.charAt(0), 10)) {
+	    return false;
+	  }
+
+	  length += 1;
+	  identifiers = tin.substring(0, length);
+	  sum = 0;
+	  pos = length - 7;
+
+	  for (var _i10 = length; _i10 >= 1; _i10--) {
+	    sum += identifiers.charAt(length - _i10) * pos;
+	    pos -= 1;
+
+	    if (pos < 2) {
+	      pos = 9;
+	    }
+	  }
+
+	  result = sum % 11 < 2 ? 0 : 11 - sum % 11;
+
+	  if (result !== parseInt(verificators.charAt(1), 10)) {
+	    return false;
+	  }
+
+	  return true;
+	}
+	/*
 	 * pt-PT validation function
 	 * (Número de identificação fiscal (NIF), persons/entities)
 	 * Verify TIN validity by calculating check (last) digit (variant of MOD 11)
@@ -35097,6 +35276,7 @@ var notBulma = (function (exports) {
 	  'mt-MT': /^\d{3,7}[APMGLHBZ]$|^([1-8])\1\d{7}$/i,
 	  'nl-NL': /^\d{9}$/,
 	  'pl-PL': /^\d{10,11}$/,
+	  'pt-BR': /^\d{11,14}$/,
 	  'pt-PT': /^\d{9}$/,
 	  'ro-RO': /^\d{13}$/,
 	  'sk-SK': /^\d{6}\/{0,1}\d{3,4}$/,
@@ -35131,6 +35311,7 @@ var notBulma = (function (exports) {
 	  'mt-MT': mtMtCheck,
 	  'nl-NL': nlNlCheck,
 	  'pl-PL': plPlCheck,
+	  'pt-BR': ptBrCheck,
 	  'pt-PT': ptPtCheck,
 	  'ro-RO': roRoCheck,
 	  'sk-SK': skSkCheck,
@@ -35214,6 +35395,7 @@ var notBulma = (function (exports) {
 	  'ar-KW': /^(\+?965)[569]\d{7}$/,
 	  'ar-LY': /^((\+?218)|0)?(9[1-6]\d{7}|[1-8]\d{7,9})$/,
 	  'ar-MA': /^(?:(?:\+|00)212|0)[5-7]\d{8}$/,
+	  'ar-OM': /^((\+|00)968)?(9[1-9])\d{6}$/,
 	  'ar-SA': /^(!?(\+?966)|0)?5\d{8}$/,
 	  'ar-SY': /^(!?(\+?963)|0)?9\d{8}$/,
 	  'ar-TN': /^(\+?216)?[2459]\d{7}$/,
@@ -35227,13 +35409,13 @@ var notBulma = (function (exports) {
 	  'da-DK': /^(\+?45)?\s?\d{2}\s?\d{2}\s?\d{2}\s?\d{2}$/,
 	  'de-DE': /^(\+49)?0?[1|3]([0|5][0-45-9]\d|6([23]|0\d?)|7([0-57-9]|6\d))\d{7}$/,
 	  'de-AT': /^(\+43|0)\d{1,4}\d{3,12}$/,
-	  'de-CH': /^(\+41|0)(7[5-9])\d{1,7}$/,
+	  'de-CH': /^(\+41|0)([1-9])\d{1,9}$/,
 	  'de-LU': /^(\+352)?((6\d1)\d{6})$/,
 	  'el-GR': /^(\+?30|0)?(69\d{8})$/,
 	  'en-AU': /^(\+?61|0)4\d{8}$/,
 	  'en-GB': /^(\+?44|0)7\d{9}$/,
 	  'en-GG': /^(\+?44|0)1481\d{6}$/,
-	  'en-GH': /^(\+233|0)(20|50|24|54|27|57|26|56|23|28)\d{7}$/,
+	  'en-GH': /^(\+233|0)(20|50|24|54|27|57|26|56|23|28|55|59)\d{7}$/,
 	  'en-HK': /^(\+?852[-\s]?)?[456789]\d{3}[-\s]?\d{4}$/,
 	  'en-MO': /^(\+?853[-\s]?)?[6]\d{3}[-\s]?\d{4}$/,
 	  'en-IE': /^(\+?353|0)8[356789]\d{7}$/,
@@ -35246,8 +35428,8 @@ var notBulma = (function (exports) {
 	  'en-PK': /^((\+92)|(0092))-{0,1}\d{3}-{0,1}\d{7}$|^\d{11}$|^\d{4}-\d{7}$/,
 	  'en-PH': /^(09|\+639)\d{9}$/,
 	  'en-RW': /^(\+?250|0)?[7]\d{8}$/,
-	  'en-SG': /^(\+65)?[689]\d{7}$/,
-	  'en-SL': /^(?:0|94|\+94)?(7(0|1|2|5|6|7|8)( |-)?\d)\d{6}$/,
+	  'en-SG': /^(\+65)?[3689]\d{7}$/,
+	  'en-SL': /^(\+?232|0)\d{8}$/,
 	  'en-TZ': /^(\+?255|0)?[67]\d{8}$/,
 	  'en-UG': /^(\+?256|0)?[7]\d{8}$/,
 	  'en-US': /^((\+1|1)?( |-)?)?(\([2-9][0-9]{2}\)|[2-9][0-9]{2})( |-)?([2-9][0-9]{2}( |-)?[0-9]{4})$/,
@@ -35256,7 +35438,7 @@ var notBulma = (function (exports) {
 	  'en-ZW': /^(\+263)[0-9]{9}$/,
 	  'es-AR': /^\+?549(11|[2368]\d)\d{8}$/,
 	  'es-BO': /^(\+?591)?(6|7)\d{7}$/,
-	  'es-CO': /^(\+?57)?([1-8]{1}|3[0-9]{2})?[2-9]{1}\d{6}$/,
+	  'es-CO': /^(\+?57)?3(0(0|1|2|4|5)|1\d|2[0-4]|5(0|1))\d{7}$/,
 	  'es-CL': /^(\+?56|0)[2-9]\d{1}\d{7}$/,
 	  'es-CR': /^(\+506)?[2-8]\d{7}$/,
 	  'es-DO': /^(\+?1)?8[024]9\d{7}$/,
@@ -35289,7 +35471,9 @@ var notBulma = (function (exports) {
 	  'kl-GL': /^(\+?299)?\s?\d{2}\s?\d{2}\s?\d{2}$/,
 	  'ko-KR': /^((\+?82)[ \-]?)?0?1([0|1|6|7|8|9]{1})[ \-]?\d{3,4}[ \-]?\d{4}$/,
 	  'lt-LT': /^(\+370|8)\d{8}$/,
+	  'lv-LV': /^(\+?371)2\d{7}$/,
 	  'ms-MY': /^(\+?6?01){1}(([0145]{1}(\-|\s)?\d{7,8})|([236789]{1}(\s|\-)?\d{7}))$/,
+	  'mz-MZ': /^(\+?258)?8[234567]\d{7}$/,
 	  'nb-NO': /^(\+?47)?[49]\d{7}$/,
 	  'ne-NP': /^(\+?977)?9[78]\d{8}$/,
 	  'nl-BE': /^(\+?32|0)4?\d{8}$/,
@@ -35298,8 +35482,10 @@ var notBulma = (function (exports) {
 	  'pl-PL': /^(\+?48)? ?[5-8]\d ?\d{3} ?\d{2} ?\d{2}$/,
 	  'pt-BR': /^((\+?55\ ?[1-9]{2}\ ?)|(\+?55\ ?\([1-9]{2}\)\ ?)|(0[1-9]{2}\ ?)|(\([1-9]{2}\)\ ?)|([1-9]{2}\ ?))((\d{4}\-?\d{4})|(9[2-9]{1}\d{3}\-?\d{4}))$/,
 	  'pt-PT': /^(\+?351)?9[1236]\d{7}$/,
+	  'pt-AO': /^(\+244)\d{9}$/,
 	  'ro-RO': /^(\+?4?0)\s?7\d{2}(\/|\s|\.|\-)?\d{3}(\s|\.|\-)?\d{3}$/,
 	  'ru-RU': /^(\+?7|8)?9\d{9}$/,
+	  'si-LK': /^(?:0|94|\+94)?(7(0|1|2|5|6|7|8)( |-)?\d)\d{6}$/,
 	  'sl-SI': /^(\+386\s?|0)(\d{1}\s?\d{3}\s?\d{2}\s?\d{2}|\d{2}\s?\d{3}\s?\d{3})$/,
 	  'sk-SK': /^(\+?421)? ?[1-9][0-9]{2} ?[0-9]{3} ?[0-9]{3}$/,
 	  'sq-AL': /^(\+355|0)6[789]\d{6}$/,
@@ -35309,8 +35495,8 @@ var notBulma = (function (exports) {
 	  'tr-TR': /^(\+?90|0)?5\d{9}$/,
 	  'uk-UA': /^(\+?38|8)?0\d{9}$/,
 	  'uz-UZ': /^(\+?998)?(6[125-79]|7[1-69]|88|9\d)\d{7}$/,
-	  'vi-VN': /^(\+?84|0)((3([2-9]))|(5([2689]))|(7([0|6-9]))|(8([1-6|89]))|(9([0-9])))([0-9]{7})$/,
-	  'zh-CN': /^((\+|00)86)?1([3568][0-9]|4[579]|6[67]|7[01235678]|9[012356789])[0-9]{8}$/,
+	  'vi-VN': /^(\+?84|0)((3([2-9]))|(5([2689]))|(7([0|6-9]))|(8([1-9]))|(9([0-9])))([0-9]{7})$/,
+	  'zh-CN': /^((\+|00)86)?1([3456789][0-9]|4[579]|6[67]|7[01235678]|9[012356789])[0-9]{8}$/,
 	  'zh-TW': /^(\+?886\-?|0)?9\d{8}$/
 	};
 	/* eslint-enable max-len */
@@ -35322,6 +35508,8 @@ var notBulma = (function (exports) {
 	phones['zh-HK'] = phones['en-HK'];
 	phones['zh-MO'] = phones['en-MO'];
 	phones['ga-IE'] = phones['en-IE'];
+	phones['fr-CH'] = phones['de-CH'];
+	phones['it-CH'] = phones['fr-CH'];
 
 	function isMobilePhone(str, locale, options) {
 	  (0, _assertString.default)(str);
@@ -35502,11 +35690,17 @@ var notBulma = (function (exports) {
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	// supports Bech32 addresses
-	var btc = /^(bc1|[13])[a-zA-HJ-NP-Z0-9]{25,39}$/;
+	var bech32 = /^(bc1)[a-z0-9]{25,39}$/;
+	var base58 = /^(1|3)[A-HJ-NP-Za-km-z1-9]{25,39}$/;
 
 	function isBtcAddress(str) {
-	  (0, _assertString.default)(str);
-	  return btc.test(str);
+	  (0, _assertString.default)(str); // check for bech32
+
+	  if (str.startsWith('bc1')) {
+	    return bech32.test(str);
+	  }
+
+	  return base58.test(str);
 	}
 
 	module.exports = exports.default;
@@ -35614,33 +35808,6 @@ var notBulma = (function (exports) {
 	});
 
 	unwrapExports(isRFC3339_1);
-
-	var isISO31661Alpha2_1 = createCommonjsModule(function (module, exports) {
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.default = isISO31661Alpha2;
-
-	var _assertString = _interopRequireDefault(assertString_1);
-
-	var _includes = _interopRequireDefault(includes_1);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	// from https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
-	var validISO31661Alpha2CountriesCodes = ['AD', 'AE', 'AF', 'AG', 'AI', 'AL', 'AM', 'AO', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AW', 'AX', 'AZ', 'BA', 'BB', 'BD', 'BE', 'BF', 'BG', 'BH', 'BI', 'BJ', 'BL', 'BM', 'BN', 'BO', 'BQ', 'BR', 'BS', 'BT', 'BV', 'BW', 'BY', 'BZ', 'CA', 'CC', 'CD', 'CF', 'CG', 'CH', 'CI', 'CK', 'CL', 'CM', 'CN', 'CO', 'CR', 'CU', 'CV', 'CW', 'CX', 'CY', 'CZ', 'DE', 'DJ', 'DK', 'DM', 'DO', 'DZ', 'EC', 'EE', 'EG', 'EH', 'ER', 'ES', 'ET', 'FI', 'FJ', 'FK', 'FM', 'FO', 'FR', 'GA', 'GB', 'GD', 'GE', 'GF', 'GG', 'GH', 'GI', 'GL', 'GM', 'GN', 'GP', 'GQ', 'GR', 'GS', 'GT', 'GU', 'GW', 'GY', 'HK', 'HM', 'HN', 'HR', 'HT', 'HU', 'ID', 'IE', 'IL', 'IM', 'IN', 'IO', 'IQ', 'IR', 'IS', 'IT', 'JE', 'JM', 'JO', 'JP', 'KE', 'KG', 'KH', 'KI', 'KM', 'KN', 'KP', 'KR', 'KW', 'KY', 'KZ', 'LA', 'LB', 'LC', 'LI', 'LK', 'LR', 'LS', 'LT', 'LU', 'LV', 'LY', 'MA', 'MC', 'MD', 'ME', 'MF', 'MG', 'MH', 'MK', 'ML', 'MM', 'MN', 'MO', 'MP', 'MQ', 'MR', 'MS', 'MT', 'MU', 'MV', 'MW', 'MX', 'MY', 'MZ', 'NA', 'NC', 'NE', 'NF', 'NG', 'NI', 'NL', 'NO', 'NP', 'NR', 'NU', 'NZ', 'OM', 'PA', 'PE', 'PF', 'PG', 'PH', 'PK', 'PL', 'PM', 'PN', 'PR', 'PS', 'PT', 'PW', 'PY', 'QA', 'RE', 'RO', 'RS', 'RU', 'RW', 'SA', 'SB', 'SC', 'SD', 'SE', 'SG', 'SH', 'SI', 'SJ', 'SK', 'SL', 'SM', 'SN', 'SO', 'SR', 'SS', 'ST', 'SV', 'SX', 'SY', 'SZ', 'TC', 'TD', 'TF', 'TG', 'TH', 'TJ', 'TK', 'TL', 'TM', 'TN', 'TO', 'TR', 'TT', 'TV', 'TW', 'TZ', 'UA', 'UG', 'UM', 'US', 'UY', 'UZ', 'VA', 'VC', 'VE', 'VG', 'VI', 'VN', 'VU', 'WF', 'WS', 'YE', 'YT', 'ZA', 'ZM', 'ZW'];
-
-	function isISO31661Alpha2(str) {
-	  (0, _assertString.default)(str);
-	  return (0, _includes.default)(validISO31661Alpha2CountriesCodes, str.toUpperCase());
-	}
-
-	module.exports = exports.default;
-	module.exports.default = exports.default;
-	});
-
-	unwrapExports(isISO31661Alpha2_1);
 
 	var isISO31661Alpha3_1 = createCommonjsModule(function (module, exports) {
 
@@ -35766,7 +35933,7 @@ var notBulma = (function (exports) {
 	  }
 
 	  for (var i = 0; i < attributes.length; i++) {
-	    if (i === attributes.length - 1 && attributes[i].toLowerCase() === 'base64') ; else if (!validAttribute.test(attributes[i])) {
+	    if (!(i === attributes.length - 1 && attributes[i].toLowerCase() === 'base64') && !validAttribute.test(attributes[i])) {
 	      return false;
 	    }
 	  }
@@ -35950,7 +36117,7 @@ var notBulma = (function (exports) {
 	  HT: /^HT\d{4}$/,
 	  HU: fourDigit,
 	  ID: fiveDigit,
-	  IE: /^(?!.*(?:o))[A-z]\d[\dw]\s\w{4}$/i,
+	  IE: /^(?!.*(?:o))[A-Za-z]\d[\dw]\s\w{4}$/i,
 	  IL: /^(\d{5}|\d{7})$/,
 	  IN: /^((?!10|29|35|54|55|65|66|86|87|88|89)[1-9][0-9]{5})$/,
 	  IR: /\b(?!(\d)\1{3})[13-9]{4}[1346-9][013-9]{5}\b/,
@@ -35958,6 +36125,7 @@ var notBulma = (function (exports) {
 	  IT: fiveDigit,
 	  JP: /^\d{3}\-\d{4}$/,
 	  KE: fiveDigit,
+	  KR: /^(\d{5}|\d{6})$/,
 	  LI: /^(948[5-9]|949[0-7])$/,
 	  LT: /^LT\-\d{5}$/,
 	  LU: fourDigit,
@@ -36056,7 +36224,7 @@ var notBulma = (function (exports) {
 	function rtrim(str, chars) {
 	  (0, _assertString.default)(str); // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#Escaping
 
-	  var pattern = chars ? new RegExp("[".concat(chars.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), "]+$"), 'g') : /\s+$/g;
+	  var pattern = chars ? new RegExp("[".concat(chars.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), "]+$"), 'g') : /(\s)+$/g;
 	  return str.replace(pattern, '');
 	}
 
@@ -36397,7 +36565,7 @@ var notBulma = (function (exports) {
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var charsetRegex = /^[^\s-_](?!.*?[-_]{2,})([a-z0-9-\\]{1,})[^\s]*[^-_\s]$/;
+	var charsetRegex = /^[^\s-_](?!.*?[-_]{2,})[a-z0-9-\\][^\s]*[^-_\s]$/;
 
 	function isSlug(str) {
 	  (0, _assertString.default)(str);
@@ -36409,6 +36577,62 @@ var notBulma = (function (exports) {
 	});
 
 	unwrapExports(isSlug_1);
+
+	var isLicensePlate_1 = createCommonjsModule(function (module, exports) {
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = isLicensePlate;
+
+	var _assertString = _interopRequireDefault(assertString_1);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var validators = {
+	  'de-DE': function deDE(str) {
+	    return /^((AW|UL|AK|GA|AÖ|LF|AZ|AM|AS|ZE|AN|AB|A|KG|KH|BA|EW|BZ|HY|KM|BT|HP|B|BC|BI|BO|FN|TT|ÜB|BN|AH|BS|FR|HB|ZZ|BB|BK|BÖ|OC|OK|CW|CE|C|CO|LH|CB|KW|LC|LN|DA|DI|DE|DH|SY|NÖ|DO|DD|DU|DN|D|EI|EA|EE|FI|EM|EL|EN|PF|ED|EF|ER|AU|ZP|E|ES|NT|EU|FL|FO|FT|FF|F|FS|FD|FÜ|GE|G|GI|GF|GS|ZR|GG|GP|GR|NY|ZI|GÖ|GZ|GT|HA|HH|HM|HU|WL|HZ|WR|RN|HK|HD|HN|HS|GK|HE|HF|RZ|HI|HG|HO|HX|IK|IL|IN|J|JL|KL|KA|KS|KF|KE|KI|KT|KO|KN|KR|KC|KU|K|LD|LL|LA|L|OP|LM|LI|LB|LU|LÖ|HL|LG|MD|GN|MZ|MA|ML|MR|MY|AT|DM|MC|NZ|RM|RG|MM|ME|MB|MI|FG|DL|HC|MW|RL|MK|MG|MÜ|WS|MH|M|MS|NU|NB|ND|NM|NK|NW|NR|NI|NF|DZ|EB|OZ|TG|TO|N|OA|GM|OB|CA|EH|FW|OF|OL|OE|OG|BH|LR|OS|AA|GD|OH|KY|NP|WK|PB|PA|PE|PI|PS|P|PM|PR|RA|RV|RE|R|H|SB|WN|RS|RD|RT|BM|NE|GV|RP|SU|GL|RO|GÜ|RH|EG|RW|PN|SK|MQ|RU|SZ|RI|SL|SM|SC|HR|FZ|VS|SW|SN|CR|SE|SI|SO|LP|SG|NH|SP|IZ|ST|BF|TE|HV|OD|SR|S|AC|DW|ZW|TF|TS|TR|TÜ|UM|PZ|TP|UE|UN|UH|MN|KK|VB|V|AE|PL|RC|VG|GW|PW|VR|VK|KB|WA|WT|BE|WM|WE|AP|MO|WW|FB|WZ|WI|WB|JE|WF|WO|W|WÜ|BL|Z|GC)[- ]?[A-Z]{1,2}[- ]?\d{1,4}|(AIC|FDB|ABG|SLN|SAW|KLZ|BUL|ESB|NAB|SUL|WST|ABI|AZE|BTF|KÖT|DKB|FEU|ROT|ALZ|SMÜ|WER|AUR|NOR|DÜW|BRK|HAB|TÖL|WOR|BAD|BAR|BER|BIW|EBS|KEM|MÜB|PEG|BGL|BGD|REI|WIL|BKS|BIR|WAT|BOR|BOH|BOT|BRB|BLK|HHM|NEB|NMB|WSF|LEO|HDL|WMS|WZL|BÜS|CHA|KÖZ|ROD|WÜM|CLP|NEC|COC|ZEL|COE|CUX|DAH|LDS|DEG|DEL|RSL|DLG|DGF|LAN|HEI|MED|DON|KIB|ROK|JÜL|MON|SLE|EBE|EIC|HIG|WBS|BIT|PRÜ|LIB|EMD|WIT|ERH|HÖS|ERZ|ANA|ASZ|MAB|MEK|STL|SZB|FDS|HCH|HOR|WOL|FRG|GRA|WOS|FRI|FFB|GAP|GER|BRL|CLZ|GTH|NOH|HGW|GRZ|LÖB|NOL|WSW|DUD|HMÜ|OHA|KRU|HAL|HAM|HBS|QLB|HVL|NAU|HAS|EBN|GEO|HOH|HDH|ERK|HER|WAN|HEF|ROF|HBN|ALF|HSK|USI|NAI|REH|SAN|KÜN|ÖHR|HOL|WAR|ARN|BRG|GNT|HOG|WOH|KEH|MAI|PAR|RID|ROL|KLE|GEL|KUS|KYF|ART|SDH|LDK|DIL|MAL|VIB|LER|BNA|GHA|GRM|MTL|WUR|LEV|LIF|STE|WEL|LIP|VAI|LUP|HGN|LBZ|LWL|PCH|STB|DAN|MKK|SLÜ|MSP|TBB|MGH|MTK|BIN|MSH|EIL|HET|SGH|BID|MYK|MSE|MST|MÜR|WRN|MEI|GRH|RIE|MZG|MIL|OBB|BED|FLÖ|MOL|FRW|SEE|SRB|AIB|MOS|BCH|ILL|SOB|NMS|NEA|SEF|UFF|NEW|VOH|NDH|TDO|NWM|GDB|GVM|WIS|NOM|EIN|GAN|LAU|HEB|OHV|OSL|SFB|ERB|LOS|BSK|KEL|BSB|MEL|WTL|OAL|FÜS|MOD|OHZ|OPR|BÜR|PAF|PLÖ|CAS|GLA|REG|VIT|ECK|SIM|GOA|EMS|DIZ|GOH|RÜD|SWA|NES|KÖN|MET|LRO|BÜZ|DBR|ROS|TET|HRO|ROW|BRV|HIP|PAN|GRI|SHK|EIS|SRO|SOK|LBS|SCZ|MER|QFT|SLF|SLS|HOM|SLK|ASL|BBG|SBK|SFT|SHG|MGN|MEG|ZIG|SAD|NEN|OVI|SHA|BLB|SIG|SON|SPN|FOR|GUB|SPB|IGB|WND|STD|STA|SDL|OBG|HST|BOG|SHL|PIR|FTL|SEB|SÖM|SÜW|TIR|SAB|TUT|ANG|SDT|LÜN|LSZ|MHL|VEC|VER|VIE|OVL|ANK|OVP|SBG|UEM|UER|WLG|GMN|NVP|RDG|RÜG|DAU|FKB|WAF|WAK|SLZ|WEN|SOG|APD|WUG|GUN|ESW|WIZ|WES|DIN|BRA|BÜD|WHV|HWI|GHC|WTM|WOB|WUN|MAK|SEL|OCH|HOT|WDA)[- ]?(([A-Z][- ]?\d{1,4})|([A-Z]{2}[- ]?\d{1,3})))[- ]?(E|H)?$/.test(str);
+	  },
+	  'de-LI': function deLI(str) {
+	    return /^FL[- ]?\d{1,5}[UZ]?$/.test(str);
+	  },
+	  'pt-PT': function ptPT(str) {
+	    return /^([A-Z]{2}|[0-9]{2})[ -·]?([A-Z]{2}|[0-9]{2})[ -·]?([A-Z]{2}|[0-9]{2})$/.test(str);
+	  },
+	  'sq-AL': function sqAL(str) {
+	    return /^[A-Z]{2}[- ]?((\d{3}[- ]?(([A-Z]{2})|T))|(R[- ]?\d{3}))$/.test(str);
+	  },
+	  'pt-BR': function ptBR(str) {
+	    return /^[A-Z]{3}[ -]?[0-9][A-Z][0-9]{2}|[A-Z]{3}[ -]?[0-9]{4}$/.test(str);
+	  }
+	};
+
+	function isLicensePlate(str, locale) {
+	  (0, _assertString.default)(str);
+
+	  if (locale in validators) {
+	    return validators[locale](str);
+	  } else if (locale === 'any') {
+	    for (var key in validators) {
+	      /* eslint guard-for-in: 0 */
+	      var validator = validators[key];
+
+	      if (validator(str)) {
+	        return true;
+	      }
+	    }
+
+	    return false;
+	  }
+
+	  throw new Error("Invalid locale '".concat(locale, "'"));
+	}
+
+	module.exports = exports.default;
+	module.exports.default = exports.default;
+	});
+
+	unwrapExports(isLicensePlate_1);
 
 	var isStrongPassword_1 = createCommonjsModule(function (module, exports) {
 
@@ -36426,7 +36650,7 @@ var notBulma = (function (exports) {
 	var upperCaseRegex = /^[A-Z]$/;
 	var lowerCaseRegex = /^[a-z]$/;
 	var numberRegex = /^[0-9]$/;
-	var symbolRegex = /^[-#!$%^&*()_+|~=`{}\[\]:";'<>?,.\/ ]$/;
+	var symbolRegex = /^[-#!$@%^&*()_+|~=`{}\[\]:";'<>?,.\/ ]$/;
 	var defaultOptions = {
 	  minLength: 8,
 	  minLowercase: 1,
@@ -36472,6 +36696,7 @@ var notBulma = (function (exports) {
 	    symbolCount: 0
 	  };
 	  Object.keys(charMap).forEach(function (char) {
+	    /* istanbul ignore else */
 	    if (upperCaseRegex.test(char)) {
 	      analysis.uppercaseCount += charMap[char];
 	    } else if (lowerCaseRegex.test(char)) {
@@ -36541,7 +36766,8 @@ var notBulma = (function (exports) {
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var vatMatchers = {
-	  GB: /^GB((\d{3} \d{4} ([0-8][0-9]|9[0-6]))|(\d{9} \d{3})|(((GD[0-4])|(HA[5-9]))[0-9]{2}))$/
+	  GB: /^GB((\d{3} \d{4} ([0-8][0-9]|9[0-6]))|(\d{9} \d{3})|(((GD[0-4])|(HA[5-9]))[0-9]{2}))$/,
+	  IT: /^(IT)?[0-9]{11}$/
 	};
 	exports.vatMatchers = vatMatchers;
 
@@ -36747,6 +36973,8 @@ var notBulma = (function (exports) {
 
 	var _isSlug = _interopRequireDefault(isSlug_1);
 
+	var _isLicensePlate = _interopRequireDefault(isLicensePlate_1);
+
 	var _isStrongPassword = _interopRequireDefault(isStrongPassword_1);
 
 	var _isVAT = _interopRequireDefault(isVAT_1);
@@ -36757,7 +36985,7 @@ var notBulma = (function (exports) {
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var version = '13.5.2';
+	var version = '13.6.0';
 	var validator = {
 	  version: version,
 	  toDate: _toDate.default,
@@ -36856,6 +37084,7 @@ var notBulma = (function (exports) {
 	  isStrongPassword: _isStrongPassword.default,
 	  isTaxID: _isTaxID.default,
 	  isDate: _isDate.default,
+	  isLicensePlate: _isLicensePlate.default,
 	  isVAT: _isVAT.default
 	};
 	var _default = validator;

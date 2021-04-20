@@ -2,6 +2,7 @@ const
   ENV = 'test',
   express = require('express'),
   expressSession = require('express-session'),
+  MongoDBStore = require('connect-mongodb-session')(expressSession),
   methodOverride = require('method-override'),
   serveStatic = require('serve-static'),
   http = require('http'),
@@ -14,17 +15,18 @@ const
   notNode = require('not-node'),
   notAppConstructor = notNode.notApp,
   notErrorReporter = require('not-error').notErrorReporter,
-  log = require('not-log')(module),
+  log = require('not-log')(module, 'test:app'),
   notWSServer = require('not-ws').notWSServer,
   notWSRouter = require('not-ws').notWSRouter,
   notWSMessenger = require('not-ws').notWSMessenger,
   jwt = require('jsonwebtoken'),
-  config = require('not-config').reader;
+  config = require('not-config').createReader();
 
 var expressApp,
   notApp,
   WSServer,
-  WSClient;
+  WSClient,
+  mongoURI;
 
 let initServerEnv = function() {
   log.info('Setting up server environment variables...');
@@ -86,6 +88,7 @@ let initMongoose = function(input) {
   return mongoServer
     .getConnectionString()
     .then((mongoUri) => {
+      mongoURI = mongoUri;
       log.info('Setting up mongoose connection... ' + mongoUri);
       mongoose.Promise = global.Promise;
       return mongoose.connect(mongoUri);
@@ -108,15 +111,14 @@ let initTemplateEngine = function(input = {
 
 let initUserSessions = function() {
   log.info('Setting up user sessions handler...');
-  var MongoStore = require('connect-mongo')(expressSession);
   expressApp.use(expressSession({
     secret: config.get('session:secret'),
     key: config.get('session:key'),
     cookie: config.get('session:cookie'),
     resave: false,
     saveUninitialized: true,
-    store: new MongoStore({
-      mongooseConnection: mongoose.connection
+    store:  new MongoDBStore({
+     uri:mongoURI
     })
   }));
 
