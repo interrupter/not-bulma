@@ -8,7 +8,8 @@ const OPT_DEFAULT_INDEX_FIELD_NAME_PRIORITY = ['_id', 'id', 'ID'],
   DEFAULT_RETURN = {},
   DEFAULT_PAGE_NUMBER = 0,
   DEFAULT_PAGE_SIZE = 10,
-  DEFAULT_ACTION_PREFIX = '$';
+  DEFAULT_ACTION_PREFIX = '$',
+  DEFAULT_WS_ROUTE_ACTION_SPLITTER = '//';
 
 class notInterface extends notBase {
   constructor(manifest, options) {
@@ -186,7 +187,7 @@ class notInterface extends notBase {
 
   getWSRequestName(actionName) {
     const modelName = this.manifest.model;
-    return `${modelName}.${actionName}`;
+    return `${modelName}${DEFAULT_WS_ROUTE_ACTION_SPLITTER}${actionName}`;
   }
 
   encodeRequest(data) {
