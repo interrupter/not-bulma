@@ -149,16 +149,21 @@ export default class notCommon {
     return typeof(func) === 'function';
   }
 
+
+  static isClass(fn){
+     return /^\s*class/.test(fn.toString());
+  }
+
   static detectType(testie){
-    if(typeof testie !== 'function'){
-      return typeof testie;
-    }else{
-      if(Object.getOwnPropertyNames(testie).includes('arguments')){
-        return 'function';
-      }else{
-        return 'class';
-      }
+    if (typeof testie !== 'function') {
+    return typeof testie;
+  } else {
+    if (this.isClass(testie)) {
+      return 'class';
+    } else {
+      return 'function';
     }
+  }
   }
 
   //Проверка является ли переменная массивом
