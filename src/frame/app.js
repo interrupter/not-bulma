@@ -154,6 +154,10 @@ export default class notApp extends notBase {
     return this.getInterface(name)(data);
   }
 
+  setService(name, val){
+    return this.setWorking(`services.${name}`, val);
+  }
+
   getService(name){
     return this.getWorking(`services.${name}`);
   }
@@ -166,10 +170,10 @@ export default class notApp extends notBase {
           const servType = notCommon.detectType(serv);
           switch(servType){
             case 'class':
-              this.setWorking(`service.${servName}`, new serv(this));
+              this.setService(servName, new serv(this));
               break;
             default:
-              this.setWorking(`service.${servName}`, serv);
+              this.setService(servName, serv);
           }
         }catch(e){
           this.error(`Service (${servName}) init error`, e);
