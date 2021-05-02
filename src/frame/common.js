@@ -149,6 +149,18 @@ export default class notCommon {
     return typeof(func) === 'function';
   }
 
+  static detectType(testie){
+    if(typeof testie !== 'function'){
+      return typeof testie;
+    }else{
+      if(Object.getOwnPropertyNames(testie).includes('arguments')){
+        return 'function';
+      }else{
+        return 'class';
+      }
+    }
+  }
+
   //Проверка является ли переменная массивом
   static isArray(data) {
     return (typeof data == "object") && (data instanceof Array);

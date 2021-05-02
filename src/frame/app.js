@@ -77,6 +77,7 @@ export default class notApp extends notBase {
   }
 
   startApp() {
+    this.initServices();
     //создать контроллеры
     //роутер и привязать к нему контроллеры
     this.execRouter();
@@ -155,6 +156,26 @@ export default class notApp extends notBase {
 
   getService(name){
     return this.getWorking(`services.${name}`);
+  }
+
+  initServices(){
+    if (this.getOptions('services')){
+      for (let servName in this.getOptions('services')){
+        try{
+          let serv = this.getOptions(`services.${servName}`);
+          const servType = notCommon.detectType(serv);
+          switch(servType){
+            case 'class':
+              this.setWorking(`service.${servName}`, new serv(this));
+              break;
+            default:
+              this.setWorking(`service.${servName}`, serv);
+          }
+        }catch(e){
+          this.error(`Service (${servName}) init error`, e);
+        }
+      }
+    }
   }
 
 }
