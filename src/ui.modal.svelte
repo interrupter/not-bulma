@@ -4,6 +4,7 @@
   import UIBox from './ui.box.svelte';
   import UITitle from './ui.title.svelte';
   import UIContent from './ui.content.svelte';
+  import UIButton from './ui.button.svelte';
 
   import {
     createEventDispatcher
