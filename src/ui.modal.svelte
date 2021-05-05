@@ -24,12 +24,11 @@
 
 </script>
 
-<div class="pageloader {loading?'is-active':''}"><span class="title">{WAITING_TEXT}</span></div>
-
 <UIOverlay show={true} closeOnClick={false} closeButton={false} >
   <UIBox {classes}>
       <UITitle size="2" {title} {subtitle} />
 			<UIContent>
+        <div class="pageloader {loading?'is-active':''}"><span class="title">{WAITING_TEXT}</span></div>
 				<slot></slot>
 				<div class="buttons is-grouped is-centered mt-4">
           {#if closeButton}
