@@ -4,6 +4,7 @@ import UIBox from './ui.box.svelte';
 import UIBlock from './ui.block.svelte';
 import UIContent from './ui.content.svelte';
 import UITitle from './ui.title.svelte';
+import UIModal from './ui.modal.svelte';
 
 import UIOverlay from './ui.overlay.svelte';
 import UIBreadcrumbs from './ui.breadcrumbs.svelte';
@@ -95,7 +96,7 @@ const {
 
 export {
   UISampleFilter,
-  UIBox, UIBlock, UIContent, UITitle,
+  UIBox, UIBlock, UIContent, UITitle, UIModal,
   LIB,
   UIAutocomplete,
   UIForm,
