@@ -18,6 +18,7 @@
   export let loading = false;
 	export let title = 'Modal window';
   export let subtitle = '';
+  export let classes = '';
 
   export let WAITING_TEXT = 'Обработка';
 
@@ -26,7 +27,7 @@
 <div class="pageloader {loading?'is-active':''}"><span class="title">{WAITING_TEXT}</span></div>
 
 <UIOverlay show={true} closeOnClick={false} closeButton={false} >
-  <UIBox>
+  <UIBox {classes}>
       <UITitle size="2" {title} {subtitle} />
 			<UIContent>
 				<slot></slot>
