@@ -13,10 +13,10 @@
   let dispatch = createEventDispatcher();
 
   export let closeButton = false;
-	export let applyButton = false;
-	export let show = false;
+export let applyButton = false;
+export let show = false;
   export let loading = false;
-	export let title = 'Modal window';
+export let title = 'Modal window';
   export let subtitle = '';
   export let classes = '';
 

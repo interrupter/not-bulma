@@ -121,7 +121,7 @@ deepmerge.all = function deepmergeAll(array, optionsArgument) {
 };
 
 
-export default class notCommon {
+class notCommon {
   static MANAGER = null;
   static LOG = 'console';
 
@@ -151,19 +151,19 @@ export default class notCommon {
 
 
   static isClass(fn){
-     return /^\s*class/.test(fn.toString());
+    return /^\s*class/.test(fn.toString());
   }
 
   static detectType(testie){
     if (typeof testie !== 'function') {
-    return typeof testie;
-  } else {
-    if (this.isClass(testie)) {
-      return 'class';
+      return typeof testie;
     } else {
-      return 'function';
+      if (this.isClass(testie)) {
+        return 'class';
+      } else {
+        return 'function';
+      }
     }
-  }
   }
 
   //Проверка является ли переменная массивом
@@ -326,43 +326,51 @@ export default class notCommon {
     return this.deepMerge(conf, conf2);
   }
 
-  static absorbModule(defaultConf, mod, services = {}, uis = {}) {
+  static absorbModule() {
+    let defaultConf,  //app options
+      mod,            //module options
+      targets = {};   //various collections
+    if(arguments.length == 1){
+      targets = {...arguments[0]};
+      if(Object.hasOwnProperty.call(arguments[0], 'defaultConf')){
+        defaultConf = arguments[0].defaultConf;
+        delete targets.defaultConf;
+      }
+      if(Object.hasOwnProperty.call(arguments[0], 'mod')){
+        mod = arguments[0].mod;
+        delete targets.mod;
+      }
+    }else{
+      this.log('WARNING: absorbModule format obsoleted, use object {defaultConf, mod, services, uis, wsc, etc}');
+      defaultConf = arguments[0];
+      mod = arguments[1];
+      if(arguments.length > 2){targets.services = arguments[2];}
+      if(arguments.length > 3){targets.uis = arguments[3];}
+      if(arguments.length > 4){targets.wcs = arguments[4];}
+    }
     for (let prop in mod) {
       //add manifest to other
-      switch (prop) {
-      case 'manifest':
+      if(prop === 'manifest'){
         defaultConf = this.extendAppConfig(defaultConf, mod.manifest);
-        break;
-      case 'services':
-        if (services){
-          for(let serv in mod[prop]){
-            services[serv] = mod[prop][serv];
-          }
+        continue;
+      }
+      if(typeof this.get(`absorb.${prop}`) === 'function'){
+        if(!Object.prototype.hasOwnProperty.call(targets, prop)){
+          targets[prop] = {};
+          this.log(`WARNING: no accamulator object provided for '${prop}' collection`);
         }
-        break;
-      case 'uis':
-        if (uis){
-          for(let ui in mod[prop]){
-            if(Object.prototype.hasOwnProperty.call(uis, ui)){
-              this.logError(`uis property duplication ${ui}`);
-            }
-            uis[ui] = mod[prop][ui];
-          }
+        this.get(`absorb.${prop}`)(targets[prop], mod[prop]);
+      }else if(prop.indexOf('nc') === 0){
+        if(!Object.prototype.hasOwnProperty.call(defaultConf, 'controllers')){
+          defaultConf.controllers = {};
         }
-        break;
-      default:
-        if(prop.indexOf('nc')===0){
-          if(!Object.prototype.hasOwnProperty.call(defaultConf, 'controllers')){
-            defaultConf.controllers = {};
-          }
-          defaultConf.controllers[prop] = mod[prop];
-        }else{
-          //in case of some other stuff presented, isolating it in special var
-          if(!Object.prototype.hasOwnProperty.call(window, 'notEnv')){
-            window.notEnv = {};
-          }
-          window.notEnv[prop] = mod[prop];
+        defaultConf.controllers[prop] = mod[prop];
+      }else {
+        //in case of some other stuff presented, isolating it in special var
+        if(!Object.prototype.hasOwnProperty.call(window, 'notEnv')){
+          window.notEnv = {};
         }
+        window.notEnv[prop] = mod[prop];
       }
     }
     return defaultConf;
@@ -449,5 +457,66 @@ export default class notCommon {
       });
     }
   }
-
 }
+
+function absorbServices(target, src){
+  if (target){
+    for(let serv in src){
+      if(Object.prototype.hasOwnProperty.call(target, serv)){
+        notCommon.logError(`services property duplication ${serv}`);
+      }
+      target[serv] = src[serv];
+    }
+  }
+}
+
+function extendWSClient(wcs, wscName, wscOptions){
+  if(!Object.prototype.hasOwnProperty.call(wcs, wscName)){
+    wcs[wscName] = {
+      options:    {},
+      routes:     {},
+      validators: {}
+    };
+  }
+  let target = wcs[wscName];
+  if(Object.prototype.hasOwnProperty.call(wscOptions, 'routes')){
+    for(let routeType in wscOptions.routes){
+      if(!Object.prototype.hasOwnProperty.call(target, routeType)){
+        target.routes[routeType] = {};
+      }
+      Object.assign(target.routes[routeType], {...wscOptions.routes[routeType]});
+    }
+  }
+  if(Object.prototype.hasOwnProperty.call(wscOptions, 'validators')){
+    Object.assign(target.validators, {...wscOptions.validators});
+  }
+  if(Object.prototype.hasOwnProperty.call(wscOptions, 'options')){
+    Object.assign(target.options, {...wscOptions.options});
+  }
+}
+
+function absorbWSC(target, src){
+  if (target){
+    for(let wsClientName in src){
+      extendWSClient(target, wsClientName, src[wsClientName]);
+    }
+  }
+}
+
+
+function absorbUIs(target, src){
+  if (target){
+    for(let ui in src){
+      if(Object.prototype.hasOwnProperty.call(target, ui)){
+        notCommon.logError(`uis property duplication ${ui}`);
+      }
+      target[ui] = src[ui];
+    }
+  }
+}
+
+notCommon.register('absorb.wsc', absorbWSC);
+notCommon.register('absorb.services', absorbServices);
+notCommon.register('absorb.uis', absorbUIs);
+
+export default notCommon;
