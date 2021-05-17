@@ -198,6 +198,15 @@ class notCommon {
     this.logMsg(...arguments);
   }
 
+  static createLogger(prefix){
+    return {
+      log: this.genLogMsg(prefix),
+      error: this.genLogError(prefix),
+      debug: this.genLogDebug(prefix),
+      report: this.report
+    };
+  }
+
   //Генерация метода вывода сообщений в консоль с указанием префикса.
   static genLogMsg(prefix) {
     return function(){
