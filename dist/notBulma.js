@@ -6444,6 +6444,10 @@ var notBulma = (function (exports) {
 	    Object.assign(target.validators, _objectSpread$1({}, wscOptions.validators));
 	  }
 
+	  if (Object.prototype.hasOwnProperty.call(wscOptions, 'messenger')) {
+	    Object.assign(target.messenger, _objectSpread$1({}, wscOptions.messenger));
+	  }
+
 	  if (Object.prototype.hasOwnProperty.call(wscOptions, 'options')) {
 	    Object.assign(target.options, _objectSpread$1({}, wscOptions.options));
 	  }
@@ -9227,8 +9231,7 @@ var notBulma = (function (exports) {
 	  }, {
 	    key: "startApp",
 	    value: function startApp() {
-	      this.initServices();
-	      this.initWSClients(); //создать контроллеры
+	      this.initServices(); //создать контроллеры
 	      //роутер и привязать к нему контроллеры
 
 	      this.execRouter();
@@ -9366,9 +9369,6 @@ var notBulma = (function (exports) {
 	        }
 	      }
 	    }
-	  }, {
-	    key: "initWSClients",
-	    value: function initWSClients() {}
 	  }]);
 
 	  return notApp;

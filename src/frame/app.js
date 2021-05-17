@@ -78,7 +78,6 @@ export default class notApp extends notBase {
 
   startApp() {
     this.initServices();
-    this.initWSClients();
     //создать контроллеры
     //роутер и привязать к нему контроллеры
     this.execRouter();
@@ -181,10 +180,6 @@ export default class notApp extends notBase {
         }
       }
     }
-  }
-
-  initWSClients(){
-    
   }
 
 }

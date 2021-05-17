@@ -490,6 +490,9 @@ function extendWSClient(wcs, wscName, wscOptions){
   if(Object.prototype.hasOwnProperty.call(wscOptions, 'validators')){
     Object.assign(target.validators, {...wscOptions.validators});
   }
+  if(Object.prototype.hasOwnProperty.call(wscOptions, 'messenger')){
+    Object.assign(target.messenger, {...wscOptions.messenger});
+  }
   if(Object.prototype.hasOwnProperty.call(wscOptions, 'options')){
     Object.assign(target.options, {...wscOptions.options});
   }
