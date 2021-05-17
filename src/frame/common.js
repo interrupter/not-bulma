@@ -475,6 +475,7 @@ function extendWSClient(wcs, wscName, wscOptions){
     wcs[wscName] = {
       options:    {},
       routes:     {},
+      messenger:  {},
       validators: {}
     };
   }
