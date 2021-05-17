@@ -138,11 +138,11 @@ export default class notApp extends notBase {
     return this;
   }
 
-  setWSClient(name = this.DEFAULT_WS_CLIENT_NAME, wsc){
+  setWSClient(name = DEFAULT_WS_CLIENT_NAME, wsc){
     return this.setWorking(`wsc.${name}`, wsc);
   }
 
-  getWSClient(name = this.DEFAULT_WS_CLIENT_NAME){
+  getWSClient(name = DEFAULT_WS_CLIENT_NAME){
     return this.getWorking(`wsc.${name}`);
   }
 
