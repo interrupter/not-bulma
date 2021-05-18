@@ -444,7 +444,7 @@ class notController extends notBase {
   */
   static getRoutes(){
     return {
-      paths:       this.getControllerRoutes(this.PARAMS_LENGTH),
+      paths:      this.getControllerRoutes(this.PARAMS_LENGTH),
       controller: this
     };
   }

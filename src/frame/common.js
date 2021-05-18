@@ -260,9 +260,9 @@ class notCommon {
   }
 
   static report(e) {
-    if (this.getApp() && this.getApp().getOptions('services.notErrorReporter')) {
-      let reporter = this.getApp().getOptions('services.notErrorReporter');
-      if (reporter && reporter.report) {
+    if (this.getApp()) {
+      let reporter = this.getApp().getService('nsErrorReporter');
+      if (reporter) {
         reporter.report(e).catch(this.error.bind(this));
       }
     } else {
