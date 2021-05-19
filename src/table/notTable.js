@@ -19,11 +19,11 @@ const OPT_DEFAULT_PAGE_SIZE = 20,
 
 
 const DEFAULT_OPTIONS = {
-  links:[],
-  actions:[],
+  links: [],
+  actions: [],
   endless: false,
   idField: '_id',
-  getItemId: (item)=>{
+  getItemId: (item) => {
     return item._id;
   }
 };
@@ -85,29 +85,29 @@ class notTable extends EventEmitter {
         return val;
       });
     }
-    if(Object.prototype.hasOwnProperty.call(this.options, 'filter')){
+    if (Object.prototype.hasOwnProperty.call(this.options, 'filter')) {
       this.setFilter(this.options.filter, true);
-    }else{
+    } else {
       this.resetFilter();
     }
-    if(Object.prototype.hasOwnProperty.call(this.options, 'pager')){
+    if (Object.prototype.hasOwnProperty.call(this.options, 'pager')) {
       this.setPager(this.options.pager, true);
-    }else{
+    } else {
       this.resetPager();
     }
-    if(Object.prototype.hasOwnProperty.call(this.options, 'sorter')){
+    if (Object.prototype.hasOwnProperty.call(this.options, 'sorter')) {
       this.setSorter(this.options.sorter, true);
-    }else{
+    } else {
       this.resetSorter(true);
     }
-    if(Object.prototype.hasOwnProperty.call(this.options, 'return')){
+    if (Object.prototype.hasOwnProperty.call(this.options, 'return')) {
       this.setReturn(this.options.return);
-    }else{
+    } else {
       this.setReturn();
     }
-    if(Object.prototype.hasOwnProperty.call(this.options, 'search')){
+    if (Object.prototype.hasOwnProperty.call(this.options, 'search')) {
       this.setSearch(this.options.search, true);
-    }else{
+    } else {
       this.setSearch();
     }
     this.render();
@@ -142,32 +142,32 @@ class notTable extends EventEmitter {
     return val;
   }
 
-  onSearchChange(line){
-    if(line.length > 3){
+  onSearchChange(line) {
+    if (line.length > 3) {
       this.setSearch(line);
-    }else{
+    } else {
       this.setSearch();
     }
   }
 
-  onSelectedUpdate(val){
+  onSelectedUpdate(val) {
     this.data.selected = val;
   }
 
-  clearSelected(){
+  clearSelected() {
     this.data.selected = {};
   }
 
-  getSelected(object = false, store = 'refined'){
+  getSelected(object = false, store = 'refined') {
     let res = [];
-    for(let id in this.data.selected){
-      if(this.data.selected[id]){
-        if(object){
+    for (let id in this.data.selected) {
+      if (this.data.selected[id]) {
+        if (object) {
           let indx = this.data[store].findIndex(item => item._id === id);
-          if(indx > -1){
+          if (indx > -1) {
             res.push(this.data[store][indx]);
           }
-        }else{
+        } else {
           res.push(id);
         }
       }
@@ -175,11 +175,11 @@ class notTable extends EventEmitter {
     return res;
   }
 
-  getItemId(item){
+  getItemId(item) {
     return this.getOptions('getItemId', DEFAULT_OPTIONS.getItemId)(item);
   }
 
-  selectAll(){
+  selectAll() {
     this.stores.selected.update(() => {
       let value = {};
       this.data.filtered.forEach(item => {
@@ -189,7 +189,7 @@ class notTable extends EventEmitter {
     });
   }
 
-  selectNone(){
+  selectNone() {
     this.stores.selected.update(() => {
       let value = {};
       this.data.filtered.forEach(item => {
@@ -223,11 +223,11 @@ class notTable extends EventEmitter {
     this.ui.table.$on('goToPrevPage', () => this.goToPrev());
   }
 
-  getActions(){
+  getActions() {
     return this.getOptions('actions', []);
   }
 
-  getLinks(){
+  getLinks() {
     return this.getOptions('links', []);
   }
 
@@ -285,7 +285,7 @@ class notTable extends EventEmitter {
 
   setFilter(hash, withoutInvalidation = false) {
     this.setState('filter', hash);
-    if(withoutInvalidation){
+    if (withoutInvalidation) {
       return this;
     }
     this.invalidateData();
@@ -304,7 +304,7 @@ class notTable extends EventEmitter {
 
   setPager(hash, withoutInvalidation = false) {
     this.setState('pager', hash);
-    if(withoutInvalidation){
+    if (withoutInvalidation) {
       return this;
     }
     this.updateData();
@@ -332,7 +332,7 @@ class notTable extends EventEmitter {
 
   setSorter(hash, withoutInvalidation = false) {
     this.setWorking('sorter', hash);
-    if(withoutInvalidation){
+    if (withoutInvalidation) {
       return this;
     }
     this.invalidateData();
@@ -366,7 +366,7 @@ class notTable extends EventEmitter {
 
   setSearch(line = OPT_DEFAULT_SEARCH, withoutInvalidation = false) {
     this.setWorking('search', line);
-    if(withoutInvalidation){
+    if (withoutInvalidation) {
       return this;
     }
     this.invalidateData();
@@ -433,7 +433,12 @@ class notTable extends EventEmitter {
   }
 
   getDataInterface() {
-    return this.getOptions('interface.factory')({});
+    let factory = this.getOptions('interface.factory');
+    if (typeof factory === 'function') {
+      return factory({});
+    } else {
+      return factory;
+    }
   }
 
   getLoadDataActionName() {
@@ -451,11 +456,11 @@ class notTable extends EventEmitter {
   loadData() {
     //load from server
     let query = this.getDataInterface()
-        .setFilter(this.getFilter())
-        .setSorter(this.getSorter())
-        .setReturn(this.getReturn())
-        .setSearch(this.getSearch())
-        .setPager(this.getPager().size, this.getPager().page),
+      .setFilter(this.getFilter())
+      .setSorter(this.getSorter())
+      .setReturn(this.getReturn())
+      .setSearch(this.getSearch())
+      .setPager(this.getPager().size, this.getPager().page),
       actionName;
     if (this.getOptions('interface.combined', OPT_DEFAULT_COMBINED)) {
       actionName = this.getCombinedActionName();
@@ -562,18 +567,18 @@ class notTable extends EventEmitter {
               if (!this.getOptions('endless', false)) {
                 this.clearFilteredData();
               }
-              if(full){
+              if (full) {
                 val.push(...(data.result.list));
-              }else{
-                if(Object.prototype.hasOwnProperty.call(data, 'list') && Array.isArray(data.list)){
+              } else {
+                if (Object.prototype.hasOwnProperty.call(data, 'list') && Array.isArray(data.list)) {
                   val.push(...(data.list));
-                }else if(Array.isArray(data)){
+                } else if (Array.isArray(data)) {
                   val.push(...data);
                 }
               }
               return val;
             });
-            this.setWorking('lastCount', full?data.result.count:data.count);
+            this.setWorking('lastCount', full ? data.result.count : data.count);
           })
           .then(() => {
             this.updatePagination(this.getWorking('lastCount'));
@@ -600,7 +605,7 @@ class notTable extends EventEmitter {
     }
   }
 
-  getData(){
+  getData() {
     return this.data;
   }
 
@@ -610,10 +615,10 @@ class notTable extends EventEmitter {
     this.log(this.getData());
     if (
       typeof thatFilter !== 'undefined' &&
-			thatFilter !== null &&
-			typeof thatFilter.filterSearch !== 'undefined' &&
-			thatFilter.filterSearch !== null &&
-			thatFilter.filterSearch.length > 0
+      thatFilter !== null &&
+      typeof thatFilter.filterSearch !== 'undefined' &&
+      thatFilter.filterSearch !== null &&
+      thatFilter.filterSearch.length > 0
     ) {
       this.stores.filtered.update((val) => {
         val.splice(0, val.length, ...(this.data.raw.filter(this.testDataItem.bind(this))));
@@ -649,13 +654,13 @@ class notTable extends EventEmitter {
   }
 
   error() {
-    if(this.options.logger){
+    if (this.options.logger) {
       this.options.logger.error(...arguments);
     }
   }
 
   log() {
-    if(this.options.logger){
+    if (this.options.logger) {
       this.options.logger.log(...arguments);
     }
   }
@@ -664,16 +669,16 @@ class notTable extends EventEmitter {
     let result = [];
     this.data.filtered.forEach((item, index) => {
       let refined = {};
-      if(this.getOptions('idField')){
+      if (this.getOptions('idField')) {
         refined[this.getOptions('idField')] = item[this.getOptions('idField')];
       }
       this.getOptions('fields').forEach((field) => {
         let preprocessed = null,
           val = notPath.get(field.path, item, this.getOptions('helpers'));
         if (Object.prototype.hasOwnProperty.call(field, OPT_FIELD_NAME_PRE_PROC)) {
-          try{
+          try {
             preprocessed = field[OPT_FIELD_NAME_PRE_PROC](val, item, index);
-          }catch(e){
+          } catch (e) {
             this.error('Error while preprocessing cell value', val, item, index);
             this.error(e);
           }
@@ -690,8 +695,8 @@ class notTable extends EventEmitter {
     });
   }
 
-  $destroy(){
-    for(let name in this.ui){
+  $destroy() {
+    for (let name in this.ui) {
       this.ui[name].$destroy && this.ui[name].$destroy();
       delete this.ui[name];
     }
