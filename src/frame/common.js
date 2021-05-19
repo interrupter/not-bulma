@@ -491,7 +491,7 @@ function extendWSClient(wcs, wscName, wscOptions){
   let target = wcs[wscName];
   if(Object.prototype.hasOwnProperty.call(wscOptions, 'routes')){
     for(let routeType in wscOptions.routes){
-      if(!Object.prototype.hasOwnProperty.call(target, routeType)){
+      if(!Object.prototype.hasOwnProperty.call(target.routes, routeType)){
         target.routes[routeType] = {};
       }
       Object.assign(target.routes[routeType], {...wscOptions.routes[routeType]});
