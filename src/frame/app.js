@@ -63,8 +63,12 @@ export default class notApp extends notBase {
     this.update();
   }
 
-  getInterfaceManifest() {
-    return this.getOptions('interfaceManifest');
+  getInterfaceManifest(modelName) {
+    if(modelName){
+      return this.getOptions('interfaceManifest')[modelName];
+    }else{
+      return this.getOptions('interfaceManifest');
+    }
   }
 
   update() {
