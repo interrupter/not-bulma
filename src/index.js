@@ -20,6 +20,7 @@ import UIButton from './ui.button.svelte';
 import UIButtons from './ui.buttons.svelte';
 import UIImages from './ui.images.svelte';
 import UILinks from './ui.links.svelte';
+import UILink from './ui.link.svelte';
 import UIIcon from './ui.icon.svelte';
 import UIIconFont from './ui.icon.font.svelte';
 import UIIconFloating from './ui.icon.floating.svelte';
@@ -131,6 +132,7 @@ export {
   UIButtons,
   UIImages,
   UILinks,
+  UILink,
   UIIcon,
   UIIconFont,
   UIIconFloating,
