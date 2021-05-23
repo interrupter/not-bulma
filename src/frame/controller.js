@@ -113,12 +113,16 @@ class notController extends notBase {
    *  @param {object} data   model data
    *  @return {notRecord}
    */
-  getModel(data = {}){
-    return this.getInterface()(data);
+  getModel(name, data){
+    if(typeof name === 'string'){
+      return this.getInterface(name)({} || data);
+    }else{
+      return this.getInterface()({} || name);
+    }
   }
 
-  getInterface(){
-    return this.app.getInterface(this.getModelName());
+  getInterface(name = false){
+    return this.app.getInterface(name || this.getModelName());
   }
 
   /**
