@@ -456,11 +456,11 @@ class notTable extends EventEmitter {
   loadData() {
     //load from server
     let query = this.getDataInterface()
-      .setFilter(this.getFilter())
-      .setSorter(this.getSorter())
-      .setReturn(this.getReturn())
-      .setSearch(this.getSearch())
-      .setPager(this.getPager().size, this.getPager().page),
+        .setFilter(this.getFilter())
+        .setSorter(this.getSorter())
+        .setReturn(this.getReturn())
+        .setSearch(this.getSearch())
+        .setPager(this.getPager().size, this.getPager().page),
       actionName;
     if (this.getOptions('interface.combined', OPT_DEFAULT_COMBINED)) {
       actionName = this.getCombinedActionName();

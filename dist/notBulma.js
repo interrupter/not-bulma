@@ -6025,6 +6025,16 @@ var notBulma = (function (exports) {
 	    key: "log",
 	    value: function log() {
 	      this.logMsg.apply(this, arguments);
+	    }
+	  }, {
+	    key: "createLogger",
+	    value: function createLogger(prefix) {
+	      return {
+	        log: this.genLogMsg(prefix),
+	        error: this.genLogError(prefix),
+	        debug: this.genLogDebug(prefix),
+	        report: this.report
+	      };
 	    } //Генерация метода вывода сообщений в консоль с указанием префикса.
 
 	  }, {
@@ -6095,10 +6105,10 @@ var notBulma = (function (exports) {
 	  }, {
 	    key: "report",
 	    value: function report(e) {
-	      if (this.getApp() && this.getApp().getOptions('services.notErrorReporter')) {
-	        var reporter = this.getApp().getOptions('services.notErrorReporter');
+	      if (this.getApp()) {
+	        var reporter = this.getApp().getService('nsErrorReporter');
 
-	        if (reporter && reporter.report) {
+	        if (reporter) {
 	          reporter.report(e).catch(this.error.bind(this));
 	        }
 	      } else {
@@ -6422,34 +6432,42 @@ var notBulma = (function (exports) {
 	function extendWSClient(wcs, wscName, wscOptions) {
 	  if (!Object.prototype.hasOwnProperty.call(wcs, wscName)) {
 	    wcs[wscName] = {
-	      options: {},
-	      routes: {},
-	      validators: {}
+	      connection: {},
+	      router: {
+	        routes: {}
+	      },
+	      messenger: {}
 	    };
 	  }
 
 	  var target = wcs[wscName];
 
-	  if (Object.prototype.hasOwnProperty.call(wscOptions, 'routes')) {
-	    for (var routeType in wscOptions.routes) {
-	      if (!Object.prototype.hasOwnProperty.call(target, routeType)) {
-	        target.routes[routeType] = {};
+	  if (Object.prototype.hasOwnProperty.call(wscOptions, 'router')) {
+	    if (Object.prototype.hasOwnProperty.call(wscOptions.router, 'routes')) {
+	      for (var routeType in wscOptions.router.routes) {
+	        if (!Object.prototype.hasOwnProperty.call(target.router.routes, routeType)) {
+	          target.router.routes[routeType] = {};
+	        }
+
+	        Object.assign(target.router.routes[routeType], _objectSpread$1({}, wscOptions.router.routes[routeType]));
 	      }
-
-	      Object.assign(target.routes[routeType], _objectSpread$1({}, wscOptions.routes[routeType]));
 	    }
-	  }
-
-	  if (Object.prototype.hasOwnProperty.call(wscOptions, 'validators')) {
-	    Object.assign(target.validators, _objectSpread$1({}, wscOptions.validators));
 	  }
 
 	  if (Object.prototype.hasOwnProperty.call(wscOptions, 'messenger')) {
 	    Object.assign(target.messenger, _objectSpread$1({}, wscOptions.messenger));
 	  }
 
-	  if (Object.prototype.hasOwnProperty.call(wscOptions, 'options')) {
-	    Object.assign(target.options, _objectSpread$1({}, wscOptions.options));
+	  if (Object.prototype.hasOwnProperty.call(wscOptions, 'connection')) {
+	    Object.assign(target.connection, _objectSpread$1({}, wscOptions.connection));
+	  }
+
+	  for (var _i = 0, _arr = ['name', 'getToken', 'logger', 'identity', 'credentials']; _i < _arr.length; _i++) {
+	    var t = _arr[_i];
+
+	    if (Object.prototype.hasOwnProperty.call(wscOptions, t)) {
+	      target[t] = wscOptions[t];
+	    }
 	  }
 	}
 
@@ -9215,8 +9233,12 @@ var notBulma = (function (exports) {
 	    }
 	  }, {
 	    key: "getInterfaceManifest",
-	    value: function getInterfaceManifest() {
-	      return this.getOptions('interfaceManifest');
+	    value: function getInterfaceManifest(modelName) {
+	      if (modelName) {
+	        return this.getOptions('interfaceManifest')[modelName];
+	      } else {
+	        return this.getOptions('interfaceManifest');
+	      }
 	    }
 	  }, {
 	    key: "update",
@@ -9315,14 +9337,14 @@ var notBulma = (function (exports) {
 	  }, {
 	    key: "setWSClient",
 	    value: function setWSClient() {
-	      var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.DEFAULT_WS_CLIENT_NAME;
+	      var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : DEFAULT_WS_CLIENT_NAME;
 	      var wsc = arguments.length > 1 ? arguments[1] : undefined;
 	      return this.setWorking("wsc.".concat(name), wsc);
 	    }
 	  }, {
 	    key: "getWSClient",
 	    value: function getWSClient() {
-	      var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.DEFAULT_WS_CLIENT_NAME;
+	      var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : DEFAULT_WS_CLIENT_NAME;
 	      return this.getWorking("wsc.".concat(name));
 	    }
 	  }, {
@@ -9540,14 +9562,18 @@ var notBulma = (function (exports) {
 
 	  }, {
 	    key: "getModel",
-	    value: function getModel() {
-	      var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-	      return this.getInterface()(data);
+	    value: function getModel(name, data) {
+	      if (typeof name === 'string') {
+	        return this.getInterface(name)({} || data);
+	      } else {
+	        return this.getInterface()({} || name);
+	      }
 	    }
 	  }, {
 	    key: "getInterface",
 	    value: function getInterface() {
-	      return this.app.getInterface(this.getModelName());
+	      var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+	      return this.app.getInterface(name || this.getModelName());
 	    }
 	    /**
 	     *  Returns current model name
@@ -28131,7 +28157,13 @@ var notBulma = (function (exports) {
 	  }, {
 	    key: "getDataInterface",
 	    value: function getDataInterface() {
-	      return this.getOptions('interface.factory')({});
+	      var factory = this.getOptions('interface.factory');
+
+	      if (typeof factory === 'function') {
+	        return factory({});
+	      } else {
+	        return factory;
+	      }
 	    }
 	  }, {
 	    key: "getLoadDataActionName",
@@ -28403,7 +28435,14 @@ var notBulma = (function (exports) {
 	              val = notPath$1.get(field.path, item, _this12.getOptions('helpers'));
 
 	          if (Object.prototype.hasOwnProperty.call(field, OPT_FIELD_NAME_PRE_PROC)) {
-	            preprocessed = field[OPT_FIELD_NAME_PRE_PROC](val, item, index);
+	            try {
+	              preprocessed = field[OPT_FIELD_NAME_PRE_PROC](val, item, index);
+	            } catch (e) {
+	              _this12.error('Error while preprocessing cell value', val, item, index);
+
+	              _this12.error(e);
+	            }
+
 	            notPath$1.set(field.path, refined, preprocessed);
 	          } else {
 	            notPath$1.set(field.path, refined, val);
@@ -40212,6 +40251,7 @@ var notBulma = (function (exports) {
 	exports.UIIconFont = Ui_icon_font;
 	exports.UIImages = Ui_images;
 	exports.UILabel = UILabel;
+	exports.UILink = Ui_link;
 	exports.UILinks = Ui_links;
 	exports.UIModal = Ui_modal;
 	exports.UIOverlay = Ui_overlay;

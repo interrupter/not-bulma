@@ -482,29 +482,34 @@ function absorbServices(target, src){
 function extendWSClient(wcs, wscName, wscOptions){
   if(!Object.prototype.hasOwnProperty.call(wcs, wscName)){
     wcs[wscName] = {
-      options:    {},
-      routes:     {},
-      messenger:  {},
-      validators: {}
+      connection:     {},
+      router:         {
+        routes:{}
+      },
+      messenger:      {}
     };
   }
   let target = wcs[wscName];
-  if(Object.prototype.hasOwnProperty.call(wscOptions, 'routes')){
-    for(let routeType in wscOptions.routes){
-      if(!Object.prototype.hasOwnProperty.call(target.routes, routeType)){
-        target.routes[routeType] = {};
+  if(Object.prototype.hasOwnProperty.call(wscOptions, 'router')){
+    if(Object.prototype.hasOwnProperty.call(wscOptions.router, 'routes')){
+      for(let routeType in wscOptions.router.routes){
+        if(!Object.prototype.hasOwnProperty.call(target.router.routes, routeType)){
+          target.router.routes[routeType] = {};
+        }
+        Object.assign(target.router.routes[routeType], {...wscOptions.router.routes[routeType]});
       }
-      Object.assign(target.routes[routeType], {...wscOptions.routes[routeType]});
     }
-  }
-  if(Object.prototype.hasOwnProperty.call(wscOptions, 'validators')){
-    Object.assign(target.validators, {...wscOptions.validators});
   }
   if(Object.prototype.hasOwnProperty.call(wscOptions, 'messenger')){
     Object.assign(target.messenger, {...wscOptions.messenger});
   }
-  if(Object.prototype.hasOwnProperty.call(wscOptions, 'options')){
-    Object.assign(target.options, {...wscOptions.options});
+  if(Object.prototype.hasOwnProperty.call(wscOptions, 'connection')){
+    Object.assign(target.connection, {...wscOptions.connection});
+  }
+  for(let t of ['name', 'getToken', 'logger', 'identity', 'credentials']){
+    if(Object.prototype.hasOwnProperty.call(wscOptions, t)){
+      target[t] = wscOptions[t];
+    }
   }
 }
 
