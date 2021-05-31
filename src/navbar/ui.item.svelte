@@ -11,7 +11,7 @@
   export let classes ='';
 
   function onClick(event){
-    dispatch('click',{event, element: item});
+    dispatch('click', {event, element: item});
   }
 
 </script>
@@ -23,7 +23,7 @@
 {#if item.url }
 <a
   on:click={onClick}
-  class="navbar-item {hidden?`is-hidden-${hidden}`:''} {classes} "
+  class="navbar-item {hidden?`is-hidden-${hidden}`:''} {item.classes} {classes} "
   href="{root}{item.url}"
   data-href="{item.url}"
   >
@@ -32,7 +32,7 @@
 {:else}
 <div
   on:click={onClick}
-  class="navbar-item {hidden?`is-hidden-${hidden}`:''} {classes} "
+  class="navbar-item {hidden?`is-hidden-${hidden}`:''} {item.classes} {classes}"
   >
   <UIItemContent {item} />
 </div>
