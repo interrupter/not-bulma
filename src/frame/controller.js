@@ -115,9 +115,9 @@ class notController extends notBase {
    */
   getModel(name, data){
     if(typeof name === 'string'){
-      return this.getInterface(name)({} || data);
+      return this.getInterface(name)(data || {});
     }else{
-      return this.getInterface()({} || name);
+      return this.getInterface()(name || {});
     }
   }
 
