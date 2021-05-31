@@ -96,14 +96,14 @@ class notInterface extends notBase {
         actionData.type.length &&
         actionData.type !== 'request'
       ){
-        return WS.sendMessage(
+        return WS.message(
           actionData.type,
           messageName,
           payload
         )
           .then(response => response.payload);
       }else{
-        return WS.sendRequest(
+        return WS.request(
           messageName,
           payload
         )
