@@ -1,22 +1,15 @@
 <script>
-  let overlay;
   import UIOverlay from './ui.overlay.svelte';
   import UIBox from './ui.box.svelte';
   import UITitle from './ui.title.svelte';
   import UIContent from './ui.content.svelte';
   import UIButton from './ui.button.svelte';
 
-  import {
-    createEventDispatcher
-  } from 'svelte';
-
-  let dispatch = createEventDispatcher();
-
   export let closeButton = false;
-export let applyButton = false;
-export let show = false;
+  export let applyButton = false;
+  export let show = false;
   export let loading = false;
-export let title = 'Modal window';
+  export let title = 'Modal window';
   export let subtitle = '';
   export let classes = '';
 
@@ -24,7 +17,7 @@ export let title = 'Modal window';
 
 </script>
 
-<UIOverlay show={true} closeOnClick={false} closeButton={false} >
+<UIOverlay {show} closeOnClick={false} closeButton={false} >
   <UIBox {classes}>
       <UITitle size="2" {title} {subtitle} />
 			<UIContent>

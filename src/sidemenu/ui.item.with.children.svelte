@@ -1,6 +1,6 @@
 <script>
   import { createEventDispatcher } from 'svelte';
-const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher();
 
   import UISideMenuTrigger from './ui.trigger.svelte';
   import UISideMenuItems from './ui.items.svelte';
