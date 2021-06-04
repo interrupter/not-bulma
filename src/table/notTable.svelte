@@ -1,5 +1,5 @@
 <script>
-	import {LOCALE} from './locale';
+	import {LOCALE} from '../locale';
 	import * as Stores from './../stores.js';
 	import TableImages from '../ui.images.svelte';
 	import TableLinks from '../ui.links.svelte';

@@ -96,7 +96,7 @@ const {
 } = FormElements;
 
 
-import {LOCALE, say} from './locale.js';
+import {LOCALE, say, notLocale} from './locale/index.js';
 
 export {
   UISampleFilter,
@@ -162,7 +162,7 @@ export {
   notApp,
   notAppComponents,
   notAPI,
-  //not-locale module shortcuts
-  say,    //to render phrase
-  LOCALE  // writable custom svelte/store for current dictionary
+  say,        //to render phrase
+  LOCALE,     // writable custom svelte/store for current dictionary
+  notLocale
 };
