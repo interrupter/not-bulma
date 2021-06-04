@@ -1,4 +1,5 @@
 <script>
+  import {LOCALE} from '../locale';
   import UIIcon from '../ui.icon.svelte';
   import UITag from '../ui.tag.svelte';
   import UIIndicator from '../ui.indicator.svelte';
@@ -26,7 +27,7 @@
   {...item.props}
    />
 {:else}
-{item.title}
+{$LOCALE[item.title]}
 {/if}
 
 {#if item.tag }

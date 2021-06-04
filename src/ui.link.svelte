@@ -1,4 +1,5 @@
 <script>
+  import {LOCALE} from './locale';
   export let title = '';
   export let url = '';
   export let light = false;
@@ -31,12 +32,12 @@
   <span class="icon"><i class="fas fa-{icon} {size?`is-${size}`:''}"></i></span>
     {/if}
     {#if title }
-    <span>{title}</span>
+    <span>{$LOCALE[title]}</span>
     {/if}
   {#if iconSide === 'right' }
     <span class="icon"><i class="fas fa-{icon} {size?`is-${size}`:''}"></i></span>
   {/if}
   {:else}
-  {title}
+  {$LOCALE[title]}
   {/if}
 </a>

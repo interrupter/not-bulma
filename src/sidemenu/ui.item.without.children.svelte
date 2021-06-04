@@ -2,6 +2,7 @@
   import { createEventDispatcher } from 'svelte';
   const dispatch = createEventDispatcher();
 
+  import {LOCALE} from '../locale';
   import UIIndicator from '../ui.indicator.svelte';
 
   export let root = '';
@@ -21,7 +22,7 @@
 {#if (typeof item.url !== 'undefined' && item.url!==false) }
 <li class="{item.classes}">
   <a href="{root}{item.url}" data-href="{item.url}" on:click="{onClick}">
-  {item.title}
+  {$LOCALE[item.title]}
   {#if item.tag }
     <UIIndicator id={item.id} {...item.tag} />
   {/if}
@@ -31,7 +32,7 @@
 </a></li>
 {:else }
 <li class="is-no-follow-subtitle {item.classes}">
-  {item.title}
+  {$LOCALE[item.title]}
   {#if item.tag }
     <UIIndicator id={item.id} {...item.tag} />
   {/if}

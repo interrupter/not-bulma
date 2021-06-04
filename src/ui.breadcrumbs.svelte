@@ -1,5 +1,7 @@
 <script>
 
+  import {LOCALE} from './locale';
+
   export let root = '';
   export let items = [];
   export let go = null;
@@ -19,13 +21,13 @@
   <ul>
     {#each items as link, index}
     {#if (items.length === (index + 1)) }
-    <li class="is-active"><a href="{root}{link.url}" data-href="{link.url}" aria-current="page">{link.title}</a></li>
+    <li class="is-active"><a href="{root}{link.url}" data-href="{link.url}" aria-current="page">{$LOCALE[link.title]}</a></li>
     {:else }
     <li>
       {#if link.url === false }
-      {link.title}
+      {$LOCALE[link.title]}
       {:else}
-      <a href="{root}{link.url}" data-href="{link.url}" on:click="{onClick}">{link.title}</a>
+      <a href="{root}{link.url}" data-href="{link.url}" on:click="{onClick}">{$LOCALE[link.title]}</a>
       {/if}
     </li>
     {/if}

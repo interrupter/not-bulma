@@ -1,5 +1,6 @@
 <script>
   import {onMount} from 'svelte';
+  import {LOCALE} from './locale';
   export let show = false;
   export let message = 'Для улучшения работы сайта и его взаимодействия с пользователями мы используем файлы cookie. Продолжая работу с сайтом, Вы разрешаете использование cookie-файлов. Вы всегда можете отключить файлы cookie в настройках Вашего браузера.';
   export let agree = 'Хорошо';
@@ -19,8 +20,8 @@
 
 {#if show}
 <div id="cookie_notification">
-  <p>{message}</p>
-  <button class="button is-success cookie_accept" on:click={accept}>{agree}</button>
+  <p>{$LOCALE[message]}</p>
+  <button class="button is-success cookie_accept" on:click={accept}>{$LOCALE[agree]}</button>
 </div>
 {/if}
 

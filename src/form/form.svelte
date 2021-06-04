@@ -1,4 +1,6 @@
 <script>
+	import {LOCALE} from '../locale';
+
 	import UIField from './field.svelte';
 	import 'bulma-pageloader';
 
@@ -294,27 +296,27 @@
 
 </script>
 
-<div class="pageloader {loading?'is-active':''}"><span class="title">{WAITING_TEXT}</span></div>
+<div class="pageloader {loading?'is-active':''}"><span class="title">{$LOCALE[WAITING_TEXT]}</span></div>
 
 {#if success}
 <div class="notification is-success">
-	<h3 class="form-success-message">{SUCCESS_TEXT}</h3>
+	<h3 class="form-success-message">{$LOCALE[SUCCESS_TEXT]}</h3>
 </div>
 {:else}
 {#if title }
-<h5 class="title is-5">{title}</h5>
+<h5 class="title is-5">{$LOCALE[title]}</h5>
 {/if}
 {#if description }
-<h6 class="subtitle is-6">{description}</h6>
+<h6 class="subtitle is-6">{$LOCALE[description]}</h6>
 {/if}
 
 {#if options.buttonsFirst }
 <div class="buttons is-grouped is-centered">
 	{#if cancel.enabled}
-	<button class="button is-outlined {cancel.classes}" on:click={rejectForm}>{cancel.caption}</button>
+	<button class="button is-outlined {cancel.classes}" on:click={rejectForm}>{$LOCALE[cancel.caption]}</button>
 	{/if}
 	{#if submit.enabled}
-	<button on:click={submitForm} disabled={formInvalid} class="button is-primary is-hovered {submit.classes}">{submit.caption}</button>
+	<button on:click={submitForm} disabled={formInvalid} class="button is-primary is-hovered {submit.classes}">{$LOCALE[submit.caption]}</button>
 	{/if}
 </div>
 
@@ -368,10 +370,10 @@
 {/if}
 <div class="buttons is-grouped is-centered">
 	{#if cancel.enabled}
-	<button class="button is-outlined {cancel.classes}" on:click={rejectForm}>{cancel.caption}</button>
+	<button class="button is-outlined {cancel.classes}" on:click={rejectForm}>{$LOCALE[cancel.caption]}</button>
 	{/if}
 	{#if submit.enabled}
-	<button on:click={submitForm} disabled={formInvalid} class="button is-primary is-hovered {submit.classes}">{submit.caption}</button>
+	<button on:click={submitForm} disabled={formInvalid} class="button is-primary is-hovered {submit.classes}">{$LOCALE[submit.caption]}</button>
 	{/if}
 </div>
 {/if}

@@ -107,6 +107,10 @@ export default class notApp extends notBase {
   }
 
   setCurrentController(ctrl) {
+    let oldCtrl = this.getCurrentController();
+    if(oldCtrl && oldCtrl.destroy){
+      oldCtrl.destroy();
+    }
     this.setWorking('currentController', ctrl);
     return this;
   }

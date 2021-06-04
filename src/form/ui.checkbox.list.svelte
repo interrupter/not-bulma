@@ -1,9 +1,9 @@
 <script>
-
+  import {LOCALE} from '../locale';
   import UICommon from '../common.js';
 
   import {createEventDispatcher} from 'svelte';
-let dispatch = createEventDispatcher();
+  let dispatch = createEventDispatcher();
 
   export let inputStarted = false;
   export let value = [];
@@ -70,7 +70,7 @@ let dispatch = createEventDispatcher();
       aria-describedby="input-field-helper-{fieldname+'_'+item.id}"
       disabled={disabled || item.disabled}
       >
-    {item.label}
+    {$LOCALE[item.label]}
   </label>
   {/each}
 </div>

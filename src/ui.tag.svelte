@@ -1,4 +1,5 @@
 <script>
+  import {LOCALE} from './locale';
   import {onMount} from 'svelte';
   import {notCommon} from './frame';
   //if we want to address this tag
@@ -57,5 +58,5 @@
   {top?'is-sided-top':''}
   {bottom?'is-sided-bottom':''}
   {classes}"
-  >{title}</span>
+  >{$LOCALE[title]}</span>
 {/if}

@@ -1,9 +1,11 @@
 <script>
+  import {LOCALE} from '../locale';
   import UIIcon from '../ui.icon.font.svelte';
   import UIIndicator from '../ui.indicator.svelte';
   import UITag from '../ui.tag.svelte';
   import {COMPONENTS} from '../frame/LIB.js';
   export let item = {};
+
 </script>
 
 
@@ -16,7 +18,7 @@
   {...item.props}
    />
 {:else}
-{item.title}
+{$LOCALE[item.title]}
 {/if}
 {#if item.tag }
   <UITag id={item.id} {...item.tag} />

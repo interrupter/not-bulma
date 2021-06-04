@@ -58,6 +58,7 @@ class notController extends notBase {
       }
     });
     this.app = app;
+    this.app.setCurrentController(this);
     this.setWorking({
       ready: false,
       views: {},

@@ -95,6 +95,9 @@ const {
   UITagControl
 } = FormElements;
 
+
+import {LOCALE, say} from './locale.js';
+
 export {
   UISampleFilter,
   UIBox, UIBlock, UIContent, UITitle, UIModal,
@@ -158,5 +161,8 @@ export {
   notInterface,
   notApp,
   notAppComponents,
-  notAPI
+  notAPI,
+  //not-locale module shortcuts
+  say,    //to render phrase
+  LOCALE  // writable custom svelte/store for current dictionary
 };

@@ -1,8 +1,9 @@
 <script>
+  import {LOCALE} from '../locale';
   import 'bulma-switch';
-import UICommon from '../common.js';
+  import UICommon from '../common.js';
 
-import {createEventDispatcher} from 'svelte';
+  import {createEventDispatcher} from 'svelte';
   let dispatch = createEventDispatcher();
 
 export let inputStarted = false;
@@ -62,7 +63,7 @@ function onInput(ev){
         aria-controls="input-field-helper-{fieldname}"
         aria-describedby="input-field-helper-{fieldname}"
         disabled={disabled} />
-        <label class="label" for="form-field-switch-{fieldname}">{label}</label>
+        <label class="label" for="form-field-switch-{fieldname}">{$LOCALE[label]}</label>
   </div>
   <p class="help {validationClasses}" id="form-field-helper-{fieldname}">
     {#if !(validated && valid) && (inputStarted) }

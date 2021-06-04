@@ -1,5 +1,5 @@
 <script>
-
+  import {LOCALE} from '../locale';
   import { createEventDispatcher } from 'svelte';
   let dispatch = createEventDispatcher();
   /*
@@ -52,7 +52,7 @@
 <div class="columns">
   <div class="column {classes}">
     {#each items as item (item.id)}
-    <span class="mx-1 tag is-{item.type}">{item.title}
+    <span class="mx-1 tag is-{item.type}">{$LOCALE[item.title]}
       {#if !readonly }
       <button data-id="{item.id}" class="delete is-small" on:click="{remove}"></button>
       {/if}
@@ -64,13 +64,13 @@
     <div class="control">
       <div class="select is-small">
         <select>
-          <option value="-1" selected>Выберите из списка...</option>
+          <option value="-1" selected>{$LOCALE['Выберите из списка...']}</option>
           {#each variants as variant}
-          <option value="{variant.id}">{variant.title}</option>
+          <option value="{variant.id}">{$LOCALE[variant.title]}</option>
           {/each}
         </select>
       </div>
-      <button class="button is-primary is-small" on:click={add}>Добавить</button>
+      <button class="button is-primary is-small" on:click={add}>{$LOCALE['Добавить']}</button>
     </div>
   </div>
   {/if}

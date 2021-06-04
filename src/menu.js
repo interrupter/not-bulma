@@ -32,7 +32,9 @@ class Menu {
   static interval;
 
   static setApp(app) {
-    this.app = app;
+    if(!this.app){
+      this.app = app;
+    }
     return this;
   }
 

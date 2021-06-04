@@ -1,4 +1,5 @@
 <script>
+  import {LOCALE} from './locale';
   import UIOverlay from './ui.overlay.svelte';
   import UIBox from './ui.box.svelte';
   import UITitle from './ui.title.svelte';
@@ -19,9 +20,9 @@
 
 <UIOverlay {show} closeOnClick={false} closeButton={false} >
   <UIBox {classes}>
-      <UITitle size="2" {title} {subtitle} />
+      <UITitle size="2" title={$LOCALE[title]} subtitle={$LOCALE[subtitle]} />
 			<UIContent>
-        <div class="pageloader {loading?'is-active':''}"><span class="title">{WAITING_TEXT}</span></div>
+        <div class="pageloader {loading?'is-active':''}"><span class="title">{$LOCALE[WAITING_TEXT]}</span></div>
 				<slot></slot>
 				<div class="buttons is-grouped is-centered mt-4">
           {#if closeButton}

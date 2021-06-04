@@ -142,4 +142,8 @@ export default class notBase extends EventEmitter {
     return notCommon.getApp();
   }
 
+  destroy(){
+    this.emit('destroy');
+  }
+
 }

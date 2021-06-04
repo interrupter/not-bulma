@@ -41,21 +41,32 @@ class SideMenu extends Menu {
     }
     this.prepareData();
     if (!this.menu) {
-      let target = document.querySelector(this.getOptions().targetSelector);
-      if(!target){return;}
-      this.menu = new UISideMenu({
-        target,
-        props: {
-          items: this.items,
-          sections: this.sections,
-          root: this.getOptions().root,
-          navigate: this.getOptions().navigate
-        }
-      });
-      this.initSizeResponse();
-      this.interval = setInterval(this.updateMenuActiveItem.bind(this), 200);
-      this.bindToggle();
+      this.createUI();
     }
+  }
+
+  static update(){
+    if (this.menu) {
+      this.menu.$destroy();
+      this.createUI();
+    }
+  }
+
+  static createUI(){
+    let target = document.querySelector(this.getOptions().targetSelector);
+    if(!target){return;}
+    this.menu = new UISideMenu({
+      target,
+      props: {
+        items: this.items,
+        sections: this.sections,
+        root: this.getOptions().root,
+        navigate: this.getOptions().navigate
+      }
+    });
+    this.initSizeResponse();
+    this.interval = setInterval(this.updateMenuActiveItem.bind(this), 200);
+    this.bindToggle();
   }
 
   static itemIsActive(itemURL) {

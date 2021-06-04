@@ -1,5 +1,5 @@
 <script>
-
+  import {LOCALE} from './locale';
   export let message;
   export let title;
 
@@ -7,9 +7,9 @@
 
 <article class="message is-success">
   <div class="message-header">
-    <p>{title}</p>
+    <p>{$LOCALE[title]}</p>
   </div>
   <div class="message-body">
-    {message}
+    {$LOCALE[message]}
   </div>
 </article>

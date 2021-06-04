@@ -1,4 +1,5 @@
 <script>
+  import {LOCALE} from '../locale';
   import UIIndicator from '../ui.indicator.svelte';
   import UISideMenuItems from './ui.items.svelte';
   import {COMPONENTS} from '../frame/LIB.js';
@@ -20,7 +21,7 @@
     {...section.props}
      />
   {:else}
-  {section.title}
+  {$LOCALE[section.title]}
   {/if}
   {#if section.tag }
     <UIIndicator id={section.id} {...section.tag} />

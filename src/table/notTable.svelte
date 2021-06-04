@@ -1,4 +1,5 @@
 <script>
+	import {LOCALE} from './locale';
 	import * as Stores from './../stores.js';
 	import TableImages from '../ui.images.svelte';
 	import TableLinks from '../ui.links.svelte';
@@ -127,7 +128,7 @@
 		<th><input type="checkbox" id="table-row-select-page" bind:checked={selectAll} placeholder="" name="row_selected_all" on:change={onSelectAll} /></th>
 		{/if}
 		{#each fields as field}
-		<th class="{field.hideOnMobile?'is-hidden-touch':''}">{field.title}</th>
+		<th class="{field.hideOnMobile?'is-hidden-touch':''}">{$LOCALE[field.title]}</th>
 		{/each}
 	</thead>
 	<tbody>

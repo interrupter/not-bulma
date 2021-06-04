@@ -1,9 +1,10 @@
 <script>
+  import {LOCALE} from '../locale';
   import UICommon from '../common.js';
   const CLEAR_MACRO = '__CLEAR__';
 
   import {createEventDispatcher} from 'svelte';
-let dispatch = createEventDispatcher();
+  let dispatch = createEventDispatcher();
 
   export let inputStarted = false;
   export let value = '';
@@ -81,13 +82,13 @@ let dispatch = createEventDispatcher();
         on:blur={onBlur} on:input={onInput} {readonly} {required} multiple >
         {#if placeholder.length > 0 }
         {#if value }
-        <option value="{CLEAR_MACRO}" >{placeholder}</option>
+        <option value="{CLEAR_MACRO}" >{$LOCALE[placeholder]}</option>
         {:else}
-        <option value="{CLEAR_MACRO}" selected="selected">{placeholder}</option>
+        <option value="{CLEAR_MACRO}" selected="selected">{$LOCALE[placeholder]}</option>
         {/if}
         {/if}
         {#each variants as variant}
-        <option value="{variant.id}" selected="{value && value.indexOf(variant.id) > -1}">{variant.title}</option>
+        <option value="{variant.id}" selected="{value && value.indexOf(variant.id) > -1}">{$LOCALE[variant.title]}</option>
         {/each}
       </select>
       {:else}
@@ -95,13 +96,13 @@ let dispatch = createEventDispatcher();
         name="{fieldname}" bind:value={value} on:blur={onBlur} on:input={onInput} {readonly} >
         {#if placeholder.length > 0 }
         {#if value }
-        <option value="{CLEAR_MACRO}">{placeholder}</option>
+        <option value="{CLEAR_MACRO}">{$LOCALE[placeholder]}</option>
         {:else}
-        <option value="{CLEAR_MACRO}" selected="selected">{placeholder}</option>
+        <option value="{CLEAR_MACRO}" selected="selected">{$LOCALE[placeholder]}</option>
         {/if}
         {/if}
         {#each variants as variant}
-        <option value="{variant.id}" selected="{value == variant.id}">{variant.title}</option>
+        <option value="{variant.id}" selected="{value == variant.id}">{$LOCALE[variant.title]}</option>
         {/each}
       </select>
       {/if}

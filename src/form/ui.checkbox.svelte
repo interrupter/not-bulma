@@ -1,9 +1,10 @@
 <script>
+  import {LOCALE} from '../locale';
 
   import UICommon from '../common.js';
 
   import {createEventDispatcher} from 'svelte';
-let dispatch = createEventDispatcher();
+  let dispatch = createEventDispatcher();
 
   export let inputStarted = false;
   export let value = false;
@@ -52,7 +53,7 @@ let dispatch = createEventDispatcher();
   <label class="checkbox" disabled={disabled} for="form-field-checkbox-{fieldname}">
     <input type="checkbox" id="form-field-checkbox-{fieldname}" bind:checked={value} placeholder="{placeholder}" name="{fieldname}" required={required} {readonly} invalid="{invalid}" on:change={onBlur} on:input={onInput} aria-controls="input-field-helper-{fieldname}"
       aria-describedby="input-field-helper-{fieldname}" disabled={disabled}>
-    {label}
+    {$LOCALE[label]}
   </label>
 </div>
 <p class="help {validationClasses}" id="form-field-helper-{fieldname}">
