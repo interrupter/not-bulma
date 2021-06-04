@@ -30,7 +30,7 @@ class notLocale extends EventEmitter{
   * @returns  {string}              localized version of string with
   */
   format(str, params){
-    return notPath.get(str, params, this.helpers);
+    return notPath.parseSubs(str, params, this.helpers);
   }
 
   /**
