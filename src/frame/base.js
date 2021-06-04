@@ -143,6 +143,7 @@ export default class notBase extends EventEmitter {
   }
 
   destroy(){
+    this.removeEvent();
     this.emit('destroy');
   }
 
