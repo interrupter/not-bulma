@@ -55,7 +55,7 @@ class notLocale extends EventEmitter{
         throw new Error(`Unknown locale phrase: ${phrase}`);
       }
     }catch(e){
-      notCommon.report(e);
+      notCommon.debug(e);
       return phrase;
     }
   }
