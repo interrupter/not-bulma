@@ -124,8 +124,23 @@ class notInterface extends notBase {
     }
   }
 
+  wsIsUp(actionData){
+    if(actionData.ws === true){
+      let client;
+      if(Object.prototype.hasOwnProperty.call(actionData, 'wsClient') && actionData.wsClient){
+        client = notCommon.getApp().getWSClient(actionData.wsClient);
+      }else{
+        client = notCommon.getApp().getWSClient();
+      }
+      if(client && client.isConnected()){
+        return true;
+      }
+    }
+    return false;
+  }
+
   selectTransport(actionData){
-    if(actionData.ws === true && notCommon.getApp().getWSClient().isConnected()){
+    if(this.wsIsUp(actionData)){
       return 'ws';//for ws/wss
     }
     if(Object.prototype.hasOwnProperty.call(actionData, 'method')){
