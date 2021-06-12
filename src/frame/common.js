@@ -188,10 +188,26 @@ class notCommon {
     return date;
   }
 
+  static backlog = [];
+
+  static backlogAdd(msg, type = 'log'){
+    if(this.getEnv('backlog') === true){
+      this.backlog.push({ msg, type});
+    }
+  }
+
+  static dumpBacklog(){
+    while(this.backlog.length){
+      let row = this.backlog.shift();
+      window[this.LOG][row.type](...row.msg);
+    }
+  }
+
   static logMsg() {
     let now = this.localIsoDate();
     // eslint-disable-next-line no-console
     window[this.LOG].log(`[${now}]: `, ...arguments);
+    this.backlogAdd([`[${now}]: `, ...arguments], 'log');
   }
 
   static log(){
@@ -213,6 +229,7 @@ class notCommon {
       let now = notCommon.localIsoDate();
       // eslint-disable-next-line no-console
       window[notCommon.LOG].log(`[${now}]: ${prefix}::`, ...arguments);
+      this.backlogAdd([`[${now}]: ${prefix}::`, ...arguments], 'log');
     };
   }
 
@@ -249,6 +266,7 @@ class notCommon {
     let now = this.localIsoDate();
     // eslint-disable-next-line no-console
     window[this.LOG].error(`[${now}]: `, ...arguments);
+    this.backlogAdd([`[${now}]: `, ...arguments], 'error');
   }
 
   static genLogError(prefix) {
@@ -256,6 +274,7 @@ class notCommon {
       let now = notCommon.localIsoDate();
       // eslint-disable-next-line no-console
       window[notCommon.LOG].error(`[${now}]: ${prefix}::`, ...arguments);
+      this.backlogAdd([`[${now}]: ${prefix}::`, ...arguments], 'error');
     };
   }
 
