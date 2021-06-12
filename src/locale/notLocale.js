@@ -14,6 +14,10 @@ class notLocale extends EventEmitter{
     super();
     this.dict = {};          //dictionary of phrases
     this.helpers = {};        //additional helper functions and constants
+    let dict = this.restoreFromStorage();
+    if(dict){
+      this.set(dict);
+    }
   }
 
   /**
@@ -66,8 +70,40 @@ class notLocale extends EventEmitter{
   **/
   set(dict){
     LOCALE.set(dict);
+    this.saveToStorage(dict);
     this.dict = Object.assign({}, {...dict});
     this.emit('change');
+  }
+
+
+  saveToStorage(dict){
+    if (window.localStorage) {
+    	try {
+    	  return window.localStorage.setItem('dictionary', JSON.stringify(dict));
+      } catch (e) {
+        notCommon.debug(e);
+        return false;
+      }
+    }
+    return false;
+  }
+
+  restoreFromStorage(){
+    if (window.localStorage) {
+    	try {
+    	  let str =  window.localStorage.getItem('dictionary');
+        if(str){
+          let dict = JSON.parse(str);
+          return dict;
+        }else{
+          return false;
+        }
+      } catch (e) {
+        notCommon.debug(e);
+        return false;
+      }
+    }
+    return false;
   }
 
   /**
