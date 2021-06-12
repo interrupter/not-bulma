@@ -191,7 +191,7 @@ class notCommon {
   static backlog = [];
 
   static backlogAdd(msg, type = 'log'){
-    if(this.getEnv('backlog') === true){
+    if(this.get('backlog') === true){
       this.backlog.push({ msg, type});
     }
   }
