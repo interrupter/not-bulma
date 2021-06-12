@@ -225,7 +225,7 @@ class notCommon {
 
   //Генерация метода вывода сообщений в консоль с указанием префикса.
   static genLogMsg(prefix) {
-    return function(){
+    return ()=>{
       let now = notCommon.localIsoDate();
       // eslint-disable-next-line no-console
       window[notCommon.LOG].log(`[${now}]: ${prefix}::`, ...arguments);
@@ -270,7 +270,7 @@ class notCommon {
   }
 
   static genLogError(prefix) {
-    return function(){
+    return ()=>{
       let now = notCommon.localIsoDate();
       // eslint-disable-next-line no-console
       window[notCommon.LOG].error(`[${now}]: ${prefix}::`, ...arguments);
