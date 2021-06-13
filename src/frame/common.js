@@ -225,11 +225,11 @@ class notCommon {
 
   //Генерация метода вывода сообщений в консоль с указанием префикса.
   static genLogMsg(prefix) {
-    return ()=>{
+    return function(){  //not arrow bc of arguments special var is not available in arrow functions
       let now = notCommon.localIsoDate();
       // eslint-disable-next-line no-console
       window[notCommon.LOG].log(`[${now}]: ${prefix}::`, ...arguments);
-      this.backlogAdd([`[${now}]: ${prefix}::`, ...arguments], 'log');
+      notCommon.backlogAdd([`[${now}]: ${prefix}::`, ...arguments], 'log');
     };
   }
 
@@ -270,11 +270,11 @@ class notCommon {
   }
 
   static genLogError(prefix) {
-    return ()=>{
+    return function(){//do not change to arrow function, bc of arguments
       let now = notCommon.localIsoDate();
       // eslint-disable-next-line no-console
       window[notCommon.LOG].error(`[${now}]: ${prefix}::`, ...arguments);
-      this.backlogAdd([`[${now}]: ${prefix}::`, ...arguments], 'error');
+      notCommon.backlogAdd([`[${now}]: ${prefix}::`, ...arguments], 'error');
     };
   }
 
