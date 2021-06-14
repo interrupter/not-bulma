@@ -173,11 +173,11 @@
 					{...field.options}
 					/>
 				{:else}
-				{if !isNaN(field.maxLength) && field.maxLength }
-				{notCommon.strLengthCap(notPath.get(field.path, item, helpers), field.maxLength)}
-				{:else}
-				{notPath.get(field.path, item, helpers)}
-				{/if}
+					{#if !isNaN(field.maxLength) && field.maxLength }
+					{notCommon.strLengthCap(notPath.get(field.path, item, helpers), field.maxLength)}
+					{:else}
+					{notPath.get(field.path, item, helpers)}
+					{/if}
 				{/if}
 			</td>
 			{/each}
