@@ -333,6 +333,14 @@ class notCommon {
     return string.charAt(0).toLowerCase() + string.slice(1);
   }
 
+  static strLengthCap(str, MAX_TITLE_LENGTH = 50, POST_FIX = '...'){
+    if(str.length > MAX_TITLE_LENGTH){
+      return str.substr(0, MAX_TITLE_LENGTH) + POST_FIX;
+    }else{
+      return str;
+    }
+  }
+
   static escapeHtml(unsafe) {
     return unsafe
       .replace(/&/g, '&amp;')

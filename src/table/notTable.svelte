@@ -1,4 +1,5 @@
 <script>
+	import {notCommon} from '../frame'
 	import {LOCALE} from '../locale';
 	import * as Stores from './../stores.js';
 	import TableImages from '../ui.images.svelte';
@@ -172,7 +173,11 @@
 					{...field.options}
 					/>
 				{:else}
+				{if !isNaN(field.maxLength) && field.maxLength }
+				{notCommon.strLengthCap(notPath.get(field.path, item, helpers), field.maxLength)}
+				{:else}
 				{notPath.get(field.path, item, helpers)}
+				{/if}
 				{/if}
 			</td>
 			{/each}
