@@ -132,7 +132,7 @@ class notInterface extends notBase {
       }else{
         client = notCommon.getApp().getWSClient();
       }
-      if(client && client.isConnected()){
+      if(client){
         return true;
       }
     }
