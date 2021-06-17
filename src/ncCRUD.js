@@ -17,6 +17,7 @@ class ncCRUD extends notController {
     this.ui = {};
     this.els = {};
     this.setOptions('names', {
+      module: '',
       plural: 'plural',
       single: 'single',
     });
@@ -28,10 +29,18 @@ class ncCRUD extends notController {
   static ERROR_DEFAULT = 'Что пошло не так.';
 
   start(){
-    BREADCRUMBS.splice(0, BREADCRUMBS.length ,{
+    let newHead = [];
+    if(this.MODULE_NAME && this.getOptions('names.module')){
+      newHead.push({
+        title: this.getOptions('names.module'),
+        url: false
+      });
+    }
+    newHead.push({
       title: this.getOptions('names.plural'),
       url: this.getModelURL()
     });
+    BREADCRUMBS.splice(0, BREADCRUMBS.length, ...newHead);
     Breadcrumbs.setHead(BREADCRUMBS).render({
       root: '',
       target: this.els.top,
