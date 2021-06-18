@@ -30,7 +30,7 @@ class ncCRUD extends notController {
 
   start(){
     let newHead = [];
-    if(this.MODULE_NAME && this.getOptions('names.module')){
+    if(this.getModuleName() && this.getOptions('names.module')){
       newHead.push({
         title: this.getOptions('names.module'),
         url: false
