@@ -23,13 +23,11 @@
     {#if (items.length === (index + 1)) }
     <li class="is-active"><a href="{root}{link.url}" data-href="{link.url}" aria-current="page">{$LOCALE[link.title]}</a></li>
     {:else }
-    <li>
-      {#if link.url === false }
-      {$LOCALE[link.title]}
-      {:else}
-      <a href="{root}{link.url}" data-href="{link.url}" on:click="{onClick}">{$LOCALE[link.title]}</a>
-      {/if}
-    </li>
+    {#if link.url === false }
+    <li class="is-plain-crumb">{$LOCALE[link.title]}</li>
+    {:else}
+    <li><a href="{root}{link.url}" data-href="{link.url}" on:click="{onClick}">{$LOCALE[link.title]}</a></li>
+    {/if}
     {/if}
     {/each}
   </ul>
