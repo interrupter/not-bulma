@@ -18,7 +18,7 @@
   {...item.props}
    />
 {:else}
-{$LOCALE[item.title]}
+<span class="is-no-link">{$LOCALE[item.title]}</span>
 {/if}
 {#if item.tag }
   <UITag id={item.id} {...item.tag} />
@@ -26,3 +26,4 @@
 {#if item.indicator }
   <UIIndicator id={item.id} {...item.indicator } />
 {/if}
+<slot></slot>

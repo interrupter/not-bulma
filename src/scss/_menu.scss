@@ -5,7 +5,7 @@ aside.menu{
   padding: 1rem;
 
   & .is-no-follow-subtitle{
-	  padding: .5em .75em;
+	  //padding: .5em .75em;
   }
 
   & .is-closed{
@@ -38,4 +38,38 @@ aside.menu{
 
 .is-wide{
   min-width: 15em;
+}
+
+span.is-no-link{
+  border-radius: 5px;
+  //display: block;
+  padding: .5em .75em;
+}
+
+a>span.is-no-link{
+  border-radius: 5px;
+  //display: block;
+  padding-left: 0em;
+}
+
+a.has-subitems{
+  padding-right: 0em!important;
+}
+
+
+a:not(.is-active) > span.is-no-link:hover{
+  background-color: #f5f5f5;
+  color: #363636;
+}
+
+.is-no-follow-subtitle{
+  padding-left: 0em;
+  &>a{
+    padding-left: 0em;
+  }
+}
+
+
+.menu-list li ul, .menu-list li ul li ul{
+  margin-right: 0em!important;
 }

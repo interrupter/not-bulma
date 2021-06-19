@@ -7,13 +7,14 @@
 	import UISideMenuTrigger from './ui.trigger.svelte';
 	import UISideMenuItemLabel from './ui.item.label.svelte';
 
+	let closedChildren = {
+
+	};
+
 	export let root = '';
 	export let items = [];
 	export let closed = false;
 
-	function toggle({detail}) {
-  closed = detail.closed;
-}
 
 function onClick(ev){
   ev.preventDefault();
@@ -28,19 +29,21 @@ function onClick(ev){
 
 
 <ul class="menu-list {closed?'is-closed':''}">
-{#each items as item}
+{#each items as item, index}
 	{#if item.items && item.items.length }
-	<li class="{(typeof item.url === 'undefined' || item.url===false)?'':'is-no-follow-subtitle'} {item.classes}">
+	<li class="is-no-follow-subtitle {item.classes}">
 		{#if (typeof item.url !== 'undefined' && item.url!==false) }
-		<a href="{root}{item.url}" data-href="{item.url}" on:click="{onClick}">
-			<UISideMenuItemLabel {item} />
-			<UISideMenuTrigger {closed} on:toggle={toggle} />
+		<a href="{root}{item.url}" data-href="{item.url}" on:click="{onClick}" class="has-subitems">
+			<UISideMenuItemLabel {item} >
+				<UISideMenuTrigger on:toggle={({detail})=>{ closedChildren[index] = detail.closed; }} />
+			</UISideMenuItemLabel>
 		</a>
 		{:else}
-			<UISideMenuItemLabel {item} />
-			<UISideMenuTrigger {closed} on:toggle={toggle} />
+			<UISideMenuItemLabel {item} >
+				<UISideMenuTrigger on:toggle={({detail})=>{ closedChildren[index] = detail.closed; }} />
+			</UISideMenuItemLabel>
 		{/if}
-		<svelte:self {root} items="{item.items}" {closed} on:navigate />
+		<svelte:self {root} items="{item.items}" bind:closed={closedChildren[index]} on:navigate />
 	</li>
 	{:else}
 	<UISideMenuItemWithoutChildren {root} {item} on:navigate />

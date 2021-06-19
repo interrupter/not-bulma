@@ -14,7 +14,7 @@
   export let closed = false;
 
   function onClick(e){
-    e && e.preventDefault();
+    e && e.preventDefault() && e.stopPropagation();
     closed = !closed;
     dispatch('toggle', {closed});
     return false;
