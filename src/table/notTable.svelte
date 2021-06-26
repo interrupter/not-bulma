@@ -2,14 +2,14 @@
 	import {notCommon} from '../frame'
 	import {LOCALE} from '../locale';
 	import * as Stores from './../stores.js';
-	import TableImages from '../ui.images.svelte';
+
+
+	import UITableRow from './notTableRow.svelte';
 	import TableLinks from '../ui.links.svelte';
 	import TableButtons from '../ui.buttons.svelte';
-	import TableBooleans from '../ui.booleans.svelte';
 	import TableSwitch from './controls/ui.switch.svelte';
 	import TableTags from './controls/ui.tags.svelte';
 
-	import notPath from 'not-path';
 	import { onMount } from 'svelte';
 	import {createEventDispatcher} from 'svelte';
 	let dispatch = createEventDispatcher();
@@ -31,13 +31,11 @@
 	export let getItemId = item => item._id;
 
 	onMount(() => {
-
 	  if(showSelect){
 	    Stores.get(id).selected.subscribe(value => {
 	      selected = value;
 	    });
 	  }
-
 	  Stores.get(id).refined.subscribe(value => {
 	    items = value;
 	    if(showSelect){
@@ -50,10 +48,9 @@
 	          }
 	        }
 	      }
-	      selected=selected;
+	      selected = selected;
 	    }
 	  });
-
 	  Stores.get(id).state.subscribe(value => {
 	    state = value;
 	  });
@@ -81,17 +78,6 @@
 	  e.preventDefault();
 	  let el = e.target;
 	  dispatch('goToPage', parseInt(el.dataset.page));
-	  return false;
-	}
-
-	function onRowSelect(e){
-	  e.preventDefault();
-	  let itemId = e.currentTarget.dataset.id;
-	  Stores.get(id).selected.update((value)=>{return value;});
-	  dispatch('rowSelectChange', {
-	    id: 			itemId,
-	    selected: selected[itemId]
-	  });
 	  return false;
 	}
 
@@ -134,38 +120,7 @@
 	</thead>
 	<tbody>
 		{#each items as item (item._id)}
-		<tr>
-			{#if showSelect }
-			<td>
-				<input type="checkbox" id="table-row-select-{getItemId(item)}" data-id="{getItemId(item)}" bind:checked={selected[getItemId(item)]} placeholder="" name="row_selected_{getItemId(item)}" on:change={onRowSelect} />
-			</td>
-			{/if}
-			{#each fields as field}
-			<td class="{field.hideOnMobile?'is-hidden-touch':''}">
-				{#if field.type === 'link' }
-				<TableLinks values={ notPath.get(field.path, item, helpers) } />
-				{:else if field.type === 'button' }
-				<TableButtons values={ notPath.get(field.path, item, helpers) } />
-				{:else if field.type === 'image' }
-				<TableImages values={ notPath.get(field.path, item, helpers) } />
-				{:else if field.type === 'boolean' }
-				<TableBooleans values={ notPath.get(field.path, item, helpers) } />
-				{:else if field.type === 'tag' }
-				<TableTags values={ notPath.get(field.path, item, helpers) } />
-				{:else if field.type === 'switch' }
-				<TableSwitch id={getItemId(item)} fieldname={field.path} on:change="{field.onChange}" value={ notPath.get(field.path, item, helpers) } disabled={field.disabled} readonly={field.readonly} />
-				{:else if field.type === 'component' }
-				<svelte:component this={field.component} id={getItemId(item)} on:change="{field.onChange}" fieldname={field.path} disabled={field.disabled} readonly={field.readonly} value={ notPath.get(field.path, item, helpers) } {...field.options} />
-				{:else}
-				{#if !isNaN(field.maxLength) && field.maxLength }
-				{notCommon.strLengthCap(notPath.get(field.path, item, helpers), field.maxLength)}
-				{:else}
-				{notPath.get(field.path, item, helpers)}
-				{/if}
-				{/if}
-			</td>
-			{/each}
-		</tr>
+		<UITableRow {id} {item} {fields} {helpers} {showSelect} {getItemId} on:rowSelectChange />
 		{/each}
 	</tbody>
 </table>
@@ -177,9 +132,9 @@
 		{#each state.pagination.pages.list as page}
 		<li>
 			{#if page.active}
-			<a href class="pagination-link is-current" aria-label="Страница {page.index}" aria-current="page">{page.index+1}</a>
+			<a href class="pagination-link is-current" aria-label="Страница {page.index}" aria-current="page">{page.index + 1}</a>
 			{:else}
-			<a href class="pagination-link" aria-label="Страница {page.index}" data-page="{page.index}" on:click={goTo}>{page.index+1}</a>
+			<a href class="pagination-link" aria-label="Страница {page.index}" data-page="{page.index}" on:click={goTo}>{page.index + 1}</a>
 			{/if}
 		</li>
 		{/each}

@@ -4,6 +4,8 @@ import notPath from 'not-path';
 import * as Stores from './../stores.js';
 import UITable from './notTable.svelte';
 
+const CONST_ID_DUBLICATE_POSTFIX = '__dublicate__';
+
 const OPT_DEFAULT_PAGE_SIZE = 20,
   OPT_DEFAULT_PAGE_NUMBER = 0,
   OPT_DEFAULT_PAGE_RANGE = 6,
@@ -671,9 +673,20 @@ class notTable extends EventEmitter {
     let fields = this.getOptions('fields', []);
     fields.forEach((field) => {
       if(pathId === field.path){
-        field.path = field.path + '_';
+        field.path = field.path + CONST_ID_DUBLICATE_POSTFIX;
       }
     });
+  }
+
+
+  readFieldValue(path, item, helpers){
+    if(path.indexOf(CONST_ID_DUBLICATE_POSTFIX) > -1){
+      const fieldId = this.getOptions('idField');
+      const pathId = ':' + fieldId;
+      return notPath.get(pathId, item, helpers);
+    }else{
+      return notPath.get(path, item, helpers);
+    }
   }
 
   refineFiltered() {
@@ -686,7 +699,7 @@ class notTable extends EventEmitter {
       }
       this.getOptions('fields', []).forEach((field) => {
         let preprocessed = null,
-          val = notPath.get(field.path, item, this.getOptions('helpers'));
+          val = this.readFieldValue(field.path, item, this.getOptions('helpers'));
         if(Object.prototype.hasOwnProperty.call(field, OPT_FIELD_NAME_PRE_PROC)) {
           try {
             preprocessed = field[OPT_FIELD_NAME_PRE_PROC](val, item, index);
