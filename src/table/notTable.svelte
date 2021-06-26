@@ -28,7 +28,7 @@
 	export let showSelect = true;
 	export let selectAll = false;
 
-	export let getItemId = item=>item._id;
+	export let getItemId = item => item._id;
 
 	onMount(() => {
 
@@ -137,7 +137,7 @@
 		<tr>
 			{#if showSelect }
 			<td>
-				<input type="checkbox" id="table-row-select-{getItemId(item)}" data-id="{getItemId(item)}" bind:checked={selected[getItemId(item)]} placeholder="" name="row_selected_{getItemId(item)}"  on:change={onRowSelect} />
+				<input type="checkbox" id="table-row-select-{getItemId(item)}" data-id="{getItemId(item)}" bind:checked={selected[getItemId(item)]} placeholder="" name="row_selected_{getItemId(item)}" on:change={onRowSelect} />
 			</td>
 			{/if}
 			{#each fields as field}
@@ -153,31 +153,15 @@
 				{:else if field.type === 'tag' }
 				<TableTags values={ notPath.get(field.path, item, helpers) } />
 				{:else if field.type === 'switch' }
-				<TableSwitch
-					id={getItemId(item)}
-					fieldname={field.path}
-					on:change="{field.onChange}"
-					value={ notPath.get(field.path, item, helpers) }
-					disabled={field.disabled}
-					readonly={field.readonly}
-					/>
+				<TableSwitch id={getItemId(item)} fieldname={field.path} on:change="{field.onChange}" value={ notPath.get(field.path, item, helpers) } disabled={field.disabled} readonly={field.readonly} />
 				{:else if field.type === 'component' }
-				<svelte:component
-					this={field.component}
-					id={getItemId(item)}
-					on:change="{field.onChange}"
-					fieldname={field.path}
-					disabled={field.disabled}
-					readonly={field.readonly}
-					value={ notPath.get(field.path, item, helpers) }
-					{...field.options}
-					/>
+				<svelte:component this={field.component} id={getItemId(item)} on:change="{field.onChange}" fieldname={field.path} disabled={field.disabled} readonly={field.readonly} value={ notPath.get(field.path, item, helpers) } {...field.options} />
 				{:else}
-					{#if !isNaN(field.maxLength) && field.maxLength }
-					{notCommon.strLengthCap(notPath.get(field.path, item, helpers), field.maxLength)}
-					{:else}
-					{notPath.get(field.path, item, helpers)}
-					{/if}
+				{#if !isNaN(field.maxLength) && field.maxLength }
+				{notCommon.strLengthCap(notPath.get(field.path, item, helpers), field.maxLength)}
+				{:else}
+				{notPath.get(field.path, item, helpers)}
+				{/if}
 				{/if}
 			</td>
 			{/each}

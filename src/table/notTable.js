@@ -675,14 +675,18 @@ class notTable extends EventEmitter {
       this.getOptions('fields').forEach((field) => {
         let preprocessed = null,
           val = notPath.get(field.path, item, this.getOptions('helpers'));
-        if (Object.prototype.hasOwnProperty.call(field, OPT_FIELD_NAME_PRE_PROC)) {
+        if(Object.prototype.hasOwnProperty.call(field, OPT_FIELD_NAME_PRE_PROC)) {
           try {
             preprocessed = field[OPT_FIELD_NAME_PRE_PROC](val, item, index);
           } catch (e) {
             this.error('Error while preprocessing cell value', val, item, index);
             this.error(e);
           }
-          notPath.set(field.path, refined, preprocessed);
+          if(this.getOptions('idField') === field.path){
+            notPath.set(field.path + '_', refined, preprocessed);
+          }else{
+            notPath.set(field.path, refined, preprocessed);
+          }
         } else {
           notPath.set(field.path, refined, val);
         }
