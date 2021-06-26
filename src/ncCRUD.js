@@ -325,18 +325,16 @@ class ncCRUD extends notController {
         combined: true,
         factory: this.getInterface()
       },
-      /*
       fields:       undefined,
       showSelect:   undefined,
       getItemId:     undefined,
       idField:       undefined,
-      filter:       undefined,
-      */
       preload:       {},
       pager:         { size: 50, page: 0},
       sorter:       {
         id: -1
       },
+      filter:       undefined,
     };
 
     const TABLE_OPTIONS = {
@@ -353,8 +351,11 @@ class ncCRUD extends notController {
       }
     };
 
-    Object.keys(DEFAULT_OPTIONS_TABLE).forEach(key=>{
-      TABLE_OPTIONS.options[key] = this.getOptions(`list.${key}`, DEFAULT_OPTIONS_TABLE[key]);
+    Object.keys(DEFAULT_OPTIONS_TABLE).forEach( (key) => {
+      let optVal = this.getOptions(`list.${key}`, DEFAULT_OPTIONS_TABLE[key]);
+      if(typeof t !== 'undefined'){
+        TABLE_OPTIONS.options[key] = t;
+      }
     });
 
     this.ui.list = new notTable(TABLE_OPTIONS);

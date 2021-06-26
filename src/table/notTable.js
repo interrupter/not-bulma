@@ -672,7 +672,7 @@ class notTable extends EventEmitter {
       if (this.getOptions('idField')) {
         refined[this.getOptions('idField')] = item[this.getOptions('idField')];
       }
-      this.getOptions('fields').forEach((field) => {
+      this.getOptions('fields', []).forEach((field) => {
         let preprocessed = null,
           val = notPath.get(field.path, item, this.getOptions('helpers'));
         if(Object.prototype.hasOwnProperty.call(field, OPT_FIELD_NAME_PRE_PROC)) {
