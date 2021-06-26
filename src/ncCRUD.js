@@ -353,8 +353,8 @@ class ncCRUD extends notController {
 
     Object.keys(DEFAULT_OPTIONS_TABLE).forEach( (key) => {
       let optVal = this.getOptions(`list.${key}`, DEFAULT_OPTIONS_TABLE[key]);
-      if(typeof t !== 'undefined'){
-        TABLE_OPTIONS.options[key] = t;
+      if(typeof optVal !== 'undefined'){
+        TABLE_OPTIONS.options[key] = optVal;
       }
     });
 
