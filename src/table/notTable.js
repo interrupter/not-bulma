@@ -665,8 +665,20 @@ class notTable extends EventEmitter {
     }
   }
 
+  checkFieldsNames(){
+    const fieldId = this.getOptions('idField');
+    const pathId = ':' + fieldId;
+    let fields = this.getOptions('fields', []);
+    fields.forEach((field) => {
+      if(pathId === field.path){
+        field.path = field.path + '_';
+      }
+    });
+  }
+
   refineFiltered() {
     let result = [];
+    this.checkFieldsNames();
     this.data.filtered.forEach((item, index) => {
       let refined = {};
       if (this.getOptions('idField')) {
@@ -682,11 +694,7 @@ class notTable extends EventEmitter {
             this.error('Error while preprocessing cell value', val, item, index);
             this.error(e);
           }
-          if((':' + this.getOptions('idField')) === field.path){
-            notPath.set(field.path + '_', refined, preprocessed);
-          }else{
-            notPath.set(field.path, refined, preprocessed);
-          }
+          notPath.set(field.path, refined, preprocessed);
         } else {
           notPath.set(field.path, refined, val);
         }
