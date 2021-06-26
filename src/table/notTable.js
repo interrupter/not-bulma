@@ -682,7 +682,7 @@ class notTable extends EventEmitter {
             this.error('Error while preprocessing cell value', val, item, index);
             this.error(e);
           }
-          if(this.getOptions('idField') === field.path){
+          if((':' + this.getOptions('idField')) === field.path){
             notPath.set(field.path + '_', refined, preprocessed);
           }else{
             notPath.set(field.path, refined, preprocessed);

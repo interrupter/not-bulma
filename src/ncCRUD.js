@@ -325,13 +325,15 @@ class ncCRUD extends notController {
         combined: true,
         factory: this.getInterface()
       },
+      /*
       fields:       undefined,
       showSelect:   undefined,
       getItemId:     undefined,
       idField:       undefined,
+      filter:       undefined,
+      */
       preload:       {},
       pager:         { size: 50, page: 0},
-      filter:       undefined,
       sorter:       {
         id: -1
       },
