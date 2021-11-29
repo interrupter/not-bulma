@@ -1,6 +1,7 @@
 <script>
   import UIIcon from '../ui.icon.svelte';
   export let url = '/';
+  export let title = '';
   export let icon = {
     src: 'https://via.placeholder.com/56x28',
     width: 28,
@@ -10,5 +11,5 @@
 
 
 <a class="navbar-item" href="{url}">
-  <UIIcon {...icon}></UIIcon>
+  <UIIcon {...icon}></UIIcon>{title?` ${title}`:''}
 </a>
