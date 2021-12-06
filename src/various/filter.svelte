@@ -11,7 +11,6 @@
 
   import UIForm from '../form/form.svelte';
   import Form from '../form.js';
-  import Validators from './validators.js';
 
   import UIButton from '../ui.button.svelte';
 //  import AutoComplete from "simple-svelte-autocomplete";
@@ -164,7 +163,6 @@
     props = Form.prebuild({
       manifest,
       action:       'search',
-      validators:   Validators,
       options:     formOptions
     });
   });

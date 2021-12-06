@@ -929,14 +929,14 @@ var notBulma = (function (exports) {
 	var concat$3 = functionUncurryThis([].concat);
 
 	// all object keys, includes non-enumerable and symbols
-	var ownKeys$4 = getBuiltIn('Reflect', 'ownKeys') || function ownKeys(it) {
+	var ownKeys$5 = getBuiltIn('Reflect', 'ownKeys') || function ownKeys(it) {
 	  var keys = objectGetOwnPropertyNames.f(anObject(it));
 	  var getOwnPropertySymbols = objectGetOwnPropertySymbols.f;
 	  return getOwnPropertySymbols ? concat$3(keys, getOwnPropertySymbols(it)) : keys;
 	};
 
 	var copyConstructorProperties = function (target, source) {
-	  var keys = ownKeys$4(source);
+	  var keys = ownKeys$5(source);
 	  var defineProperty = objectDefineProperty.f;
 	  var getOwnPropertyDescriptor = objectGetOwnPropertyDescriptor.f;
 	  for (var i = 0; i < keys.length; i++) {
@@ -2865,7 +2865,7 @@ var notBulma = (function (exports) {
 	  getOwnPropertyDescriptors: function getOwnPropertyDescriptors(object) {
 	    var O = toIndexedObject(object);
 	    var getOwnPropertyDescriptor = objectGetOwnPropertyDescriptor.f;
-	    var keys = ownKeys$4(O);
+	    var keys = ownKeys$5(O);
 	    var result = {};
 	    var index = 0;
 	    var key, descriptor;
@@ -6655,9 +6655,9 @@ var notBulma = (function (exports) {
 
 	function _arrayLikeToArray$4(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-	function ownKeys$3(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+	function ownKeys$4(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
-	function _objectSpread$3(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$3(Object(source), true).forEach(function (key) { defineProperty$4(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$3(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+	function _objectSpread$4(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$4(Object(source), true).forEach(function (key) { defineProperty$4(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$4(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 	/*
 	https://github.com/TehShrike/is-mergeable-object
 
@@ -7233,7 +7233,7 @@ var notBulma = (function (exports) {
 	      targets = {}; //various collections
 
 	      if (arguments.length == 1) {
-	        targets = _objectSpread$3({}, arguments[0]);
+	        targets = _objectSpread$4({}, arguments[0]);
 
 	        if (Object.hasOwnProperty.call(arguments[0], 'defaultConf')) {
 	          defaultConf = arguments[0].defaultConf;
@@ -7465,17 +7465,17 @@ var notBulma = (function (exports) {
 	          target.router.routes[routeType] = {};
 	        }
 
-	        Object.assign(target.router.routes[routeType], _objectSpread$3({}, wscOptions.router.routes[routeType]));
+	        Object.assign(target.router.routes[routeType], _objectSpread$4({}, wscOptions.router.routes[routeType]));
 	      }
 	    }
 	  }
 
 	  if (Object.prototype.hasOwnProperty.call(wscOptions, 'messenger')) {
-	    Object.assign(target.messenger, _objectSpread$3({}, wscOptions.messenger));
+	    Object.assign(target.messenger, _objectSpread$4({}, wscOptions.messenger));
 	  }
 
 	  if (Object.prototype.hasOwnProperty.call(wscOptions, 'connection')) {
-	    Object.assign(target.connection, _objectSpread$3({}, wscOptions.connection));
+	    Object.assign(target.connection, _objectSpread$4({}, wscOptions.connection));
 	  }
 
 	  for (var _i = 0, _arr = ['name', 'getToken', 'logger', 'identity', 'credentials']; _i < _arr.length; _i++) {
@@ -17334,6 +17334,148 @@ var notBulma = (function (exports) {
 
 	var validator = unwrapExports(validator_1);
 
+	var UICommon = /*#__PURE__*/function () {
+	  function UICommon() {
+	    classCallCheck(this, UICommon);
+	  }
+
+	  createClass(UICommon, null, [{
+	    key: "formatPhone",
+	    value:
+	    /**
+	     *  Reformats input from any string to strict phone format
+	     *  @param {string}    phone    free style phone number
+	     *  @returns {string}          phone number
+	     **/
+	    function formatPhone(val) {
+	      var filler = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.FILLER;
+	      //starting from 11 digits in phone number
+	      var slots = [1, 2, 2, 2, 3, 3, 3, 4, 4, 5, 5];
+	      var digits = val.replace(/\D/g, ''); //if there are more, move them to country code slot
+
+	      if (digits.length > 11) {
+	        var d = digits.length - 11;
+
+	        while (d > 0) {
+	          d--;
+	          slots.unshift(1);
+	        }
+	      }
+
+	      var stack = ['', '', '', '', ''];
+	      Array.from(digits).forEach(function (digit, index) {
+	        var slot = slots[index];
+	        stack[slot - 1] = stack[slot - 1] + digit;
+	      }); //creating map of parts lengths
+
+	      var lens = slots.reduce(function (acc, curr) {
+	        if (typeof acc[curr] === 'undefined') {
+	          acc[curr] = 1;
+	        } else {
+	          acc[curr] += 1;
+	        }
+
+	        return acc;
+	      }, {}); //fill empty positions with filler (_)
+
+	      for (var t in stack) {
+	        var dif = lens[parseInt(t) + 1] - stack[t].length;
+
+	        while (dif > 0) {
+	          stack[t] = stack[t] + filler;
+	          dif--;
+	        }
+	      }
+
+	      return "+".concat(stack[0], " (").concat(stack[1], ") ").concat(stack[2], "-").concat(stack[3], "-").concat(stack[4]);
+	    }
+	  }, {
+	    key: "setMoneySign",
+	    value: function setMoneySign(val) {
+	      this.MONEY_SIGN = val;
+	    }
+	  }, {
+	    key: "formatPrice",
+	    value: function formatPrice(price) {
+	      var major = parseInt(Math.floor(price / 100)),
+	          minor = parseInt(price % 100);
+	      major = '' + major;
+	      return "".concat(this.MONEY_SIGN).concat(major, ".").concat(minor);
+	    }
+	  }, {
+	    key: "formatTimestamp",
+	    value: function formatTimestamp(timestamp) {
+	      var offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+	      var offsetLocal = new Date().getTimezoneOffset();
+	      var deltaOffset = (offsetLocal - parseInt(offset)) * 60 * 1000;
+	      var localDateTime = new Date(parseInt(timestamp) - deltaOffset);
+	      return localDateTime.toLocaleString(window.navigator.language);
+	    }
+	  }, {
+	    key: "declOfNum",
+	    value: function declOfNum(n, text_forms) {
+	      n = Math.abs(n) % 100;
+	      var n1 = n % 10;
+
+	      if (n > 10 && n < 20) {
+	        return text_forms[2];
+	      }
+
+	      if (n1 > 1 && n1 < 5) {
+	        return text_forms[1];
+	      }
+
+	      if (n1 == 1) {
+	        return text_forms[0];
+	      }
+
+	      return text_forms[2];
+	    }
+	  }, {
+	    key: "humanizedTimeDiff",
+	    value: function humanizedTimeDiff(date
+	    /* unix time */
+	    ) {
+	      var currentTime = new Date().getTime();
+	      var sec = Math.round((currentTime - date) / 1000);
+	      var unit;
+
+	      if (sec < 60) {
+	        unit = this.declOfNum(sec, this.TIME.SECONDS);
+	        return "".concat(sec, " ").concat(unit, " \u043D\u0430\u0437\u0430\u0434");
+	      } else if (sec < 3600) {
+	        var min = Math.floor(sec / 60);
+	        unit = this.declOfNum(min, this.TIME.MINUTES);
+	        return "".concat(min, " ").concat(unit, " \u043D\u0430\u0437\u0430\u0434");
+	      } else {
+	        var hours = Math.floor(sec / (60 * 60));
+	        unit = this.declOfNum(hours, this.TIME.HOURS);
+	        return "".concat(hours, " ").concat(unit, " \u043D\u0430\u0437\u0430\u0434");
+	      }
+	    }
+	  }]);
+
+	  return UICommon;
+	}();
+
+	defineProperty$4(UICommon, "ERROR_DEFAULT", 'Что пошло не так.');
+
+	defineProperty$4(UICommon, "DEFAULT_REDIRECT_TIMEOUT", 3000);
+
+	defineProperty$4(UICommon, "CLASS_OK", 'is-success');
+
+	defineProperty$4(UICommon, "CLASS_ERR", 'is-danger');
+
+	defineProperty$4(UICommon, "FILLER", '_');
+
+	defineProperty$4(UICommon, "MONEY_SIGN", '&#8381;');
+
+	defineProperty$4(UICommon, "TIME", {
+	  SECONDS: ['секунду', 'секунды', 'секунд'],
+	  MINUTES: ['минуту', 'минуты', 'минут'],
+	  HOURS: ['час', 'часа', 'часов']
+	});
+
 	/* src/form/ui.label.svelte generated by Svelte v3.44.2 */
 
 	function create_fragment$Z(ctx) {
@@ -18190,7 +18332,7 @@ var notBulma = (function (exports) {
 		return child_ctx;
 	}
 
-	// (261:0) {:else}
+	// (262:0) {:else}
 	function create_else_block$v(ctx) {
 		let t0;
 		let t1;
@@ -18361,7 +18503,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (257:0) {#if success}
+	// (258:0) {#if success}
 	function create_if_block$E(ctx) {
 		let div;
 		let h3;
@@ -18392,7 +18534,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (262:0) {#if title }
+	// (263:0) {#if title }
 	function create_if_block_15(ctx) {
 		let h5;
 		let t_value = /*$LOCALE*/ ctx[15][/*title*/ ctx[5]] + "";
@@ -18417,7 +18559,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (265:0) {#if description }
+	// (266:0) {#if description }
 	function create_if_block_14(ctx) {
 		let h6;
 		let t_value = /*$LOCALE*/ ctx[15][/*description*/ ctx[6]] + "";
@@ -18442,7 +18584,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (269:0) {#if options.buttonsFirst }
+	// (270:0) {#if options.buttonsFirst }
 	function create_if_block_10(ctx) {
 		let div;
 		let t0;
@@ -18523,7 +18665,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (271:1) {#if cancel.enabled}
+	// (272:1) {#if cancel.enabled}
 	function create_if_block_13(ctx) {
 		let button;
 		let t_value = /*$LOCALE*/ ctx[15][/*cancel*/ ctx[8].caption] + "";
@@ -18566,7 +18708,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (274:1) {#if submit.enabled}
+	// (275:1) {#if submit.enabled}
 	function create_if_block_12(ctx) {
 		let button;
 		let t_value = /*$LOCALE*/ ctx[15][/*submit*/ ctx[7].caption] + "";
@@ -18614,7 +18756,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (279:0) {#if formErrors.length > 0 }
+	// (280:0) {#if formErrors.length > 0 }
 	function create_if_block_11(ctx) {
 		let div;
 		let t_value = /*formErrors*/ ctx[12].join(', ') + "";
@@ -18639,7 +18781,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (317:0) {:else}
+	// (306:0) {:else}
 	function create_else_block_2$2(ctx) {
 		let div;
 		let t0;
@@ -18672,7 +18814,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (307:0) {#if form[field] && form[field].component }
+	// (302:0) {#if form[field] && form[field].component }
 	function create_if_block_8$1(ctx) {
 		let if_block_anchor;
 		let current;
@@ -18728,7 +18870,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (286:0) {#if Array.isArray(field) }
+	// (287:0) {#if Array.isArray(field) }
 	function create_if_block_5$6(ctx) {
 		let div;
 		let current;
@@ -18815,7 +18957,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (308:0) {#if form[field].visible}
+	// (303:0) {#if form[field].visible}
 	function create_if_block_9$1(ctx) {
 		let uifield;
 		let current;
@@ -18862,7 +19004,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (301:1) {:else}
+	// (296:1) {:else}
 	function create_else_block_1$3(ctx) {
 		let div;
 		let t0;
@@ -18895,7 +19037,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (289:1) {#if form[subfield] && form[subfield].component }
+	// (290:1) {#if form[subfield] && form[subfield].component }
 	function create_if_block_6$3(ctx) {
 		let if_block_anchor;
 		let current;
@@ -18951,7 +19093,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (290:1) {#if form[subfield].visible }
+	// (291:1) {#if form[subfield].visible }
 	function create_if_block_7$2(ctx) {
 		let div;
 		let uifield;
@@ -19013,7 +19155,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (288:1) {#each field as subfield }
+	// (289:1) {#each field as subfield }
 	function create_each_block_1$4(ctx) {
 		let current_block_type_index;
 		let if_block;
@@ -19083,7 +19225,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (285:0) {#each fields as field}
+	// (286:0) {#each fields as field}
 	function create_each_block$g(ctx) {
 		let show_if;
 		let current_block_type_index;
@@ -19156,7 +19298,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (323:0) {#if !options.buttonsFirst }
+	// (312:0) {#if !options.buttonsFirst }
 	function create_if_block_1$t(ctx) {
 		let t0;
 		let div;
@@ -19233,7 +19375,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (324:0) {#if formErrors.length > 0 }
+	// (313:0) {#if formErrors.length > 0 }
 	function create_if_block_4$e(ctx) {
 		let div;
 		let t_value = /*formErrors*/ ctx[12].join(', ') + "";
@@ -19258,7 +19400,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (328:1) {#if cancel.enabled}
+	// (317:1) {#if cancel.enabled}
 	function create_if_block_3$i(ctx) {
 		let button;
 		let t_value = /*$LOCALE*/ ctx[15][/*cancel*/ ctx[8].caption] + "";
@@ -19301,7 +19443,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (331:1) {#if submit.enabled}
+	// (320:1) {#if submit.enabled}
 	function create_if_block_2$k(ctx) {
 		let button;
 		let t_value = /*$LOCALE*/ ctx[15][/*submit*/ ctx[7].caption] + "";
@@ -19449,6 +19591,7 @@ var notBulma = (function (exports) {
 		let dispatch = createEventDispatcher();
 		let form = {};
 		let formErrors = [];
+		let formHasErrors = false;
 		let fieldsHasErrors = false;
 		let success = false;
 
@@ -19553,20 +19696,6 @@ var notBulma = (function (exports) {
 			dispatch(`field.valid`, { fieldName });
 		}
 
-		function fieldErrorsNotChanged(fieldName, errs) {
-			let oldErrs = form[fieldName].errors;
-
-			if (oldErrs === false && errs === false) {
-				return true;
-			} else {
-				if (Array.isArray(oldErrs) && Array.isArray(errs)) {
-					return oldErrs.join('. ') === errs.join('. ');
-				} else {
-					return false;
-				}
-			}
-		}
-
 		function initFormByField(fieldName) {
 			if (Array.isArray(fieldName)) {
 				fieldName.forEach(initFormByField);
@@ -19593,8 +19722,12 @@ var notBulma = (function (exports) {
 		});
 
 		function updateFormValidationStatus(result) {
+			$$invalidate(31, formHasErrors = false); /* FormValidationSession.getCompleteResult() */
+			$$invalidate(32, fieldsHasErrors = false);
+
 			if (Array.isArray(result.form) && result.form.length) {
-				formErrors.splice(0, formErrors.length, ...result.form); /* FormValidationSession.getCompleteResult() */
+				formErrors.splice(0, formErrors.length, ...result.form);
+				$$invalidate(31, formHasErrors = true);
 			} else {
 				formErrors.splice(0, formErrors.length);
 			}
@@ -19605,6 +19738,7 @@ var notBulma = (function (exports) {
 				for (let fieldName in result.fields) {
 					if (Array.isArray(result.fields[fieldName]) && result.fields[fieldName].length) {
 						setFormFieldInvalid(fieldName, result.fields[fieldName]);
+						$$invalidate(32, fieldsHasErrors = true);
 					} else {
 						setFormFieldValid(fieldName);
 					}
@@ -19691,8 +19825,8 @@ var notBulma = (function (exports) {
 		};
 
 		$$self.$$.update = () => {
-			if ($$self.$$.dirty[1] & /*fieldsHasErrors*/ 2) {
-				$$invalidate(14, formInvalid = fieldsHasErrors);
+			if ($$self.$$.dirty[1] & /*formHasErrors, fieldsHasErrors*/ 3) {
+				$$invalidate(14, formInvalid = formHasErrors || fieldsHasErrors);
 			}
 		};
 
@@ -19720,7 +19854,6 @@ var notBulma = (function (exports) {
 			fieldIsValid,
 			setFormFieldInvalid,
 			setFormFieldValid,
-			fieldErrorsNotChanged,
 			updateFormValidationStatus,
 			showSuccess,
 			setLoading,
@@ -19729,6 +19862,7 @@ var notBulma = (function (exports) {
 			setVisibleFields,
 			setInvisibleFields,
 			setFieldValue,
+			formHasErrors,
 			fieldsHasErrors
 		];
 	}
@@ -19750,8 +19884,7 @@ var notBulma = (function (exports) {
 					fieldIsValid: 20,
 					setFormFieldInvalid: 21,
 					setFormFieldValid: 22,
-					fieldErrorsNotChanged: 23,
-					updateFormValidationStatus: 24,
+					updateFormValidationStatus: 23,
 					fields: 1,
 					options: 2,
 					SUCCESS_TEXT: 3,
@@ -19762,14 +19895,14 @@ var notBulma = (function (exports) {
 					cancel: 8,
 					loading: 0,
 					submitForm: 9,
-					showSuccess: 25,
+					showSuccess: 24,
 					rejectForm: 10,
-					setLoading: 26,
-					resetLoading: 27,
-					setFieldsVisibility: 28,
-					setVisibleFields: 29,
-					setInvisibleFields: 30,
-					setFieldValue: 31
+					setLoading: 25,
+					resetLoading: 26,
+					setFieldsVisibility: 27,
+					setVisibleFields: 28,
+					setInvisibleFields: 29,
+					setFieldValue: 30
 				},
 				null,
 				[-1, -1]
@@ -19800,279 +19933,38 @@ var notBulma = (function (exports) {
 			return this.$$.ctx[22];
 		}
 
-		get fieldErrorsNotChanged() {
+		get updateFormValidationStatus() {
 			return this.$$.ctx[23];
 		}
 
-		get updateFormValidationStatus() {
+		get showSuccess() {
 			return this.$$.ctx[24];
 		}
 
-		get showSuccess() {
+		get setLoading() {
 			return this.$$.ctx[25];
 		}
 
-		get setLoading() {
+		get resetLoading() {
 			return this.$$.ctx[26];
 		}
 
-		get resetLoading() {
+		get setFieldsVisibility() {
 			return this.$$.ctx[27];
 		}
 
-		get setFieldsVisibility() {
+		get setVisibleFields() {
 			return this.$$.ctx[28];
 		}
 
-		get setVisibleFields() {
+		get setInvisibleFields() {
 			return this.$$.ctx[29];
 		}
 
-		get setInvisibleFields() {
+		get setFieldValue() {
 			return this.$$.ctx[30];
 		}
-
-		get setFieldValue() {
-			return this.$$.ctx[31];
-		}
 	}
-
-	var Form = /*#__PURE__*/function () {
-	  function Form() {
-	    classCallCheck(this, Form);
-	  }
-
-	  createClass(Form, null, [{
-	    key: "addComponent",
-	    value: function addComponent(name, value) {
-	      COMPONENTS.add(name, value);
-	    }
-	  }, {
-	    key: "addVariants",
-	    value: function addVariants(name, value) {
-	      VARIANTS.add(name, value);
-	    }
-	  }, {
-	    key: "addField",
-	    value: function addField(name, field) {
-	      FIELDS.add(name, field);
-	    }
-	  }, {
-	    key: "actionFieldsInit",
-	    value: function actionFieldsInit(fieldName, options, validators, data) {
-	      var _this = this;
-
-	      if (Array.isArray(fieldName)) {
-	        fieldName.forEach(function (subFieldName) {
-	          _this.actionFieldsInit(subFieldName, options, validators, data);
-	        });
-	      } else {
-	        if (!Object.prototype.hasOwnProperty.call(options, 'fields')) {
-	          options.fields = {};
-	        }
-
-	        if (!Object.prototype.hasOwnProperty.call(options.fields, fieldName)) {
-	          options.fields[fieldName] = {};
-	        } //copying validators
-
-
-	        if (validators && validators.fields && Object.prototype.hasOwnProperty.call(validators.fields, fieldName)) {
-	          options.fields[fieldName].validate = validators.fields[fieldName];
-	        } //copying initial data
-
-
-	        if (typeof data !== 'undefined' && data !== null && typeof data[fieldName] !== 'undefined' && data[fieldName] !== null) {
-	          options.fields[fieldName].value = data[fieldName];
-	        }
-	      }
-	    }
-	  }, {
-	    key: "build",
-	    value: function build(_ref) {
-	      var target = _ref.target,
-	          manifest = _ref.manifest,
-	          action = _ref.action,
-	          _ref$options = _ref.options,
-	          options = _ref$options === void 0 ? {} : _ref$options,
-	          _ref$validators = _ref.validators,
-	          validators = _ref$validators === void 0 ? {} : _ref$validators,
-	          _ref$data = _ref.data,
-	          data = _ref$data === void 0 ? null : _ref$data;
-	      return new Form$1({
-	        target: target,
-	        props: this.prebuild({
-	          manifest: manifest,
-	          action: action,
-	          options: options,
-	          validators: validators,
-	          data: data
-	        })
-	      });
-	    }
-	  }, {
-	    key: "prebuild",
-	    value: function prebuild(_ref2) {
-	      var manifest = _ref2.manifest,
-	          action = _ref2.action,
-	          _ref2$options = _ref2.options,
-	          options = _ref2$options === void 0 ? {} : _ref2$options,
-	          _ref2$validators = _ref2.validators,
-	          validators = _ref2$validators === void 0 ? {} : _ref2$validators,
-	          _ref2$data = _ref2.data,
-	          data = _ref2$data === void 0 ? null : _ref2$data;
-
-	      if (Object.prototype.hasOwnProperty.call(manifest, 'fields')) {
-	        FIELDS.import(manifest.fields);
-	      }
-
-	      if (typeof options === 'undefined' || options === null) {
-	        options = {};
-	      }
-
-	      if (manifest.actions[action] && manifest.actions[action].fields) {
-	        this.actionFieldsInit(manifest.actions[action].fields, options, validators, data);
-	      }
-
-	      if (typeof validators !== 'undefined' && validators !== null) {
-	        if (Object.prototype.hasOwnProperty.call(validators, 'forms')) {
-	          if (Object.prototype.hasOwnProperty.call(validators.forms, action)) {
-	            options.validate = validators.forms[action];
-	          }
-	        }
-	      }
-
-	      return {
-	        title: manifest.actions[action].title,
-	        description: manifest.actions[action].description,
-	        fields: manifest.actions[action].fields,
-	        options: options
-	      };
-	    }
-	  }, {
-	    key: "getVariantTitle",
-	    value: function getVariantTitle(name, id) {
-	      var lib = VARIANTS.get(name);
-	      var result = lib.filter(function (item) {
-	        return item.id === id;
-	      });
-	      return result.length === 1 ? result[0] : 'noname';
-	    }
-	  }]);
-
-	  return Form;
-	}();
-
-	defineProperty$4(Form, "validator", validator);
-
-	function ownKeys$2(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
-
-	function _objectSpread$2(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$2(Object(source), true).forEach(function (key) { defineProperty$4(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$2(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-	var ValidatorsBuilder = /*#__PURE__*/function () {
-	  function ValidatorsBuilder(app, getValidatorEnv) {
-	    classCallCheck(this, ValidatorsBuilder);
-
-	    this.app = app;
-	    this.getValidatorEnv = getValidatorEnv;
-	  }
-
-	  createClass(ValidatorsBuilder, [{
-	    key: "augmentValidators",
-	    value: function augmentValidators(validators) {
-	      if (Object.prototype.hasOwnProperty.call(validators, 'fields')) {
-	        for (var fieldName in validators.fields) {
-	          validators.fields[fieldName] = this.augmentValidators(validators.fields[fieldName]);
-	        }
-	      }
-
-	      if (Object.prototype.hasOwnProperty.call(validators, 'fields')) {
-	        for (var formName in validators.forms) {
-	          validators.forms[formName] = this.augmentFormValidators(validators.forms[formName]);
-	        }
-	      }
-
-	      return validators;
-	    }
-	  }, {
-	    key: "augmentFieldsValidators",
-	    value: function augmentFieldsValidators(fieldValidators) {
-	      var _this = this;
-
-	      return fieldValidators.map(function (field) {
-	        return _this.augmentValidator(field);
-	      });
-	    }
-	  }, {
-	    key: "augmentFieldValidator",
-	    value: function augmentFieldValidator(rule) {
-	      if (rule.validator) {
-	        if (typeof rule.validator === 'string') {
-	          return this.augmentValidatorObsolete(rule);
-	        } else {
-	          return this.augmentValidatorModern(rule);
-	        }
-	      }
-
-	      return rule;
-	    }
-	  }, {
-	    key: "augmentFieldValidatorObsolete",
-	    value: function augmentFieldValidatorObsolete(rule) {
-	      if (Form.validator && Object.prototype.hasOwnProperty.call(Form.validator, rule.validator)) {
-	        var validatorName = rule.validator;
-
-	        var result = _objectSpread$2({}, rule);
-
-	        delete result.validator;
-
-	        result.validator = function (val) {
-	          return Form.validator[validatorName](val, rule.arguments);
-	        };
-
-	        return result;
-	      } else {
-	        return _objectSpread$2({}, rule);
-	      }
-	    }
-	  }, {
-	    key: "augmentFieldValidatorModern",
-	    value: function augmentFieldValidatorModern(rule) {
-	      var _this2 = this;
-
-	      var ruleValidator = rule.validator;
-
-	      var result = _objectSpread$2({}, rule);
-
-	      delete result.validator;
-
-	      result.validator = function (val) {
-	        return ruleValidator(val, _this2.getValidatorEnv());
-	      };
-
-	      return result;
-	    }
-	  }, {
-	    key: "augmentFormValidator",
-	    value: function augmentFormValidator(rule) {
-	      var _this3 = this;
-
-	      return function (val, validationResults) {
-	        return rule(val, validationResults, _this3.getValidatorEnv());
-	      };
-	    }
-	  }, {
-	    key: "augmentFormValidators",
-	    value: function augmentFormValidators(rules) {
-	      var _this4 = this;
-
-	      return rules.map(function (rule) {
-	        return _this4.augmentFormValidator(rule);
-	      });
-	    }
-	  }]);
-
-	  return ValidatorsBuilder;
-	}();
 
 	function _createForOfIteratorHelper$1(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray$1(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
@@ -20539,6 +20431,263 @@ var notBulma = (function (exports) {
 	  return FormValidationRunner;
 	}();
 
+	var Form = /*#__PURE__*/function () {
+	  function Form() {
+	    classCallCheck(this, Form);
+	  }
+
+	  createClass(Form, null, [{
+	    key: "addComponent",
+	    value: function addComponent(name, value) {
+	      COMPONENTS.add(name, value);
+	    }
+	  }, {
+	    key: "addVariants",
+	    value: function addVariants(name, value) {
+	      VARIANTS.add(name, value);
+	    }
+	  }, {
+	    key: "addField",
+	    value: function addField(name, field) {
+	      FIELDS.add(name, field);
+	    }
+	  }, {
+	    key: "actionFieldsInit",
+	    value: function actionFieldsInit(fieldName, options, data) {
+	      var _this = this;
+
+	      if (Array.isArray(fieldName)) {
+	        fieldName.forEach(function (subFieldName) {
+	          _this.actionFieldsInit(subFieldName, options, data);
+	        });
+	      } else {
+	        if (!Object.prototype.hasOwnProperty.call(options, 'fields')) {
+	          options.fields = {};
+	        }
+
+	        if (!Object.prototype.hasOwnProperty.call(options.fields, fieldName)) {
+	          options.fields[fieldName] = {};
+	        } //copying initial data
+
+
+	        if (typeof data !== 'undefined' && data !== null && typeof data[fieldName] !== 'undefined' && data[fieldName] !== null) {
+	          options.fields[fieldName].value = data[fieldName];
+	        }
+	      }
+	    }
+	  }, {
+	    key: "build",
+	    value: function build(_ref) {
+	      var target = _ref.target,
+	          manifest = _ref.manifest,
+	          action = _ref.action,
+	          _ref$options = _ref.options,
+	          options = _ref$options === void 0 ? {} : _ref$options,
+	          _ref$validators = _ref.validators,
+	          validators = _ref$validators === void 0 ? {} : _ref$validators,
+	          _ref$data = _ref.data,
+	          data = _ref$data === void 0 ? null : _ref$data;
+	      var formUI = new Form$1({
+	        target: target,
+	        props: Form.prebuild({
+	          manifest: manifest,
+	          action: action,
+	          options: options,
+	          data: data
+	        })
+	      });
+	      var formValidator = new FormValidationRunner$1(validators);
+	      formUI.$on('change', /*#__PURE__*/asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee() {
+	        var session;
+	        return regenerator.wrap(function _callee$(_context) {
+	          while (1) {
+	            switch (_context.prev = _context.next) {
+	              case 0:
+	                _context.prev = 0;
+	                _context.next = 3;
+	                return formValidator.all(formUI.collectData(), action);
+
+	              case 3:
+	                session = _context.sent;
+	                formUI.updateFormValidationStatus(session.getCompleteResult());
+	                _context.next = 11;
+	                break;
+
+	              case 7:
+	                _context.prev = 7;
+	                _context.t0 = _context["catch"](0);
+	                formUI.updateFormValidationStatus({
+	                  form: [UICommon.ERROR_DEFAULT]
+	                });
+	                notCommon$1.report(_context.t0);
+
+	              case 11:
+	              case "end":
+	                return _context.stop();
+	            }
+	          }
+	        }, _callee, null, [[0, 7]]);
+	      })));
+	      return {
+	        ui: formUI,
+	        validator: formValidator
+	      };
+	    }
+	  }, {
+	    key: "prebuild",
+	    value: function prebuild(_ref3) {
+	      var manifest = _ref3.manifest,
+	          action = _ref3.action,
+	          _ref3$options = _ref3.options,
+	          options = _ref3$options === void 0 ? {} : _ref3$options,
+	          _ref3$data = _ref3.data,
+	          data = _ref3$data === void 0 ? null : _ref3$data;
+
+	      if (Object.prototype.hasOwnProperty.call(manifest, 'fields')) {
+	        FIELDS.import(manifest.fields);
+	      }
+
+	      if (typeof options === 'undefined' || options === null) {
+	        options = {};
+	      }
+
+	      if (manifest.actions[action] && manifest.actions[action].fields) {
+	        this.actionFieldsInit(manifest.actions[action].fields, options, data);
+	      }
+
+	      return {
+	        title: manifest.actions[action].title,
+	        description: manifest.actions[action].description,
+	        fields: manifest.actions[action].fields,
+	        options: options
+	      };
+	    }
+	  }, {
+	    key: "getVariantTitle",
+	    value: function getVariantTitle(name, id) {
+	      var lib = VARIANTS.get(name);
+	      var result = lib.filter(function (item) {
+	        return item.id === id;
+	      });
+	      return result.length === 1 ? result[0] : 'noname';
+	    }
+	  }]);
+
+	  return Form;
+	}();
+
+	defineProperty$4(Form, "validator", validator);
+
+	function ownKeys$3(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+	function _objectSpread$3(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$3(Object(source), true).forEach(function (key) { defineProperty$4(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$3(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+	var ValidatorsBuilder = /*#__PURE__*/function () {
+	  function ValidatorsBuilder(app, getValidatorEnv) {
+	    classCallCheck(this, ValidatorsBuilder);
+
+	    this.app = app;
+	    this.getValidatorEnv = getValidatorEnv;
+	  }
+
+	  createClass(ValidatorsBuilder, [{
+	    key: "augmentValidators",
+	    value: function augmentValidators(validators) {
+	      if (Object.prototype.hasOwnProperty.call(validators, 'fields')) {
+	        for (var fieldName in validators.fields) {
+	          validators.fields[fieldName] = this.augmentValidators(validators.fields[fieldName]);
+	        }
+	      }
+
+	      if (Object.prototype.hasOwnProperty.call(validators, 'fields')) {
+	        for (var formName in validators.forms) {
+	          validators.forms[formName] = this.augmentFormValidators(validators.forms[formName]);
+	        }
+	      }
+
+	      return validators;
+	    }
+	  }, {
+	    key: "augmentFieldsValidators",
+	    value: function augmentFieldsValidators(fieldValidators) {
+	      var _this = this;
+
+	      return fieldValidators.map(function (field) {
+	        return _this.augmentValidator(field);
+	      });
+	    }
+	  }, {
+	    key: "augmentFieldValidator",
+	    value: function augmentFieldValidator(rule) {
+	      if (rule.validator) {
+	        if (typeof rule.validator === 'string') {
+	          return this.augmentValidatorObsolete(rule);
+	        } else {
+	          return this.augmentValidatorModern(rule);
+	        }
+	      }
+
+	      return rule;
+	    }
+	  }, {
+	    key: "augmentFieldValidatorObsolete",
+	    value: function augmentFieldValidatorObsolete(rule) {
+	      if (Form.validator && Object.prototype.hasOwnProperty.call(Form.validator, rule.validator)) {
+	        var validatorName = rule.validator;
+
+	        var result = _objectSpread$3({}, rule);
+
+	        delete result.validator;
+
+	        result.validator = function (val) {
+	          return Form.validator[validatorName](val, rule.arguments);
+	        };
+
+	        return result;
+	      } else {
+	        return _objectSpread$3({}, rule);
+	      }
+	    }
+	  }, {
+	    key: "augmentFieldValidatorModern",
+	    value: function augmentFieldValidatorModern(rule) {
+	      var _this2 = this;
+
+	      var ruleValidator = rule.validator;
+
+	      var result = _objectSpread$3({}, rule);
+
+	      delete result.validator;
+
+	      result.validator = function (val) {
+	        return ruleValidator(val, _this2.getValidatorEnv());
+	      };
+
+	      return result;
+	    }
+	  }, {
+	    key: "augmentFormValidator",
+	    value: function augmentFormValidator(rule) {
+	      var _this3 = this;
+
+	      return function (val, validationResults) {
+	        return rule(val, validationResults, _this3.getValidatorEnv());
+	      };
+	    }
+	  }, {
+	    key: "augmentFormValidators",
+	    value: function augmentFormValidators(rules) {
+	      var _this4 = this;
+
+	      return rules.map(function (rule) {
+	        return _this4.augmentFormValidator(rule);
+	      });
+	    }
+	  }]);
+
+	  return ValidatorsBuilder;
+	}();
+
 	//import 'babel-polyfill/dist/polyfill';
 
 	var index$1 = /*#__PURE__*/Object.freeze({
@@ -20558,9 +20707,9 @@ var notBulma = (function (exports) {
 		FormValidationSession: FormValidationSession$1
 	});
 
-	function ownKeys$1(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+	function ownKeys$2(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
-	function _objectSpread$1(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$1(Object(source), true).forEach(function (key) { defineProperty$4(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$1(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+	function _objectSpread$2(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$2(Object(source), true).forEach(function (key) { defineProperty$4(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$2(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 	function _createSuper$4(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$4(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
 
@@ -20652,7 +20801,7 @@ var notBulma = (function (exports) {
 	    value: function set(dict) {
 	      LOCALE.set(dict);
 	      this.saveToStorage(dict);
-	      this.dict = Object.assign({}, _objectSpread$1({}, dict));
+	      this.dict = Object.assign({}, _objectSpread$2({}, dict));
 	      this.emit('change');
 	    }
 	  }, {
@@ -25513,9 +25662,9 @@ var notBulma = (function (exports) {
 
 	function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-	function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+	function ownKeys$1(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
-	function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { defineProperty$4(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+	function _objectSpread$1(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$1(Object(source), true).forEach(function (key) { defineProperty$4(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$1(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 	var Menu = /*#__PURE__*/function () {
 	  function Menu() {
@@ -25534,7 +25683,7 @@ var notBulma = (function (exports) {
 	  }, {
 	    key: "setOptions",
 	    value: function setOptions(options) {
-	      this.options = _objectSpread(_objectSpread({}, this.options), options);
+	      this.options = _objectSpread$1(_objectSpread$1({}, this.options), options);
 	      return this;
 	    }
 	  }, {
@@ -25694,14 +25843,14 @@ var notBulma = (function (exports) {
 	    key: "updateSectionTag",
 	    value: function updateSectionTag(sectionId, tag) {
 	      this.updateSection(sectionId, function (section) {
-	        section.tag = _objectSpread(_objectSpread({}, section.tag), tag);
+	        section.tag = _objectSpread$1(_objectSpread$1({}, section.tag), tag);
 	      });
 	    }
 	  }, {
 	    key: "updateItemTag",
 	    value: function updateItemTag(itemId, tag) {
 	      this.updateItem(itemId, function (item) {
-	        item.tag = _objectSpread(_objectSpread({}, item.tag), tag);
+	        item.tag = _objectSpread$1(_objectSpread$1({}, item.tag), tag);
 	      });
 	    }
 	  }, {
@@ -27786,146 +27935,6 @@ var notBulma = (function (exports) {
 			init(this, options, instance$w, create_fragment$w, safe_not_equal, { show: 0, message: 1, agree: 2 });
 		}
 	}
-
-	var UICommon = /*#__PURE__*/function () {
-	  function UICommon() {
-	    classCallCheck(this, UICommon);
-	  }
-
-	  createClass(UICommon, null, [{
-	    key: "formatPhone",
-	    value:
-	    /**
-	     *  Reformats input from any string to strict phone format
-	     *  @param {string}    phone    free style phone number
-	     *  @returns {string}          phone number
-	     **/
-	    function formatPhone(val) {
-	      var filler = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.FILLER;
-	      //starting from 11 digits in phone number
-	      var slots = [1, 2, 2, 2, 3, 3, 3, 4, 4, 5, 5];
-	      var digits = val.replace(/\D/g, ''); //if there are more, move them to country code slot
-
-	      if (digits.length > 11) {
-	        var d = digits.length - 11;
-
-	        while (d > 0) {
-	          d--;
-	          slots.unshift(1);
-	        }
-	      }
-
-	      var stack = ['', '', '', '', ''];
-	      Array.from(digits).forEach(function (digit, index) {
-	        var slot = slots[index];
-	        stack[slot - 1] = stack[slot - 1] + digit;
-	      }); //creating map of parts lengths
-
-	      var lens = slots.reduce(function (acc, curr) {
-	        if (typeof acc[curr] === 'undefined') {
-	          acc[curr] = 1;
-	        } else {
-	          acc[curr] += 1;
-	        }
-
-	        return acc;
-	      }, {}); //fill empty positions with filler (_)
-
-	      for (var t in stack) {
-	        var dif = lens[parseInt(t) + 1] - stack[t].length;
-
-	        while (dif > 0) {
-	          stack[t] = stack[t] + filler;
-	          dif--;
-	        }
-	      }
-
-	      return "+".concat(stack[0], " (").concat(stack[1], ") ").concat(stack[2], "-").concat(stack[3], "-").concat(stack[4]);
-	    }
-	  }, {
-	    key: "setMoneySign",
-	    value: function setMoneySign(val) {
-	      this.MONEY_SIGN = val;
-	    }
-	  }, {
-	    key: "formatPrice",
-	    value: function formatPrice(price) {
-	      var major = parseInt(Math.floor(price / 100)),
-	          minor = parseInt(price % 100);
-	      major = '' + major;
-	      return "".concat(this.MONEY_SIGN).concat(major, ".").concat(minor);
-	    }
-	  }, {
-	    key: "formatTimestamp",
-	    value: function formatTimestamp(timestamp) {
-	      var offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-	      var offsetLocal = new Date().getTimezoneOffset();
-	      var deltaOffset = (offsetLocal - parseInt(offset)) * 60 * 1000;
-	      var localDateTime = new Date(parseInt(timestamp) - deltaOffset);
-	      return localDateTime.toLocaleString(window.navigator.language);
-	    }
-	  }, {
-	    key: "declOfNum",
-	    value: function declOfNum(n, text_forms) {
-	      n = Math.abs(n) % 100;
-	      var n1 = n % 10;
-
-	      if (n > 10 && n < 20) {
-	        return text_forms[2];
-	      }
-
-	      if (n1 > 1 && n1 < 5) {
-	        return text_forms[1];
-	      }
-
-	      if (n1 == 1) {
-	        return text_forms[0];
-	      }
-
-	      return text_forms[2];
-	    }
-	  }, {
-	    key: "humanizedTimeDiff",
-	    value: function humanizedTimeDiff(date
-	    /* unix time */
-	    ) {
-	      var currentTime = new Date().getTime();
-	      var sec = Math.round((currentTime - date) / 1000);
-	      var unit;
-
-	      if (sec < 60) {
-	        unit = this.declOfNum(sec, this.TIME.SECONDS);
-	        return "".concat(sec, " ").concat(unit, " \u043D\u0430\u0437\u0430\u0434");
-	      } else if (sec < 3600) {
-	        var min = Math.floor(sec / 60);
-	        unit = this.declOfNum(min, this.TIME.MINUTES);
-	        return "".concat(min, " ").concat(unit, " \u043D\u0430\u0437\u0430\u0434");
-	      } else {
-	        var hours = Math.floor(sec / (60 * 60));
-	        unit = this.declOfNum(hours, this.TIME.HOURS);
-	        return "".concat(hours, " ").concat(unit, " \u043D\u0430\u0437\u0430\u0434");
-	      }
-	    }
-	  }]);
-
-	  return UICommon;
-	}();
-
-	defineProperty$4(UICommon, "DEFAULT_REDIRECT_TIMEOUT", 3000);
-
-	defineProperty$4(UICommon, "CLASS_OK", 'is-success');
-
-	defineProperty$4(UICommon, "CLASS_ERR", 'is-danger');
-
-	defineProperty$4(UICommon, "FILLER", '_');
-
-	defineProperty$4(UICommon, "MONEY_SIGN", '&#8381;');
-
-	defineProperty$4(UICommon, "TIME", {
-	  SECONDS: ['секунду', 'секунды', 'секунд'],
-	  MINUTES: ['минуту', 'минуты', 'минут'],
-	  HOURS: ['час', 'часа', 'часов']
-	});
 
 	/* src/form/ui.textfield.svelte generated by Svelte v3.44.2 */
 
@@ -41864,11 +41873,13 @@ var notBulma = (function (exports) {
 		UIColumn: Ui_column
 	});
 
+	function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+	function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { defineProperty$4(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
 	function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
 
 	function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
-
-	var ERROR_DEFAULT = 'Что пошло не так.';
 	var BREADCRUMBS = [];
 
 	var ncCRUD = /*#__PURE__*/function (_notController) {
@@ -41883,6 +41894,7 @@ var notBulma = (function (exports) {
 
 	    _this = _super.call(this, app, "CRUD.".concat(name));
 	    _this.ui = {};
+	    _this.validator = {};
 	    _this.els = {};
 
 	    _this.setOptions('names', {
@@ -42042,15 +42054,16 @@ var notBulma = (function (exports) {
 
 	              case 14:
 	                this.log('preload finished');
-	                _context.next = 20;
+	                _context.next = 21;
 	                break;
 
 	              case 17:
 	                _context.prev = 17;
 	                _context.t0 = _context["catch"](1);
-	                this.error(_context.t0);
+	                this.report(_context.t0);
+	                this.showErrorMessage(_context.t0);
 
-	              case 20:
+	              case 21:
 	              case "end":
 	                return _context.stop();
 	            }
@@ -42097,59 +42110,66 @@ var notBulma = (function (exports) {
 	    value: function route() {
 	      var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
-	      if (params.length == 1) {
-	        if (params[0] === 'create') {
-	          return this.runCreate(params);
-	        } else {
-	          return this.runDetails(params);
-	        }
-	      } else if (params.length > 1) {
-	        if (params[1] === 'delete') {
-	          return this.runDelete(params);
-	        } else if (params[1] === 'update') {
-	          return this.runUpdate(params);
-	        } else {
-	          var routeRunnerName = 'run' + notCommon$1.capitalizeFirstLetter(params[1]);
+	      try {
+	        if (params.length == 1) {
+	          if (params[0] === 'create') {
+	            return this.runCreate(params);
+	          } else {
+	            return this.runDetails(params);
+	          }
+	        } else if (params.length > 1) {
+	          if (params[1] === 'delete') {
+	            return this.runDelete(params);
+	          } else if (params[1] === 'update') {
+	            return this.runUpdate(params);
+	          } else {
+	            var routeRunnerName = 'run' + notCommon$1.capitalizeFirstLetter(params[1]);
 
-	          if (this[routeRunnerName] && typeof this[routeRunnerName] === 'function') {
-	            return this[routeRunnerName](params);
+	            if (this[routeRunnerName] && typeof this[routeRunnerName] === 'function') {
+	              return this[routeRunnerName](params);
+	            }
 	          }
 	        }
-	      }
 
-	      return this.runList(params);
+	        return this.runList(params);
+	      } catch (e) {
+	        notCommon$1.report(e);
+	        this.showErrorMessage(e);
+	      }
 	    }
 	  }, {
 	    key: "runCreate",
 	    value: function () {
-	      var _runCreate = asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee2() {
+	      var _runCreate = asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee3() {
 	        var _this4 = this;
 
-	        var defData, manifest;
-	        return regenerator.wrap(function _callee2$(_context2) {
+	        var defData, manifest, _Form$build, ui, validator;
+
+	        return regenerator.wrap(function _callee3$(_context3) {
 	          while (1) {
-	            switch (_context2.prev = _context2.next) {
+	            switch (_context3.prev = _context3.next) {
 	              case 0:
-	                _context2.next = 2;
+	                _context3.prev = 0;
+	                _context3.next = 3;
 	                return this.preloadVariants('create');
 
-	              case 2:
+	              case 3:
 	                this.setBreadcrumbs([{
 	                  title: 'Добавление',
 	                  url: this.getModelActionURL(false, 'create')
 	                }]);
 
 	                if (!this.ui.create) {
-	                  _context2.next = 7;
+	                  _context3.next = 8;
 	                  break;
 	                }
 
-	                return _context2.abrupt("return");
-
-	              case 7:
-	                this.$destroyUI();
+	                return _context3.abrupt("return");
 
 	              case 8:
+	                this.$destroyUI();
+
+	              case 9:
 	                defData = this.createDefault();
 
 	                if (defData.getData) {
@@ -42157,26 +42177,64 @@ var notBulma = (function (exports) {
 	                }
 
 	                manifest = this.app.getInterfaceManifest()[this.getModelName()];
-	                this.ui.create = Form.build({
+	                _Form$build = Form.build({
 	                  target: this.els.main,
 	                  manifest: manifest,
 	                  action: 'create',
 	                  options: {},
 	                  validators: this.getOptions('Validators'),
 	                  data: defData
-	                });
-	                this.ui.create.$on('submit', function (ev) {
-	                  return _this4.onCreateFormSubmit(ev.detail);
-	                });
+	                }), ui = _Form$build.ui, validator = _Form$build.validator;
+	                this.ui.create = ui;
+	                this.validator.create = validator;
+	                this.ui.create.$on('submit', /*#__PURE__*/function () {
+	                  var _ref = asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee2(ev) {
+	                    var success;
+	                    return regenerator.wrap(function _callee2$(_context2) {
+	                      while (1) {
+	                        switch (_context2.prev = _context2.next) {
+	                          case 0:
+	                            _context2.next = 2;
+	                            return _this4.onActionSubmit('create', ev.detail);
+
+	                          case 2:
+	                            success = _context2.sent;
+
+	                            if (success) {
+	                              setTimeout(function () {
+	                                return _this4.goList();
+	                              }, 1000);
+	                            }
+
+	                          case 4:
+	                          case "end":
+	                            return _context2.stop();
+	                        }
+	                      }
+	                    }, _callee2);
+	                  }));
+
+	                  return function (_x) {
+	                    return _ref.apply(this, arguments);
+	                  };
+	                }());
 	                this.ui.create.$on('reject', this.goList.bind(this));
 	                this.emit('after:render:create');
+	                _context3.next = 24;
+	                break;
 
-	              case 15:
+	              case 20:
+	                _context3.prev = 20;
+	                _context3.t0 = _context3["catch"](0);
+	                notCommon$1.report(_context3.t0);
+	                this.showErrorMessage(_context3.t0);
+
+	              case 24:
 	              case "end":
-	                return _context2.stop();
+	                return _context3.stop();
 	            }
 	          }
-	        }, _callee2, this);
+	        }, _callee3, this, [[0, 20]]);
 	      }));
 
 	      function runCreate() {
@@ -42188,74 +42246,85 @@ var notBulma = (function (exports) {
 	  }, {
 	    key: "runDetails",
 	    value: function () {
-	      var _runDetails = asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee3(params) {
-	        var _this5 = this;
+	      var _runDetails = asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee4(params) {
+	        var idField, query, manifest, res, title, _Form$build2, ui, validator;
 
-	        var idField, query, manifest;
-	        return regenerator.wrap(function _callee3$(_context3) {
+	        return regenerator.wrap(function _callee4$(_context4) {
 	          while (1) {
-	            switch (_context3.prev = _context3.next) {
+	            switch (_context4.prev = _context4.next) {
 	              case 0:
+	                _context4.prev = 0;
 	                idField = this.getOptions('details.idField', '_id'), query = {};
-	                _context3.next = 3;
+	                _context4.next = 4;
 	                return this.preloadVariants('details');
 
-	              case 3:
+	              case 4:
 	                this.setBreadcrumbs([{
 	                  title: 'Просмотр',
 	                  url: this.getModelActionURL(params[0], false)
 	                }]);
 
 	                if (!this.ui.details) {
-	                  _context3.next = 8;
+	                  _context4.next = 9;
 	                  break;
 	                }
 
-	                return _context3.abrupt("return");
-
-	              case 8:
-	                this.$destroyUI();
+	                return _context4.abrupt("return");
 
 	              case 9:
+	                this.$destroyUI();
+
+	              case 10:
 	                manifest = this.app.getInterfaceManifest()[this.getModelName()];
 	                query[idField] = params[0];
-	                this.getModel(query)['$get']().then(function (res) {
-	                  if (res.status === 'ok') {
-	                    var title = _this5.getItemTitle(res.result);
+	                _context4.next = 14;
+	                return this.getModel(query)['$get']();
 
-	                    _this5.setBreadcrumbs([{
-	                      title: "\u041F\u0440\u043E\u0441\u043C\u043E\u0442\u0440 \"".concat(title, "\""),
-	                      url: _this5.getModelActionURL(params[0], false)
-	                    }]);
+	              case 14:
+	                res = _context4.sent;
 
-	                    _this5.ui.details = Form.build({
-	                      target: _this5.els.main,
-	                      manifest: manifest,
-	                      action: 'get',
-	                      options: {
-	                        readonly: true
-	                      },
-	                      validators: _this5.getOptions('Validators'),
-	                      data: res.result
-	                    });
+	                if (res.status === 'ok') {
+	                  title = this.getItemTitle(res.result);
+	                  this.setBreadcrumbs([{
+	                    title: "\u041F\u0440\u043E\u0441\u043C\u043E\u0442\u0440 \"".concat(title, "\""),
+	                    url: this.getModelActionURL(params[0], false)
+	                  }]);
+	                  _Form$build2 = Form.build({
+	                    target: this.els.main,
+	                    manifest: manifest,
+	                    action: 'get',
+	                    options: {
+	                      readonly: true
+	                    },
+	                    validators: this.getOptions('Validators'),
+	                    data: res.result
+	                  }), ui = _Form$build2.ui, validator = _Form$build2.validator;
+	                  this.ui.details = ui;
+	                  this.validator.details = validator;
+	                  this.emit('after:render:details');
+	                  this.ui.details.$on('reject', this.goList.bind(this));
+	                } else {
+	                  this.showErrorMessage(res);
+	                }
 
-	                    _this5.emit('after:render:details');
+	                _context4.next = 22;
+	                break;
 
-	                    _this5.ui.details.$on('reject', _this5.goList.bind(_this5));
-	                  } else {
-	                    _this5.showErrorMessage(res);
-	                  }
-	                }).catch(this.error.bind(this));
+	              case 18:
+	                _context4.prev = 18;
+	                _context4.t0 = _context4["catch"](0);
+	                notCommon$1.report(_context4.t0);
+	                this.showErrorMessage(_context4.t0);
 
-	              case 12:
+	              case 22:
 	              case "end":
-	                return _context3.stop();
+	                return _context4.stop();
 	            }
 	          }
-	        }, _callee3, this);
+	        }, _callee4, this, [[0, 18]]);
 	      }));
 
-	      function runDetails(_x) {
+	      function runDetails(_x2) {
 	        return _runDetails.apply(this, arguments);
 	      }
 
@@ -42264,76 +42333,112 @@ var notBulma = (function (exports) {
 	  }, {
 	    key: "runUpdate",
 	    value: function () {
-	      var _runUpdate = asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee4(params) {
-	        var _this6 = this;
+	      var _runUpdate = asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee6(params) {
+	        var _this5 = this;
 
-	        var idField, query, manifest;
-	        return regenerator.wrap(function _callee4$(_context4) {
+	        var idField, query, id, manifest, res, title, _Form$build3, ui, validator;
+
+	        return regenerator.wrap(function _callee6$(_context6) {
 	          while (1) {
-	            switch (_context4.prev = _context4.next) {
+	            switch (_context6.prev = _context6.next) {
 	              case 0:
-	                idField = this.getOptions('update.idField', '_id'), query = {};
-	                _context4.next = 3;
+	                _context6.prev = 0;
+	                idField = this.getOptions('update.idField', '_id'), query = {}, id = params[0];
+	                _context6.next = 4;
 	                return this.preloadVariants('update');
 
-	              case 3:
+	              case 4:
 	                this.setBreadcrumbs([{
 	                  title: 'Редактирование',
-	                  url: this.getModelActionURL(params[0], 'update')
+	                  url: this.getModelActionURL(id, 'update')
 	                }]);
 
 	                if (!this.ui.update) {
-	                  _context4.next = 8;
+	                  _context6.next = 9;
 	                  break;
 	                }
 
-	                return _context4.abrupt("return");
-
-	              case 8:
-	                this.$destroyUI();
+	                return _context6.abrupt("return");
 
 	              case 9:
+	                this.$destroyUI();
+
+	              case 10:
 	                manifest = this.app.getInterfaceManifest()[this.getModelName()];
 	                query[idField] = params[0];
-	                this.getModel(query).$getRaw().then(function (res) {
-	                  if (res.status === 'ok') {
-	                    var title = _this6.getItemTitle(res.result);
+	                _context6.next = 14;
+	                return this.getModel(query).$getRaw();
 
-	                    _this6.setBreadcrumbs([{
-	                      title: "\u0420\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435 \"".concat(title, "\""),
-	                      url: _this6.getModelActionURL(params[0], 'update')
-	                    }]);
+	              case 14:
+	                res = _context6.sent;
 
-	                    _this6.ui.update = Form.build({
-	                      target: _this6.els.main,
-	                      manifest: manifest,
-	                      action: 'update',
-	                      options: {},
-	                      validators: _this6.getOptions('Validators'),
-	                      data: notCommon$1.stripProxy(res.result)
-	                    });
+	                if (res.status === 'ok') {
+	                  title = this.getItemTitle(res.result);
+	                  this.setBreadcrumbs([{
+	                    title: "\u0420\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435 \"".concat(title, "\""),
+	                    url: this.getModelActionURL(params[0], 'update')
+	                  }]);
+	                  _Form$build3 = Form.build({
+	                    target: this.els.main,
+	                    manifest: manifest,
+	                    action: 'update',
+	                    options: {},
+	                    validators: this.getOptions('Validators'),
+	                    data: notCommon$1.stripProxy(res.result)
+	                  }), ui = _Form$build3.ui, validator = _Form$build3.validator;
+	                  this.ui.update = ui;
+	                  this.validator.update = validator;
+	                  this.ui.update.$on('submit', /*#__PURE__*/function () {
+	                    var _ref2 = asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee5(ev) {
+	                      var success;
+	                      return regenerator.wrap(function _callee5$(_context5) {
+	                        while (1) {
+	                          switch (_context5.prev = _context5.next) {
+	                            case 0:
+	                              success = _this5.onActionSubmit('update', ev.detail);
 
-	                    _this6.ui.update.$on('submit', function (ev) {
-	                      _this6.onUpdateFormSubmit(ev.detail);
-	                    });
+	                              if (success) {
+	                                setTimeout(function () {
+	                                  return _this5.goDetails(id);
+	                                }, 1000);
+	                              }
 
-	                    _this6.ui.update.$on('reject', _this6.goList.bind(_this6));
+	                            case 2:
+	                            case "end":
+	                              return _context5.stop();
+	                          }
+	                        }
+	                      }, _callee5);
+	                    }));
 
-	                    _this6.emit('after:render:update');
-	                  } else {
-	                    _this6.showErrorMessage(res);
-	                  }
-	                }).catch(this.error.bind(this));
+	                    return function (_x4) {
+	                      return _ref2.apply(this, arguments);
+	                    };
+	                  }());
+	                  this.ui.update.$on('reject', this.goList.bind(this));
+	                  this.emit('after:render:update');
+	                } else {
+	                  this.showErrorMessage(res);
+	                }
 
-	              case 12:
+	                _context6.next = 22;
+	                break;
+
+	              case 18:
+	                _context6.prev = 18;
+	                _context6.t0 = _context6["catch"](0);
+	                notCommon$1.report(_context6.t0);
+	                this.showErrorMessage(_context6.t0);
+
+	              case 22:
 	              case "end":
-	                return _context4.stop();
+	                return _context6.stop();
 	            }
 	          }
-	        }, _callee4, this);
+	        }, _callee6, this, [[0, 18]]);
 	      }));
 
-	      function runUpdate(_x2) {
+	      function runUpdate(_x3) {
 	        return _runUpdate.apply(this, arguments);
 	      }
 
@@ -42342,45 +42447,64 @@ var notBulma = (function (exports) {
 	  }, {
 	    key: "runDelete",
 	    value: function () {
-	      var _runDelete = asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee5(params) {
-	        var _this7 = this;
-
-	        return regenerator.wrap(function _callee5$(_context5) {
+	      var _runDelete = asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee7(params) {
+	        var success;
+	        return regenerator.wrap(function _callee7$(_context7) {
 	          while (1) {
-	            switch (_context5.prev = _context5.next) {
+	            switch (_context7.prev = _context7.next) {
 	              case 0:
-	                _context5.next = 2;
+	                _context7.prev = 0;
+	                _context7.next = 3;
 	                return this.preloadVariants('delete');
 
-	              case 2:
+	              case 3:
 	                this.setBreadcrumbs([{
 	                  title: 'Удаление',
 	                  url: this.getModelActionURL(params[0], 'delete')
 	                }]);
 
-	                if (confirm('Удалить запись?')) {
-	                  this.getModel({
-	                    _id: params[0]
-	                  }).$delete().then(function () {
-	                    _this7.goList();
-	                  }).catch(function (e) {
-	                    _this7.error(e);
+	                if (!confirm('Удалить запись?')) {
+	                  _context7.next = 11;
+	                  break;
+	                }
 
-	                    _this7.goList();
-	                  });
-	                } else {
+	                _context7.next = 7;
+	                return this.onActionSubmit('delete', {
+	                  _id: params[0]
+	                });
+
+	              case 7:
+	                success = _context7.sent;
+
+	                if (success) {
 	                  this.goList();
 	                }
 
-	              case 4:
+	                _context7.next = 12;
+	                break;
+
+	              case 11:
+	                this.goList();
+
+	              case 12:
+	                _context7.next = 18;
+	                break;
+
+	              case 14:
+	                _context7.prev = 14;
+	                _context7.t0 = _context7["catch"](0);
+	                notCommon$1.report(_context7.t0);
+	                this.showErrorMessage(_context7.t0);
+
+	              case 18:
 	              case "end":
-	                return _context5.stop();
+	                return _context7.stop();
 	            }
 	          }
-	        }, _callee5, this);
+	        }, _callee7, this, [[0, 14]]);
 	      }));
 
-	      function runDelete(_x3) {
+	      function runDelete(_x5) {
 	        return _runDelete.apply(this, arguments);
 	      }
 
@@ -42389,34 +42513,35 @@ var notBulma = (function (exports) {
 	  }, {
 	    key: "runList",
 	    value: function () {
-	      var _runList = asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee6() {
-	        var _this8 = this;
+	      var _runList = asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee8() {
+	        var _this6 = this;
 
 	        var DEFAULT_OPTIONS_TABLE, TABLE_OPTIONS;
-	        return regenerator.wrap(function _callee6$(_context6) {
+	        return regenerator.wrap(function _callee8$(_context8) {
 	          while (1) {
-	            switch (_context6.prev = _context6.next) {
+	            switch (_context8.prev = _context8.next) {
 	              case 0:
-	                _context6.next = 2;
+	                _context8.prev = 0;
+	                _context8.next = 3;
 	                return this.preloadVariants('list');
 
-	              case 2:
+	              case 3:
 	                this.setBreadcrumbs([{
 	                  title: 'Список',
 	                  url: this.getModelURL()
 	                }]);
 
 	                if (!this.ui.list) {
-	                  _context6.next = 7;
+	                  _context8.next = 8;
 	                  break;
 	                }
 
-	                return _context6.abrupt("return");
-
-	              case 7:
-	                this.$destroyUI();
+	                return _context8.abrupt("return");
 
 	              case 8:
+	                this.$destroyUI();
+
+	              case 9:
 	                DEFAULT_OPTIONS_TABLE = {
 	                  interface: {
 	                    combined: true,
@@ -42447,7 +42572,7 @@ var notBulma = (function (exports) {
 	                  }
 	                };
 	                Object.keys(DEFAULT_OPTIONS_TABLE).forEach(function (key) {
-	                  var optVal = _this8.getOptions("list.".concat(key), DEFAULT_OPTIONS_TABLE[key]);
+	                  var optVal = _this6.getOptions("list.".concat(key), DEFAULT_OPTIONS_TABLE[key]);
 
 	                  if (typeof optVal !== 'undefined') {
 	                    TABLE_OPTIONS.options[key] = optVal;
@@ -42455,13 +42580,21 @@ var notBulma = (function (exports) {
 	                });
 	                this.ui.list = new notTable(TABLE_OPTIONS);
 	                this.emit('after:render:list');
+	                _context8.next = 20;
+	                break;
 
-	              case 13:
+	              case 16:
+	                _context8.prev = 16;
+	                _context8.t0 = _context8["catch"](0);
+	                notCommon$1.report(_context8.t0);
+	                this.showErrorMessage(_context8.t0);
+
+	              case 20:
 	              case "end":
-	                return _context6.stop();
+	                return _context8.stop();
 	            }
 	          }
-	        }, _callee6, this);
+	        }, _callee8, this, [[0, 16]]);
 	      }));
 
 	      function runList() {
@@ -42496,91 +42629,74 @@ var notBulma = (function (exports) {
 	      this.app.getWorking('router').navigate(this.getModelURL());
 	    }
 	  }, {
-	    key: "onCreateFormSubmit",
-	    value: function onCreateFormSubmit(item) {
-	      var _this9 = this;
+	    key: "onActionSubmit",
+	    value: function () {
+	      var _onActionSubmit = asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee9(action, item) {
+	        var result;
+	        return regenerator.wrap(function _callee9$(_context9) {
+	          while (1) {
+	            switch (_context9.prev = _context9.next) {
+	              case 0:
+	                _context9.prev = 0;
+	                this.ui[action].setLoading();
+	                result = this.getModel(item)["$".concat(action)]();
+	                this.processResult(this.ui[action], result);
+	                return _context9.abrupt("return", true);
 
-	      this.ui.create.setLoading();
-	      this.getModel(item).$create().then(function (res) {
-	        _this9.log(res);
+	              case 7:
+	                _context9.prev = 7;
+	                _context9.t0 = _context9["catch"](0);
+	                this.processResult(this.ui[action], _context9.t0);
+	                return _context9.abrupt("return", false);
 
-	        _this9.showResult(_this9.ui.create, res);
+	              case 11:
+	                _context9.prev = 11;
+	                this.ui[action].resetLoading();
+	                return _context9.finish(11);
 
-	        if (!notCommon$1.isError(res)) {
-	          setTimeout(function () {
-	            return _this9.goList(_this9.app);
-	          }, 3000);
-	        }
-	      }).catch(function (e) {
-	        _this9.showResult(_this9.ui.create, e);
-	      });
-	    }
-	  }, {
-	    key: "onUpdateFormSubmit",
-	    value: function onUpdateFormSubmit(item) {
-	      var _this10 = this;
-
-	      this.ui.update.setLoading();
-	      this.getModel(item).$update().then(function (res) {
-	        _this10.showResult(_this10.ui.update, res);
-
-	        if (!notCommon$1.isError(res) && !res.error) {
-	          setTimeout(function () {
-	            return _this10.goList(_this10.app);
-	          }, 3000);
-	        }
-	      }).catch(function (e) {
-	        _this10.showResult(_this10.ui.update, e);
-	      });
-	    }
-	  }, {
-	    key: "showResult",
-	    value: function showResult(ui, res) {
-	      ui.resetLoading();
-
-	      if (notCommon$1.isError(res)) {
-	        notCommon$1.report(res);
-	        ui.addFormError(res.message);
-	      } else {
-	        if (Object.prototype.hasOwnProperty.call(res, 'status')) {
-	          if (res.status === 'error') {
-	            if (!Array.isArray(res.error)) {
-	              res.error = [ERROR_DEFAULT];
+	              case 14:
+	              case "end":
+	                return _context9.stop();
 	            }
-
-	            ui.addFormError(res.error);
-	          } else if (res.status === 'ok') {
-	            ui.showSuccess();
 	          }
-	        } else {
-	          this.processFieldsErrors(ui, res);
+	        }, _callee9, this, [[0, 7, 11, 14]]);
+	      }));
 
-	          if (res.error) {
-	            ui.addFormError(res.error);
-	          }
+	      function onActionSubmit(_x6, _x7) {
+	        return _onActionSubmit.apply(this, arguments);
+	      }
 
-	          if (!res.error) {
-	            ui.showSuccess();
-	          }
-	        }
+	      return onActionSubmit;
+	    }()
+	  }, {
+	    key: "processResult",
+	    value: function processResult(ui, result) {
+	      var ifSuccess = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : function () {};
+
+	      if (result.status === 'ok') {
+	        ui.showSuccess();
+	        ifSuccess && ifSuccess();
+	      } else {
+	        this.setFormErrors(ui, result);
 	      }
 	    }
 	  }, {
-	    key: "processFieldsErrors",
-	    value: function processFieldsErrors(ui, res) {
-	      if (res.errors && Object.keys(res.errors).length > 0) {
-	        if (!Array.isArray(res.error)) {
-	          res.error = [];
-	        }
+	    key: "setFormErrors",
+	    value: function setFormErrors(ui, result) {
+	      var status = {
+	        form: [],
+	        fields: {}
+	      };
 
-	        Object.keys(res.errors).forEach(function (fieldName) {
-	          var _res$error;
-
-	          ui.setFieldInvalid(fieldName, res.errors[fieldName]);
-
-	          (_res$error = res.error).push.apply(_res$error, toConsumableArray(res.errors[fieldName]));
-	        });
+	      if (result.message) {
+	        result.form.push(result.message);
 	      }
+
+	      if (result.errors && Object.keys(result.errors).length > 0) {
+	        result.errors = _objectSpread({}, result.errors);
+	      }
+
+	      ui.updateFormValidationStatus(status);
 	    }
 	  }, {
 	    key: "$destroyUI",
@@ -42588,6 +42704,10 @@ var notBulma = (function (exports) {
 	      for (var name in this.ui) {
 	        this.ui[name].$destroy && this.ui[name].$destroy();
 	        delete this.ui[name];
+	      }
+
+	      for (var _name in this.validator) {
+	        delete this.validator[_name];
 	      }
 	    }
 	  }, {
@@ -42598,7 +42718,7 @@ var notBulma = (function (exports) {
 	        target: this.els.main,
 	        props: {
 	          title: 'Произошла ошибка',
-	          message: res.error ? res.error : ERROR_DEFAULT
+	          message: res.message ? res.message : UICommon.ERROR_DEFAULT
 	        }
 	      });
 	    }
@@ -42618,35 +42738,7 @@ var notBulma = (function (exports) {
 	  return ncCRUD;
 	}(notController$1);
 
-	defineProperty$4(ncCRUD, "ERROR_DEFAULT", 'Что пошло не так.');
-
-	var Validators = {
-	  fields: {
-	    term: function term(value) {
-	      var errors = [];
-
-	      if (value !== '') {
-	        if (!Form.validator.isLength(value, {
-	          min: 3
-	        })) {
-	          errors.push('Минимальная длина 3 знаков');
-	        }
-	      }
-
-	      return errors;
-	    }
-	  },
-	  forms: {
-	    search: function search() {
-	      var errors = {
-	        clean: true,
-	        fields: {},
-	        form: []
-	      };
-	      return errors;
-	    }
-	  }
-	};
+	defineProperty$4(ncCRUD, "ERROR_DEFAULT", UICommon.ERROR_DEFAULT);
 
 	/* src/various/filter.svelte generated by Svelte v3.44.2 */
 
@@ -42688,7 +42780,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (215:4) {#if show}
+	// (213:4) {#if show}
 	function create_if_block(ctx) {
 		let if_block_anchor;
 		let current;
@@ -42744,7 +42836,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (216:4) {#if props}
+	// (214:4) {#if props}
 	function create_if_block_1(ctx) {
 		let uiform;
 		let current;
@@ -42802,7 +42894,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (214:0) <UIContainer id='search-filter'>
+	// (212:0) <UIContainer id='search-filter'>
 	function create_default_slot(ctx) {
 		let current_block_type_index;
 		let if_block;
@@ -43050,7 +43142,6 @@ var notBulma = (function (exports) {
 			$$invalidate(2, props = Form.prebuild({
 				manifest,
 				action: 'search',
-				validators: Validators,
 				options: formOptions
 			}));
 		});

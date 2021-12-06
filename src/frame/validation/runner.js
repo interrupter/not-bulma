@@ -32,4 +32,5 @@ export default class FormValidationRunner{
   getFormValidators(name){
     return this.validators && this.validators.forms && this.validators.forms[name]?this.validators.forms[name]:[];
   }
+  
 }

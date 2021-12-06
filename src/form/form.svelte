@@ -1,5 +1,7 @@
 <script>
-	import {LOCALE} from '../locale';
+	import {
+	  LOCALE
+	} from '../locale';
 
 	import UIField from './field.svelte';
 	import 'bulma-pageloader';
@@ -38,10 +40,14 @@
 	    variants: []
 	  };
 	  if (FIELDS.contains(type)) {
-	    field = {...field, ...FIELDS.get(type)};
+	    field = { ...field,
+	      ...FIELDS.get(type)
+	    };
 	  }
 	  if (mutation) {
-	    field = {...field, ...mutation};
+	    field = { ...field,
+	      ...mutation
+	    };
 	  }
 	  if (
 	    Object.prototype.hasOwnProperty.call(field, 'variantsSource') &&
@@ -56,7 +62,7 @@
 	  let result = {};
 	  fields.flat().forEach((fieldname) => {
 	    if (Object.prototype.hasOwnProperty.call(form, fieldname) && form[fieldname].enabled && form[fieldname].visible) {
-	      if(typeof form[fieldname].value !== 'undefined'){
+	      if (typeof form[fieldname].value !== 'undefined') {
 	        result[fieldname] = form[fieldname].value;
 	      }
 	    }
@@ -107,7 +113,9 @@
 	  form[fieldName].valid = false;
 	  form[fieldName].formLevelError = true;
 	  form = form;
-	  dispatch(`field.invalid`, {fieldName});
+	  dispatch(`field.invalid`, {
+	    fieldName
+	  });
 	}
 
 	export function setFormFieldValid(fieldName) {
@@ -116,20 +124,9 @@
 	  form[fieldName].valid = true;
 	  form[fieldName].formLevelError = false;
 	  form = form;
-	  dispatch(`field.valid`, {fieldName});
-	}
-
-	export function fieldErrorsNotChanged(fieldName, errs) {
-	  let oldErrs = form[fieldName].errors;
-	  if (oldErrs === false && errs === false) {
-	    return true;
-	  } else {
-	    if (Array.isArray(oldErrs) && Array.isArray(errs)) {
-	      return (oldErrs.join('. ')) === (errs.join('. '));
-	    } else {
-	      return false;
-	    }
-	  }
+	  dispatch(`field.valid`, {
+	    fieldName
+	  });
 	}
 
 	function initFormByField(fieldName) {
@@ -154,18 +151,22 @@
 	  form = form;
 	});
 
-	export function updateFormValidationStatus(result /* FormValidationSession.getCompleteResult() */){
-	  if(Array.isArray(result.form) && result.form.length){
+	export function updateFormValidationStatus(result /* FormValidationSession.getCompleteResult() */ ) {
+	  formHasErrors = false;
+	  fieldsHasErrors = false;
+	  if (Array.isArray(result.form) && result.form.length) {
 	    formErrors.splice(0, formErrors.length, ...result.form);
-	  }else{
+	    formHasErrors = true;
+	  } else {
 	    formErrors.splice(0, formErrors.length);
 	  }
 	  formErrors = formErrors;
-	  if(result.fields){
-	    for(let fieldName in result.fields){
-	      if(Array.isArray(result.fields[fieldName]) && result.fields[fieldName].length){
+	  if (result.fields) {
+	    for (let fieldName in result.fields) {
+	      if (Array.isArray(result.fields[fieldName]) && result.fields[fieldName].length) {
 	        setFormFieldInvalid(fieldName, result.fields[fieldName]);
-	      }else{
+	        fieldsHasErrors = true;
+	      } else {
 	        setFormFieldValid(fieldName);
 	      }
 	    }
@@ -221,35 +222,35 @@
 	  loading = false;
 	}
 
-	export function setFieldsVisibility(fieldsList, val){
-	  if(Array.isArray(fieldsList)){
+	export function setFieldsVisibility(fieldsList, val) {
+	  if (Array.isArray(fieldsList)) {
 	    Object.keys(form).forEach(fieldName => {
-	      form[fieldName].visible = fieldsList.includes(fieldName)?val:!val;
+	      form[fieldName].visible = fieldsList.includes(fieldName) ? val : !val;
 	    });
-	    form=form;
+	    form = form;
 	  }
 	}
 
-	export function setVisibleFields(fieldsList){
+	export function setVisibleFields(fieldsList) {
 	  setFieldsVisibility(fieldsList, true);
 	}
 
-	export function setInvisibleFields(fieldsList){
+	export function setInvisibleFields(fieldsList) {
 	  setFieldsVisibility(fieldsList, false);
 	}
 
-	export function setFieldValue(fieldName, value){
-	  if(Object.prototype.hasOwnProperty.call(form, fieldName)){
+	export function setFieldValue(fieldName, value) {
+	  if (Object.prototype.hasOwnProperty.call(form, fieldName)) {
 	    form[fieldName].value = value;
 	    form = form;
 	    onFieldChange({
-	      detail:{
-	        field:fieldName, value
+	      detail: {
+	        field: fieldName,
+	        value
 	      }
 	    });
 	  }
 	}
-
 </script>
 
 <div class="pageloader {loading?'is-active':''}"><span class="title">{$LOCALE[WAITING_TEXT]}</span></div>
@@ -289,13 +290,7 @@
 	{#if form[subfield] && form[subfield].component }
 	{#if form[subfield].visible }
 	<div class="column {form[subfield].fieldSize?('is-'+form[subfield].fieldSize):''} ">
-		<UIField
-			controls={[form[subfield]]}
-			on:change={onFieldChange}
-			name={subfield}
-			horizontal={options.horizontal}
-			label={form[subfield].label}
-			/>
+		<UIField controls={[form[subfield]]} on:change={onFieldChange} name={subfield} horizontal={options.horizontal} label={form[subfield].label} />
 	</div>
 	{/if}
 	{:else}
@@ -306,13 +301,7 @@
 {:else }
 {#if form[field] && form[field].component }
 {#if form[field].visible}
-<UIField
-	controls={[form[field]]}
-	on:change={onFieldChange}
-	name={field}
-	horizontal={options.horizontal}
-	label={form[field].label}
-	/>
+<UIField controls={[form[field]]} on:change={onFieldChange} name={field} horizontal={options.horizontal} label={form[field].label} />
 {/if}
 {:else}
 <div class="notification is-danger">Field '{field}' is not registered</div>
