@@ -11,16 +11,16 @@ export default class notApp extends notBase {
   static DEFAULT_WS_CLIENT_NAME = DEFAULT_WS_CLIENT_NAME;
   constructor(options) {
     super({
-      working:{
-        name:                 options.name,
-        interfaces:           {},
-        controllers:          Object.prototype.hasOwnProperty.call(options, 'controllers')?options.controllers:{},
-        initController:       null,
-        currentController:    null,
-        uis:                  {},
-        wsc:                  {},
-        wss:                  {},
-        services:             {}
+      working: {
+        name: options.name,
+        interfaces: {},
+        controllers: Object.prototype.hasOwnProperty.call(options, 'controllers') ? options.controllers : {},
+        initController: null,
+        currentController: null,
+        uis: {},
+        wsc: {},
+        wss: {},
+        services: {}
       },
       options
     });
@@ -50,7 +50,7 @@ export default class notApp extends notBase {
         schemes = routeBlock.schemes,
         controller = routeBlock.controller;
       for (let i = 0; i < paths.length; i++) {
-        let pathScheme = (schemes && Array.isArray(schemes) && schemes.length > i)?schemes[i]: false;
+        let pathScheme = (schemes && Array.isArray(schemes) && schemes.length > i) ? schemes[i] : false;
         routieInput[paths[i]] = this.bindController(controller, pathScheme);
       }
     }
@@ -64,9 +64,9 @@ export default class notApp extends notBase {
   }
 
   getInterfaceManifest(modelName) {
-    if(modelName){
+    if (modelName) {
       return this.getOptions('interfaceManifest')[modelName];
-    }else{
+    } else {
       return this.getOptions('interfaceManifest');
     }
   }
@@ -90,13 +90,13 @@ export default class notApp extends notBase {
 
   bindController(controllerName, controllerPathScheme) {
     let app = this;
-    return function () {
+    return function() {
       new controllerName(app, arguments, controllerPathScheme);
     };
   }
 
   initController() {
-    if (typeof (this.getOptions('initController')) !== 'undefined') {
+    if (typeof(this.getOptions('initController')) !== 'undefined') {
       let initController = this.getOptions('initController');
       this.setWorking('initController', new initController(this));
     }
@@ -108,7 +108,7 @@ export default class notApp extends notBase {
 
   setCurrentController(ctrl) {
     let oldCtrl = this.getCurrentController();
-    if(oldCtrl && oldCtrl.destroy){
+    if (oldCtrl && oldCtrl.destroy) {
       oldCtrl.destroy();
     }
     this.setWorking('currentController', ctrl);
@@ -146,48 +146,62 @@ export default class notApp extends notBase {
     return this;
   }
 
-  setWSClient(name = DEFAULT_WS_CLIENT_NAME, wsc){
+  setWSClient(name = DEFAULT_WS_CLIENT_NAME, wsc) {
     return this.setWorking(`wsc.${name}`, wsc);
   }
 
-  getWSClient(name = DEFAULT_WS_CLIENT_NAME){
+  getWSClient(name = DEFAULT_WS_CLIENT_NAME) {
     return this.getWorking(`wsc.${name}`);
   }
 
-  getInterface(name){
+  getInterface(name) {
     return this.getInterfaces()[name];
   }
 
-  getModel(name, data = {}){
+  getModel(name, data = {}) {
     return this.getInterface(name)(data);
   }
 
-  setService(name, val){
+  setService(name, val) {
     return this.setWorking(`services.${name}`, val);
   }
 
-  getService(name){
+  getService(name) {
     return this.getWorking(`services.${name}`);
   }
 
-  initServices(){
-    if (this.getOptions('services')){
-      for (let servName in this.getOptions('services')){
-        try{
+  initServices() {
+    if (this.getOptions('services')) {
+      for (let servName in this.getOptions('services')) {
+        try {
           let serv = this.getOptions(`services.${servName}`);
           const servType = notCommon.detectType(serv);
-          switch(servType){
+          switch (servType) {
           case 'class':
             this.setService(servName, new serv(this));
             break;
           default:
             this.setService(servName, serv);
           }
-        }catch(e){
+        } catch (e) {
           this.error(`Service (${servName}) init error`, e);
         }
       }
     }
   }
+
+  getConfigReaderForModule(moduleName = '') {
+    const modConfPath = ['modules', moduleName].join('.');
+    return {
+      get: (subPath, fallback) => {
+        if (subPath && typeof subPath == 'string' && subPath.length) {
+          this.getOptions([modConfPath, subPath].join('.'), fallback);
+        } else {
+          this.getOptions(modConfPath, fallback);
+        }
+      }
+    };
+  }
+
 
 }

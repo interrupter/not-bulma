@@ -17,13 +17,6 @@
 	let dispatch = createEventDispatcher();
 
 	let form = {};
-	let validate = () => {
-	  return {
-	    clean: true
-	  };
-	};
-
-
 
 	let formErrors = [];
 	let formHasErrors = false;
@@ -114,6 +107,7 @@
 	  form[fieldName].valid = false;
 	  form[fieldName].formLevelError = true;
 	  form = form;
+	  dispatch(`field.invalid`, {fieldName});
 	}
 
 	export function setFormFieldValid(fieldName) {
@@ -122,6 +116,7 @@
 	  form[fieldName].valid = true;
 	  form[fieldName].formLevelError = false;
 	  form = form;
+	  dispatch(`field.valid`, {fieldName});
 	}
 
 	export function fieldErrorsNotChanged(fieldName, errs) {
@@ -156,78 +151,35 @@
 
 	onMount(() => {
 	  initFormByField(fields);
-	  if (Object.prototype.hasOwnProperty.call(options, 'validate') && typeof options.validate === 'function') {
-	    validate = options.validate;
-	  }
 	  form = form;
 	});
 
-	export function addFormError(err) {
-	  if (Array.isArray(formErrors)) {
-	    if (!formErrors.includes(err)) {
-	      formErrors.push(err);
-	    }
-	  } else {
-	    formErrors = [err];
-	  }
-	  formHasErrors = true;
-	}
-
-	/*function removeFormErrors(err) {
-	  if (Array.isArray(formErrors)) {
+	export function updateFormValidationStatus(result /* FormValidationSession.getCompleteResult() */){
+	  if(Array.isArray(result.form) && result.form.length){
+	    formErrors.splice(0, formErrors.length, ...result.form);
+	  }else{
 	    formErrors.splice(0, formErrors.length);
-	    formErrors = formErrors;
-	  } else {
-	    formErrors = false;
 	  }
-	}*/
+	  formErrors = formErrors;
+	  if(result.fields){
+	    for(let fieldName in result.fields){
+	      if(Array.isArray(result.fields[fieldName]) && result.fields[fieldName].length){
+	        setFormFieldInvalid(fieldName, result.fields[fieldName]);
+	      }else{
+	        setFormFieldValid(fieldName);
+	      }
+	    }
+	  }
+	}
 
 	function onFieldChange(ev) {
 	  let data = ev.detail;
-	  if (validation) {
-	    //fields level validations
-	    let res = typeof form[data.field].validate === 'function' ? form[data.field].validate(data.value) : [];
-	    if (res.length === 0) {
-	      setFieldValid(data.field, data.value);
-	    } else {
-	      setFieldInvalid(data.field, data.value, res);
-	    }
-	    //form level validations
-	    let errors = validate(collectData());
-	    if ((!errors) || errors.clean) {
-	      formHasErrors = false;
-	      dispatch('change', data);
-	    } else {
-	      if ((errors.form.length === 0) && Object.keys(errors.fields).length === 0) {
-	        formHasErrors = false;
-	        for (let fieldName in fields.flat()) {
-	          setFormFieldValid(fieldName);
-	        }
-	        dispatch('change', data);
-	      } else {
-	        if (errors.form.length) {
-	          errors.form.forEach(addFormError);
-	        } else {
-	          formErrors = false;
-	        }
-	        for (let fieldName of fields.flat()) {
-	          if (Object.prototype.hasOwnProperty.call(errors.fields, fieldName)) {
-	            setFormFieldInvalid(fieldName, errors.fields[fieldName]);
-	          } else {
-	            setFormFieldValid(fieldName);
-	          }
-	        }
-	      }
-	    }
-	  } else {
-	    dispatch('change', data);
-	  }
+	  dispatch('change', data);
 	}
 
 	export let fields = [];
 
 	export let options = {};
-	export let validation = true;
 	export let SUCCESS_TEXT = 'Операция завершена';
 	export let WAITING_TEXT = 'Отправка данных на сервер';
 
@@ -290,7 +242,11 @@
 	  if(Object.prototype.hasOwnProperty.call(form, fieldName)){
 	    form[fieldName].value = value;
 	    form = form;
-	    onFieldChange({detail:{field:fieldName, value}});
+	    onFieldChange({
+	      detail:{
+	        field:fieldName, value
+	      }
+	    });
 	  }
 	}
 

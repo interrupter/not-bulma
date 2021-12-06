@@ -64,7 +64,10 @@ const
   notInterface = Frame.notInterface,
   notApp = Frame.notApp,
   notAppComponents = Frame.COMPONENTS,
-  notAPI = Frame.notAPI;
+  notAPI = Frame.notAPI,
+  FormValidationBuilder = Frame.FormValidationBuilder,
+  FormValidationRunner = Frame.FormValidationRunner,
+  FormValidationSession = Frame.FormValidationSession;
 
 Frame.COMPONENTS.add('UIProgress', UIProgress);
 Frame.COMPONENTS.add('UIUserCard', UIUserCard);
@@ -152,6 +155,7 @@ export {
   ncCRUD,
   Frame,
   Layout,
+  //app frame
   notCommon,
   notPath,
   notController,
@@ -162,6 +166,11 @@ export {
   notApp,
   notAppComponents,
   notAPI,
+  //validation
+  FormValidationBuilder,
+  FormValidationRunner,
+  FormValidationSession,
+  //locale
   say,        //to render phrase
   LOCALE,     // writable custom svelte/store for current dictionary
   notLocale

@@ -1,3 +1,5 @@
+import notPath from 'not-path';
+
 /*
 https://github.com/TehShrike/is-mergeable-object
 
@@ -143,10 +145,102 @@ class notCommon {
   static pad(n) {
     return n < 10 ? '0' + n : n;
   }
+  /**
+   *  Returns today Date object without hours, minutes, seconds
+   *  @return {number}  current date with 00:00:00 in ms of unix time
+   */
+  static getTodayDate(){
+    let t = new Date();
+    return (new Date(t.getFullYear(), t.getMonth(),t.getDate())).getTime();
+  }
 
-  //Проверка является ли переменная функцией.
-  static isFunc(func) {
-    return typeof(func) === 'function';
+
+  /**
+   *  Returns true if object has field of name
+   *   @param   {object}    obj    some object
+   *  @param  {string}    name  field name
+   *  @return {boolean}          if object contains field with name
+   **/
+  static objHas(obj, name){
+    return  Object.prototype.hasOwnProperty.call(obj, name);
+  }
+
+  /**
+  * Copies object to secure it from changes
+  * @param {object}   obj     original object
+  * @return {object}          copy of object
+  **/
+  static copyObj(obj){
+    return JSON.parse(JSON.stringify(obj));
+  }
+
+  /**
+  * Copies object to secure it from changes
+  * @param {object}   obj     original object
+  * @return {object}          copy of object
+  **/
+  static partCopyObj(obj, list){
+    let partObj =  Object.keys(obj).reduce((prev, curr)=>{
+      if(list.includes(curr)){
+        prev[curr] = obj[curr];
+      }
+      return prev;
+    }, {});
+    return JSON.parse(JSON.stringify(partObj));
+  }
+
+
+  /**
+  * Test argument type to be 'function'
+  * @param {any}  func    possible function
+  * @return {boolean}     if this is a function
+  **/
+  static isFunc(func){
+    return typeof func === 'function';
+  }
+
+  /**
+  * Returns true if argument is Async function
+  * @param {function} func  to test
+  * @return {boolean}       if this function is constructed as AsyncFunction
+  **/
+  static isAsync(func){
+    return func.constructor.name === 'AsyncFunction';
+  }
+
+  /**
+  *  Executes method of object in appropriate way inside Promise
+  * @param {object}   obj     original object
+  * @param {string}   name    method name to execute
+  * @param {Array}     params  array of params
+  * @return {Promise}          results of method execution
+  **/
+  static async executeObjectFunction(obj, name, params){
+    if (obj){
+      const proc = notPath.get(':' + name, obj);
+      if(notCommon.isFunc(proc)){
+        if(notCommon.isAsync(proc)){
+          return await proc(...params);
+        }else{
+          return proc(...params);
+        }
+      }
+    }
+  }
+
+  /**
+  *  Executes method of object in apropriate way inside Promise
+  * @param {Object}   from     original object
+  * @param {Object}   name    method name to execute
+  * @param {Array}     list  array of params
+  * @return {Promise}          results of method execution
+  **/
+  static mapBind(from, to, list){
+    list.forEach((item)=>{
+      if (typeof from[item] === 'function') {
+        to[item] = from[item].bind(from);
+      }
+    });
   }
 
 

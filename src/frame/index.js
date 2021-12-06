@@ -30,6 +30,14 @@ import notController from './controller.js';
 import notRecord from './record.js'; //  wrapper for data with server live interactions
 import notInterface from './interface.js'; //  wrapper for data with server live interactions
 
+/*
+  Form validation rails
+*/
+
+import FormValidationBuilder from './validation/builder.js';
+import FormValidationRunner from './validation/runner.js';
+import FormValidationSession from './validation/session.js';
+
 export {
   notCommon,
   notPath,
@@ -40,5 +48,8 @@ export {
   notInterface,
   notApp,
   notAPI,
-  COMPONENTS
+  COMPONENTS,
+  FormValidationBuilder,
+  FormValidationRunner,
+  FormValidationSession,
 };

@@ -1,14 +1,10 @@
 <script>
-	import {notCommon} from '../frame'
 	import {LOCALE} from '../locale';
 	import * as Stores from './../stores.js';
-
 
 	import UITableRow from './notTableRow.svelte';
 	import TableLinks from '../ui.links.svelte';
 	import TableButtons from '../ui.buttons.svelte';
-	import TableSwitch from './controls/ui.switch.svelte';
-	import TableTags from './controls/ui.tags.svelte';
 
 	import { onMount } from 'svelte';
 	import {createEventDispatcher} from 'svelte';

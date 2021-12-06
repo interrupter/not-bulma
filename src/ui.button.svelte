@@ -18,13 +18,10 @@
   export let action = ()=>{ return true; };
 </script>
 
-
 <button
   on:click="{action}"
   {disabled}
-
   type={type?type:""}
-
   class="
     button
     {classes}
@@ -36,7 +33,8 @@
     {light?`is-light`:''}
     {loading?`is-loading`:''}
     {color?`is-${color}`:''}
-    {size?`is-${size}`:''}"
+    {size?`is-${size}`:''}
+    "
   >
   {#if icon }
   {#if iconSide === 'left' }

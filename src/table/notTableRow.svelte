@@ -22,13 +22,13 @@
   export let getItemId = ()=>{};
 
   function onRowSelect(e){
-	  e.preventDefault();
-	  dispatch('rowSelectChange', {
-	    id: 			itemId,
-	    selected: $selectedList[itemId]
-	  });
-	  return false;
-	}
+    e.preventDefault();
+    dispatch('rowSelectChange', {
+      id:       itemId,
+      selected: $selectedList[itemId]
+    });
+    return false;
+}
 
 
 </script>
@@ -36,15 +36,7 @@
 <tr>
   {#if showSelect && $selectedList }
   <td>
-    <input
-      id="table-row-select-{getItemId(item)}"
-      type="checkbox"
-      data-id="{getItemId(item)}"
-      bind:checked={$selectedList[itemId]}
-      placeholder=""
-      name="row_selected_{getItemId(item)}"
-      on:change={onRowSelect}
-      />
+    <input id="table-row-select-{getItemId(item)}" type="checkbox" data-id="{getItemId(item)}" bind:checked={$selectedList[itemId]} placeholder="" name="row_selected_{getItemId(item)}" on:change={onRowSelect} />
   </td>
   {/if}
   {#each fields as field }
