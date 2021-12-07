@@ -73,7 +73,7 @@ export default class FormValidationSession{
   async runFieldValidators(fieldName, validators, value){
     for(let validatorRule of validators){
       try{
-        const valid = await notCommon.executeObjectFunction(validatorRule, 'validator', value);
+        const valid = await notCommon.executeObjectFunction(validatorRule, 'validator', [value]);
         if(!valid){
           this.setFieldError(fieldName, validatorRule.message);
         }
@@ -87,27 +87,31 @@ export default class FormValidationSession{
     return this.validators && this.validators.fields && this.validators.fields[name]?this.validators.fields[name]:[];
   }
 
-  async form(data, formName, result = {}){
+  async form(result = {}){
     if(Object.keys(result).length === 0){
       result = {
         fields: {},
-        form: {},
+        form: {
+          fields: {},
+          errors:[],
+          exceptions: []
+        },
       };
     }
-    const formValidators = this.getFormValidators(formName);
-    await this.runFormValidators(formValidators, data, result);
+    const formValidators = this.validators && this.validators.form?this.validators.form: [];
+    await this.runFormValidators(formValidators, result);
   }
 
-  async runFormValidators(formValidators, data, result){
+  async runFormValidators(formValidators, result){
     for(let validator of formValidators){
       try{
         //checking inside and modifing results inside too
-        await validator(data, result);
+        await validator(this.data, result);
       }catch(e){
         if (!Array.isArray(result.form.exceptions)){
           result.form.exceptions = [];
         }
-        result.form.exceptions(e);
+        result.form.exceptions.push(e);
       }
     }
   }
@@ -134,9 +138,9 @@ export default class FormValidationSession{
       form: []
     };
     for(let fieldName in this.result.fields){
-      resultComplete[fieldName] = this.getCompleteResultForField(fieldName);
+      resultComplete.fields[fieldName] = this.getCompleteResultForField(fieldName);
     }
-    resultComplete.form = [this.result.form.errors];
+    resultComplete.form = [...this.result.form.errors];
     return resultComplete;
   }
 

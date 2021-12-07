@@ -194,14 +194,15 @@ class ncCRUD extends notController {
         target: this.els.main,
         manifest,
         action: 'create',
-        options: {},
+        options: this.getOptions('create.options', {}),
         validators: this.getOptions('Validators'),
         data:defData
       });
       this.ui.create = ui;
       this.validator.create = validator;
       this.ui.create.$on('submit', async(ev) => {
-        const success = await this.onActionSubmit('create', ev.detail);
+        const createActionName = this.getOptions('create.actionName', 'create');
+        const success = await this.onActionSubmit(createActionName, ev.detail);
         if(success){
           setTimeout(() => this.goList(), 1000);
         }
@@ -230,7 +231,8 @@ class ncCRUD extends notController {
       }
       let manifest = this.app.getInterfaceManifest()[this.getModelName()];
       query[idField] = params[0];
-      let res = await this.getModel(query)['$get']();
+      const detailsActionName = this.getOptions('details.actionName', 'get');
+      let res = await this.getModel(query)[`$${detailsActionName}`]();
       if (res.status === 'ok') {
         let title = this.getItemTitle(res.result);
         this.setBreadcrumbs([{
@@ -277,7 +279,8 @@ class ncCRUD extends notController {
       }
       let manifest = this.app.getInterfaceManifest()[this.getModelName()];
       query[idField] = params[0];
-      let res = await this.getModel(query).$getRaw();
+      const getActionName = this.getOptions('update.actionName', 'getRaw');
+      let res = await this.getModel(query)[`$${getActionName}`]();
       if (res.status === 'ok') {
         let title = this.getItemTitle(res.result);
         this.setBreadcrumbs([{
@@ -288,14 +291,14 @@ class ncCRUD extends notController {
           target: this.els.main,
           manifest,
           action: 'update',
-          options: {},
+          options: this.getOptions('update.options', {}),
           validators: this.getOptions('Validators'),
           data: notCommon.stripProxy(res.result)
         });
         this.ui.update = ui;
         this.validator.update = validator;
         this.ui.update.$on('submit', async (ev) => {
-          const success = this.onActionSubmit('update', ev.detail);
+          const success = await this.onActionSubmit('update', ev.detail);
           if(success){
             setTimeout(() => this.goDetails(id), 1000);
           }
@@ -320,7 +323,8 @@ class ncCRUD extends notController {
       }]);
 
       if (confirm('Удалить запись?')) {
-        const success = await this.onActionSubmit('delete', {
+        const deleteActionName = this.getOptions('delete.actionName', 'delete');
+        const success = await this.onActionSubmit(deleteActionName, {
           _id: params[0]
         });
         if(success){
@@ -414,9 +418,8 @@ class ncCRUD extends notController {
   async onActionSubmit(action, item){
     try{
       this.ui[action].setLoading();
-      let result = this.getModel(item)[`$${action}`]();
-      this.processResult(this.ui[action], result);
-      return true;
+      let result = await this.getModel(item)[`$${action}`]();
+      return this.processResult(this.ui[action], result);
     }catch(e){
       this.processResult(this.ui[action], e);
       return false;
@@ -429,8 +432,10 @@ class ncCRUD extends notController {
     if(result.status === 'ok'){
       ui.showSuccess();
       ifSuccess && ifSuccess();
+      return true;
     }else{
       this.setFormErrors(ui, result);
+      return false;
     }
   }
 
@@ -440,10 +445,10 @@ class ncCRUD extends notController {
       fields: {}
     };
     if(result.message){
-      result.form.push(result.message);
+      status.form.push(result.message);
     }
     if(result.errors && Object.keys(result.errors).length > 0 ){
-      result.errors = {...result.errors};
+      status.fields = {...result.errors};
     }
     ui.updateFormValidationStatus(status);
   }

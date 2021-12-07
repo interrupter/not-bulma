@@ -12,6 +12,7 @@ let dispatch = createEventDispatcher();
   export let icon = false;
   export let required = true;
   export let readonly = false;
+  export let disabled = false;
   export let valid = true;
   export let validated = false;
   export let errors = false;
@@ -50,11 +51,15 @@ let dispatch = createEventDispatcher();
   <div class="control {iconClasses}">
     <input class="input {validationClasses}"
       id="form-field-email-{fieldname}"
-      type="email" name="{fieldname}" invalid="{invalid}"
-      required={required} placeholder="{placeholder}"
+      type="email" name="{fieldname}"
+      {invalid}
+      {required}
+      {readonly}
+      {disabled}
+      placeholder="{placeholder}"
       bind:value={value} autocomplete="{fieldname}"
       aria-controls="input-field-helper-{fieldname}"
-      on:change={onBlur} on:input={onInput} {readonly}
+      on:change={onBlur} on:input={onInput}
       aria-describedby="input-field-helper-{fieldname}" />
     {#if icon }
     <span class="icon is-small is-left"><i class="fas fa-{icon}"></i></span>

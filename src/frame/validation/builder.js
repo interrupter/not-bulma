@@ -9,7 +9,7 @@ export default class ValidatorsBuilder {
   augmentValidators(validators) {
     if (Object.prototype.hasOwnProperty.call(validators, 'fields')) {
       for (let fieldName in validators.fields) {
-        validators.fields[fieldName] = this.augmentValidators(validators.fields[fieldName]);
+        validators.fields[fieldName] = this.augmentFieldsValidators(validators.fields[fieldName]);
       }
     }
     if (Object.prototype.hasOwnProperty.call(validators, 'fields')) {
@@ -21,15 +21,15 @@ export default class ValidatorsBuilder {
   }
 
   augmentFieldsValidators(fieldValidators) {
-    return fieldValidators.map(field => this.augmentValidator(field));
+    return fieldValidators.map(field => this.augmentFieldValidator(field));
   }
 
   augmentFieldValidator(rule) {
     if (rule.validator) {
       if (typeof rule.validator === 'string') {
-        return this.augmentValidatorObsolete(rule);
+        return this.augmentFieldValidatorObsolete(rule);
       } else {
-        return this.augmentValidatorModern(rule);
+        return this.augmentFieldValidatorModern(rule);
       }
     }
     return rule;

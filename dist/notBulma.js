@@ -7511,6 +7511,1710 @@ var notBulma = (function (exports) {
 	notCommon$1.register('absorb.services', absorbServices);
 	notCommon$1.register('absorb.uis', absorbUIs);
 
+	function ownKeys$3(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+	function _objectSpread$3(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$3(Object(source), true).forEach(function (key) { defineProperty$4(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$3(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+	function _createSuper$c(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$c(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+
+	function _isNativeReflectConstruct$c() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+	var notLocale = /*#__PURE__*/function (_EventEmitter) {
+	  inherits(notLocale, _EventEmitter);
+
+	  var _super = _createSuper$c(notLocale);
+
+	  function notLocale() {
+	    var _this;
+
+	    classCallCheck(this, notLocale);
+
+	    _this = _super.call(this);
+	    _this.dict = {}; //dictionary of phrases
+
+	    _this.helpers = {}; //additional helper functions and constants
+
+	    var dict = _this.restoreFromStorage();
+
+	    if (dict) {
+	      _this.set(dict);
+	    }
+
+	    return _this;
+	  }
+	  /**
+	   * String format should comply notPath standart.
+	   * {path_to_access} - is
+	   * : - is used to access to params
+	   * :: - is used to access to helpers
+	   * Welcome, {:where}! - will replace {:where} with content of params.where
+	   * Welcome, {::where}! - will replace {:where} with content of this.helpers.where
+	   * () - after path is to invoke function of target object
+	   * Welcome, {::where()}! - will try to exec this.helpers.where(params, undefined)
+	   * @param    {string}  str         localized string template with mark to include data
+	   * @param    {object}  params      params to use in string
+	   * @returns  {string}              localized version of string with
+	   */
+
+
+	  createClass(notLocale, [{
+	    key: "format",
+	    value: function format(str, params) {
+	      return notPath$1.parseSubs(str, params, this.helpers);
+	    }
+	    /**
+	     * Return localized version of string with injected data from provided object
+	     * may also use Locale.helpers as source of data
+	     * @param {string}   phrase    name of string to localize
+	     * @param {object}   params    object with data to inject in phrase template
+	     * @return {string}            localized string with injected data
+	     */
+
+	  }, {
+	    key: "say",
+	    value: function say(phrase) {
+	      var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+	      try {
+	        if (Object.prototype.hasOwnProperty.call(this.dict, phrase)) {
+	          var tmpl = this.dict[phrase],
+	              result = '';
+
+	          if (params) {
+	            result = this.format(tmpl, params);
+	          } else {
+	            result = tmpl;
+	          }
+
+	          return result;
+	        } else {
+	          throw new Error("Unknown locale phrase: ".concat(phrase));
+	        }
+	      } catch (e) {
+	        notCommon$1.debug(e);
+	        return phrase;
+	      }
+	    }
+	    /**
+	     * Setting new dictionary. triggers event 'change'
+	     * @param {object}     dict      vocabulary of phrases and templates
+	     **/
+
+	  }, {
+	    key: "set",
+	    value: function set(dict) {
+	      LOCALE.set(dict);
+	      this.saveToStorage(dict);
+	      this.dict = Object.assign({}, _objectSpread$3({}, dict));
+	      this.emit('change');
+	    }
+	  }, {
+	    key: "saveToStorage",
+	    value: function saveToStorage(dict) {
+	      if (window.localStorage) {
+	        try {
+	          return window.localStorage.setItem('dictionary', JSON.stringify(dict));
+	        } catch (e) {
+	          notCommon$1.debug(e);
+	          return false;
+	        }
+	      }
+
+	      return false;
+	    }
+	  }, {
+	    key: "restoreFromStorage",
+	    value: function restoreFromStorage() {
+	      if (window.localStorage) {
+	        try {
+	          var str = window.localStorage.getItem('dictionary');
+
+	          if (str) {
+	            var dict = JSON.parse(str);
+	            return dict;
+	          } else {
+	            return false;
+	          }
+	        } catch (e) {
+	          notCommon$1.debug(e);
+	          return false;
+	        }
+	      }
+
+	      return false;
+	    }
+	    /**
+	     * Returns writable store of phrases
+	     * @return {object}  writable store
+	     */
+
+	  }, {
+	    key: "vocabulary",
+	    value: function vocabulary() {
+	      return LOCALE;
+	    }
+	  }]);
+
+	  return notLocale;
+	}(EventEmitter);
+
+	var notLocale$1 = new notLocale();
+
+	var say = notLocale$1.say.bind(notLocale$1);
+
+	/* src/ui.title.svelte generated by Svelte v3.44.2 */
+
+	function create_if_block$F(ctx) {
+		let html_tag;
+		let html_anchor;
+
+		return {
+			c() {
+				html_tag = new HtmlTag();
+				html_anchor = empty();
+				html_tag.a = html_anchor;
+			},
+			m(target, anchor) {
+				html_tag.m(/*resultSubtitle*/ ctx[1], target, anchor);
+				insert(target, html_anchor, anchor);
+			},
+			p(ctx, dirty) {
+				if (dirty & /*resultSubtitle*/ 2) html_tag.p(/*resultSubtitle*/ ctx[1]);
+			},
+			d(detaching) {
+				if (detaching) detach(html_anchor);
+				if (detaching) html_tag.d();
+			}
+		};
+	}
+
+	function create_fragment$Z(ctx) {
+		let html_tag;
+		let t;
+		let if_block_anchor;
+		let if_block = /*subtitle*/ ctx[0] && create_if_block$F(ctx);
+
+		return {
+			c() {
+				html_tag = new HtmlTag();
+				t = space();
+				if (if_block) if_block.c();
+				if_block_anchor = empty();
+				html_tag.a = t;
+			},
+			m(target, anchor) {
+				html_tag.m(/*resultTitle*/ ctx[2], target, anchor);
+				insert(target, t, anchor);
+				if (if_block) if_block.m(target, anchor);
+				insert(target, if_block_anchor, anchor);
+			},
+			p(ctx, [dirty]) {
+				if (dirty & /*resultTitle*/ 4) html_tag.p(/*resultTitle*/ ctx[2]);
+
+				if (/*subtitle*/ ctx[0]) {
+					if (if_block) {
+						if_block.p(ctx, dirty);
+					} else {
+						if_block = create_if_block$F(ctx);
+						if_block.c();
+						if_block.m(if_block_anchor.parentNode, if_block_anchor);
+					}
+				} else if (if_block) {
+					if_block.d(1);
+					if_block = null;
+				}
+			},
+			i: noop,
+			o: noop,
+			d(detaching) {
+				if (detaching) html_tag.d();
+				if (detaching) detach(t);
+				if (if_block) if_block.d(detaching);
+				if (detaching) detach(if_block_anchor);
+			}
+		};
+	}
+
+	function instance$Z($$self, $$props, $$invalidate) {
+		let spacedStyle;
+		let resultTitle;
+		let resultSubtitle;
+		let $LOCALE;
+		component_subscribe($$self, LOCALE, $$value => $$invalidate(9, $LOCALE = $$value));
+		let { title = '' } = $$props;
+		let { subtitle } = $$props;
+		let { size = 1 } = $$props;
+		let { subsize } = $$props;
+		let { spaced = false } = $$props;
+		let size2;
+
+		$$self.$$set = $$props => {
+			if ('title' in $$props) $$invalidate(3, title = $$props.title);
+			if ('subtitle' in $$props) $$invalidate(0, subtitle = $$props.subtitle);
+			if ('size' in $$props) $$invalidate(4, size = $$props.size);
+			if ('subsize' in $$props) $$invalidate(5, subsize = $$props.subsize);
+			if ('spaced' in $$props) $$invalidate(6, spaced = $$props.spaced);
+		};
+
+		$$self.$$.update = () => {
+			if ($$self.$$.dirty & /*subsize, size*/ 48) {
+				$$invalidate(7, size2 = subsize ? subsize : size < 6 ? size + 1 : size);
+			}
+
+			if ($$self.$$.dirty & /*spaced*/ 64) {
+				$$invalidate(8, spacedStyle = spaced ? 'is-spaced' : '');
+			}
+
+			if ($$self.$$.dirty & /*size, spacedStyle, $LOCALE, title*/ 792) {
+				$$invalidate(2, resultTitle = `<h${size} class="title ${spacedStyle} is-${size}">${$LOCALE[title]}</h${size}>`);
+			}
+
+			if ($$self.$$.dirty & /*size2, $LOCALE, subtitle*/ 641) {
+				$$invalidate(1, resultSubtitle = `<h${size2} class="subtitle is-${size2}">${$LOCALE[subtitle]}</h${size2}>`);
+			}
+		};
+
+		return [
+			subtitle,
+			resultSubtitle,
+			resultTitle,
+			title,
+			size,
+			subsize,
+			spaced,
+			size2,
+			spacedStyle,
+			$LOCALE
+		];
+	}
+
+	class Ui_title extends SvelteComponent {
+		constructor(options) {
+			super();
+
+			init(this, options, instance$Z, create_fragment$Z, safe_not_equal, {
+				title: 3,
+				subtitle: 0,
+				size: 4,
+				subsize: 5,
+				spaced: 6
+			});
+		}
+	}
+
+	function fade(node, { delay = 0, duration = 400, easing = identity } = {}) {
+	    const o = +getComputedStyle(node).opacity;
+	    return {
+	        delay,
+	        duration,
+	        easing,
+	        css: t => `opacity: ${t * o}`
+	    };
+	}
+
+	/* src/ui.overlay.svelte generated by Svelte v3.44.2 */
+
+	function create_if_block$E(ctx) {
+		let div;
+		let t;
+		let div_transition;
+		let current;
+		let mounted;
+		let dispose;
+		let if_block = /*closeButton*/ ctx[0] && create_if_block_1$u(ctx);
+		const default_slot_template = /*#slots*/ ctx[9].default;
+		const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[8], null);
+
+		return {
+			c() {
+				div = element("div");
+				if (if_block) if_block.c();
+				t = space();
+				if (default_slot) default_slot.c();
+				attr(div, "class", "is-overlay not-overlay");
+				set_style(div, "z-index", zIndexStep * /*layer*/ ctx[3]);
+			},
+			m(target, anchor) {
+				insert(target, div, anchor);
+				if (if_block) if_block.m(div, null);
+				append(div, t);
+
+				if (default_slot) {
+					default_slot.m(div, null);
+				}
+
+				current = true;
+
+				if (!mounted) {
+					dispose = listen(div, "click", /*overlayClick*/ ctx[4]);
+					mounted = true;
+				}
+			},
+			p(ctx, dirty) {
+				if (/*closeButton*/ ctx[0]) {
+					if (if_block) {
+						if_block.p(ctx, dirty);
+					} else {
+						if_block = create_if_block_1$u(ctx);
+						if_block.c();
+						if_block.m(div, t);
+					}
+				} else if (if_block) {
+					if_block.d(1);
+					if_block = null;
+				}
+
+				if (default_slot) {
+					if (default_slot.p && (!current || dirty & /*$$scope*/ 256)) {
+						update_slot_base(
+							default_slot,
+							default_slot_template,
+							ctx,
+							/*$$scope*/ ctx[8],
+							!current
+							? get_all_dirty_from_scope(/*$$scope*/ ctx[8])
+							: get_slot_changes(default_slot_template, /*$$scope*/ ctx[8], dirty, null),
+							null
+						);
+					}
+				}
+
+				if (!current || dirty & /*layer*/ 8) {
+					set_style(div, "z-index", zIndexStep * /*layer*/ ctx[3]);
+				}
+			},
+			i(local) {
+				if (current) return;
+				transition_in(default_slot, local);
+
+				add_render_callback(() => {
+					if (!div_transition) div_transition = create_bidirectional_transition(div, fade, {}, true);
+					div_transition.run(1);
+				});
+
+				current = true;
+			},
+			o(local) {
+				transition_out(default_slot, local);
+				if (!div_transition) div_transition = create_bidirectional_transition(div, fade, {}, false);
+				div_transition.run(0);
+				current = false;
+			},
+			d(detaching) {
+				if (detaching) detach(div);
+				if (if_block) if_block.d();
+				if (default_slot) default_slot.d(detaching);
+				if (detaching && div_transition) div_transition.end();
+				mounted = false;
+				dispose();
+			}
+		};
+	}
+
+	// (66:1) {#if closeButton}
+	function create_if_block_1$u(ctx) {
+		let button;
+		let button_class_value;
+		let mounted;
+		let dispose;
+
+		return {
+			c() {
+				button = element("button");
+				attr(button, "class", button_class_value = "delete is-" + /*closeSize*/ ctx[2]);
+			},
+			m(target, anchor) {
+				insert(target, button, anchor);
+
+				if (!mounted) {
+					dispose = listen(button, "click", /*closeButtonClick*/ ctx[5]);
+					mounted = true;
+				}
+			},
+			p(ctx, dirty) {
+				if (dirty & /*closeSize*/ 4 && button_class_value !== (button_class_value = "delete is-" + /*closeSize*/ ctx[2])) {
+					attr(button, "class", button_class_value);
+				}
+			},
+			d(detaching) {
+				if (detaching) detach(button);
+				mounted = false;
+				dispose();
+			}
+		};
+	}
+
+	function create_fragment$Y(ctx) {
+		let if_block_anchor;
+		let current;
+		let if_block = /*show*/ ctx[1] && create_if_block$E(ctx);
+
+		return {
+			c() {
+				if (if_block) if_block.c();
+				if_block_anchor = empty();
+			},
+			m(target, anchor) {
+				if (if_block) if_block.m(target, anchor);
+				insert(target, if_block_anchor, anchor);
+				current = true;
+			},
+			p(ctx, [dirty]) {
+				if (/*show*/ ctx[1]) {
+					if (if_block) {
+						if_block.p(ctx, dirty);
+
+						if (dirty & /*show*/ 2) {
+							transition_in(if_block, 1);
+						}
+					} else {
+						if_block = create_if_block$E(ctx);
+						if_block.c();
+						transition_in(if_block, 1);
+						if_block.m(if_block_anchor.parentNode, if_block_anchor);
+					}
+				} else if (if_block) {
+					group_outros();
+
+					transition_out(if_block, 1, 1, () => {
+						if_block = null;
+					});
+
+					check_outros();
+				}
+			},
+			i(local) {
+				if (current) return;
+				transition_in(if_block);
+				current = true;
+			},
+			o(local) {
+				transition_out(if_block);
+				current = false;
+			},
+			d(detaching) {
+				if (if_block) if_block.d(detaching);
+				if (detaching) detach(if_block_anchor);
+			}
+		};
+	}
+
+	const zIndexStep = 1000;
+
+	function instance$Y($$self, $$props, $$invalidate) {
+		let { $$slots: slots = {}, $$scope } = $$props;
+		let overflowSave = '';
+		const dispatch = createEventDispatcher();
+		let { closeButton = false } = $$props;
+		let { show = true } = $$props;
+		let { closeOnClick = true } = $$props;
+		let { closeSize = 'normal' } = $$props;
+		let { layer = 1 } = $$props;
+
+		function overlayClick(e) {
+			if (closeOnClick) {
+				closeOverlay(e);
+			}
+		}
+
+		function closeButtonClick() {
+			rejectOverlay();
+		}
+
+		function closeOverlay(e) {
+			if (e && e.originalTarget && e.originalTarget.classList && e.originalTarget.classList.contains('is-overlay')) {
+				rejectOverlay();
+			}
+		}
+
+		function rejectOverlay(data = {}) {
+			dispatch('reject', data);
+		}
+
+		/*
+		function resolveOverlay(data = {}) {
+		  dispatch('resolve', data);
+		}
+	*/
+		onMount(() => {
+			$$invalidate(7, overflowSave = document.body.style.overflow);
+		});
+
+		onDestroy(() => {
+			document.body.style.overflow = overflowSave;
+		});
+
+		$$self.$$set = $$props => {
+			if ('closeButton' in $$props) $$invalidate(0, closeButton = $$props.closeButton);
+			if ('show' in $$props) $$invalidate(1, show = $$props.show);
+			if ('closeOnClick' in $$props) $$invalidate(6, closeOnClick = $$props.closeOnClick);
+			if ('closeSize' in $$props) $$invalidate(2, closeSize = $$props.closeSize);
+			if ('layer' in $$props) $$invalidate(3, layer = $$props.layer);
+			if ('$$scope' in $$props) $$invalidate(8, $$scope = $$props.$$scope);
+		};
+
+		$$self.$$.update = () => {
+			if ($$self.$$.dirty & /*show, overflowSave*/ 130) {
+				if (show) {
+					document.body.style.overflow = 'hidden';
+				} else {
+					document.body.style.overflow = overflowSave;
+				}
+			}
+		};
+
+		return [
+			closeButton,
+			show,
+			closeSize,
+			layer,
+			overlayClick,
+			closeButtonClick,
+			closeOnClick,
+			overflowSave,
+			$$scope,
+			slots
+		];
+	}
+
+	class Ui_overlay extends SvelteComponent {
+		constructor(options) {
+			super();
+
+			init(this, options, instance$Y, create_fragment$Y, safe_not_equal, {
+				closeButton: 0,
+				show: 1,
+				closeOnClick: 6,
+				closeSize: 2,
+				layer: 3
+			});
+		}
+	}
+
+	/* src/ui.button.svelte generated by Svelte v3.44.2 */
+
+	function create_else_block$w(ctx) {
+		let t_value = /*$LOCALE*/ ctx[16][/*title*/ ctx[0]] + "";
+		let t;
+
+		return {
+			c() {
+				t = text(t_value);
+			},
+			m(target, anchor) {
+				insert(target, t, anchor);
+			},
+			p(ctx, dirty) {
+				if (dirty & /*$LOCALE, title*/ 65537 && t_value !== (t_value = /*$LOCALE*/ ctx[16][/*title*/ ctx[0]] + "")) set_data(t, t_value);
+			},
+			d(detaching) {
+				if (detaching) detach(t);
+			}
+		};
+	}
+
+	// (39:2) {#if icon }
+	function create_if_block$D(ctx) {
+		let t0;
+		let t1;
+		let if_block2_anchor;
+		let if_block0 = /*iconSide*/ ctx[14] === 'left' && create_if_block_3$i(ctx);
+		let if_block1 = /*title*/ ctx[0] && create_if_block_2$k(ctx);
+		let if_block2 = /*iconSide*/ ctx[14] === 'right' && create_if_block_1$t(ctx);
+
+		return {
+			c() {
+				if (if_block0) if_block0.c();
+				t0 = space();
+				if (if_block1) if_block1.c();
+				t1 = space();
+				if (if_block2) if_block2.c();
+				if_block2_anchor = empty();
+			},
+			m(target, anchor) {
+				if (if_block0) if_block0.m(target, anchor);
+				insert(target, t0, anchor);
+				if (if_block1) if_block1.m(target, anchor);
+				insert(target, t1, anchor);
+				if (if_block2) if_block2.m(target, anchor);
+				insert(target, if_block2_anchor, anchor);
+			},
+			p(ctx, dirty) {
+				if (/*iconSide*/ ctx[14] === 'left') {
+					if (if_block0) {
+						if_block0.p(ctx, dirty);
+					} else {
+						if_block0 = create_if_block_3$i(ctx);
+						if_block0.c();
+						if_block0.m(t0.parentNode, t0);
+					}
+				} else if (if_block0) {
+					if_block0.d(1);
+					if_block0 = null;
+				}
+
+				if (/*title*/ ctx[0]) {
+					if (if_block1) {
+						if_block1.p(ctx, dirty);
+					} else {
+						if_block1 = create_if_block_2$k(ctx);
+						if_block1.c();
+						if_block1.m(t1.parentNode, t1);
+					}
+				} else if (if_block1) {
+					if_block1.d(1);
+					if_block1 = null;
+				}
+
+				if (/*iconSide*/ ctx[14] === 'right') {
+					if (if_block2) {
+						if_block2.p(ctx, dirty);
+					} else {
+						if_block2 = create_if_block_1$t(ctx);
+						if_block2.c();
+						if_block2.m(if_block2_anchor.parentNode, if_block2_anchor);
+					}
+				} else if (if_block2) {
+					if_block2.d(1);
+					if_block2 = null;
+				}
+			},
+			d(detaching) {
+				if (if_block0) if_block0.d(detaching);
+				if (detaching) detach(t0);
+				if (if_block1) if_block1.d(detaching);
+				if (detaching) detach(t1);
+				if (if_block2) if_block2.d(detaching);
+				if (detaching) detach(if_block2_anchor);
+			}
+		};
+	}
+
+	// (40:2) {#if iconSide === 'left' }
+	function create_if_block_3$i(ctx) {
+		let span;
+		let i;
+		let i_class_value;
+
+		return {
+			c() {
+				span = element("span");
+				i = element("i");
+				attr(i, "class", i_class_value = "fas fa-" + /*icon*/ ctx[13] + " " + (/*size*/ ctx[11] ? `is-${/*size*/ ctx[11]}` : ''));
+				attr(span, "class", "icon");
+			},
+			m(target, anchor) {
+				insert(target, span, anchor);
+				append(span, i);
+			},
+			p(ctx, dirty) {
+				if (dirty & /*icon, size*/ 10240 && i_class_value !== (i_class_value = "fas fa-" + /*icon*/ ctx[13] + " " + (/*size*/ ctx[11] ? `is-${/*size*/ ctx[11]}` : ''))) {
+					attr(i, "class", i_class_value);
+				}
+			},
+			d(detaching) {
+				if (detaching) detach(span);
+			}
+		};
+	}
+
+	// (43:2) {#if title }
+	function create_if_block_2$k(ctx) {
+		let span;
+		let t_value = /*$LOCALE*/ ctx[16][/*title*/ ctx[0]] + "";
+		let t;
+
+		return {
+			c() {
+				span = element("span");
+				t = text(t_value);
+			},
+			m(target, anchor) {
+				insert(target, span, anchor);
+				append(span, t);
+			},
+			p(ctx, dirty) {
+				if (dirty & /*$LOCALE, title*/ 65537 && t_value !== (t_value = /*$LOCALE*/ ctx[16][/*title*/ ctx[0]] + "")) set_data(t, t_value);
+			},
+			d(detaching) {
+				if (detaching) detach(span);
+			}
+		};
+	}
+
+	// (46:2) {#if iconSide === 'right' }
+	function create_if_block_1$t(ctx) {
+		let span;
+		let i;
+		let i_class_value;
+
+		return {
+			c() {
+				span = element("span");
+				i = element("i");
+				attr(i, "class", i_class_value = "fas fa-" + /*icon*/ ctx[13] + " " + (/*size*/ ctx[11] ? `is-${/*size*/ ctx[11]}` : ''));
+				attr(span, "class", "icon");
+			},
+			m(target, anchor) {
+				insert(target, span, anchor);
+				append(span, i);
+			},
+			p(ctx, dirty) {
+				if (dirty & /*icon, size*/ 10240 && i_class_value !== (i_class_value = "fas fa-" + /*icon*/ ctx[13] + " " + (/*size*/ ctx[11] ? `is-${/*size*/ ctx[11]}` : ''))) {
+					attr(i, "class", i_class_value);
+				}
+			},
+			d(detaching) {
+				if (detaching) detach(span);
+			}
+		};
+	}
+
+	function create_fragment$X(ctx) {
+		let button;
+		let button_type_value;
+		let button_class_value;
+		let mounted;
+		let dispose;
+
+		function select_block_type(ctx, dirty) {
+			if (/*icon*/ ctx[13]) return create_if_block$D;
+			return create_else_block$w;
+		}
+
+		let current_block_type = select_block_type(ctx);
+		let if_block = current_block_type(ctx);
+
+		return {
+			c() {
+				button = element("button");
+				if_block.c();
+				button.disabled = /*disabled*/ ctx[7];
+				attr(button, "type", button_type_value = /*type*/ ctx[9] ? /*type*/ ctx[9] : "");
+				attr(button, "class", button_class_value = "button " + /*classes*/ ctx[12] + " " + (/*state*/ ctx[8] ? `is-${/*state*/ ctx[8]}` : '') + " " + (/*inverted*/ ctx[5] ? `is-inverted` : '') + " " + (/*outlined*/ ctx[4] ? `is-outlined` : '') + " " + (/*raised*/ ctx[3] ? `is-raised` : '') + " " + (/*rounded*/ ctx[6] ? `is-rounded` : '') + " " + (/*light*/ ctx[1] ? `is-light` : '') + " " + (/*loading*/ ctx[2] ? `is-loading` : '') + " " + (/*color*/ ctx[10] ? `is-${/*color*/ ctx[10]}` : '') + " " + (/*size*/ ctx[11] ? `is-${/*size*/ ctx[11]}` : '') + "");
+			},
+			m(target, anchor) {
+				insert(target, button, anchor);
+				if_block.m(button, null);
+
+				if (!mounted) {
+					dispose = listen(button, "click", function () {
+						if (is_function(/*action*/ ctx[15])) /*action*/ ctx[15].apply(this, arguments);
+					});
+
+					mounted = true;
+				}
+			},
+			p(new_ctx, [dirty]) {
+				ctx = new_ctx;
+
+				if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block) {
+					if_block.p(ctx, dirty);
+				} else {
+					if_block.d(1);
+					if_block = current_block_type(ctx);
+
+					if (if_block) {
+						if_block.c();
+						if_block.m(button, null);
+					}
+				}
+
+				if (dirty & /*disabled*/ 128) {
+					button.disabled = /*disabled*/ ctx[7];
+				}
+
+				if (dirty & /*type*/ 512 && button_type_value !== (button_type_value = /*type*/ ctx[9] ? /*type*/ ctx[9] : "")) {
+					attr(button, "type", button_type_value);
+				}
+
+				if (dirty & /*classes, state, inverted, outlined, raised, rounded, light, loading, color, size*/ 7550 && button_class_value !== (button_class_value = "button " + /*classes*/ ctx[12] + " " + (/*state*/ ctx[8] ? `is-${/*state*/ ctx[8]}` : '') + " " + (/*inverted*/ ctx[5] ? `is-inverted` : '') + " " + (/*outlined*/ ctx[4] ? `is-outlined` : '') + " " + (/*raised*/ ctx[3] ? `is-raised` : '') + " " + (/*rounded*/ ctx[6] ? `is-rounded` : '') + " " + (/*light*/ ctx[1] ? `is-light` : '') + " " + (/*loading*/ ctx[2] ? `is-loading` : '') + " " + (/*color*/ ctx[10] ? `is-${/*color*/ ctx[10]}` : '') + " " + (/*size*/ ctx[11] ? `is-${/*size*/ ctx[11]}` : '') + "")) {
+					attr(button, "class", button_class_value);
+				}
+			},
+			i: noop,
+			o: noop,
+			d(detaching) {
+				if (detaching) detach(button);
+				if_block.d();
+				mounted = false;
+				dispose();
+			}
+		};
+	}
+
+	function instance$X($$self, $$props, $$invalidate) {
+		let $LOCALE;
+		component_subscribe($$self, LOCALE, $$value => $$invalidate(16, $LOCALE = $$value));
+		let { title = '' } = $$props;
+		let { light = false } = $$props;
+		let { loading = false } = $$props;
+		let { raised = false } = $$props;
+		let { outlined = false } = $$props;
+		let { inverted = false } = $$props;
+		let { rounded = false } = $$props;
+		let { disabled = false } = $$props;
+		let { state = '' } = $$props;
+		let { type = '' } = $$props;
+		let { color = '' } = $$props;
+		let { size = '' } = $$props;
+		let { classes = '' } = $$props;
+		let { icon = false } = $$props;
+		let { iconSide = 'right' } = $$props;
+
+		let { action = () => {
+			return true;
+		} } = $$props;
+
+		$$self.$$set = $$props => {
+			if ('title' in $$props) $$invalidate(0, title = $$props.title);
+			if ('light' in $$props) $$invalidate(1, light = $$props.light);
+			if ('loading' in $$props) $$invalidate(2, loading = $$props.loading);
+			if ('raised' in $$props) $$invalidate(3, raised = $$props.raised);
+			if ('outlined' in $$props) $$invalidate(4, outlined = $$props.outlined);
+			if ('inverted' in $$props) $$invalidate(5, inverted = $$props.inverted);
+			if ('rounded' in $$props) $$invalidate(6, rounded = $$props.rounded);
+			if ('disabled' in $$props) $$invalidate(7, disabled = $$props.disabled);
+			if ('state' in $$props) $$invalidate(8, state = $$props.state);
+			if ('type' in $$props) $$invalidate(9, type = $$props.type);
+			if ('color' in $$props) $$invalidate(10, color = $$props.color);
+			if ('size' in $$props) $$invalidate(11, size = $$props.size);
+			if ('classes' in $$props) $$invalidate(12, classes = $$props.classes);
+			if ('icon' in $$props) $$invalidate(13, icon = $$props.icon);
+			if ('iconSide' in $$props) $$invalidate(14, iconSide = $$props.iconSide);
+			if ('action' in $$props) $$invalidate(15, action = $$props.action);
+		};
+
+		return [
+			title,
+			light,
+			loading,
+			raised,
+			outlined,
+			inverted,
+			rounded,
+			disabled,
+			state,
+			type,
+			color,
+			size,
+			classes,
+			icon,
+			iconSide,
+			action,
+			$LOCALE
+		];
+	}
+
+	class Ui_button extends SvelteComponent {
+		constructor(options) {
+			super();
+
+			init(this, options, instance$X, create_fragment$X, safe_not_equal, {
+				title: 0,
+				light: 1,
+				loading: 2,
+				raised: 3,
+				outlined: 4,
+				inverted: 5,
+				rounded: 6,
+				disabled: 7,
+				state: 8,
+				type: 9,
+				color: 10,
+				size: 11,
+				classes: 12,
+				icon: 13,
+				iconSide: 14,
+				action: 15
+			});
+		}
+	}
+
+	/* src/ui.modal.svelte generated by Svelte v3.44.2 */
+
+	function create_if_block_1$s(ctx) {
+		let uibutton;
+		let current;
+		const uibutton_spread_levels = [/*closeButton*/ ctx[0]];
+		let uibutton_props = {};
+
+		for (let i = 0; i < uibutton_spread_levels.length; i += 1) {
+			uibutton_props = assign(uibutton_props, uibutton_spread_levels[i]);
+		}
+
+		uibutton = new Ui_button({ props: uibutton_props });
+
+		return {
+			c() {
+				create_component(uibutton.$$.fragment);
+			},
+			m(target, anchor) {
+				mount_component(uibutton, target, anchor);
+				current = true;
+			},
+			p(ctx, dirty) {
+				const uibutton_changes = (dirty & /*closeButton*/ 1)
+				? get_spread_update(uibutton_spread_levels, [get_spread_object(/*closeButton*/ ctx[0])])
+				: {};
+
+				uibutton.$set(uibutton_changes);
+			},
+			i(local) {
+				if (current) return;
+				transition_in(uibutton.$$.fragment, local);
+				current = true;
+			},
+			o(local) {
+				transition_out(uibutton.$$.fragment, local);
+				current = false;
+			},
+			d(detaching) {
+				destroy_component(uibutton, detaching);
+			}
+		};
+	}
+
+	// (31:10) {#if applyButton}
+	function create_if_block$C(ctx) {
+		let uibutton;
+		let current;
+		const uibutton_spread_levels = [/*applyButton*/ ctx[1]];
+		let uibutton_props = {};
+
+		for (let i = 0; i < uibutton_spread_levels.length; i += 1) {
+			uibutton_props = assign(uibutton_props, uibutton_spread_levels[i]);
+		}
+
+		uibutton = new Ui_button({ props: uibutton_props });
+
+		return {
+			c() {
+				create_component(uibutton.$$.fragment);
+			},
+			m(target, anchor) {
+				mount_component(uibutton, target, anchor);
+				current = true;
+			},
+			p(ctx, dirty) {
+				const uibutton_changes = (dirty & /*applyButton*/ 2)
+				? get_spread_update(uibutton_spread_levels, [get_spread_object(/*applyButton*/ ctx[1])])
+				: {};
+
+				uibutton.$set(uibutton_changes);
+			},
+			i(local) {
+				if (current) return;
+				transition_in(uibutton.$$.fragment, local);
+				current = true;
+			},
+			o(local) {
+				transition_out(uibutton.$$.fragment, local);
+				current = false;
+			},
+			d(detaching) {
+				destroy_component(uibutton, detaching);
+			}
+		};
+	}
+
+	// (24:3) <UIContent>
+	function create_default_slot_2(ctx) {
+		let div0;
+		let span;
+		let t0_value = /*$LOCALE*/ ctx[8][/*WAITING_TEXT*/ ctx[7]] + "";
+		let t0;
+		let div0_class_value;
+		let t1;
+		let t2;
+		let div1;
+		let t3;
+		let current;
+		const default_slot_template = /*#slots*/ ctx[9].default;
+		const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[10], null);
+		let if_block0 = /*closeButton*/ ctx[0] && create_if_block_1$s(ctx);
+		let if_block1 = /*applyButton*/ ctx[1] && create_if_block$C(ctx);
+
+		return {
+			c() {
+				div0 = element("div");
+				span = element("span");
+				t0 = text(t0_value);
+				t1 = space();
+				if (default_slot) default_slot.c();
+				t2 = space();
+				div1 = element("div");
+				if (if_block0) if_block0.c();
+				t3 = space();
+				if (if_block1) if_block1.c();
+				attr(span, "class", "title");
+				attr(div0, "class", div0_class_value = "pageloader " + (/*loading*/ ctx[3] ? 'is-active' : ''));
+				attr(div1, "class", "buttons is-grouped is-centered mt-4");
+			},
+			m(target, anchor) {
+				insert(target, div0, anchor);
+				append(div0, span);
+				append(span, t0);
+				insert(target, t1, anchor);
+
+				if (default_slot) {
+					default_slot.m(target, anchor);
+				}
+
+				insert(target, t2, anchor);
+				insert(target, div1, anchor);
+				if (if_block0) if_block0.m(div1, null);
+				append(div1, t3);
+				if (if_block1) if_block1.m(div1, null);
+				current = true;
+			},
+			p(ctx, dirty) {
+				if ((!current || dirty & /*$LOCALE, WAITING_TEXT*/ 384) && t0_value !== (t0_value = /*$LOCALE*/ ctx[8][/*WAITING_TEXT*/ ctx[7]] + "")) set_data(t0, t0_value);
+
+				if (!current || dirty & /*loading*/ 8 && div0_class_value !== (div0_class_value = "pageloader " + (/*loading*/ ctx[3] ? 'is-active' : ''))) {
+					attr(div0, "class", div0_class_value);
+				}
+
+				if (default_slot) {
+					if (default_slot.p && (!current || dirty & /*$$scope*/ 1024)) {
+						update_slot_base(
+							default_slot,
+							default_slot_template,
+							ctx,
+							/*$$scope*/ ctx[10],
+							!current
+							? get_all_dirty_from_scope(/*$$scope*/ ctx[10])
+							: get_slot_changes(default_slot_template, /*$$scope*/ ctx[10], dirty, null),
+							null
+						);
+					}
+				}
+
+				if (/*closeButton*/ ctx[0]) {
+					if (if_block0) {
+						if_block0.p(ctx, dirty);
+
+						if (dirty & /*closeButton*/ 1) {
+							transition_in(if_block0, 1);
+						}
+					} else {
+						if_block0 = create_if_block_1$s(ctx);
+						if_block0.c();
+						transition_in(if_block0, 1);
+						if_block0.m(div1, t3);
+					}
+				} else if (if_block0) {
+					group_outros();
+
+					transition_out(if_block0, 1, 1, () => {
+						if_block0 = null;
+					});
+
+					check_outros();
+				}
+
+				if (/*applyButton*/ ctx[1]) {
+					if (if_block1) {
+						if_block1.p(ctx, dirty);
+
+						if (dirty & /*applyButton*/ 2) {
+							transition_in(if_block1, 1);
+						}
+					} else {
+						if_block1 = create_if_block$C(ctx);
+						if_block1.c();
+						transition_in(if_block1, 1);
+						if_block1.m(div1, null);
+					}
+				} else if (if_block1) {
+					group_outros();
+
+					transition_out(if_block1, 1, 1, () => {
+						if_block1 = null;
+					});
+
+					check_outros();
+				}
+			},
+			i(local) {
+				if (current) return;
+				transition_in(default_slot, local);
+				transition_in(if_block0);
+				transition_in(if_block1);
+				current = true;
+			},
+			o(local) {
+				transition_out(default_slot, local);
+				transition_out(if_block0);
+				transition_out(if_block1);
+				current = false;
+			},
+			d(detaching) {
+				if (detaching) detach(div0);
+				if (detaching) detach(t1);
+				if (default_slot) default_slot.d(detaching);
+				if (detaching) detach(t2);
+				if (detaching) detach(div1);
+				if (if_block0) if_block0.d();
+				if (if_block1) if_block1.d();
+			}
+		};
+	}
+
+	// (22:2) <UIBox {classes}>
+	function create_default_slot_1$1(ctx) {
+		let uititle;
+		let t;
+		let uicontent;
+		let current;
+
+		uititle = new Ui_title({
+				props: {
+					size: "2",
+					title: /*$LOCALE*/ ctx[8][/*title*/ ctx[4]],
+					subtitle: /*$LOCALE*/ ctx[8][/*subtitle*/ ctx[5]]
+				}
+			});
+
+		uicontent = new Ui_content({
+				props: {
+					$$slots: { default: [create_default_slot_2] },
+					$$scope: { ctx }
+				}
+			});
+
+		return {
+			c() {
+				create_component(uititle.$$.fragment);
+				t = space();
+				create_component(uicontent.$$.fragment);
+			},
+			m(target, anchor) {
+				mount_component(uititle, target, anchor);
+				insert(target, t, anchor);
+				mount_component(uicontent, target, anchor);
+				current = true;
+			},
+			p(ctx, dirty) {
+				const uititle_changes = {};
+				if (dirty & /*$LOCALE, title*/ 272) uititle_changes.title = /*$LOCALE*/ ctx[8][/*title*/ ctx[4]];
+				if (dirty & /*$LOCALE, subtitle*/ 288) uititle_changes.subtitle = /*$LOCALE*/ ctx[8][/*subtitle*/ ctx[5]];
+				uititle.$set(uititle_changes);
+				const uicontent_changes = {};
+
+				if (dirty & /*$$scope, applyButton, closeButton, loading, $LOCALE, WAITING_TEXT*/ 1419) {
+					uicontent_changes.$$scope = { dirty, ctx };
+				}
+
+				uicontent.$set(uicontent_changes);
+			},
+			i(local) {
+				if (current) return;
+				transition_in(uititle.$$.fragment, local);
+				transition_in(uicontent.$$.fragment, local);
+				current = true;
+			},
+			o(local) {
+				transition_out(uititle.$$.fragment, local);
+				transition_out(uicontent.$$.fragment, local);
+				current = false;
+			},
+			d(detaching) {
+				destroy_component(uititle, detaching);
+				if (detaching) detach(t);
+				destroy_component(uicontent, detaching);
+			}
+		};
+	}
+
+	// (21:0) <UIOverlay {show} closeOnClick={false} closeButton={false} >
+	function create_default_slot$2(ctx) {
+		let uibox;
+		let current;
+
+		uibox = new Ui_box({
+				props: {
+					classes: /*classes*/ ctx[6],
+					$$slots: { default: [create_default_slot_1$1] },
+					$$scope: { ctx }
+				}
+			});
+
+		return {
+			c() {
+				create_component(uibox.$$.fragment);
+			},
+			m(target, anchor) {
+				mount_component(uibox, target, anchor);
+				current = true;
+			},
+			p(ctx, dirty) {
+				const uibox_changes = {};
+				if (dirty & /*classes*/ 64) uibox_changes.classes = /*classes*/ ctx[6];
+
+				if (dirty & /*$$scope, applyButton, closeButton, loading, $LOCALE, WAITING_TEXT, title, subtitle*/ 1467) {
+					uibox_changes.$$scope = { dirty, ctx };
+				}
+
+				uibox.$set(uibox_changes);
+			},
+			i(local) {
+				if (current) return;
+				transition_in(uibox.$$.fragment, local);
+				current = true;
+			},
+			o(local) {
+				transition_out(uibox.$$.fragment, local);
+				current = false;
+			},
+			d(detaching) {
+				destroy_component(uibox, detaching);
+			}
+		};
+	}
+
+	function create_fragment$W(ctx) {
+		let uioverlay;
+		let current;
+
+		uioverlay = new Ui_overlay({
+				props: {
+					show: /*show*/ ctx[2],
+					closeOnClick: false,
+					closeButton: false,
+					$$slots: { default: [create_default_slot$2] },
+					$$scope: { ctx }
+				}
+			});
+
+		return {
+			c() {
+				create_component(uioverlay.$$.fragment);
+			},
+			m(target, anchor) {
+				mount_component(uioverlay, target, anchor);
+				current = true;
+			},
+			p(ctx, [dirty]) {
+				const uioverlay_changes = {};
+				if (dirty & /*show*/ 4) uioverlay_changes.show = /*show*/ ctx[2];
+
+				if (dirty & /*$$scope, classes, applyButton, closeButton, loading, $LOCALE, WAITING_TEXT, title, subtitle*/ 1531) {
+					uioverlay_changes.$$scope = { dirty, ctx };
+				}
+
+				uioverlay.$set(uioverlay_changes);
+			},
+			i(local) {
+				if (current) return;
+				transition_in(uioverlay.$$.fragment, local);
+				current = true;
+			},
+			o(local) {
+				transition_out(uioverlay.$$.fragment, local);
+				current = false;
+			},
+			d(detaching) {
+				destroy_component(uioverlay, detaching);
+			}
+		};
+	}
+
+	function instance$W($$self, $$props, $$invalidate) {
+		let $LOCALE;
+		component_subscribe($$self, LOCALE, $$value => $$invalidate(8, $LOCALE = $$value));
+		let { $$slots: slots = {}, $$scope } = $$props;
+		let { closeButton = false } = $$props;
+		let { applyButton = false } = $$props;
+		let { show = false } = $$props;
+		let { loading = false } = $$props;
+		let { title = 'Modal window' } = $$props;
+		let { subtitle = '' } = $$props;
+		let { classes = '' } = $$props;
+		let { WAITING_TEXT = 'Обработка' } = $$props;
+
+		$$self.$$set = $$props => {
+			if ('closeButton' in $$props) $$invalidate(0, closeButton = $$props.closeButton);
+			if ('applyButton' in $$props) $$invalidate(1, applyButton = $$props.applyButton);
+			if ('show' in $$props) $$invalidate(2, show = $$props.show);
+			if ('loading' in $$props) $$invalidate(3, loading = $$props.loading);
+			if ('title' in $$props) $$invalidate(4, title = $$props.title);
+			if ('subtitle' in $$props) $$invalidate(5, subtitle = $$props.subtitle);
+			if ('classes' in $$props) $$invalidate(6, classes = $$props.classes);
+			if ('WAITING_TEXT' in $$props) $$invalidate(7, WAITING_TEXT = $$props.WAITING_TEXT);
+			if ('$$scope' in $$props) $$invalidate(10, $$scope = $$props.$$scope);
+		};
+
+		return [
+			closeButton,
+			applyButton,
+			show,
+			loading,
+			title,
+			subtitle,
+			classes,
+			WAITING_TEXT,
+			$LOCALE,
+			slots,
+			$$scope
+		];
+	}
+
+	class Ui_modal extends SvelteComponent {
+		constructor(options) {
+			super();
+
+			init(this, options, instance$W, create_fragment$W, safe_not_equal, {
+				closeButton: 0,
+				applyButton: 1,
+				show: 2,
+				loading: 3,
+				title: 4,
+				subtitle: 5,
+				classes: 6,
+				WAITING_TEXT: 7
+			});
+		}
+	}
+
+	/* src/ui.breadcrumbs.svelte generated by Svelte v3.44.2 */
+
+	function get_each_context$h(ctx, list, i) {
+		const child_ctx = ctx.slice();
+		child_ctx[5] = list[i];
+		child_ctx[7] = i;
+		return child_ctx;
+	}
+
+	// (28:4) {:else}
+	function create_else_block$v(ctx) {
+		let li;
+		let a;
+		let t_value = /*$LOCALE*/ ctx[2][/*link*/ ctx[5].title] + "";
+		let t;
+		let a_href_value;
+		let a_data_href_value;
+		let mounted;
+		let dispose;
+
+		return {
+			c() {
+				li = element("li");
+				a = element("a");
+				t = text(t_value);
+				attr(a, "href", a_href_value = "" + (/*root*/ ctx[0] + /*link*/ ctx[5].url));
+				attr(a, "data-href", a_data_href_value = /*link*/ ctx[5].url);
+			},
+			m(target, anchor) {
+				insert(target, li, anchor);
+				append(li, a);
+				append(a, t);
+
+				if (!mounted) {
+					dispose = listen(a, "click", /*onClick*/ ctx[3]);
+					mounted = true;
+				}
+			},
+			p(ctx, dirty) {
+				if (dirty & /*$LOCALE, items*/ 6 && t_value !== (t_value = /*$LOCALE*/ ctx[2][/*link*/ ctx[5].title] + "")) set_data(t, t_value);
+
+				if (dirty & /*root, items*/ 3 && a_href_value !== (a_href_value = "" + (/*root*/ ctx[0] + /*link*/ ctx[5].url))) {
+					attr(a, "href", a_href_value);
+				}
+
+				if (dirty & /*items*/ 2 && a_data_href_value !== (a_data_href_value = /*link*/ ctx[5].url)) {
+					attr(a, "data-href", a_data_href_value);
+				}
+			},
+			d(detaching) {
+				if (detaching) detach(li);
+				mounted = false;
+				dispose();
+			}
+		};
+	}
+
+	// (26:4) {#if link.url === false }
+	function create_if_block_1$r(ctx) {
+		let li;
+		let t_value = /*$LOCALE*/ ctx[2][/*link*/ ctx[5].title] + "";
+		let t;
+
+		return {
+			c() {
+				li = element("li");
+				t = text(t_value);
+				attr(li, "class", "is-plain-crumb");
+			},
+			m(target, anchor) {
+				insert(target, li, anchor);
+				append(li, t);
+			},
+			p(ctx, dirty) {
+				if (dirty & /*$LOCALE, items*/ 6 && t_value !== (t_value = /*$LOCALE*/ ctx[2][/*link*/ ctx[5].title] + "")) set_data(t, t_value);
+			},
+			d(detaching) {
+				if (detaching) detach(li);
+			}
+		};
+	}
+
+	// (23:4) {#if (items.length === (index + 1)) }
+	function create_if_block$B(ctx) {
+		let li;
+		let a;
+		let t_value = /*$LOCALE*/ ctx[2][/*link*/ ctx[5].title] + "";
+		let t;
+		let a_href_value;
+		let a_data_href_value;
+
+		return {
+			c() {
+				li = element("li");
+				a = element("a");
+				t = text(t_value);
+				attr(a, "href", a_href_value = "" + (/*root*/ ctx[0] + /*link*/ ctx[5].url));
+				attr(a, "data-href", a_data_href_value = /*link*/ ctx[5].url);
+				attr(a, "aria-current", "page");
+				attr(li, "class", "is-active");
+			},
+			m(target, anchor) {
+				insert(target, li, anchor);
+				append(li, a);
+				append(a, t);
+			},
+			p(ctx, dirty) {
+				if (dirty & /*$LOCALE, items*/ 6 && t_value !== (t_value = /*$LOCALE*/ ctx[2][/*link*/ ctx[5].title] + "")) set_data(t, t_value);
+
+				if (dirty & /*root, items*/ 3 && a_href_value !== (a_href_value = "" + (/*root*/ ctx[0] + /*link*/ ctx[5].url))) {
+					attr(a, "href", a_href_value);
+				}
+
+				if (dirty & /*items*/ 2 && a_data_href_value !== (a_data_href_value = /*link*/ ctx[5].url)) {
+					attr(a, "data-href", a_data_href_value);
+				}
+			},
+			d(detaching) {
+				if (detaching) detach(li);
+			}
+		};
+	}
+
+	// (22:4) {#each items as link, index}
+	function create_each_block$h(ctx) {
+		let if_block_anchor;
+
+		function select_block_type(ctx, dirty) {
+			if (/*items*/ ctx[1].length === /*index*/ ctx[7] + 1) return create_if_block$B;
+			if (/*link*/ ctx[5].url === false) return create_if_block_1$r;
+			return create_else_block$v;
+		}
+
+		let current_block_type = select_block_type(ctx);
+		let if_block = current_block_type(ctx);
+
+		return {
+			c() {
+				if_block.c();
+				if_block_anchor = empty();
+			},
+			m(target, anchor) {
+				if_block.m(target, anchor);
+				insert(target, if_block_anchor, anchor);
+			},
+			p(ctx, dirty) {
+				if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block) {
+					if_block.p(ctx, dirty);
+				} else {
+					if_block.d(1);
+					if_block = current_block_type(ctx);
+
+					if (if_block) {
+						if_block.c();
+						if_block.m(if_block_anchor.parentNode, if_block_anchor);
+					}
+				}
+			},
+			d(detaching) {
+				if_block.d(detaching);
+				if (detaching) detach(if_block_anchor);
+			}
+		};
+	}
+
+	function create_fragment$V(ctx) {
+		let nav;
+		let ul;
+		let each_value = /*items*/ ctx[1];
+		let each_blocks = [];
+
+		for (let i = 0; i < each_value.length; i += 1) {
+			each_blocks[i] = create_each_block$h(get_each_context$h(ctx, each_value, i));
+		}
+
+		return {
+			c() {
+				nav = element("nav");
+				ul = element("ul");
+
+				for (let i = 0; i < each_blocks.length; i += 1) {
+					each_blocks[i].c();
+				}
+
+				attr(nav, "class", "breadcrumb");
+				attr(nav, "aria-label", "breadcrumbs");
+			},
+			m(target, anchor) {
+				insert(target, nav, anchor);
+				append(nav, ul);
+
+				for (let i = 0; i < each_blocks.length; i += 1) {
+					each_blocks[i].m(ul, null);
+				}
+			},
+			p(ctx, [dirty]) {
+				if (dirty & /*root, items, $LOCALE, onClick*/ 15) {
+					each_value = /*items*/ ctx[1];
+					let i;
+
+					for (i = 0; i < each_value.length; i += 1) {
+						const child_ctx = get_each_context$h(ctx, each_value, i);
+
+						if (each_blocks[i]) {
+							each_blocks[i].p(child_ctx, dirty);
+						} else {
+							each_blocks[i] = create_each_block$h(child_ctx);
+							each_blocks[i].c();
+							each_blocks[i].m(ul, null);
+						}
+					}
+
+					for (; i < each_blocks.length; i += 1) {
+						each_blocks[i].d(1);
+					}
+
+					each_blocks.length = each_value.length;
+				}
+			},
+			i: noop,
+			o: noop,
+			d(detaching) {
+				if (detaching) detach(nav);
+				destroy_each(each_blocks, detaching);
+			}
+		};
+	}
+
+	function instance$V($$self, $$props, $$invalidate) {
+		let $LOCALE;
+		component_subscribe($$self, LOCALE, $$value => $$invalidate(2, $LOCALE = $$value));
+		let { root = '' } = $$props;
+		let { items = [] } = $$props;
+		let { go = null } = $$props;
+
+		function onClick(ev) {
+			if (typeof go === 'function') {
+				ev.preventDefault();
+				go(ev.currentTarget.dataset.href);
+				return false;
+			} else {
+				return true;
+			}
+		}
+
+		$$self.$$set = $$props => {
+			if ('root' in $$props) $$invalidate(0, root = $$props.root);
+			if ('items' in $$props) $$invalidate(1, items = $$props.items);
+			if ('go' in $$props) $$invalidate(4, go = $$props.go);
+		};
+
+		return [root, items, $LOCALE, onClick, go];
+	}
+
+	class Ui_breadcrumbs extends SvelteComponent {
+		constructor(options) {
+			super();
+			init(this, options, instance$V, create_fragment$V, safe_not_equal, { root: 0, items: 1, go: 4 });
+		}
+	}
+
+	/* src/ui.progress.svelte generated by Svelte v3.44.2 */
+
+	function create_fragment$U(ctx) {
+		let progress;
+		let t0;
+		let t1;
+		let progress_class_value;
+
+		return {
+			c() {
+				progress = element("progress");
+				t0 = text(/*value*/ ctx[0]);
+				t1 = text("%");
+				attr(progress, "class", progress_class_value = "progress " + /*classes*/ ctx[4] + " " + (/*color*/ ctx[2] ? `is-${/*color*/ ctx[2]}` : '') + " " + (/*size*/ ctx[3] ? `is-${/*size*/ ctx[3]}` : ''));
+				progress.value = /*value*/ ctx[0];
+				attr(progress, "max", /*max*/ ctx[1]);
+			},
+			m(target, anchor) {
+				insert(target, progress, anchor);
+				append(progress, t0);
+				append(progress, t1);
+			},
+			p(ctx, [dirty]) {
+				if (dirty & /*value*/ 1) set_data(t0, /*value*/ ctx[0]);
+
+				if (dirty & /*classes, color, size*/ 28 && progress_class_value !== (progress_class_value = "progress " + /*classes*/ ctx[4] + " " + (/*color*/ ctx[2] ? `is-${/*color*/ ctx[2]}` : '') + " " + (/*size*/ ctx[3] ? `is-${/*size*/ ctx[3]}` : ''))) {
+					attr(progress, "class", progress_class_value);
+				}
+
+				if (dirty & /*value*/ 1) {
+					progress.value = /*value*/ ctx[0];
+				}
+
+				if (dirty & /*max*/ 2) {
+					attr(progress, "max", /*max*/ ctx[1]);
+				}
+			},
+			i: noop,
+			o: noop,
+			d(detaching) {
+				if (detaching) detach(progress);
+			}
+		};
+	}
+
+	function instance$U($$self, $$props, $$invalidate) {
+		let { value } = $$props;
+		let { max = 100 } = $$props;
+		let { color = '' } = $$props;
+		let { size = '' } = $$props;
+		let { classes = '' } = $$props;
+
+		$$self.$$set = $$props => {
+			if ('value' in $$props) $$invalidate(0, value = $$props.value);
+			if ('max' in $$props) $$invalidate(1, max = $$props.max);
+			if ('color' in $$props) $$invalidate(2, color = $$props.color);
+			if ('size' in $$props) $$invalidate(3, size = $$props.size);
+			if ('classes' in $$props) $$invalidate(4, classes = $$props.classes);
+		};
+
+		return [value, max, color, size, classes];
+	}
+
+	class Ui_progress extends SvelteComponent {
+		constructor(options) {
+			super();
+
+			init(this, options, instance$U, create_fragment$U, safe_not_equal, {
+				value: 0,
+				max: 1,
+				color: 2,
+				size: 3,
+				classes: 4
+			});
+		}
+	}
+
 	// `SameValue` abstract operation
 	// https://tc39.es/ecma262/#sec-samevalue
 	// eslint-disable-next-line es/no-object-is -- safe
@@ -7584,9 +9288,9 @@ var notBulma = (function (exports) {
 	  ];
 	});
 
-	function _createSuper$c(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$c(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+	function _createSuper$b(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$b(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
 
-	function _isNativeReflectConstruct$c() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+	function _isNativeReflectConstruct$b() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 	var META_METHOD_INIT = Symbol('init'),
 	    META_DATA = Symbol('data'),
 	    META_WORKING = Symbol('working'),
@@ -7595,7 +9299,7 @@ var notBulma = (function (exports) {
 	var notBase$1 = /*#__PURE__*/function (_EventEmitter) {
 	  inherits(notBase, _EventEmitter);
 
-	  var _super = _createSuper$c(notBase);
+	  var _super = _createSuper$b(notBase);
 
 	  function notBase(input) {
 	    var _this;
@@ -7777,9 +9481,9 @@ var notBulma = (function (exports) {
 	  return notBase;
 	}(EventEmitter);
 
-	function _createSuper$b(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$b(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+	function _createSuper$a(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$a(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
 
-	function _isNativeReflectConstruct$b() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+	function _isNativeReflectConstruct$a() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 	var OPT_MODE_HISTORY = Symbol('history'),
 	    OPT_MODE_HASH = Symbol('hash'),
 	    OPT_DEFAULT_CHECK_INTERVAL = 50;
@@ -7787,7 +9491,7 @@ var notBulma = (function (exports) {
 	var notRouter$1 = /*#__PURE__*/function (_notBase) {
 	  inherits(notRouter, _notBase);
 
-	  var _super = _createSuper$b(notRouter);
+	  var _super = _createSuper$a(notRouter);
 
 	  function notRouter() {
 	    var _this;
@@ -8084,15 +9788,15 @@ var notBulma = (function (exports) {
 
 	var notRouter$2 = new notRouter$1();
 
-	function _createSuper$a(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$a(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+	function _createSuper$9(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$9(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
 
-	function _isNativeReflectConstruct$a() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+	function _isNativeReflectConstruct$9() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 	var LOG_PREFIX$1 = 'APIQuee';
 
 	var notAPIQueue = /*#__PURE__*/function (_notBase) {
 	  inherits(notAPIQueue, _notBase);
 
-	  var _super = _createSuper$a(notAPIQueue);
+	  var _super = _createSuper$9(notAPIQueue);
 
 	  function notAPIQueue() {
 	    var _this;
@@ -8284,15 +9988,15 @@ var notBulma = (function (exports) {
 	  port: 9000
 	};
 
-	function _createSuper$9(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$9(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+	function _createSuper$8(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$8(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
 
-	function _isNativeReflectConstruct$9() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+	function _isNativeReflectConstruct$8() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 	var LOG_PREFIX = 'APIConnection';
 
 	var notAPIConnection = /*#__PURE__*/function (_notBase) {
 	  inherits(notAPIConnection, _notBase);
 
-	  var _super = _createSuper$9(notAPIConnection);
+	  var _super = _createSuper$8(notAPIConnection);
 
 	  function notAPIConnection(options) {
 	    var _this;
@@ -8567,9 +10271,9 @@ var notBulma = (function (exports) {
 
 	function _arrayLikeToArray$3(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-	function _createSuper$8(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$8(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+	function _createSuper$7(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$7(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
 
-	function _isNativeReflectConstruct$8() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+	function _isNativeReflectConstruct$7() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 	var OPT_DEFAULT_INDEX_FIELD_NAME_PRIORITY = ['_id', 'id', 'ID'],
 	    DEFAULT_FILTER = {},
 	    DEFAULT_SEARCH = '',
@@ -8582,7 +10286,7 @@ var notBulma = (function (exports) {
 	var notInterface$1 = /*#__PURE__*/function (_notBase) {
 	  inherits(notInterface, _notBase);
 
-	  var _super = _createSuper$8(notInterface);
+	  var _super = _createSuper$7(notInterface);
 
 	  function notInterface(manifest, options) {
 	    var _this;
@@ -9041,14 +10745,14 @@ var notBulma = (function (exports) {
 
 	function _arrayLikeToArray$2(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-	function _createSuper$7(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$7(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+	function _createSuper$6(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$6(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
 
-	function _isNativeReflectConstruct$7() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+	function _isNativeReflectConstruct$6() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 
 	var notRecord$1 = /*#__PURE__*/function (_notBase) {
 	  inherits(notRecord, _notBase);
 
-	  var _super = _createSuper$7(notRecord);
+	  var _super = _createSuper$6(notRecord);
 
 	  function notRecord(manifest, item) {
 	    var _this;
@@ -9273,9 +10977,9 @@ var notBulma = (function (exports) {
 	  return notRecord;
 	}(notBase$1);
 
-	function _createSuper$6(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$6(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+	function _createSuper$5(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$5(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
 
-	function _isNativeReflectConstruct$6() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+	function _isNativeReflectConstruct$5() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 	var OPT_CONTROLLER_PREFIX = 'nc',
 	    OPT_RECORD_PREFIX = 'nr',
 	    DEFAULT_WS_CLIENT_NAME = 'main';
@@ -9283,7 +10987,7 @@ var notBulma = (function (exports) {
 	var notApp$1 = /*#__PURE__*/function (_notBase) {
 	  inherits(notApp, _notBase);
 
-	  var _super = _createSuper$6(notApp);
+	  var _super = _createSuper$5(notApp);
 
 	  function notApp(options) {
 	    var _this;
@@ -9528,9 +11232,9 @@ var notBulma = (function (exports) {
 	      return {
 	        get: function get(subPath, fallback) {
 	          if (subPath && typeof subPath == 'string' && subPath.length) {
-	            _this3.getOptions([modConfPath, subPath].join('.'), fallback);
+	            return _this3.getOptions([modConfPath, subPath].join('.'), fallback);
 	          } else {
-	            _this3.getOptions(modConfPath, fallback);
+	            return _this3.getOptions(modConfPath, fallback);
 	          }
 	        }
 	      };
@@ -9560,9 +11264,9 @@ var notBulma = (function (exports) {
 
 	var toArray = _toArray;
 
-	function _createSuper$5(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$5(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
+	function _createSuper$4(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$4(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
 
-	function _isNativeReflectConstruct$5() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+	function _isNativeReflectConstruct$4() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 	/**
 	 * @const {string}  OPT_DEFAULT_ACTION_NAME      default action name
 	 */
@@ -9601,7 +11305,7 @@ var notBulma = (function (exports) {
 	var notController$1 = /*#__PURE__*/function (_notBase) {
 	  inherits(notController, _notBase);
 
-	  var _super = _createSuper$5(notController);
+	  var _super = _createSuper$4(notController);
 
 	  /**
 	   *  @static {number} PARAMS_LENGTH  number of params in URL path
@@ -17478,7 +19182,7 @@ var notBulma = (function (exports) {
 
 	/* src/form/ui.label.svelte generated by Svelte v3.44.2 */
 
-	function create_fragment$Z(ctx) {
+	function create_fragment$T(ctx) {
 		let label_1;
 		let t_value = /*$LOCALE*/ ctx[2][/*label*/ ctx[1]] + "";
 		let t;
@@ -17509,7 +19213,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	function instance$Z($$self, $$props, $$invalidate) {
+	function instance$T($$self, $$props, $$invalidate) {
 		let $LOCALE;
 		component_subscribe($$self, LOCALE, $$value => $$invalidate(2, $LOCALE = $$value));
 		let { id } = $$props;
@@ -17526,7 +19230,7 @@ var notBulma = (function (exports) {
 	class Ui_label extends SvelteComponent {
 		constructor(options) {
 			super();
-			init(this, options, instance$Z, create_fragment$Z, safe_not_equal, { id: 0, label: 1 });
+			init(this, options, instance$T, create_fragment$T, safe_not_equal, { id: 0, label: 1 });
 		}
 	}
 
@@ -17555,14 +19259,14 @@ var notBulma = (function (exports) {
 		return child_ctx;
 	}
 
-	function get_each_context$h(ctx, list, i) {
+	function get_each_context$g(ctx, list, i) {
 		const child_ctx = ctx.slice();
 		child_ctx[18] = list[i];
 		return child_ctx;
 	}
 
 	// (80:0) {:else}
-	function create_else_block$w(ctx) {
+	function create_else_block$u(ctx) {
 		let div;
 		let div_class_value;
 		let current;
@@ -17654,7 +19358,7 @@ var notBulma = (function (exports) {
 	}
 
 	// (69:0) {#if horizontal}
-	function create_if_block_1$u(ctx) {
+	function create_if_block_1$q(ctx) {
 		let div2;
 		let div0;
 		let uilabel;
@@ -17781,14 +19485,14 @@ var notBulma = (function (exports) {
 	}
 
 	// (61:0) {#if hidden }
-	function create_if_block$F(ctx) {
+	function create_if_block$A(ctx) {
 		let each_1_anchor;
 		let current;
 		let each_value = /*controls*/ ctx[3];
 		let each_blocks = [];
 
 		for (let i = 0; i < each_value.length; i += 1) {
-			each_blocks[i] = create_each_block$h(get_each_context$h(ctx, each_value, i));
+			each_blocks[i] = create_each_block$g(get_each_context$g(ctx, each_value, i));
 		}
 
 		const out = i => transition_out(each_blocks[i], 1, 1, () => {
@@ -17817,13 +19521,13 @@ var notBulma = (function (exports) {
 					let i;
 
 					for (i = 0; i < each_value.length; i += 1) {
-						const child_ctx = get_each_context$h(ctx, each_value, i);
+						const child_ctx = get_each_context$g(ctx, each_value, i);
 
 						if (each_blocks[i]) {
 							each_blocks[i].p(child_ctx, dirty);
 							transition_in(each_blocks[i], 1);
 						} else {
-							each_blocks[i] = create_each_block$h(child_ctx);
+							each_blocks[i] = create_each_block$g(child_ctx);
 							each_blocks[i].c();
 							transition_in(each_blocks[i], 1);
 							each_blocks[i].m(each_1_anchor.parentNode, each_1_anchor);
@@ -18059,7 +19763,7 @@ var notBulma = (function (exports) {
 	}
 
 	// (63:0) {#each controls as control}
-	function create_each_block$h(ctx) {
+	function create_each_block$g(ctx) {
 		let switch_instance;
 		let switch_instance_anchor;
 		let current;
@@ -18143,12 +19847,12 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	function create_fragment$Y(ctx) {
+	function create_fragment$S(ctx) {
 		let current_block_type_index;
 		let if_block;
 		let if_block_anchor;
 		let current;
-		const if_block_creators = [create_if_block$F, create_if_block_1$u, create_else_block$w];
+		const if_block_creators = [create_if_block$A, create_if_block_1$q, create_else_block$u];
 		const if_blocks = [];
 
 		function select_block_type(ctx, dirty) {
@@ -18213,7 +19917,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	function instance$Y($$self, $$props, $$invalidate) {
+	function instance$S($$self, $$props, $$invalidate) {
 		let dispatch = createEventDispatcher();
 		let { label = '' } = $$props;
 		let { name = 'generic field' } = $$props;
@@ -18300,7 +20004,7 @@ var notBulma = (function (exports) {
 		constructor(options) {
 			super();
 
-			init(this, options, instance$Y, create_fragment$Y, safe_not_equal, {
+			init(this, options, instance$S, create_fragment$S, safe_not_equal, {
 				label: 0,
 				name: 1,
 				readonly: 8,
@@ -18320,7 +20024,7 @@ var notBulma = (function (exports) {
 
 	/* src/form/form.svelte generated by Svelte v3.44.2 */
 
-	function get_each_context$g(ctx, list, i) {
+	function get_each_context$f(ctx, list, i) {
 		const child_ctx = ctx.slice();
 		child_ctx[36] = list[i];
 		return child_ctx;
@@ -18332,8 +20036,8 @@ var notBulma = (function (exports) {
 		return child_ctx;
 	}
 
-	// (262:0) {:else}
-	function create_else_block$v(ctx) {
+	// (264:0) {:else}
+	function create_else_block$t(ctx) {
 		let t0;
 		let t1;
 		let t2;
@@ -18347,14 +20051,14 @@ var notBulma = (function (exports) {
 		let each_blocks = [];
 
 		for (let i = 0; i < each_value.length; i += 1) {
-			each_blocks[i] = create_each_block$g(get_each_context$g(ctx, each_value, i));
+			each_blocks[i] = create_each_block$f(get_each_context$f(ctx, each_value, i));
 		}
 
 		const out = i => transition_out(each_blocks[i], 1, 1, () => {
 			each_blocks[i] = null;
 		});
 
-		let if_block3 = !/*options*/ ctx[2].buttonsFirst && create_if_block_1$t(ctx);
+		let if_block3 = !/*options*/ ctx[2].buttonsFirst && create_if_block_1$p(ctx);
 
 		return {
 			c() {
@@ -18435,13 +20139,13 @@ var notBulma = (function (exports) {
 					let i;
 
 					for (i = 0; i < each_value.length; i += 1) {
-						const child_ctx = get_each_context$g(ctx, each_value, i);
+						const child_ctx = get_each_context$f(ctx, each_value, i);
 
 						if (each_blocks[i]) {
 							each_blocks[i].p(child_ctx, dirty);
 							transition_in(each_blocks[i], 1);
 						} else {
-							each_blocks[i] = create_each_block$g(child_ctx);
+							each_blocks[i] = create_each_block$f(child_ctx);
 							each_blocks[i].c();
 							transition_in(each_blocks[i], 1);
 							each_blocks[i].m(t3.parentNode, t3);
@@ -18461,7 +20165,7 @@ var notBulma = (function (exports) {
 					if (if_block3) {
 						if_block3.p(ctx, dirty);
 					} else {
-						if_block3 = create_if_block_1$t(ctx);
+						if_block3 = create_if_block_1$p(ctx);
 						if_block3.c();
 						if_block3.m(if_block3_anchor.parentNode, if_block3_anchor);
 					}
@@ -18503,8 +20207,8 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (258:0) {#if success}
-	function create_if_block$E(ctx) {
+	// (260:0) {#if success}
+	function create_if_block$z(ctx) {
 		let div;
 		let h3;
 		let t_value = /*$LOCALE*/ ctx[15][/*SUCCESS_TEXT*/ ctx[3]] + "";
@@ -18534,7 +20238,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (263:0) {#if title }
+	// (265:0) {#if title }
 	function create_if_block_15(ctx) {
 		let h5;
 		let t_value = /*$LOCALE*/ ctx[15][/*title*/ ctx[5]] + "";
@@ -18559,7 +20263,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (266:0) {#if description }
+	// (268:0) {#if description }
 	function create_if_block_14(ctx) {
 		let h6;
 		let t_value = /*$LOCALE*/ ctx[15][/*description*/ ctx[6]] + "";
@@ -18584,7 +20288,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (270:0) {#if options.buttonsFirst }
+	// (272:0) {#if options.buttonsFirst }
 	function create_if_block_10(ctx) {
 		let div;
 		let t0;
@@ -18665,7 +20369,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (272:1) {#if cancel.enabled}
+	// (274:1) {#if cancel.enabled}
 	function create_if_block_13(ctx) {
 		let button;
 		let t_value = /*$LOCALE*/ ctx[15][/*cancel*/ ctx[8].caption] + "";
@@ -18708,7 +20412,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (275:1) {#if submit.enabled}
+	// (277:1) {#if submit.enabled}
 	function create_if_block_12(ctx) {
 		let button;
 		let t_value = /*$LOCALE*/ ctx[15][/*submit*/ ctx[7].caption] + "";
@@ -18756,7 +20460,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (280:0) {#if formErrors.length > 0 }
+	// (282:0) {#if formErrors.length > 0 }
 	function create_if_block_11(ctx) {
 		let div;
 		let t_value = /*formErrors*/ ctx[12].join(', ') + "";
@@ -18781,7 +20485,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (306:0) {:else}
+	// (308:0) {:else}
 	function create_else_block_2$2(ctx) {
 		let div;
 		let t0;
@@ -18814,7 +20518,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (302:0) {#if form[field] && form[field].component }
+	// (304:0) {#if form[field] && form[field].component }
 	function create_if_block_8$1(ctx) {
 		let if_block_anchor;
 		let current;
@@ -18870,7 +20574,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (287:0) {#if Array.isArray(field) }
+	// (289:0) {#if Array.isArray(field) }
 	function create_if_block_5$6(ctx) {
 		let div;
 		let current;
@@ -18957,7 +20661,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (303:0) {#if form[field].visible}
+	// (305:0) {#if form[field].visible}
 	function create_if_block_9$1(ctx) {
 		let uifield;
 		let current;
@@ -19004,7 +20708,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (296:1) {:else}
+	// (298:1) {:else}
 	function create_else_block_1$3(ctx) {
 		let div;
 		let t0;
@@ -19037,7 +20741,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (290:1) {#if form[subfield] && form[subfield].component }
+	// (292:1) {#if form[subfield] && form[subfield].component }
 	function create_if_block_6$3(ctx) {
 		let if_block_anchor;
 		let current;
@@ -19093,7 +20797,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (291:1) {#if form[subfield].visible }
+	// (293:1) {#if form[subfield].visible }
 	function create_if_block_7$2(ctx) {
 		let div;
 		let uifield;
@@ -19155,7 +20859,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (289:1) {#each field as subfield }
+	// (291:1) {#each field as subfield }
 	function create_each_block_1$4(ctx) {
 		let current_block_type_index;
 		let if_block;
@@ -19225,8 +20929,8 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (286:0) {#each fields as field}
-	function create_each_block$g(ctx) {
+	// (288:0) {#each fields as field}
+	function create_each_block$f(ctx) {
 		let show_if;
 		let current_block_type_index;
 		let if_block;
@@ -19298,14 +21002,14 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (312:0) {#if !options.buttonsFirst }
-	function create_if_block_1$t(ctx) {
+	// (314:0) {#if !options.buttonsFirst }
+	function create_if_block_1$p(ctx) {
 		let t0;
 		let div;
 		let t1;
 		let if_block0 = /*formErrors*/ ctx[12].length > 0 && create_if_block_4$e(ctx);
-		let if_block1 = /*cancel*/ ctx[8].enabled && create_if_block_3$i(ctx);
-		let if_block2 = /*submit*/ ctx[7].enabled && create_if_block_2$k(ctx);
+		let if_block1 = /*cancel*/ ctx[8].enabled && create_if_block_3$h(ctx);
+		let if_block2 = /*submit*/ ctx[7].enabled && create_if_block_2$j(ctx);
 
 		return {
 			c() {
@@ -19343,7 +21047,7 @@ var notBulma = (function (exports) {
 					if (if_block1) {
 						if_block1.p(ctx, dirty);
 					} else {
-						if_block1 = create_if_block_3$i(ctx);
+						if_block1 = create_if_block_3$h(ctx);
 						if_block1.c();
 						if_block1.m(div, t1);
 					}
@@ -19356,7 +21060,7 @@ var notBulma = (function (exports) {
 					if (if_block2) {
 						if_block2.p(ctx, dirty);
 					} else {
-						if_block2 = create_if_block_2$k(ctx);
+						if_block2 = create_if_block_2$j(ctx);
 						if_block2.c();
 						if_block2.m(div, null);
 					}
@@ -19375,7 +21079,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (313:0) {#if formErrors.length > 0 }
+	// (315:0) {#if formErrors.length > 0 }
 	function create_if_block_4$e(ctx) {
 		let div;
 		let t_value = /*formErrors*/ ctx[12].join(', ') + "";
@@ -19400,8 +21104,8 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (317:1) {#if cancel.enabled}
-	function create_if_block_3$i(ctx) {
+	// (319:1) {#if cancel.enabled}
+	function create_if_block_3$h(ctx) {
 		let button;
 		let t_value = /*$LOCALE*/ ctx[15][/*cancel*/ ctx[8].caption] + "";
 		let t;
@@ -19443,8 +21147,8 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (320:1) {#if submit.enabled}
-	function create_if_block_2$k(ctx) {
+	// (322:1) {#if submit.enabled}
+	function create_if_block_2$j(ctx) {
 		let button;
 		let t_value = /*$LOCALE*/ ctx[15][/*submit*/ ctx[7].caption] + "";
 		let t;
@@ -19491,7 +21195,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	function create_fragment$X(ctx) {
+	function create_fragment$R(ctx) {
 		let div;
 		let span;
 		let t0_value = /*$LOCALE*/ ctx[15][/*WAITING_TEXT*/ ctx[4]] + "";
@@ -19502,7 +21206,7 @@ var notBulma = (function (exports) {
 		let if_block;
 		let if_block_anchor;
 		let current;
-		const if_block_creators = [create_if_block$E, create_else_block$v];
+		const if_block_creators = [create_if_block$z, create_else_block$t];
 		const if_blocks = [];
 
 		function select_block_type(ctx, dirty) {
@@ -19584,7 +21288,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	function instance$X($$self, $$props, $$invalidate) {
+	function instance$R($$self, $$props, $$invalidate) {
 		let formInvalid;
 		let $LOCALE;
 		component_subscribe($$self, LOCALE, $$value => $$invalidate(15, $LOCALE = $$value));
@@ -19748,6 +21452,8 @@ var notBulma = (function (exports) {
 
 		function onFieldChange(ev) {
 			let data = ev.detail;
+			$$invalidate(11, form[data.field].value = data.value, form);
+			$$invalidate(11, form);
 			dispatch('change', data);
 		}
 
@@ -19874,8 +21580,8 @@ var notBulma = (function (exports) {
 			init(
 				this,
 				options,
-				instance$X,
-				create_fragment$X,
+				instance$R,
+				create_fragment$R,
 				safe_not_equal,
 				{
 					collectData: 17,
@@ -20165,7 +21871,7 @@ var notBulma = (function (exports) {
 	                validatorRule = _step.value;
 	                _context4.prev = 5;
 	                _context4.next = 8;
-	                return notCommon$1.executeObjectFunction(validatorRule, 'validator', value);
+	                return notCommon$1.executeObjectFunction(validatorRule, 'validator', [value]);
 
 	              case 8:
 	                valid = _context4.sent;
@@ -20225,7 +21931,7 @@ var notBulma = (function (exports) {
 	  }, {
 	    key: "form",
 	    value: function () {
-	      var _form = asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee5(data, formName) {
+	      var _form = asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee5() {
 	        var result,
 	            formValidators,
 	            _args5 = arguments;
@@ -20233,18 +21939,22 @@ var notBulma = (function (exports) {
 	          while (1) {
 	            switch (_context5.prev = _context5.next) {
 	              case 0:
-	                result = _args5.length > 2 && _args5[2] !== undefined ? _args5[2] : {};
+	                result = _args5.length > 0 && _args5[0] !== undefined ? _args5[0] : {};
 
 	                if (Object.keys(result).length === 0) {
 	                  result = {
 	                    fields: {},
-	                    form: {}
+	                    form: {
+	                      fields: {},
+	                      errors: [],
+	                      exceptions: []
+	                    }
 	                  };
 	                }
 
-	                formValidators = this.getFormValidators(formName);
+	                formValidators = this.validators && this.validators.form ? this.validators.form : [];
 	                _context5.next = 5;
-	                return this.runFormValidators(formValidators, data, result);
+	                return this.runFormValidators(formValidators, result);
 
 	              case 5:
 	              case "end":
@@ -20254,7 +21964,7 @@ var notBulma = (function (exports) {
 	        }, _callee5, this);
 	      }));
 
-	      function form(_x6, _x7) {
+	      function form() {
 	        return _form.apply(this, arguments);
 	      }
 
@@ -20263,7 +21973,7 @@ var notBulma = (function (exports) {
 	  }, {
 	    key: "runFormValidators",
 	    value: function () {
-	      var _runFormValidators = asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee6(formValidators, data, result) {
+	      var _runFormValidators = asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee6(formValidators, result) {
 	        var _iterator2, _step2, validator;
 
 	        return regenerator.wrap(function _callee6$(_context6) {
@@ -20284,7 +21994,7 @@ var notBulma = (function (exports) {
 	                validator = _step2.value;
 	                _context6.prev = 5;
 	                _context6.next = 8;
-	                return validator(data, result);
+	                return validator(this.data, result);
 
 	              case 8:
 	                _context6.next = 14;
@@ -20298,7 +22008,7 @@ var notBulma = (function (exports) {
 	                  result.form.exceptions = [];
 	                }
 
-	                result.form.exceptions(_context6.t0);
+	                result.form.exceptions.push(_context6.t0);
 
 	              case 14:
 	                _context6.next = 3;
@@ -20326,10 +22036,10 @@ var notBulma = (function (exports) {
 	                return _context6.stop();
 	            }
 	          }
-	        }, _callee6, null, [[1, 18, 21, 24], [5, 10]]);
+	        }, _callee6, this, [[1, 18, 21, 24], [5, 10]]);
 	      }));
 
-	      function runFormValidators(_x8, _x9, _x10) {
+	      function runFormValidators(_x6, _x7) {
 	        return _runFormValidators.apply(this, arguments);
 	      }
 
@@ -20361,10 +22071,10 @@ var notBulma = (function (exports) {
 	      };
 
 	      for (var fieldName in this.result.fields) {
-	        resultComplete[fieldName] = this.getCompleteResultForField(fieldName);
+	        resultComplete.fields[fieldName] = this.getCompleteResultForField(fieldName);
 	      }
 
-	      resultComplete.form = [this.result.form.errors];
+	      resultComplete.form = toConsumableArray(this.result.form.errors);
 	      return resultComplete;
 	    }
 	  }, {
@@ -20399,7 +22109,7 @@ var notBulma = (function (exports) {
 	    value: function all(data, formName) {
 	      var validators = {
 	        fields: this.getFieldsValidators(data),
-	        form: this.getFieldValidators(formName)
+	        form: this.getFormValidators(formName)
 	      };
 	      return new FormValidationSession$1(validators, data);
 	    }
@@ -20578,9 +22288,9 @@ var notBulma = (function (exports) {
 
 	defineProperty$4(Form, "validator", validator);
 
-	function ownKeys$3(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+	function ownKeys$2(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
-	function _objectSpread$3(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$3(Object(source), true).forEach(function (key) { defineProperty$4(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$3(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+	function _objectSpread$2(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$2(Object(source), true).forEach(function (key) { defineProperty$4(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$2(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 	var ValidatorsBuilder = /*#__PURE__*/function () {
 	  function ValidatorsBuilder(app, getValidatorEnv) {
@@ -20595,7 +22305,7 @@ var notBulma = (function (exports) {
 	    value: function augmentValidators(validators) {
 	      if (Object.prototype.hasOwnProperty.call(validators, 'fields')) {
 	        for (var fieldName in validators.fields) {
-	          validators.fields[fieldName] = this.augmentValidators(validators.fields[fieldName]);
+	          validators.fields[fieldName] = this.augmentFieldsValidators(validators.fields[fieldName]);
 	        }
 	      }
 
@@ -20613,7 +22323,7 @@ var notBulma = (function (exports) {
 	      var _this = this;
 
 	      return fieldValidators.map(function (field) {
-	        return _this.augmentValidator(field);
+	        return _this.augmentFieldValidator(field);
 	      });
 	    }
 	  }, {
@@ -20621,9 +22331,9 @@ var notBulma = (function (exports) {
 	    value: function augmentFieldValidator(rule) {
 	      if (rule.validator) {
 	        if (typeof rule.validator === 'string') {
-	          return this.augmentValidatorObsolete(rule);
+	          return this.augmentFieldValidatorObsolete(rule);
 	        } else {
-	          return this.augmentValidatorModern(rule);
+	          return this.augmentFieldValidatorModern(rule);
 	        }
 	      }
 
@@ -20635,7 +22345,7 @@ var notBulma = (function (exports) {
 	      if (Form.validator && Object.prototype.hasOwnProperty.call(Form.validator, rule.validator)) {
 	        var validatorName = rule.validator;
 
-	        var result = _objectSpread$3({}, rule);
+	        var result = _objectSpread$2({}, rule);
 
 	        delete result.validator;
 
@@ -20645,7 +22355,7 @@ var notBulma = (function (exports) {
 
 	        return result;
 	      } else {
-	        return _objectSpread$3({}, rule);
+	        return _objectSpread$2({}, rule);
 	      }
 	    }
 	  }, {
@@ -20655,7 +22365,7 @@ var notBulma = (function (exports) {
 
 	      var ruleValidator = rule.validator;
 
-	      var result = _objectSpread$3({}, rule);
+	      var result = _objectSpread$2({}, rule);
 
 	      delete result.validator;
 
@@ -20706,1710 +22416,6 @@ var notBulma = (function (exports) {
 		FormValidationRunner: FormValidationRunner$1,
 		FormValidationSession: FormValidationSession$1
 	});
-
-	function ownKeys$2(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
-
-	function _objectSpread$2(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$2(Object(source), true).forEach(function (key) { defineProperty$4(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$2(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-	function _createSuper$4(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$4(); return function _createSuperInternal() { var Super = getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return possibleConstructorReturn(this, result); }; }
-
-	function _isNativeReflectConstruct$4() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
-
-	var notLocale = /*#__PURE__*/function (_EventEmitter) {
-	  inherits(notLocale, _EventEmitter);
-
-	  var _super = _createSuper$4(notLocale);
-
-	  function notLocale() {
-	    var _this;
-
-	    classCallCheck(this, notLocale);
-
-	    _this = _super.call(this);
-	    _this.dict = {}; //dictionary of phrases
-
-	    _this.helpers = {}; //additional helper functions and constants
-
-	    var dict = _this.restoreFromStorage();
-
-	    if (dict) {
-	      _this.set(dict);
-	    }
-
-	    return _this;
-	  }
-	  /**
-	   * String format should comply notPath standart.
-	   * {path_to_access} - is
-	   * : - is used to access to params
-	   * :: - is used to access to helpers
-	   * Welcome, {:where}! - will replace {:where} with content of params.where
-	   * Welcome, {::where}! - will replace {:where} with content of this.helpers.where
-	   * () - after path is to invoke function of target object
-	   * Welcome, {::where()}! - will try to exec this.helpers.where(params, undefined)
-	   * @param    {string}  str         localized string template with mark to include data
-	   * @param    {object}  params      params to use in string
-	   * @returns  {string}              localized version of string with
-	   */
-
-
-	  createClass(notLocale, [{
-	    key: "format",
-	    value: function format(str, params) {
-	      return notPath$1.parseSubs(str, params, this.helpers);
-	    }
-	    /**
-	     * Return localized version of string with injected data from provided object
-	     * may also use Locale.helpers as source of data
-	     * @param {string}   phrase    name of string to localize
-	     * @param {object}   params    object with data to inject in phrase template
-	     * @return {string}            localized string with injected data
-	     */
-
-	  }, {
-	    key: "say",
-	    value: function say(phrase) {
-	      var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-
-	      try {
-	        if (Object.prototype.hasOwnProperty.call(this.dict, phrase)) {
-	          var tmpl = this.dict[phrase],
-	              result = '';
-
-	          if (params) {
-	            result = this.format(tmpl, params);
-	          } else {
-	            result = tmpl;
-	          }
-
-	          return result;
-	        } else {
-	          throw new Error("Unknown locale phrase: ".concat(phrase));
-	        }
-	      } catch (e) {
-	        notCommon$1.debug(e);
-	        return phrase;
-	      }
-	    }
-	    /**
-	     * Setting new dictionary. triggers event 'change'
-	     * @param {object}     dict      vocabulary of phrases and templates
-	     **/
-
-	  }, {
-	    key: "set",
-	    value: function set(dict) {
-	      LOCALE.set(dict);
-	      this.saveToStorage(dict);
-	      this.dict = Object.assign({}, _objectSpread$2({}, dict));
-	      this.emit('change');
-	    }
-	  }, {
-	    key: "saveToStorage",
-	    value: function saveToStorage(dict) {
-	      if (window.localStorage) {
-	        try {
-	          return window.localStorage.setItem('dictionary', JSON.stringify(dict));
-	        } catch (e) {
-	          notCommon$1.debug(e);
-	          return false;
-	        }
-	      }
-
-	      return false;
-	    }
-	  }, {
-	    key: "restoreFromStorage",
-	    value: function restoreFromStorage() {
-	      if (window.localStorage) {
-	        try {
-	          var str = window.localStorage.getItem('dictionary');
-
-	          if (str) {
-	            var dict = JSON.parse(str);
-	            return dict;
-	          } else {
-	            return false;
-	          }
-	        } catch (e) {
-	          notCommon$1.debug(e);
-	          return false;
-	        }
-	      }
-
-	      return false;
-	    }
-	    /**
-	     * Returns writable store of phrases
-	     * @return {object}  writable store
-	     */
-
-	  }, {
-	    key: "vocabulary",
-	    value: function vocabulary() {
-	      return LOCALE;
-	    }
-	  }]);
-
-	  return notLocale;
-	}(EventEmitter);
-
-	var notLocale$1 = new notLocale();
-
-	var say = notLocale$1.say.bind(notLocale$1);
-
-	/* src/ui.title.svelte generated by Svelte v3.44.2 */
-
-	function create_if_block$D(ctx) {
-		let html_tag;
-		let html_anchor;
-
-		return {
-			c() {
-				html_tag = new HtmlTag();
-				html_anchor = empty();
-				html_tag.a = html_anchor;
-			},
-			m(target, anchor) {
-				html_tag.m(/*resultSubtitle*/ ctx[1], target, anchor);
-				insert(target, html_anchor, anchor);
-			},
-			p(ctx, dirty) {
-				if (dirty & /*resultSubtitle*/ 2) html_tag.p(/*resultSubtitle*/ ctx[1]);
-			},
-			d(detaching) {
-				if (detaching) detach(html_anchor);
-				if (detaching) html_tag.d();
-			}
-		};
-	}
-
-	function create_fragment$W(ctx) {
-		let html_tag;
-		let t;
-		let if_block_anchor;
-		let if_block = /*subtitle*/ ctx[0] && create_if_block$D(ctx);
-
-		return {
-			c() {
-				html_tag = new HtmlTag();
-				t = space();
-				if (if_block) if_block.c();
-				if_block_anchor = empty();
-				html_tag.a = t;
-			},
-			m(target, anchor) {
-				html_tag.m(/*resultTitle*/ ctx[2], target, anchor);
-				insert(target, t, anchor);
-				if (if_block) if_block.m(target, anchor);
-				insert(target, if_block_anchor, anchor);
-			},
-			p(ctx, [dirty]) {
-				if (dirty & /*resultTitle*/ 4) html_tag.p(/*resultTitle*/ ctx[2]);
-
-				if (/*subtitle*/ ctx[0]) {
-					if (if_block) {
-						if_block.p(ctx, dirty);
-					} else {
-						if_block = create_if_block$D(ctx);
-						if_block.c();
-						if_block.m(if_block_anchor.parentNode, if_block_anchor);
-					}
-				} else if (if_block) {
-					if_block.d(1);
-					if_block = null;
-				}
-			},
-			i: noop,
-			o: noop,
-			d(detaching) {
-				if (detaching) html_tag.d();
-				if (detaching) detach(t);
-				if (if_block) if_block.d(detaching);
-				if (detaching) detach(if_block_anchor);
-			}
-		};
-	}
-
-	function instance$W($$self, $$props, $$invalidate) {
-		let spacedStyle;
-		let resultTitle;
-		let resultSubtitle;
-		let $LOCALE;
-		component_subscribe($$self, LOCALE, $$value => $$invalidate(9, $LOCALE = $$value));
-		let { title = '' } = $$props;
-		let { subtitle } = $$props;
-		let { size = 1 } = $$props;
-		let { subsize } = $$props;
-		let { spaced = false } = $$props;
-		let size2;
-
-		$$self.$$set = $$props => {
-			if ('title' in $$props) $$invalidate(3, title = $$props.title);
-			if ('subtitle' in $$props) $$invalidate(0, subtitle = $$props.subtitle);
-			if ('size' in $$props) $$invalidate(4, size = $$props.size);
-			if ('subsize' in $$props) $$invalidate(5, subsize = $$props.subsize);
-			if ('spaced' in $$props) $$invalidate(6, spaced = $$props.spaced);
-		};
-
-		$$self.$$.update = () => {
-			if ($$self.$$.dirty & /*subsize, size*/ 48) {
-				$$invalidate(7, size2 = subsize ? subsize : size < 6 ? size + 1 : size);
-			}
-
-			if ($$self.$$.dirty & /*spaced*/ 64) {
-				$$invalidate(8, spacedStyle = spaced ? 'is-spaced' : '');
-			}
-
-			if ($$self.$$.dirty & /*size, spacedStyle, $LOCALE, title*/ 792) {
-				$$invalidate(2, resultTitle = `<h${size} class="title ${spacedStyle} is-${size}">${$LOCALE[title]}</h${size}>`);
-			}
-
-			if ($$self.$$.dirty & /*size2, $LOCALE, subtitle*/ 641) {
-				$$invalidate(1, resultSubtitle = `<h${size2} class="subtitle is-${size2}">${$LOCALE[subtitle]}</h${size2}>`);
-			}
-		};
-
-		return [
-			subtitle,
-			resultSubtitle,
-			resultTitle,
-			title,
-			size,
-			subsize,
-			spaced,
-			size2,
-			spacedStyle,
-			$LOCALE
-		];
-	}
-
-	class Ui_title extends SvelteComponent {
-		constructor(options) {
-			super();
-
-			init(this, options, instance$W, create_fragment$W, safe_not_equal, {
-				title: 3,
-				subtitle: 0,
-				size: 4,
-				subsize: 5,
-				spaced: 6
-			});
-		}
-	}
-
-	function fade(node, { delay = 0, duration = 400, easing = identity } = {}) {
-	    const o = +getComputedStyle(node).opacity;
-	    return {
-	        delay,
-	        duration,
-	        easing,
-	        css: t => `opacity: ${t * o}`
-	    };
-	}
-
-	/* src/ui.overlay.svelte generated by Svelte v3.44.2 */
-
-	function create_if_block$C(ctx) {
-		let div;
-		let t;
-		let div_transition;
-		let current;
-		let mounted;
-		let dispose;
-		let if_block = /*closeButton*/ ctx[0] && create_if_block_1$s(ctx);
-		const default_slot_template = /*#slots*/ ctx[9].default;
-		const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[8], null);
-
-		return {
-			c() {
-				div = element("div");
-				if (if_block) if_block.c();
-				t = space();
-				if (default_slot) default_slot.c();
-				attr(div, "class", "is-overlay not-overlay");
-				set_style(div, "z-index", zIndexStep * /*layer*/ ctx[3]);
-			},
-			m(target, anchor) {
-				insert(target, div, anchor);
-				if (if_block) if_block.m(div, null);
-				append(div, t);
-
-				if (default_slot) {
-					default_slot.m(div, null);
-				}
-
-				current = true;
-
-				if (!mounted) {
-					dispose = listen(div, "click", /*overlayClick*/ ctx[4]);
-					mounted = true;
-				}
-			},
-			p(ctx, dirty) {
-				if (/*closeButton*/ ctx[0]) {
-					if (if_block) {
-						if_block.p(ctx, dirty);
-					} else {
-						if_block = create_if_block_1$s(ctx);
-						if_block.c();
-						if_block.m(div, t);
-					}
-				} else if (if_block) {
-					if_block.d(1);
-					if_block = null;
-				}
-
-				if (default_slot) {
-					if (default_slot.p && (!current || dirty & /*$$scope*/ 256)) {
-						update_slot_base(
-							default_slot,
-							default_slot_template,
-							ctx,
-							/*$$scope*/ ctx[8],
-							!current
-							? get_all_dirty_from_scope(/*$$scope*/ ctx[8])
-							: get_slot_changes(default_slot_template, /*$$scope*/ ctx[8], dirty, null),
-							null
-						);
-					}
-				}
-
-				if (!current || dirty & /*layer*/ 8) {
-					set_style(div, "z-index", zIndexStep * /*layer*/ ctx[3]);
-				}
-			},
-			i(local) {
-				if (current) return;
-				transition_in(default_slot, local);
-
-				add_render_callback(() => {
-					if (!div_transition) div_transition = create_bidirectional_transition(div, fade, {}, true);
-					div_transition.run(1);
-				});
-
-				current = true;
-			},
-			o(local) {
-				transition_out(default_slot, local);
-				if (!div_transition) div_transition = create_bidirectional_transition(div, fade, {}, false);
-				div_transition.run(0);
-				current = false;
-			},
-			d(detaching) {
-				if (detaching) detach(div);
-				if (if_block) if_block.d();
-				if (default_slot) default_slot.d(detaching);
-				if (detaching && div_transition) div_transition.end();
-				mounted = false;
-				dispose();
-			}
-		};
-	}
-
-	// (66:1) {#if closeButton}
-	function create_if_block_1$s(ctx) {
-		let button;
-		let button_class_value;
-		let mounted;
-		let dispose;
-
-		return {
-			c() {
-				button = element("button");
-				attr(button, "class", button_class_value = "delete is-" + /*closeSize*/ ctx[2]);
-			},
-			m(target, anchor) {
-				insert(target, button, anchor);
-
-				if (!mounted) {
-					dispose = listen(button, "click", /*closeButtonClick*/ ctx[5]);
-					mounted = true;
-				}
-			},
-			p(ctx, dirty) {
-				if (dirty & /*closeSize*/ 4 && button_class_value !== (button_class_value = "delete is-" + /*closeSize*/ ctx[2])) {
-					attr(button, "class", button_class_value);
-				}
-			},
-			d(detaching) {
-				if (detaching) detach(button);
-				mounted = false;
-				dispose();
-			}
-		};
-	}
-
-	function create_fragment$V(ctx) {
-		let if_block_anchor;
-		let current;
-		let if_block = /*show*/ ctx[1] && create_if_block$C(ctx);
-
-		return {
-			c() {
-				if (if_block) if_block.c();
-				if_block_anchor = empty();
-			},
-			m(target, anchor) {
-				if (if_block) if_block.m(target, anchor);
-				insert(target, if_block_anchor, anchor);
-				current = true;
-			},
-			p(ctx, [dirty]) {
-				if (/*show*/ ctx[1]) {
-					if (if_block) {
-						if_block.p(ctx, dirty);
-
-						if (dirty & /*show*/ 2) {
-							transition_in(if_block, 1);
-						}
-					} else {
-						if_block = create_if_block$C(ctx);
-						if_block.c();
-						transition_in(if_block, 1);
-						if_block.m(if_block_anchor.parentNode, if_block_anchor);
-					}
-				} else if (if_block) {
-					group_outros();
-
-					transition_out(if_block, 1, 1, () => {
-						if_block = null;
-					});
-
-					check_outros();
-				}
-			},
-			i(local) {
-				if (current) return;
-				transition_in(if_block);
-				current = true;
-			},
-			o(local) {
-				transition_out(if_block);
-				current = false;
-			},
-			d(detaching) {
-				if (if_block) if_block.d(detaching);
-				if (detaching) detach(if_block_anchor);
-			}
-		};
-	}
-
-	const zIndexStep = 1000;
-
-	function instance$V($$self, $$props, $$invalidate) {
-		let { $$slots: slots = {}, $$scope } = $$props;
-		let overflowSave = '';
-		const dispatch = createEventDispatcher();
-		let { closeButton = false } = $$props;
-		let { show = true } = $$props;
-		let { closeOnClick = true } = $$props;
-		let { closeSize = 'normal' } = $$props;
-		let { layer = 1 } = $$props;
-
-		function overlayClick(e) {
-			if (closeOnClick) {
-				closeOverlay(e);
-			}
-		}
-
-		function closeButtonClick() {
-			rejectOverlay();
-		}
-
-		function closeOverlay(e) {
-			if (e && e.originalTarget && e.originalTarget.classList && e.originalTarget.classList.contains('is-overlay')) {
-				rejectOverlay();
-			}
-		}
-
-		function rejectOverlay(data = {}) {
-			dispatch('reject', data);
-		}
-
-		/*
-		function resolveOverlay(data = {}) {
-		  dispatch('resolve', data);
-		}
-	*/
-		onMount(() => {
-			$$invalidate(7, overflowSave = document.body.style.overflow);
-		});
-
-		onDestroy(() => {
-			document.body.style.overflow = overflowSave;
-		});
-
-		$$self.$$set = $$props => {
-			if ('closeButton' in $$props) $$invalidate(0, closeButton = $$props.closeButton);
-			if ('show' in $$props) $$invalidate(1, show = $$props.show);
-			if ('closeOnClick' in $$props) $$invalidate(6, closeOnClick = $$props.closeOnClick);
-			if ('closeSize' in $$props) $$invalidate(2, closeSize = $$props.closeSize);
-			if ('layer' in $$props) $$invalidate(3, layer = $$props.layer);
-			if ('$$scope' in $$props) $$invalidate(8, $$scope = $$props.$$scope);
-		};
-
-		$$self.$$.update = () => {
-			if ($$self.$$.dirty & /*show, overflowSave*/ 130) {
-				if (show) {
-					document.body.style.overflow = 'hidden';
-				} else {
-					document.body.style.overflow = overflowSave;
-				}
-			}
-		};
-
-		return [
-			closeButton,
-			show,
-			closeSize,
-			layer,
-			overlayClick,
-			closeButtonClick,
-			closeOnClick,
-			overflowSave,
-			$$scope,
-			slots
-		];
-	}
-
-	class Ui_overlay extends SvelteComponent {
-		constructor(options) {
-			super();
-
-			init(this, options, instance$V, create_fragment$V, safe_not_equal, {
-				closeButton: 0,
-				show: 1,
-				closeOnClick: 6,
-				closeSize: 2,
-				layer: 3
-			});
-		}
-	}
-
-	/* src/ui.button.svelte generated by Svelte v3.44.2 */
-
-	function create_else_block$u(ctx) {
-		let t_value = /*$LOCALE*/ ctx[16][/*title*/ ctx[0]] + "";
-		let t;
-
-		return {
-			c() {
-				t = text(t_value);
-			},
-			m(target, anchor) {
-				insert(target, t, anchor);
-			},
-			p(ctx, dirty) {
-				if (dirty & /*$LOCALE, title*/ 65537 && t_value !== (t_value = /*$LOCALE*/ ctx[16][/*title*/ ctx[0]] + "")) set_data(t, t_value);
-			},
-			d(detaching) {
-				if (detaching) detach(t);
-			}
-		};
-	}
-
-	// (39:2) {#if icon }
-	function create_if_block$B(ctx) {
-		let t0;
-		let t1;
-		let if_block2_anchor;
-		let if_block0 = /*iconSide*/ ctx[14] === 'left' && create_if_block_3$h(ctx);
-		let if_block1 = /*title*/ ctx[0] && create_if_block_2$j(ctx);
-		let if_block2 = /*iconSide*/ ctx[14] === 'right' && create_if_block_1$r(ctx);
-
-		return {
-			c() {
-				if (if_block0) if_block0.c();
-				t0 = space();
-				if (if_block1) if_block1.c();
-				t1 = space();
-				if (if_block2) if_block2.c();
-				if_block2_anchor = empty();
-			},
-			m(target, anchor) {
-				if (if_block0) if_block0.m(target, anchor);
-				insert(target, t0, anchor);
-				if (if_block1) if_block1.m(target, anchor);
-				insert(target, t1, anchor);
-				if (if_block2) if_block2.m(target, anchor);
-				insert(target, if_block2_anchor, anchor);
-			},
-			p(ctx, dirty) {
-				if (/*iconSide*/ ctx[14] === 'left') {
-					if (if_block0) {
-						if_block0.p(ctx, dirty);
-					} else {
-						if_block0 = create_if_block_3$h(ctx);
-						if_block0.c();
-						if_block0.m(t0.parentNode, t0);
-					}
-				} else if (if_block0) {
-					if_block0.d(1);
-					if_block0 = null;
-				}
-
-				if (/*title*/ ctx[0]) {
-					if (if_block1) {
-						if_block1.p(ctx, dirty);
-					} else {
-						if_block1 = create_if_block_2$j(ctx);
-						if_block1.c();
-						if_block1.m(t1.parentNode, t1);
-					}
-				} else if (if_block1) {
-					if_block1.d(1);
-					if_block1 = null;
-				}
-
-				if (/*iconSide*/ ctx[14] === 'right') {
-					if (if_block2) {
-						if_block2.p(ctx, dirty);
-					} else {
-						if_block2 = create_if_block_1$r(ctx);
-						if_block2.c();
-						if_block2.m(if_block2_anchor.parentNode, if_block2_anchor);
-					}
-				} else if (if_block2) {
-					if_block2.d(1);
-					if_block2 = null;
-				}
-			},
-			d(detaching) {
-				if (if_block0) if_block0.d(detaching);
-				if (detaching) detach(t0);
-				if (if_block1) if_block1.d(detaching);
-				if (detaching) detach(t1);
-				if (if_block2) if_block2.d(detaching);
-				if (detaching) detach(if_block2_anchor);
-			}
-		};
-	}
-
-	// (40:2) {#if iconSide === 'left' }
-	function create_if_block_3$h(ctx) {
-		let span;
-		let i;
-		let i_class_value;
-
-		return {
-			c() {
-				span = element("span");
-				i = element("i");
-				attr(i, "class", i_class_value = "fas fa-" + /*icon*/ ctx[13] + " " + (/*size*/ ctx[11] ? `is-${/*size*/ ctx[11]}` : ''));
-				attr(span, "class", "icon");
-			},
-			m(target, anchor) {
-				insert(target, span, anchor);
-				append(span, i);
-			},
-			p(ctx, dirty) {
-				if (dirty & /*icon, size*/ 10240 && i_class_value !== (i_class_value = "fas fa-" + /*icon*/ ctx[13] + " " + (/*size*/ ctx[11] ? `is-${/*size*/ ctx[11]}` : ''))) {
-					attr(i, "class", i_class_value);
-				}
-			},
-			d(detaching) {
-				if (detaching) detach(span);
-			}
-		};
-	}
-
-	// (43:2) {#if title }
-	function create_if_block_2$j(ctx) {
-		let span;
-		let t_value = /*$LOCALE*/ ctx[16][/*title*/ ctx[0]] + "";
-		let t;
-
-		return {
-			c() {
-				span = element("span");
-				t = text(t_value);
-			},
-			m(target, anchor) {
-				insert(target, span, anchor);
-				append(span, t);
-			},
-			p(ctx, dirty) {
-				if (dirty & /*$LOCALE, title*/ 65537 && t_value !== (t_value = /*$LOCALE*/ ctx[16][/*title*/ ctx[0]] + "")) set_data(t, t_value);
-			},
-			d(detaching) {
-				if (detaching) detach(span);
-			}
-		};
-	}
-
-	// (46:2) {#if iconSide === 'right' }
-	function create_if_block_1$r(ctx) {
-		let span;
-		let i;
-		let i_class_value;
-
-		return {
-			c() {
-				span = element("span");
-				i = element("i");
-				attr(i, "class", i_class_value = "fas fa-" + /*icon*/ ctx[13] + " " + (/*size*/ ctx[11] ? `is-${/*size*/ ctx[11]}` : ''));
-				attr(span, "class", "icon");
-			},
-			m(target, anchor) {
-				insert(target, span, anchor);
-				append(span, i);
-			},
-			p(ctx, dirty) {
-				if (dirty & /*icon, size*/ 10240 && i_class_value !== (i_class_value = "fas fa-" + /*icon*/ ctx[13] + " " + (/*size*/ ctx[11] ? `is-${/*size*/ ctx[11]}` : ''))) {
-					attr(i, "class", i_class_value);
-				}
-			},
-			d(detaching) {
-				if (detaching) detach(span);
-			}
-		};
-	}
-
-	function create_fragment$U(ctx) {
-		let button;
-		let button_type_value;
-		let button_class_value;
-		let mounted;
-		let dispose;
-
-		function select_block_type(ctx, dirty) {
-			if (/*icon*/ ctx[13]) return create_if_block$B;
-			return create_else_block$u;
-		}
-
-		let current_block_type = select_block_type(ctx);
-		let if_block = current_block_type(ctx);
-
-		return {
-			c() {
-				button = element("button");
-				if_block.c();
-				button.disabled = /*disabled*/ ctx[7];
-				attr(button, "type", button_type_value = /*type*/ ctx[9] ? /*type*/ ctx[9] : "");
-				attr(button, "class", button_class_value = "button " + /*classes*/ ctx[12] + " " + (/*state*/ ctx[8] ? `is-${/*state*/ ctx[8]}` : '') + " " + (/*inverted*/ ctx[5] ? `is-inverted` : '') + " " + (/*outlined*/ ctx[4] ? `is-outlined` : '') + " " + (/*raised*/ ctx[3] ? `is-raised` : '') + " " + (/*rounded*/ ctx[6] ? `is-rounded` : '') + " " + (/*light*/ ctx[1] ? `is-light` : '') + " " + (/*loading*/ ctx[2] ? `is-loading` : '') + " " + (/*color*/ ctx[10] ? `is-${/*color*/ ctx[10]}` : '') + " " + (/*size*/ ctx[11] ? `is-${/*size*/ ctx[11]}` : '') + "");
-			},
-			m(target, anchor) {
-				insert(target, button, anchor);
-				if_block.m(button, null);
-
-				if (!mounted) {
-					dispose = listen(button, "click", function () {
-						if (is_function(/*action*/ ctx[15])) /*action*/ ctx[15].apply(this, arguments);
-					});
-
-					mounted = true;
-				}
-			},
-			p(new_ctx, [dirty]) {
-				ctx = new_ctx;
-
-				if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block) {
-					if_block.p(ctx, dirty);
-				} else {
-					if_block.d(1);
-					if_block = current_block_type(ctx);
-
-					if (if_block) {
-						if_block.c();
-						if_block.m(button, null);
-					}
-				}
-
-				if (dirty & /*disabled*/ 128) {
-					button.disabled = /*disabled*/ ctx[7];
-				}
-
-				if (dirty & /*type*/ 512 && button_type_value !== (button_type_value = /*type*/ ctx[9] ? /*type*/ ctx[9] : "")) {
-					attr(button, "type", button_type_value);
-				}
-
-				if (dirty & /*classes, state, inverted, outlined, raised, rounded, light, loading, color, size*/ 7550 && button_class_value !== (button_class_value = "button " + /*classes*/ ctx[12] + " " + (/*state*/ ctx[8] ? `is-${/*state*/ ctx[8]}` : '') + " " + (/*inverted*/ ctx[5] ? `is-inverted` : '') + " " + (/*outlined*/ ctx[4] ? `is-outlined` : '') + " " + (/*raised*/ ctx[3] ? `is-raised` : '') + " " + (/*rounded*/ ctx[6] ? `is-rounded` : '') + " " + (/*light*/ ctx[1] ? `is-light` : '') + " " + (/*loading*/ ctx[2] ? `is-loading` : '') + " " + (/*color*/ ctx[10] ? `is-${/*color*/ ctx[10]}` : '') + " " + (/*size*/ ctx[11] ? `is-${/*size*/ ctx[11]}` : '') + "")) {
-					attr(button, "class", button_class_value);
-				}
-			},
-			i: noop,
-			o: noop,
-			d(detaching) {
-				if (detaching) detach(button);
-				if_block.d();
-				mounted = false;
-				dispose();
-			}
-		};
-	}
-
-	function instance$U($$self, $$props, $$invalidate) {
-		let $LOCALE;
-		component_subscribe($$self, LOCALE, $$value => $$invalidate(16, $LOCALE = $$value));
-		let { title = '' } = $$props;
-		let { light = false } = $$props;
-		let { loading = false } = $$props;
-		let { raised = false } = $$props;
-		let { outlined = false } = $$props;
-		let { inverted = false } = $$props;
-		let { rounded = false } = $$props;
-		let { disabled = false } = $$props;
-		let { state = '' } = $$props;
-		let { type = '' } = $$props;
-		let { color = '' } = $$props;
-		let { size = '' } = $$props;
-		let { classes = '' } = $$props;
-		let { icon = false } = $$props;
-		let { iconSide = 'right' } = $$props;
-
-		let { action = () => {
-			return true;
-		} } = $$props;
-
-		$$self.$$set = $$props => {
-			if ('title' in $$props) $$invalidate(0, title = $$props.title);
-			if ('light' in $$props) $$invalidate(1, light = $$props.light);
-			if ('loading' in $$props) $$invalidate(2, loading = $$props.loading);
-			if ('raised' in $$props) $$invalidate(3, raised = $$props.raised);
-			if ('outlined' in $$props) $$invalidate(4, outlined = $$props.outlined);
-			if ('inverted' in $$props) $$invalidate(5, inverted = $$props.inverted);
-			if ('rounded' in $$props) $$invalidate(6, rounded = $$props.rounded);
-			if ('disabled' in $$props) $$invalidate(7, disabled = $$props.disabled);
-			if ('state' in $$props) $$invalidate(8, state = $$props.state);
-			if ('type' in $$props) $$invalidate(9, type = $$props.type);
-			if ('color' in $$props) $$invalidate(10, color = $$props.color);
-			if ('size' in $$props) $$invalidate(11, size = $$props.size);
-			if ('classes' in $$props) $$invalidate(12, classes = $$props.classes);
-			if ('icon' in $$props) $$invalidate(13, icon = $$props.icon);
-			if ('iconSide' in $$props) $$invalidate(14, iconSide = $$props.iconSide);
-			if ('action' in $$props) $$invalidate(15, action = $$props.action);
-		};
-
-		return [
-			title,
-			light,
-			loading,
-			raised,
-			outlined,
-			inverted,
-			rounded,
-			disabled,
-			state,
-			type,
-			color,
-			size,
-			classes,
-			icon,
-			iconSide,
-			action,
-			$LOCALE
-		];
-	}
-
-	class Ui_button extends SvelteComponent {
-		constructor(options) {
-			super();
-
-			init(this, options, instance$U, create_fragment$U, safe_not_equal, {
-				title: 0,
-				light: 1,
-				loading: 2,
-				raised: 3,
-				outlined: 4,
-				inverted: 5,
-				rounded: 6,
-				disabled: 7,
-				state: 8,
-				type: 9,
-				color: 10,
-				size: 11,
-				classes: 12,
-				icon: 13,
-				iconSide: 14,
-				action: 15
-			});
-		}
-	}
-
-	/* src/ui.modal.svelte generated by Svelte v3.44.2 */
-
-	function create_if_block_1$q(ctx) {
-		let uibutton;
-		let current;
-		const uibutton_spread_levels = [/*closeButton*/ ctx[0]];
-		let uibutton_props = {};
-
-		for (let i = 0; i < uibutton_spread_levels.length; i += 1) {
-			uibutton_props = assign(uibutton_props, uibutton_spread_levels[i]);
-		}
-
-		uibutton = new Ui_button({ props: uibutton_props });
-
-		return {
-			c() {
-				create_component(uibutton.$$.fragment);
-			},
-			m(target, anchor) {
-				mount_component(uibutton, target, anchor);
-				current = true;
-			},
-			p(ctx, dirty) {
-				const uibutton_changes = (dirty & /*closeButton*/ 1)
-				? get_spread_update(uibutton_spread_levels, [get_spread_object(/*closeButton*/ ctx[0])])
-				: {};
-
-				uibutton.$set(uibutton_changes);
-			},
-			i(local) {
-				if (current) return;
-				transition_in(uibutton.$$.fragment, local);
-				current = true;
-			},
-			o(local) {
-				transition_out(uibutton.$$.fragment, local);
-				current = false;
-			},
-			d(detaching) {
-				destroy_component(uibutton, detaching);
-			}
-		};
-	}
-
-	// (31:10) {#if applyButton}
-	function create_if_block$A(ctx) {
-		let uibutton;
-		let current;
-		const uibutton_spread_levels = [/*applyButton*/ ctx[1]];
-		let uibutton_props = {};
-
-		for (let i = 0; i < uibutton_spread_levels.length; i += 1) {
-			uibutton_props = assign(uibutton_props, uibutton_spread_levels[i]);
-		}
-
-		uibutton = new Ui_button({ props: uibutton_props });
-
-		return {
-			c() {
-				create_component(uibutton.$$.fragment);
-			},
-			m(target, anchor) {
-				mount_component(uibutton, target, anchor);
-				current = true;
-			},
-			p(ctx, dirty) {
-				const uibutton_changes = (dirty & /*applyButton*/ 2)
-				? get_spread_update(uibutton_spread_levels, [get_spread_object(/*applyButton*/ ctx[1])])
-				: {};
-
-				uibutton.$set(uibutton_changes);
-			},
-			i(local) {
-				if (current) return;
-				transition_in(uibutton.$$.fragment, local);
-				current = true;
-			},
-			o(local) {
-				transition_out(uibutton.$$.fragment, local);
-				current = false;
-			},
-			d(detaching) {
-				destroy_component(uibutton, detaching);
-			}
-		};
-	}
-
-	// (24:3) <UIContent>
-	function create_default_slot_2(ctx) {
-		let div0;
-		let span;
-		let t0_value = /*$LOCALE*/ ctx[8][/*WAITING_TEXT*/ ctx[7]] + "";
-		let t0;
-		let div0_class_value;
-		let t1;
-		let t2;
-		let div1;
-		let t3;
-		let current;
-		const default_slot_template = /*#slots*/ ctx[9].default;
-		const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[10], null);
-		let if_block0 = /*closeButton*/ ctx[0] && create_if_block_1$q(ctx);
-		let if_block1 = /*applyButton*/ ctx[1] && create_if_block$A(ctx);
-
-		return {
-			c() {
-				div0 = element("div");
-				span = element("span");
-				t0 = text(t0_value);
-				t1 = space();
-				if (default_slot) default_slot.c();
-				t2 = space();
-				div1 = element("div");
-				if (if_block0) if_block0.c();
-				t3 = space();
-				if (if_block1) if_block1.c();
-				attr(span, "class", "title");
-				attr(div0, "class", div0_class_value = "pageloader " + (/*loading*/ ctx[3] ? 'is-active' : ''));
-				attr(div1, "class", "buttons is-grouped is-centered mt-4");
-			},
-			m(target, anchor) {
-				insert(target, div0, anchor);
-				append(div0, span);
-				append(span, t0);
-				insert(target, t1, anchor);
-
-				if (default_slot) {
-					default_slot.m(target, anchor);
-				}
-
-				insert(target, t2, anchor);
-				insert(target, div1, anchor);
-				if (if_block0) if_block0.m(div1, null);
-				append(div1, t3);
-				if (if_block1) if_block1.m(div1, null);
-				current = true;
-			},
-			p(ctx, dirty) {
-				if ((!current || dirty & /*$LOCALE, WAITING_TEXT*/ 384) && t0_value !== (t0_value = /*$LOCALE*/ ctx[8][/*WAITING_TEXT*/ ctx[7]] + "")) set_data(t0, t0_value);
-
-				if (!current || dirty & /*loading*/ 8 && div0_class_value !== (div0_class_value = "pageloader " + (/*loading*/ ctx[3] ? 'is-active' : ''))) {
-					attr(div0, "class", div0_class_value);
-				}
-
-				if (default_slot) {
-					if (default_slot.p && (!current || dirty & /*$$scope*/ 1024)) {
-						update_slot_base(
-							default_slot,
-							default_slot_template,
-							ctx,
-							/*$$scope*/ ctx[10],
-							!current
-							? get_all_dirty_from_scope(/*$$scope*/ ctx[10])
-							: get_slot_changes(default_slot_template, /*$$scope*/ ctx[10], dirty, null),
-							null
-						);
-					}
-				}
-
-				if (/*closeButton*/ ctx[0]) {
-					if (if_block0) {
-						if_block0.p(ctx, dirty);
-
-						if (dirty & /*closeButton*/ 1) {
-							transition_in(if_block0, 1);
-						}
-					} else {
-						if_block0 = create_if_block_1$q(ctx);
-						if_block0.c();
-						transition_in(if_block0, 1);
-						if_block0.m(div1, t3);
-					}
-				} else if (if_block0) {
-					group_outros();
-
-					transition_out(if_block0, 1, 1, () => {
-						if_block0 = null;
-					});
-
-					check_outros();
-				}
-
-				if (/*applyButton*/ ctx[1]) {
-					if (if_block1) {
-						if_block1.p(ctx, dirty);
-
-						if (dirty & /*applyButton*/ 2) {
-							transition_in(if_block1, 1);
-						}
-					} else {
-						if_block1 = create_if_block$A(ctx);
-						if_block1.c();
-						transition_in(if_block1, 1);
-						if_block1.m(div1, null);
-					}
-				} else if (if_block1) {
-					group_outros();
-
-					transition_out(if_block1, 1, 1, () => {
-						if_block1 = null;
-					});
-
-					check_outros();
-				}
-			},
-			i(local) {
-				if (current) return;
-				transition_in(default_slot, local);
-				transition_in(if_block0);
-				transition_in(if_block1);
-				current = true;
-			},
-			o(local) {
-				transition_out(default_slot, local);
-				transition_out(if_block0);
-				transition_out(if_block1);
-				current = false;
-			},
-			d(detaching) {
-				if (detaching) detach(div0);
-				if (detaching) detach(t1);
-				if (default_slot) default_slot.d(detaching);
-				if (detaching) detach(t2);
-				if (detaching) detach(div1);
-				if (if_block0) if_block0.d();
-				if (if_block1) if_block1.d();
-			}
-		};
-	}
-
-	// (22:2) <UIBox {classes}>
-	function create_default_slot_1$1(ctx) {
-		let uititle;
-		let t;
-		let uicontent;
-		let current;
-
-		uititle = new Ui_title({
-				props: {
-					size: "2",
-					title: /*$LOCALE*/ ctx[8][/*title*/ ctx[4]],
-					subtitle: /*$LOCALE*/ ctx[8][/*subtitle*/ ctx[5]]
-				}
-			});
-
-		uicontent = new Ui_content({
-				props: {
-					$$slots: { default: [create_default_slot_2] },
-					$$scope: { ctx }
-				}
-			});
-
-		return {
-			c() {
-				create_component(uititle.$$.fragment);
-				t = space();
-				create_component(uicontent.$$.fragment);
-			},
-			m(target, anchor) {
-				mount_component(uititle, target, anchor);
-				insert(target, t, anchor);
-				mount_component(uicontent, target, anchor);
-				current = true;
-			},
-			p(ctx, dirty) {
-				const uititle_changes = {};
-				if (dirty & /*$LOCALE, title*/ 272) uititle_changes.title = /*$LOCALE*/ ctx[8][/*title*/ ctx[4]];
-				if (dirty & /*$LOCALE, subtitle*/ 288) uititle_changes.subtitle = /*$LOCALE*/ ctx[8][/*subtitle*/ ctx[5]];
-				uititle.$set(uititle_changes);
-				const uicontent_changes = {};
-
-				if (dirty & /*$$scope, applyButton, closeButton, loading, $LOCALE, WAITING_TEXT*/ 1419) {
-					uicontent_changes.$$scope = { dirty, ctx };
-				}
-
-				uicontent.$set(uicontent_changes);
-			},
-			i(local) {
-				if (current) return;
-				transition_in(uititle.$$.fragment, local);
-				transition_in(uicontent.$$.fragment, local);
-				current = true;
-			},
-			o(local) {
-				transition_out(uititle.$$.fragment, local);
-				transition_out(uicontent.$$.fragment, local);
-				current = false;
-			},
-			d(detaching) {
-				destroy_component(uititle, detaching);
-				if (detaching) detach(t);
-				destroy_component(uicontent, detaching);
-			}
-		};
-	}
-
-	// (21:0) <UIOverlay {show} closeOnClick={false} closeButton={false} >
-	function create_default_slot$2(ctx) {
-		let uibox;
-		let current;
-
-		uibox = new Ui_box({
-				props: {
-					classes: /*classes*/ ctx[6],
-					$$slots: { default: [create_default_slot_1$1] },
-					$$scope: { ctx }
-				}
-			});
-
-		return {
-			c() {
-				create_component(uibox.$$.fragment);
-			},
-			m(target, anchor) {
-				mount_component(uibox, target, anchor);
-				current = true;
-			},
-			p(ctx, dirty) {
-				const uibox_changes = {};
-				if (dirty & /*classes*/ 64) uibox_changes.classes = /*classes*/ ctx[6];
-
-				if (dirty & /*$$scope, applyButton, closeButton, loading, $LOCALE, WAITING_TEXT, title, subtitle*/ 1467) {
-					uibox_changes.$$scope = { dirty, ctx };
-				}
-
-				uibox.$set(uibox_changes);
-			},
-			i(local) {
-				if (current) return;
-				transition_in(uibox.$$.fragment, local);
-				current = true;
-			},
-			o(local) {
-				transition_out(uibox.$$.fragment, local);
-				current = false;
-			},
-			d(detaching) {
-				destroy_component(uibox, detaching);
-			}
-		};
-	}
-
-	function create_fragment$T(ctx) {
-		let uioverlay;
-		let current;
-
-		uioverlay = new Ui_overlay({
-				props: {
-					show: /*show*/ ctx[2],
-					closeOnClick: false,
-					closeButton: false,
-					$$slots: { default: [create_default_slot$2] },
-					$$scope: { ctx }
-				}
-			});
-
-		return {
-			c() {
-				create_component(uioverlay.$$.fragment);
-			},
-			m(target, anchor) {
-				mount_component(uioverlay, target, anchor);
-				current = true;
-			},
-			p(ctx, [dirty]) {
-				const uioverlay_changes = {};
-				if (dirty & /*show*/ 4) uioverlay_changes.show = /*show*/ ctx[2];
-
-				if (dirty & /*$$scope, classes, applyButton, closeButton, loading, $LOCALE, WAITING_TEXT, title, subtitle*/ 1531) {
-					uioverlay_changes.$$scope = { dirty, ctx };
-				}
-
-				uioverlay.$set(uioverlay_changes);
-			},
-			i(local) {
-				if (current) return;
-				transition_in(uioverlay.$$.fragment, local);
-				current = true;
-			},
-			o(local) {
-				transition_out(uioverlay.$$.fragment, local);
-				current = false;
-			},
-			d(detaching) {
-				destroy_component(uioverlay, detaching);
-			}
-		};
-	}
-
-	function instance$T($$self, $$props, $$invalidate) {
-		let $LOCALE;
-		component_subscribe($$self, LOCALE, $$value => $$invalidate(8, $LOCALE = $$value));
-		let { $$slots: slots = {}, $$scope } = $$props;
-		let { closeButton = false } = $$props;
-		let { applyButton = false } = $$props;
-		let { show = false } = $$props;
-		let { loading = false } = $$props;
-		let { title = 'Modal window' } = $$props;
-		let { subtitle = '' } = $$props;
-		let { classes = '' } = $$props;
-		let { WAITING_TEXT = 'Обработка' } = $$props;
-
-		$$self.$$set = $$props => {
-			if ('closeButton' in $$props) $$invalidate(0, closeButton = $$props.closeButton);
-			if ('applyButton' in $$props) $$invalidate(1, applyButton = $$props.applyButton);
-			if ('show' in $$props) $$invalidate(2, show = $$props.show);
-			if ('loading' in $$props) $$invalidate(3, loading = $$props.loading);
-			if ('title' in $$props) $$invalidate(4, title = $$props.title);
-			if ('subtitle' in $$props) $$invalidate(5, subtitle = $$props.subtitle);
-			if ('classes' in $$props) $$invalidate(6, classes = $$props.classes);
-			if ('WAITING_TEXT' in $$props) $$invalidate(7, WAITING_TEXT = $$props.WAITING_TEXT);
-			if ('$$scope' in $$props) $$invalidate(10, $$scope = $$props.$$scope);
-		};
-
-		return [
-			closeButton,
-			applyButton,
-			show,
-			loading,
-			title,
-			subtitle,
-			classes,
-			WAITING_TEXT,
-			$LOCALE,
-			slots,
-			$$scope
-		];
-	}
-
-	class Ui_modal extends SvelteComponent {
-		constructor(options) {
-			super();
-
-			init(this, options, instance$T, create_fragment$T, safe_not_equal, {
-				closeButton: 0,
-				applyButton: 1,
-				show: 2,
-				loading: 3,
-				title: 4,
-				subtitle: 5,
-				classes: 6,
-				WAITING_TEXT: 7
-			});
-		}
-	}
-
-	/* src/ui.breadcrumbs.svelte generated by Svelte v3.44.2 */
-
-	function get_each_context$f(ctx, list, i) {
-		const child_ctx = ctx.slice();
-		child_ctx[5] = list[i];
-		child_ctx[7] = i;
-		return child_ctx;
-	}
-
-	// (28:4) {:else}
-	function create_else_block$t(ctx) {
-		let li;
-		let a;
-		let t_value = /*$LOCALE*/ ctx[2][/*link*/ ctx[5].title] + "";
-		let t;
-		let a_href_value;
-		let a_data_href_value;
-		let mounted;
-		let dispose;
-
-		return {
-			c() {
-				li = element("li");
-				a = element("a");
-				t = text(t_value);
-				attr(a, "href", a_href_value = "" + (/*root*/ ctx[0] + /*link*/ ctx[5].url));
-				attr(a, "data-href", a_data_href_value = /*link*/ ctx[5].url);
-			},
-			m(target, anchor) {
-				insert(target, li, anchor);
-				append(li, a);
-				append(a, t);
-
-				if (!mounted) {
-					dispose = listen(a, "click", /*onClick*/ ctx[3]);
-					mounted = true;
-				}
-			},
-			p(ctx, dirty) {
-				if (dirty & /*$LOCALE, items*/ 6 && t_value !== (t_value = /*$LOCALE*/ ctx[2][/*link*/ ctx[5].title] + "")) set_data(t, t_value);
-
-				if (dirty & /*root, items*/ 3 && a_href_value !== (a_href_value = "" + (/*root*/ ctx[0] + /*link*/ ctx[5].url))) {
-					attr(a, "href", a_href_value);
-				}
-
-				if (dirty & /*items*/ 2 && a_data_href_value !== (a_data_href_value = /*link*/ ctx[5].url)) {
-					attr(a, "data-href", a_data_href_value);
-				}
-			},
-			d(detaching) {
-				if (detaching) detach(li);
-				mounted = false;
-				dispose();
-			}
-		};
-	}
-
-	// (26:4) {#if link.url === false }
-	function create_if_block_1$p(ctx) {
-		let li;
-		let t_value = /*$LOCALE*/ ctx[2][/*link*/ ctx[5].title] + "";
-		let t;
-
-		return {
-			c() {
-				li = element("li");
-				t = text(t_value);
-				attr(li, "class", "is-plain-crumb");
-			},
-			m(target, anchor) {
-				insert(target, li, anchor);
-				append(li, t);
-			},
-			p(ctx, dirty) {
-				if (dirty & /*$LOCALE, items*/ 6 && t_value !== (t_value = /*$LOCALE*/ ctx[2][/*link*/ ctx[5].title] + "")) set_data(t, t_value);
-			},
-			d(detaching) {
-				if (detaching) detach(li);
-			}
-		};
-	}
-
-	// (23:4) {#if (items.length === (index + 1)) }
-	function create_if_block$z(ctx) {
-		let li;
-		let a;
-		let t_value = /*$LOCALE*/ ctx[2][/*link*/ ctx[5].title] + "";
-		let t;
-		let a_href_value;
-		let a_data_href_value;
-
-		return {
-			c() {
-				li = element("li");
-				a = element("a");
-				t = text(t_value);
-				attr(a, "href", a_href_value = "" + (/*root*/ ctx[0] + /*link*/ ctx[5].url));
-				attr(a, "data-href", a_data_href_value = /*link*/ ctx[5].url);
-				attr(a, "aria-current", "page");
-				attr(li, "class", "is-active");
-			},
-			m(target, anchor) {
-				insert(target, li, anchor);
-				append(li, a);
-				append(a, t);
-			},
-			p(ctx, dirty) {
-				if (dirty & /*$LOCALE, items*/ 6 && t_value !== (t_value = /*$LOCALE*/ ctx[2][/*link*/ ctx[5].title] + "")) set_data(t, t_value);
-
-				if (dirty & /*root, items*/ 3 && a_href_value !== (a_href_value = "" + (/*root*/ ctx[0] + /*link*/ ctx[5].url))) {
-					attr(a, "href", a_href_value);
-				}
-
-				if (dirty & /*items*/ 2 && a_data_href_value !== (a_data_href_value = /*link*/ ctx[5].url)) {
-					attr(a, "data-href", a_data_href_value);
-				}
-			},
-			d(detaching) {
-				if (detaching) detach(li);
-			}
-		};
-	}
-
-	// (22:4) {#each items as link, index}
-	function create_each_block$f(ctx) {
-		let if_block_anchor;
-
-		function select_block_type(ctx, dirty) {
-			if (/*items*/ ctx[1].length === /*index*/ ctx[7] + 1) return create_if_block$z;
-			if (/*link*/ ctx[5].url === false) return create_if_block_1$p;
-			return create_else_block$t;
-		}
-
-		let current_block_type = select_block_type(ctx);
-		let if_block = current_block_type(ctx);
-
-		return {
-			c() {
-				if_block.c();
-				if_block_anchor = empty();
-			},
-			m(target, anchor) {
-				if_block.m(target, anchor);
-				insert(target, if_block_anchor, anchor);
-			},
-			p(ctx, dirty) {
-				if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block) {
-					if_block.p(ctx, dirty);
-				} else {
-					if_block.d(1);
-					if_block = current_block_type(ctx);
-
-					if (if_block) {
-						if_block.c();
-						if_block.m(if_block_anchor.parentNode, if_block_anchor);
-					}
-				}
-			},
-			d(detaching) {
-				if_block.d(detaching);
-				if (detaching) detach(if_block_anchor);
-			}
-		};
-	}
-
-	function create_fragment$S(ctx) {
-		let nav;
-		let ul;
-		let each_value = /*items*/ ctx[1];
-		let each_blocks = [];
-
-		for (let i = 0; i < each_value.length; i += 1) {
-			each_blocks[i] = create_each_block$f(get_each_context$f(ctx, each_value, i));
-		}
-
-		return {
-			c() {
-				nav = element("nav");
-				ul = element("ul");
-
-				for (let i = 0; i < each_blocks.length; i += 1) {
-					each_blocks[i].c();
-				}
-
-				attr(nav, "class", "breadcrumb");
-				attr(nav, "aria-label", "breadcrumbs");
-			},
-			m(target, anchor) {
-				insert(target, nav, anchor);
-				append(nav, ul);
-
-				for (let i = 0; i < each_blocks.length; i += 1) {
-					each_blocks[i].m(ul, null);
-				}
-			},
-			p(ctx, [dirty]) {
-				if (dirty & /*root, items, $LOCALE, onClick*/ 15) {
-					each_value = /*items*/ ctx[1];
-					let i;
-
-					for (i = 0; i < each_value.length; i += 1) {
-						const child_ctx = get_each_context$f(ctx, each_value, i);
-
-						if (each_blocks[i]) {
-							each_blocks[i].p(child_ctx, dirty);
-						} else {
-							each_blocks[i] = create_each_block$f(child_ctx);
-							each_blocks[i].c();
-							each_blocks[i].m(ul, null);
-						}
-					}
-
-					for (; i < each_blocks.length; i += 1) {
-						each_blocks[i].d(1);
-					}
-
-					each_blocks.length = each_value.length;
-				}
-			},
-			i: noop,
-			o: noop,
-			d(detaching) {
-				if (detaching) detach(nav);
-				destroy_each(each_blocks, detaching);
-			}
-		};
-	}
-
-	function instance$S($$self, $$props, $$invalidate) {
-		let $LOCALE;
-		component_subscribe($$self, LOCALE, $$value => $$invalidate(2, $LOCALE = $$value));
-		let { root = '' } = $$props;
-		let { items = [] } = $$props;
-		let { go = null } = $$props;
-
-		function onClick(ev) {
-			if (typeof go === 'function') {
-				ev.preventDefault();
-				go(ev.currentTarget.dataset.href);
-				return false;
-			} else {
-				return true;
-			}
-		}
-
-		$$self.$$set = $$props => {
-			if ('root' in $$props) $$invalidate(0, root = $$props.root);
-			if ('items' in $$props) $$invalidate(1, items = $$props.items);
-			if ('go' in $$props) $$invalidate(4, go = $$props.go);
-		};
-
-		return [root, items, $LOCALE, onClick, go];
-	}
-
-	class Ui_breadcrumbs extends SvelteComponent {
-		constructor(options) {
-			super();
-			init(this, options, instance$S, create_fragment$S, safe_not_equal, { root: 0, items: 1, go: 4 });
-		}
-	}
-
-	/* src/ui.progress.svelte generated by Svelte v3.44.2 */
-
-	function create_fragment$R(ctx) {
-		let progress;
-		let t0;
-		let t1;
-		let progress_class_value;
-
-		return {
-			c() {
-				progress = element("progress");
-				t0 = text(/*value*/ ctx[0]);
-				t1 = text("%");
-				attr(progress, "class", progress_class_value = "progress " + /*classes*/ ctx[4] + " " + (/*color*/ ctx[2] ? `is-${/*color*/ ctx[2]}` : '') + " " + (/*size*/ ctx[3] ? `is-${/*size*/ ctx[3]}` : ''));
-				progress.value = /*value*/ ctx[0];
-				attr(progress, "max", /*max*/ ctx[1]);
-			},
-			m(target, anchor) {
-				insert(target, progress, anchor);
-				append(progress, t0);
-				append(progress, t1);
-			},
-			p(ctx, [dirty]) {
-				if (dirty & /*value*/ 1) set_data(t0, /*value*/ ctx[0]);
-
-				if (dirty & /*classes, color, size*/ 28 && progress_class_value !== (progress_class_value = "progress " + /*classes*/ ctx[4] + " " + (/*color*/ ctx[2] ? `is-${/*color*/ ctx[2]}` : '') + " " + (/*size*/ ctx[3] ? `is-${/*size*/ ctx[3]}` : ''))) {
-					attr(progress, "class", progress_class_value);
-				}
-
-				if (dirty & /*value*/ 1) {
-					progress.value = /*value*/ ctx[0];
-				}
-
-				if (dirty & /*max*/ 2) {
-					attr(progress, "max", /*max*/ ctx[1]);
-				}
-			},
-			i: noop,
-			o: noop,
-			d(detaching) {
-				if (detaching) detach(progress);
-			}
-		};
-	}
-
-	function instance$R($$self, $$props, $$invalidate) {
-		let { value } = $$props;
-		let { max = 100 } = $$props;
-		let { color = '' } = $$props;
-		let { size = '' } = $$props;
-		let { classes = '' } = $$props;
-
-		$$self.$$set = $$props => {
-			if ('value' in $$props) $$invalidate(0, value = $$props.value);
-			if ('max' in $$props) $$invalidate(1, max = $$props.max);
-			if ('color' in $$props) $$invalidate(2, color = $$props.color);
-			if ('size' in $$props) $$invalidate(3, size = $$props.size);
-			if ('classes' in $$props) $$invalidate(4, classes = $$props.classes);
-		};
-
-		return [value, max, color, size, classes];
-	}
-
-	class Ui_progress extends SvelteComponent {
-		constructor(options) {
-			super();
-
-			init(this, options, instance$R, create_fragment$R, safe_not_equal, {
-				value: 0,
-				max: 1,
-				color: 2,
-				size: 3,
-				classes: 4
-			});
-		}
-	}
 
 	/* src/ui.user.card.svelte generated by Svelte v3.44.2 */
 
@@ -27965,13 +27971,13 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (59:4) {#if validated === true }
+	// (65:4) {#if validated === true }
 	function create_if_block_1$i(ctx) {
 		let span;
 
 		function select_block_type(ctx, dirty) {
-			if (/*valid*/ ctx[7] === true) return create_if_block_2$d;
-			if (/*valid*/ ctx[7] === false) return create_if_block_3$c;
+			if (/*valid*/ ctx[8] === true) return create_if_block_2$d;
+			if (/*valid*/ ctx[8] === false) return create_if_block_3$c;
 		}
 
 		let current_block_type = select_block_type(ctx);
@@ -28008,7 +28014,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (63:35) 
+	// (69:35) 
 	function create_if_block_3$c(ctx) {
 		let i;
 
@@ -28026,7 +28032,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (61:6) {#if valid === true }
+	// (67:6) {#if valid === true }
 	function create_if_block_2$d(ctx) {
 		let i;
 
@@ -28044,7 +28050,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (72:4) {:else}
+	// (78:4) {:else}
 	function create_else_block$j(ctx) {
 		let t;
 
@@ -28062,19 +28068,19 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (70:4) {#if !(validated && valid) && (inputStarted) }
+	// (76:4) {#if !(validated && valid) && (inputStarted) }
 	function create_if_block$m(ctx) {
 		let t;
 
 		return {
 			c() {
-				t = text(/*helper*/ ctx[11]);
+				t = text(/*helper*/ ctx[12]);
 			},
 			m(target, anchor) {
 				insert(target, t, anchor);
 			},
 			p(ctx, dirty) {
-				if (dirty & /*helper*/ 2048) set_data(t, /*helper*/ ctx[11]);
+				if (dirty & /*helper*/ 4096) set_data(t, /*helper*/ ctx[12]);
 			},
 			d(detaching) {
 				if (detaching) detach(t);
@@ -28099,10 +28105,10 @@ var notBulma = (function (exports) {
 		let mounted;
 		let dispose;
 		let if_block0 = /*icon*/ ctx[4] && create_if_block_4$b(ctx);
-		let if_block1 = /*validated*/ ctx[8] === true && create_if_block_1$i(ctx);
+		let if_block1 = /*validated*/ ctx[9] === true && create_if_block_1$i(ctx);
 
 		function select_block_type_1(ctx, dirty) {
-			if (!(/*validated*/ ctx[8] && /*valid*/ ctx[7]) && /*inputStarted*/ ctx[0]) return create_if_block$m;
+			if (!(/*validated*/ ctx[9] && /*valid*/ ctx[8]) && /*inputStarted*/ ctx[0]) return create_if_block$m;
 			return create_else_block$j;
 		}
 
@@ -28121,18 +28127,19 @@ var notBulma = (function (exports) {
 				p = element("p");
 				if_block2.c();
 				attr(input, "id", input_id_value = "form-field-textfield-" + /*fieldname*/ ctx[3]);
-				attr(input, "class", input_class_value = "input " + /*validationClasses*/ ctx[9]);
+				attr(input, "class", input_class_value = "input " + /*validationClasses*/ ctx[10]);
 				attr(input, "type", "text");
 				attr(input, "name", /*fieldname*/ ctx[3]);
-				attr(input, "invalid", /*invalid*/ ctx[10]);
+				attr(input, "invalid", /*invalid*/ ctx[11]);
+				input.disabled = /*disabled*/ ctx[6];
 				input.required = /*required*/ ctx[5];
+				input.readOnly = /*readonly*/ ctx[7];
 				attr(input, "placeholder", /*placeholder*/ ctx[2]);
 				attr(input, "autocomplete", /*fieldname*/ ctx[3]);
 				attr(input, "aria-controls", input_aria_controls_value = "input-field-helper-" + /*fieldname*/ ctx[3]);
 				attr(input, "aria-describedby", input_aria_describedby_value = "input-field-helper-" + /*fieldname*/ ctx[3]);
-				input.readOnly = /*readonly*/ ctx[6];
-				attr(div, "class", div_class_value = "control " + /*iconClasses*/ ctx[12]);
-				attr(p, "class", p_class_value = "help " + /*validationClasses*/ ctx[9]);
+				attr(div, "class", div_class_value = "control " + /*iconClasses*/ ctx[13]);
+				attr(p, "class", p_class_value = "help " + /*validationClasses*/ ctx[10]);
 				attr(p, "id", p_id_value = "input-field-helper-" + /*fieldname*/ ctx[3]);
 			},
 			m(target, anchor) {
@@ -28149,9 +28156,9 @@ var notBulma = (function (exports) {
 
 				if (!mounted) {
 					dispose = [
-						listen(input, "input", /*input_input_handler*/ ctx[19]),
-						listen(input, "change", /*onBlur*/ ctx[13]),
-						listen(input, "input", /*onInput*/ ctx[14])
+						listen(input, "input", /*input_input_handler*/ ctx[20]),
+						listen(input, "change", /*onBlur*/ ctx[14]),
+						listen(input, "input", /*onInput*/ ctx[15])
 					];
 
 					mounted = true;
@@ -28162,7 +28169,7 @@ var notBulma = (function (exports) {
 					attr(input, "id", input_id_value);
 				}
 
-				if (dirty & /*validationClasses*/ 512 && input_class_value !== (input_class_value = "input " + /*validationClasses*/ ctx[9])) {
+				if (dirty & /*validationClasses*/ 1024 && input_class_value !== (input_class_value = "input " + /*validationClasses*/ ctx[10])) {
 					attr(input, "class", input_class_value);
 				}
 
@@ -28170,12 +28177,20 @@ var notBulma = (function (exports) {
 					attr(input, "name", /*fieldname*/ ctx[3]);
 				}
 
-				if (dirty & /*invalid*/ 1024) {
-					attr(input, "invalid", /*invalid*/ ctx[10]);
+				if (dirty & /*invalid*/ 2048) {
+					attr(input, "invalid", /*invalid*/ ctx[11]);
+				}
+
+				if (dirty & /*disabled*/ 64) {
+					input.disabled = /*disabled*/ ctx[6];
 				}
 
 				if (dirty & /*required*/ 32) {
 					input.required = /*required*/ ctx[5];
+				}
+
+				if (dirty & /*readonly*/ 128) {
+					input.readOnly = /*readonly*/ ctx[7];
 				}
 
 				if (dirty & /*placeholder*/ 4) {
@@ -28192,10 +28207,6 @@ var notBulma = (function (exports) {
 
 				if (dirty & /*fieldname*/ 8 && input_aria_describedby_value !== (input_aria_describedby_value = "input-field-helper-" + /*fieldname*/ ctx[3])) {
 					attr(input, "aria-describedby", input_aria_describedby_value);
-				}
-
-				if (dirty & /*readonly*/ 64) {
-					input.readOnly = /*readonly*/ ctx[6];
 				}
 
 				if (dirty & /*value*/ 2 && input.value !== /*value*/ ctx[1]) {
@@ -28215,7 +28226,7 @@ var notBulma = (function (exports) {
 					if_block0 = null;
 				}
 
-				if (/*validated*/ ctx[8] === true) {
+				if (/*validated*/ ctx[9] === true) {
 					if (if_block1) {
 						if_block1.p(ctx, dirty);
 					} else {
@@ -28228,7 +28239,7 @@ var notBulma = (function (exports) {
 					if_block1 = null;
 				}
 
-				if (dirty & /*iconClasses*/ 4096 && div_class_value !== (div_class_value = "control " + /*iconClasses*/ ctx[12])) {
+				if (dirty & /*iconClasses*/ 8192 && div_class_value !== (div_class_value = "control " + /*iconClasses*/ ctx[13])) {
 					attr(div, "class", div_class_value);
 				}
 
@@ -28244,7 +28255,7 @@ var notBulma = (function (exports) {
 					}
 				}
 
-				if (dirty & /*validationClasses*/ 512 && p_class_value !== (p_class_value = "help " + /*validationClasses*/ ctx[9])) {
+				if (dirty & /*validationClasses*/ 1024 && p_class_value !== (p_class_value = "help " + /*validationClasses*/ ctx[10])) {
 					attr(p, "class", p_class_value);
 				}
 
@@ -28280,6 +28291,7 @@ var notBulma = (function (exports) {
 		let { fieldname = 'textfield' } = $$props;
 		let { icon = false } = $$props;
 		let { required = true } = $$props;
+		let { disabled = false } = $$props;
 		let { readonly = false } = $$props;
 		let { valid = true } = $$props;
 		let { validated = false } = $$props;
@@ -28317,33 +28329,34 @@ var notBulma = (function (exports) {
 			if ('fieldname' in $$props) $$invalidate(3, fieldname = $$props.fieldname);
 			if ('icon' in $$props) $$invalidate(4, icon = $$props.icon);
 			if ('required' in $$props) $$invalidate(5, required = $$props.required);
-			if ('readonly' in $$props) $$invalidate(6, readonly = $$props.readonly);
-			if ('valid' in $$props) $$invalidate(7, valid = $$props.valid);
-			if ('validated' in $$props) $$invalidate(8, validated = $$props.validated);
-			if ('errors' in $$props) $$invalidate(15, errors = $$props.errors);
-			if ('formErrors' in $$props) $$invalidate(16, formErrors = $$props.formErrors);
-			if ('formLevelError' in $$props) $$invalidate(17, formLevelError = $$props.formLevelError);
+			if ('disabled' in $$props) $$invalidate(6, disabled = $$props.disabled);
+			if ('readonly' in $$props) $$invalidate(7, readonly = $$props.readonly);
+			if ('valid' in $$props) $$invalidate(8, valid = $$props.valid);
+			if ('validated' in $$props) $$invalidate(9, validated = $$props.validated);
+			if ('errors' in $$props) $$invalidate(16, errors = $$props.errors);
+			if ('formErrors' in $$props) $$invalidate(17, formErrors = $$props.formErrors);
+			if ('formLevelError' in $$props) $$invalidate(18, formLevelError = $$props.formLevelError);
 		};
 
 		$$self.$$.update = () => {
 			if ($$self.$$.dirty & /*icon*/ 16) {
-				$$invalidate(12, iconClasses = (icon ? ' has-icons-left ' : '') + ' has-icons-right ');
+				$$invalidate(13, iconClasses = (icon ? ' has-icons-left ' : '') + ' has-icons-right ');
 			}
 
-			if ($$self.$$.dirty & /*errors, formErrors*/ 98304) {
-				$$invalidate(18, allErrors = [].concat(errors ? errors : [], formErrors ? formErrors : []));
+			if ($$self.$$.dirty & /*errors, formErrors*/ 196608) {
+				$$invalidate(19, allErrors = [].concat(errors ? errors : [], formErrors ? formErrors : []));
 			}
 
-			if ($$self.$$.dirty & /*allErrors, placeholder*/ 262148) {
-				$$invalidate(11, helper = allErrors ? allErrors.join(', ') : placeholder);
+			if ($$self.$$.dirty & /*allErrors, placeholder*/ 524292) {
+				$$invalidate(12, helper = allErrors ? allErrors.join(', ') : placeholder);
 			}
 
-			if ($$self.$$.dirty & /*valid, formLevelError*/ 131200) {
-				$$invalidate(10, invalid = valid === false || formLevelError);
+			if ($$self.$$.dirty & /*valid, formLevelError*/ 262400) {
+				$$invalidate(11, invalid = valid === false || formLevelError);
 			}
 
-			if ($$self.$$.dirty & /*valid, inputStarted*/ 129) {
-				$$invalidate(9, validationClasses = valid === true || !inputStarted
+			if ($$self.$$.dirty & /*valid, inputStarted*/ 257) {
+				$$invalidate(10, validationClasses = valid === true || !inputStarted
 				? UICommon.CLASS_OK
 				: UICommon.CLASS_ERR);
 			}
@@ -28356,6 +28369,7 @@ var notBulma = (function (exports) {
 			fieldname,
 			icon,
 			required,
+			disabled,
 			readonly,
 			valid,
 			validated,
@@ -28384,12 +28398,13 @@ var notBulma = (function (exports) {
 				fieldname: 3,
 				icon: 4,
 				required: 5,
-				readonly: 6,
-				valid: 7,
-				validated: 8,
-				errors: 15,
-				formErrors: 16,
-				formLevelError: 17
+				disabled: 6,
+				readonly: 7,
+				valid: 8,
+				validated: 9,
+				errors: 16,
+				formErrors: 17,
+				formLevelError: 18
 			});
 		}
 	}
@@ -32049,13 +32064,13 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (62:4) {#if validated === true }
+	// (67:4) {#if validated === true }
 	function create_if_block_1$d(ctx) {
 		let span;
 
 		function select_block_type(ctx, dirty) {
-			if (/*valid*/ ctx[7] === true) return create_if_block_2$9;
-			if (/*valid*/ ctx[7] === false) return create_if_block_3$8;
+			if (/*valid*/ ctx[8] === true) return create_if_block_2$9;
+			if (/*valid*/ ctx[8] === false) return create_if_block_3$8;
 		}
 
 		let current_block_type = select_block_type(ctx);
@@ -32092,7 +32107,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (66:35) 
+	// (71:35) 
 	function create_if_block_3$8(ctx) {
 		let i;
 
@@ -32110,7 +32125,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (64:6) {#if valid === true }
+	// (69:6) {#if valid === true }
 	function create_if_block_2$9(ctx) {
 		let i;
 
@@ -32128,7 +32143,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (75:4) {:else}
+	// (80:4) {:else}
 	function create_else_block$c(ctx) {
 		let t;
 
@@ -32146,19 +32161,19 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (73:4) {#if !(validated && valid) && (inputStarted) }
+	// (78:4) {#if !(validated && valid) && (inputStarted) }
 	function create_if_block$f(ctx) {
 		let t;
 
 		return {
 			c() {
-				t = text(/*helper*/ ctx[11]);
+				t = text(/*helper*/ ctx[12]);
 			},
 			m(target, anchor) {
 				insert(target, t, anchor);
 			},
 			p(ctx, dirty) {
-				if (dirty & /*helper*/ 2048) set_data(t, /*helper*/ ctx[11]);
+				if (dirty & /*helper*/ 4096) set_data(t, /*helper*/ ctx[12]);
 			},
 			d(detaching) {
 				if (detaching) detach(t);
@@ -32183,10 +32198,10 @@ var notBulma = (function (exports) {
 		let mounted;
 		let dispose;
 		let if_block0 = /*icon*/ ctx[4] && create_if_block_4$7(ctx);
-		let if_block1 = /*validated*/ ctx[8] === true && create_if_block_1$d(ctx);
+		let if_block1 = /*validated*/ ctx[9] === true && create_if_block_1$d(ctx);
 
 		function select_block_type_1(ctx, dirty) {
-			if (!(/*validated*/ ctx[8] && /*valid*/ ctx[7]) && /*inputStarted*/ ctx[0]) return create_if_block$f;
+			if (!(/*validated*/ ctx[9] && /*valid*/ ctx[8]) && /*inputStarted*/ ctx[0]) return create_if_block$f;
 			return create_else_block$c;
 		}
 
@@ -32204,19 +32219,20 @@ var notBulma = (function (exports) {
 				t2 = space();
 				p = element("p");
 				if_block2.c();
-				attr(input, "class", input_class_value = "input " + /*validationClasses*/ ctx[9]);
+				attr(input, "class", input_class_value = "input " + /*validationClasses*/ ctx[10]);
 				attr(input, "id", input_id_value = "form-field-email-" + /*fieldname*/ ctx[3]);
 				attr(input, "type", "email");
 				attr(input, "name", /*fieldname*/ ctx[3]);
-				attr(input, "invalid", /*invalid*/ ctx[10]);
+				attr(input, "invalid", /*invalid*/ ctx[11]);
 				input.required = /*required*/ ctx[5];
+				input.readOnly = /*readonly*/ ctx[6];
+				input.disabled = /*disabled*/ ctx[7];
 				attr(input, "placeholder", /*placeholder*/ ctx[2]);
 				attr(input, "autocomplete", /*fieldname*/ ctx[3]);
 				attr(input, "aria-controls", input_aria_controls_value = "input-field-helper-" + /*fieldname*/ ctx[3]);
-				input.readOnly = /*readonly*/ ctx[6];
 				attr(input, "aria-describedby", input_aria_describedby_value = "input-field-helper-" + /*fieldname*/ ctx[3]);
-				attr(div, "class", div_class_value = "control " + /*iconClasses*/ ctx[12]);
-				attr(p, "class", p_class_value = "help " + /*validationClasses*/ ctx[9]);
+				attr(div, "class", div_class_value = "control " + /*iconClasses*/ ctx[13]);
+				attr(p, "class", p_class_value = "help " + /*validationClasses*/ ctx[10]);
 				attr(p, "id", p_id_value = "input-field-helper-" + /*fieldname*/ ctx[3]);
 			},
 			m(target, anchor) {
@@ -32233,16 +32249,16 @@ var notBulma = (function (exports) {
 
 				if (!mounted) {
 					dispose = [
-						listen(input, "input", /*input_input_handler*/ ctx[19]),
-						listen(input, "change", /*onBlur*/ ctx[13]),
-						listen(input, "input", /*onInput*/ ctx[14])
+						listen(input, "input", /*input_input_handler*/ ctx[20]),
+						listen(input, "change", /*onBlur*/ ctx[14]),
+						listen(input, "input", /*onInput*/ ctx[15])
 					];
 
 					mounted = true;
 				}
 			},
 			p(ctx, [dirty]) {
-				if (dirty & /*validationClasses*/ 512 && input_class_value !== (input_class_value = "input " + /*validationClasses*/ ctx[9])) {
+				if (dirty & /*validationClasses*/ 1024 && input_class_value !== (input_class_value = "input " + /*validationClasses*/ ctx[10])) {
 					attr(input, "class", input_class_value);
 				}
 
@@ -32254,12 +32270,20 @@ var notBulma = (function (exports) {
 					attr(input, "name", /*fieldname*/ ctx[3]);
 				}
 
-				if (dirty & /*invalid*/ 1024) {
-					attr(input, "invalid", /*invalid*/ ctx[10]);
+				if (dirty & /*invalid*/ 2048) {
+					attr(input, "invalid", /*invalid*/ ctx[11]);
 				}
 
 				if (dirty & /*required*/ 32) {
 					input.required = /*required*/ ctx[5];
+				}
+
+				if (dirty & /*readonly*/ 64) {
+					input.readOnly = /*readonly*/ ctx[6];
+				}
+
+				if (dirty & /*disabled*/ 128) {
+					input.disabled = /*disabled*/ ctx[7];
 				}
 
 				if (dirty & /*placeholder*/ 4) {
@@ -32272,10 +32296,6 @@ var notBulma = (function (exports) {
 
 				if (dirty & /*fieldname*/ 8 && input_aria_controls_value !== (input_aria_controls_value = "input-field-helper-" + /*fieldname*/ ctx[3])) {
 					attr(input, "aria-controls", input_aria_controls_value);
-				}
-
-				if (dirty & /*readonly*/ 64) {
-					input.readOnly = /*readonly*/ ctx[6];
 				}
 
 				if (dirty & /*fieldname*/ 8 && input_aria_describedby_value !== (input_aria_describedby_value = "input-field-helper-" + /*fieldname*/ ctx[3])) {
@@ -32299,7 +32319,7 @@ var notBulma = (function (exports) {
 					if_block0 = null;
 				}
 
-				if (/*validated*/ ctx[8] === true) {
+				if (/*validated*/ ctx[9] === true) {
 					if (if_block1) {
 						if_block1.p(ctx, dirty);
 					} else {
@@ -32312,7 +32332,7 @@ var notBulma = (function (exports) {
 					if_block1 = null;
 				}
 
-				if (dirty & /*iconClasses*/ 4096 && div_class_value !== (div_class_value = "control " + /*iconClasses*/ ctx[12])) {
+				if (dirty & /*iconClasses*/ 8192 && div_class_value !== (div_class_value = "control " + /*iconClasses*/ ctx[13])) {
 					attr(div, "class", div_class_value);
 				}
 
@@ -32328,7 +32348,7 @@ var notBulma = (function (exports) {
 					}
 				}
 
-				if (dirty & /*validationClasses*/ 512 && p_class_value !== (p_class_value = "help " + /*validationClasses*/ ctx[9])) {
+				if (dirty & /*validationClasses*/ 1024 && p_class_value !== (p_class_value = "help " + /*validationClasses*/ ctx[10])) {
 					attr(p, "class", p_class_value);
 				}
 
@@ -32365,6 +32385,7 @@ var notBulma = (function (exports) {
 		let { icon = false } = $$props;
 		let { required = true } = $$props;
 		let { readonly = false } = $$props;
+		let { disabled = false } = $$props;
 		let { valid = true } = $$props;
 		let { validated = false } = $$props;
 		let { errors = false } = $$props;
@@ -32406,32 +32427,33 @@ var notBulma = (function (exports) {
 			if ('icon' in $$props) $$invalidate(4, icon = $$props.icon);
 			if ('required' in $$props) $$invalidate(5, required = $$props.required);
 			if ('readonly' in $$props) $$invalidate(6, readonly = $$props.readonly);
-			if ('valid' in $$props) $$invalidate(7, valid = $$props.valid);
-			if ('validated' in $$props) $$invalidate(8, validated = $$props.validated);
-			if ('errors' in $$props) $$invalidate(15, errors = $$props.errors);
-			if ('formErrors' in $$props) $$invalidate(16, formErrors = $$props.formErrors);
-			if ('formLevelError' in $$props) $$invalidate(17, formLevelError = $$props.formLevelError);
+			if ('disabled' in $$props) $$invalidate(7, disabled = $$props.disabled);
+			if ('valid' in $$props) $$invalidate(8, valid = $$props.valid);
+			if ('validated' in $$props) $$invalidate(9, validated = $$props.validated);
+			if ('errors' in $$props) $$invalidate(16, errors = $$props.errors);
+			if ('formErrors' in $$props) $$invalidate(17, formErrors = $$props.formErrors);
+			if ('formLevelError' in $$props) $$invalidate(18, formLevelError = $$props.formLevelError);
 		};
 
 		$$self.$$.update = () => {
 			if ($$self.$$.dirty & /*icon*/ 16) {
-				$$invalidate(12, iconClasses = (icon ? ' has-icons-left ' : '') + ' has-icons-right ');
+				$$invalidate(13, iconClasses = (icon ? ' has-icons-left ' : '') + ' has-icons-right ');
 			}
 
-			if ($$self.$$.dirty & /*errors, formErrors*/ 98304) {
-				$$invalidate(18, allErrors = [].concat(errors ? errors : [], formErrors ? formErrors : []));
+			if ($$self.$$.dirty & /*errors, formErrors*/ 196608) {
+				$$invalidate(19, allErrors = [].concat(errors ? errors : [], formErrors ? formErrors : []));
 			}
 
-			if ($$self.$$.dirty & /*allErrors, placeholder*/ 262148) {
-				$$invalidate(11, helper = allErrors ? allErrors.join(', ') : placeholder);
+			if ($$self.$$.dirty & /*allErrors, placeholder*/ 524292) {
+				$$invalidate(12, helper = allErrors ? allErrors.join(', ') : placeholder);
 			}
 
-			if ($$self.$$.dirty & /*valid, formLevelError*/ 131200) {
-				$$invalidate(10, invalid = valid === false || formLevelError);
+			if ($$self.$$.dirty & /*valid, formLevelError*/ 262400) {
+				$$invalidate(11, invalid = valid === false || formLevelError);
 			}
 
-			if ($$self.$$.dirty & /*valid, inputStarted*/ 129) {
-				$$invalidate(9, validationClasses = valid === true || !inputStarted
+			if ($$self.$$.dirty & /*valid, inputStarted*/ 257) {
+				$$invalidate(10, validationClasses = valid === true || !inputStarted
 				? UICommon.CLASS_OK
 				: UICommon.CLASS_ERR);
 			}
@@ -32445,6 +32467,7 @@ var notBulma = (function (exports) {
 			icon,
 			required,
 			readonly,
+			disabled,
 			valid,
 			validated,
 			validationClasses,
@@ -32473,11 +32496,12 @@ var notBulma = (function (exports) {
 				icon: 4,
 				required: 5,
 				readonly: 6,
-				valid: 7,
-				validated: 8,
-				errors: 15,
-				formErrors: 16,
-				formLevelError: 17
+				disabled: 7,
+				valid: 8,
+				validated: 9,
+				errors: 16,
+				formErrors: 17,
+				formLevelError: 18
 			});
 		}
 	}
@@ -35269,13 +35293,13 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (65:4) {#if validated === true }
+	// (67:4) {#if validated === true }
 	function create_if_block_1$8(ctx) {
 		let span;
 
 		function select_block_type(ctx, dirty) {
-			if (/*valid*/ ctx[8] === true) return create_if_block_2$5;
-			if (/*valid*/ ctx[8] === false) return create_if_block_3$4;
+			if (/*valid*/ ctx[9] === true) return create_if_block_2$5;
+			if (/*valid*/ ctx[9] === false) return create_if_block_3$4;
 		}
 
 		let current_block_type = select_block_type(ctx);
@@ -35312,7 +35336,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (69:35) 
+	// (71:35) 
 	function create_if_block_3$4(ctx) {
 		let i;
 
@@ -35330,7 +35354,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (67:6) {#if valid === true }
+	// (69:6) {#if valid === true }
 	function create_if_block_2$5(ctx) {
 		let i;
 
@@ -35348,7 +35372,7 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (78:4) {:else}
+	// (80:4) {:else}
 	function create_else_block$7(ctx) {
 		let t;
 
@@ -35366,19 +35390,19 @@ var notBulma = (function (exports) {
 		};
 	}
 
-	// (76:4) {#if !(validated && valid) && (inputStarted) }
+	// (78:4) {#if !(validated && valid) && (inputStarted) }
 	function create_if_block$9(ctx) {
 		let t;
 
 		return {
 			c() {
-				t = text(/*helper*/ ctx[12]);
+				t = text(/*helper*/ ctx[13]);
 			},
 			m(target, anchor) {
 				insert(target, t, anchor);
 			},
 			p(ctx, dirty) {
-				if (dirty & /*helper*/ 4096) set_data(t, /*helper*/ ctx[12]);
+				if (dirty & /*helper*/ 8192) set_data(t, /*helper*/ ctx[13]);
 			},
 			d(detaching) {
 				if (detaching) detach(t);
@@ -35403,10 +35427,10 @@ var notBulma = (function (exports) {
 		let mounted;
 		let dispose;
 		let if_block0 = /*icon*/ ctx[4] && create_if_block_4$3(ctx);
-		let if_block1 = /*validated*/ ctx[9] === true && create_if_block_1$8(ctx);
+		let if_block1 = /*validated*/ ctx[10] === true && create_if_block_1$8(ctx);
 
 		function select_block_type_1(ctx, dirty) {
-			if (!(/*validated*/ ctx[9] && /*valid*/ ctx[8]) && /*inputStarted*/ ctx[0]) return create_if_block$9;
+			if (!(/*validated*/ ctx[10] && /*valid*/ ctx[9]) && /*inputStarted*/ ctx[0]) return create_if_block$9;
 			return create_else_block$7;
 		}
 
@@ -35425,17 +35449,18 @@ var notBulma = (function (exports) {
 				p = element("p");
 				if_block2.c();
 				attr(textarea, "id", textarea_id_value = "form-field-textarea-" + /*fieldname*/ ctx[3]);
-				attr(textarea, "invalid", /*invalid*/ ctx[11]);
-				attr(textarea, "class", textarea_class_value = "textarea " + /*validationClasses*/ ctx[10]);
+				attr(textarea, "invalid", /*invalid*/ ctx[12]);
+				textarea.disabled = /*disabled*/ ctx[8];
 				textarea.required = /*required*/ ctx[6];
 				textarea.readOnly = /*readonly*/ ctx[7];
+				attr(textarea, "class", textarea_class_value = "textarea " + /*validationClasses*/ ctx[11]);
 				attr(textarea, "name", /*fieldname*/ ctx[3]);
 				attr(textarea, "placeholder", /*placeholder*/ ctx[2]);
 				attr(textarea, "rows", /*rows*/ ctx[5]);
 				attr(textarea, "aria-controls", textarea_aria_controls_value = "input-field-helper-" + /*fieldname*/ ctx[3]);
 				attr(textarea, "aria-describedby", textarea_aria_describedby_value = "input-field-helper-" + /*fieldname*/ ctx[3]);
-				attr(div, "class", div_class_value = "control " + /*iconClasses*/ ctx[13]);
-				attr(p, "class", p_class_value = "help " + /*validationClasses*/ ctx[10]);
+				attr(div, "class", div_class_value = "control " + /*iconClasses*/ ctx[14]);
+				attr(p, "class", p_class_value = "help " + /*validationClasses*/ ctx[11]);
 				attr(p, "id", p_id_value = "input-field-helper-" + /*fieldname*/ ctx[3]);
 			},
 			m(target, anchor) {
@@ -35452,8 +35477,8 @@ var notBulma = (function (exports) {
 
 				if (!mounted) {
 					dispose = [
-						listen(textarea, "blur", /*onBlur*/ ctx[14]),
-						listen(textarea, "input", /*textarea_input_handler*/ ctx[19])
+						listen(textarea, "blur", /*onBlur*/ ctx[15]),
+						listen(textarea, "input", /*textarea_input_handler*/ ctx[20])
 					];
 
 					mounted = true;
@@ -35464,12 +35489,12 @@ var notBulma = (function (exports) {
 					attr(textarea, "id", textarea_id_value);
 				}
 
-				if (dirty & /*invalid*/ 2048) {
-					attr(textarea, "invalid", /*invalid*/ ctx[11]);
+				if (dirty & /*invalid*/ 4096) {
+					attr(textarea, "invalid", /*invalid*/ ctx[12]);
 				}
 
-				if (dirty & /*validationClasses*/ 1024 && textarea_class_value !== (textarea_class_value = "textarea " + /*validationClasses*/ ctx[10])) {
-					attr(textarea, "class", textarea_class_value);
+				if (dirty & /*disabled*/ 256) {
+					textarea.disabled = /*disabled*/ ctx[8];
 				}
 
 				if (dirty & /*required*/ 64) {
@@ -35478,6 +35503,10 @@ var notBulma = (function (exports) {
 
 				if (dirty & /*readonly*/ 128) {
 					textarea.readOnly = /*readonly*/ ctx[7];
+				}
+
+				if (dirty & /*validationClasses*/ 2048 && textarea_class_value !== (textarea_class_value = "textarea " + /*validationClasses*/ ctx[11])) {
+					attr(textarea, "class", textarea_class_value);
 				}
 
 				if (dirty & /*fieldname*/ 8) {
@@ -35517,7 +35546,7 @@ var notBulma = (function (exports) {
 					if_block0 = null;
 				}
 
-				if (/*validated*/ ctx[9] === true) {
+				if (/*validated*/ ctx[10] === true) {
 					if (if_block1) {
 						if_block1.p(ctx, dirty);
 					} else {
@@ -35530,7 +35559,7 @@ var notBulma = (function (exports) {
 					if_block1 = null;
 				}
 
-				if (dirty & /*iconClasses*/ 8192 && div_class_value !== (div_class_value = "control " + /*iconClasses*/ ctx[13])) {
+				if (dirty & /*iconClasses*/ 16384 && div_class_value !== (div_class_value = "control " + /*iconClasses*/ ctx[14])) {
 					attr(div, "class", div_class_value);
 				}
 
@@ -35546,7 +35575,7 @@ var notBulma = (function (exports) {
 					}
 				}
 
-				if (dirty & /*validationClasses*/ 1024 && p_class_value !== (p_class_value = "help " + /*validationClasses*/ ctx[10])) {
+				if (dirty & /*validationClasses*/ 2048 && p_class_value !== (p_class_value = "help " + /*validationClasses*/ ctx[11])) {
 					attr(p, "class", p_class_value);
 				}
 
@@ -35584,6 +35613,7 @@ var notBulma = (function (exports) {
 		let { rows = 10 } = $$props;
 		let { required = true } = $$props;
 		let { readonly = false } = $$props;
+		let { disabled = false } = $$props;
 		let { valid = true } = $$props;
 		let { validated = false } = $$props;
 		let { errors = false } = $$props;
@@ -35617,32 +35647,33 @@ var notBulma = (function (exports) {
 			if ('rows' in $$props) $$invalidate(5, rows = $$props.rows);
 			if ('required' in $$props) $$invalidate(6, required = $$props.required);
 			if ('readonly' in $$props) $$invalidate(7, readonly = $$props.readonly);
-			if ('valid' in $$props) $$invalidate(8, valid = $$props.valid);
-			if ('validated' in $$props) $$invalidate(9, validated = $$props.validated);
-			if ('errors' in $$props) $$invalidate(15, errors = $$props.errors);
-			if ('formErrors' in $$props) $$invalidate(16, formErrors = $$props.formErrors);
-			if ('formLevelError' in $$props) $$invalidate(17, formLevelError = $$props.formLevelError);
+			if ('disabled' in $$props) $$invalidate(8, disabled = $$props.disabled);
+			if ('valid' in $$props) $$invalidate(9, valid = $$props.valid);
+			if ('validated' in $$props) $$invalidate(10, validated = $$props.validated);
+			if ('errors' in $$props) $$invalidate(16, errors = $$props.errors);
+			if ('formErrors' in $$props) $$invalidate(17, formErrors = $$props.formErrors);
+			if ('formLevelError' in $$props) $$invalidate(18, formLevelError = $$props.formLevelError);
 		};
 
 		$$self.$$.update = () => {
 			if ($$self.$$.dirty & /*icon*/ 16) {
-				$$invalidate(13, iconClasses = (icon ? ' has-icons-left ' : '') + ' has-icons-right ');
+				$$invalidate(14, iconClasses = (icon ? ' has-icons-left ' : '') + ' has-icons-right ');
 			}
 
-			if ($$self.$$.dirty & /*errors, formErrors*/ 98304) {
-				$$invalidate(18, allErrors = [].concat(errors ? errors : [], formErrors ? formErrors : []));
+			if ($$self.$$.dirty & /*errors, formErrors*/ 196608) {
+				$$invalidate(19, allErrors = [].concat(errors ? errors : [], formErrors ? formErrors : []));
 			}
 
-			if ($$self.$$.dirty & /*allErrors, placeholder*/ 262148) {
-				$$invalidate(12, helper = allErrors ? allErrors.join(', ') : placeholder);
+			if ($$self.$$.dirty & /*allErrors, placeholder*/ 524292) {
+				$$invalidate(13, helper = allErrors ? allErrors.join(', ') : placeholder);
 			}
 
-			if ($$self.$$.dirty & /*valid, formLevelError*/ 131328) {
-				$$invalidate(11, invalid = valid === false || formLevelError);
+			if ($$self.$$.dirty & /*valid, formLevelError*/ 262656) {
+				$$invalidate(12, invalid = valid === false || formLevelError);
 			}
 
-			if ($$self.$$.dirty & /*valid, inputStarted*/ 257) {
-				$$invalidate(10, validationClasses = valid === true || !inputStarted
+			if ($$self.$$.dirty & /*valid, inputStarted*/ 513) {
+				$$invalidate(11, validationClasses = valid === true || !inputStarted
 				? UICommon.CLASS_OK
 				: UICommon.CLASS_ERR);
 			}
@@ -35657,6 +35688,7 @@ var notBulma = (function (exports) {
 			rows,
 			required,
 			readonly,
+			disabled,
 			valid,
 			validated,
 			validationClasses,
@@ -35685,11 +35717,12 @@ var notBulma = (function (exports) {
 				rows: 5,
 				required: 6,
 				readonly: 7,
-				valid: 8,
-				validated: 9,
-				errors: 15,
-				formErrors: 16,
-				formLevelError: 17
+				disabled: 8,
+				valid: 9,
+				validated: 10,
+				errors: 16,
+				formErrors: 17,
+				formLevelError: 18
 			});
 		}
 	}
@@ -42181,7 +42214,7 @@ var notBulma = (function (exports) {
 	                  target: this.els.main,
 	                  manifest: manifest,
 	                  action: 'create',
-	                  options: {},
+	                  options: this.getOptions('create.options', {}),
 	                  validators: this.getOptions('Validators'),
 	                  data: defData
 	                }), ui = _Form$build.ui, validator = _Form$build.validator;
@@ -42189,15 +42222,16 @@ var notBulma = (function (exports) {
 	                this.validator.create = validator;
 	                this.ui.create.$on('submit', /*#__PURE__*/function () {
 	                  var _ref = asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee2(ev) {
-	                    var success;
+	                    var createActionName, success;
 	                    return regenerator.wrap(function _callee2$(_context2) {
 	                      while (1) {
 	                        switch (_context2.prev = _context2.next) {
 	                          case 0:
-	                            _context2.next = 2;
-	                            return _this4.onActionSubmit('create', ev.detail);
+	                            createActionName = _this4.getOptions('create.actionName', 'create');
+	                            _context2.next = 3;
+	                            return _this4.onActionSubmit(createActionName, ev.detail);
 
-	                          case 2:
+	                          case 3:
 	                            success = _context2.sent;
 
 	                            if (success) {
@@ -42206,7 +42240,7 @@ var notBulma = (function (exports) {
 	                              }, 1000);
 	                            }
 
-	                          case 4:
+	                          case 5:
 	                          case "end":
 	                            return _context2.stop();
 	                        }
@@ -42247,7 +42281,7 @@ var notBulma = (function (exports) {
 	    key: "runDetails",
 	    value: function () {
 	      var _runDetails = asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee4(params) {
-	        var idField, query, manifest, res, title, _Form$build2, ui, validator;
+	        var idField, query, manifest, detailsActionName, res, title, _Form$build2, ui, validator;
 
 	        return regenerator.wrap(function _callee4$(_context4) {
 	          while (1) {
@@ -42277,10 +42311,11 @@ var notBulma = (function (exports) {
 	              case 10:
 	                manifest = this.app.getInterfaceManifest()[this.getModelName()];
 	                query[idField] = params[0];
-	                _context4.next = 14;
-	                return this.getModel(query)['$get']();
+	                detailsActionName = this.getOptions('details.actionName', 'get');
+	                _context4.next = 15;
+	                return this.getModel(query)["$".concat(detailsActionName)]();
 
-	              case 14:
+	              case 15:
 	                res = _context4.sent;
 
 	                if (res.status === 'ok') {
@@ -42307,21 +42342,21 @@ var notBulma = (function (exports) {
 	                  this.showErrorMessage(res);
 	                }
 
-	                _context4.next = 22;
+	                _context4.next = 23;
 	                break;
 
-	              case 18:
-	                _context4.prev = 18;
+	              case 19:
+	                _context4.prev = 19;
 	                _context4.t0 = _context4["catch"](0);
 	                notCommon$1.report(_context4.t0);
 	                this.showErrorMessage(_context4.t0);
 
-	              case 22:
+	              case 23:
 	              case "end":
 	                return _context4.stop();
 	            }
 	          }
-	        }, _callee4, this, [[0, 18]]);
+	        }, _callee4, this, [[0, 19]]);
 	      }));
 
 	      function runDetails(_x2) {
@@ -42336,7 +42371,7 @@ var notBulma = (function (exports) {
 	      var _runUpdate = asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee6(params) {
 	        var _this5 = this;
 
-	        var idField, query, id, manifest, res, title, _Form$build3, ui, validator;
+	        var idField, query, id, manifest, getActionName, res, title, _Form$build3, ui, validator;
 
 	        return regenerator.wrap(function _callee6$(_context6) {
 	          while (1) {
@@ -42366,10 +42401,11 @@ var notBulma = (function (exports) {
 	              case 10:
 	                manifest = this.app.getInterfaceManifest()[this.getModelName()];
 	                query[idField] = params[0];
-	                _context6.next = 14;
-	                return this.getModel(query).$getRaw();
+	                getActionName = this.getOptions('update.actionName', 'getRaw');
+	                _context6.next = 15;
+	                return this.getModel(query)["$".concat(getActionName)]();
 
-	              case 14:
+	              case 15:
 	                res = _context6.sent;
 
 	                if (res.status === 'ok') {
@@ -42382,7 +42418,7 @@ var notBulma = (function (exports) {
 	                    target: this.els.main,
 	                    manifest: manifest,
 	                    action: 'update',
-	                    options: {},
+	                    options: this.getOptions('update.options', {}),
 	                    validators: this.getOptions('Validators'),
 	                    data: notCommon$1.stripProxy(res.result)
 	                  }), ui = _Form$build3.ui, validator = _Form$build3.validator;
@@ -42395,7 +42431,11 @@ var notBulma = (function (exports) {
 	                        while (1) {
 	                          switch (_context5.prev = _context5.next) {
 	                            case 0:
-	                              success = _this5.onActionSubmit('update', ev.detail);
+	                              _context5.next = 2;
+	                              return _this5.onActionSubmit('update', ev.detail);
+
+	                            case 2:
+	                              success = _context5.sent;
 
 	                              if (success) {
 	                                setTimeout(function () {
@@ -42403,7 +42443,7 @@ var notBulma = (function (exports) {
 	                                }, 1000);
 	                              }
 
-	                            case 2:
+	                            case 4:
 	                            case "end":
 	                              return _context5.stop();
 	                          }
@@ -42421,21 +42461,21 @@ var notBulma = (function (exports) {
 	                  this.showErrorMessage(res);
 	                }
 
-	                _context6.next = 22;
+	                _context6.next = 23;
 	                break;
 
-	              case 18:
-	                _context6.prev = 18;
+	              case 19:
+	                _context6.prev = 19;
 	                _context6.t0 = _context6["catch"](0);
 	                notCommon$1.report(_context6.t0);
 	                this.showErrorMessage(_context6.t0);
 
-	              case 22:
+	              case 23:
 	              case "end":
 	                return _context6.stop();
 	            }
 	          }
-	        }, _callee6, this, [[0, 18]]);
+	        }, _callee6, this, [[0, 19]]);
 	      }));
 
 	      function runUpdate(_x3) {
@@ -42448,7 +42488,7 @@ var notBulma = (function (exports) {
 	    key: "runDelete",
 	    value: function () {
 	      var _runDelete = asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee7(params) {
-	        var success;
+	        var deleteActionName, success;
 	        return regenerator.wrap(function _callee7$(_context7) {
 	          while (1) {
 	            switch (_context7.prev = _context7.next) {
@@ -42464,44 +42504,45 @@ var notBulma = (function (exports) {
 	                }]);
 
 	                if (!confirm('Удалить запись?')) {
-	                  _context7.next = 11;
+	                  _context7.next = 12;
 	                  break;
 	                }
 
-	                _context7.next = 7;
-	                return this.onActionSubmit('delete', {
+	                deleteActionName = this.getOptions('delete.actionName', 'delete');
+	                _context7.next = 8;
+	                return this.onActionSubmit(deleteActionName, {
 	                  _id: params[0]
 	                });
 
-	              case 7:
+	              case 8:
 	                success = _context7.sent;
 
 	                if (success) {
 	                  this.goList();
 	                }
 
-	                _context7.next = 12;
+	                _context7.next = 13;
 	                break;
-
-	              case 11:
-	                this.goList();
 
 	              case 12:
-	                _context7.next = 18;
+	                this.goList();
+
+	              case 13:
+	                _context7.next = 19;
 	                break;
 
-	              case 14:
-	                _context7.prev = 14;
+	              case 15:
+	                _context7.prev = 15;
 	                _context7.t0 = _context7["catch"](0);
 	                notCommon$1.report(_context7.t0);
 	                this.showErrorMessage(_context7.t0);
 
-	              case 18:
+	              case 19:
 	              case "end":
 	                return _context7.stop();
 	            }
 	          }
-	        }, _callee7, this, [[0, 14]]);
+	        }, _callee7, this, [[0, 15]]);
 	      }));
 
 	      function runDelete(_x5) {
@@ -42639,27 +42680,30 @@ var notBulma = (function (exports) {
 	              case 0:
 	                _context9.prev = 0;
 	                this.ui[action].setLoading();
-	                result = this.getModel(item)["$".concat(action)]();
-	                this.processResult(this.ui[action], result);
-	                return _context9.abrupt("return", true);
+	                _context9.next = 4;
+	                return this.getModel(item)["$".concat(action)]();
 
-	              case 7:
-	                _context9.prev = 7;
+	              case 4:
+	                result = _context9.sent;
+	                return _context9.abrupt("return", this.processResult(this.ui[action], result));
+
+	              case 8:
+	                _context9.prev = 8;
 	                _context9.t0 = _context9["catch"](0);
 	                this.processResult(this.ui[action], _context9.t0);
 	                return _context9.abrupt("return", false);
 
-	              case 11:
-	                _context9.prev = 11;
+	              case 12:
+	                _context9.prev = 12;
 	                this.ui[action].resetLoading();
-	                return _context9.finish(11);
+	                return _context9.finish(12);
 
-	              case 14:
+	              case 15:
 	              case "end":
 	                return _context9.stop();
 	            }
 	          }
-	        }, _callee9, this, [[0, 7, 11, 14]]);
+	        }, _callee9, this, [[0, 8, 12, 15]]);
 	      }));
 
 	      function onActionSubmit(_x6, _x7) {
@@ -42676,8 +42720,10 @@ var notBulma = (function (exports) {
 	      if (result.status === 'ok') {
 	        ui.showSuccess();
 	        ifSuccess && ifSuccess();
+	        return true;
 	      } else {
 	        this.setFormErrors(ui, result);
+	        return false;
 	      }
 	    }
 	  }, {
@@ -42689,11 +42735,11 @@ var notBulma = (function (exports) {
 	      };
 
 	      if (result.message) {
-	        result.form.push(result.message);
+	        status.form.push(result.message);
 	      }
 
 	      if (result.errors && Object.keys(result.errors).length > 0) {
-	        result.errors = _objectSpread({}, result.errors);
+	        status.fields = _objectSpread({}, result.errors);
 	      }
 
 	      ui.updateFormValidationStatus(status);

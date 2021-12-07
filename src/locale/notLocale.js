@@ -5,10 +5,8 @@
 
 import EventEmitter from 'wolfy87-eventemitter';
 
-import {
-  notCommon,
-  notPath
-} from '../frame';
+import notCommon from '../frame/common.js';
+import notPath from 'not-path';
 
 import LOCALE from './store';
 

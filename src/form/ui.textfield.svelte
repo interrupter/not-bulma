@@ -12,6 +12,7 @@ let dispatch = createEventDispatcher();
   export let fieldname = 'textfield';
   export let icon = false;
   export let required = true;
+  export let disabled = false;
   export let readonly = false;
   export let valid = true;
   export let validated = false;
@@ -48,11 +49,16 @@ let dispatch = createEventDispatcher();
 </script>
   <div class="control {iconClasses}">
     <input id="form-field-textfield-{fieldname}"
-    class="input {validationClasses}" type="text" name="{fieldname}" invalid="{invalid}" required={required} placeholder="{placeholder}"
+      class="input {validationClasses}"
+      type="text" name="{fieldname}"
+      {invalid}
+      {disabled}
+      {required} {readonly}
+      placeholder="{placeholder}"
       bind:value={value} autocomplete="{fieldname}"
       aria-controls="input-field-helper-{fieldname}"
       on:change={onBlur} on:input={onInput}
-      aria-describedby="input-field-helper-{fieldname}" {readonly}/>
+      aria-describedby="input-field-helper-{fieldname}"/>
     {#if icon }
     <span class="icon is-small is-left"><i class="fas fa-{icon}"></i></span>
     {/if}

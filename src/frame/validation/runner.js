@@ -9,7 +9,7 @@ export default class FormValidationRunner{
   all(data, formName){
     const validators = {
       fields: this.getFieldsValidators(data),
-      form: this.getFieldValidators(formName),
+      form: this.getFormValidators(formName),
     };
     return (new FormValidationSession(validators, data));
   }
@@ -32,5 +32,5 @@ export default class FormValidationRunner{
   getFormValidators(name){
     return this.validators && this.validators.forms && this.validators.forms[name]?this.validators.forms[name]:[];
   }
-  
+
 }

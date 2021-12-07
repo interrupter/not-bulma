@@ -195,9 +195,9 @@ export default class notApp extends notBase {
     return {
       get: (subPath, fallback) => {
         if (subPath && typeof subPath == 'string' && subPath.length) {
-          this.getOptions([modConfPath, subPath].join('.'), fallback);
+          return this.getOptions([modConfPath, subPath].join('.'), fallback);
         } else {
-          this.getOptions(modConfPath, fallback);
+          return this.getOptions(modConfPath, fallback);
         }
       }
     };

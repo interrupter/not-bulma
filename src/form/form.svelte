@@ -175,6 +175,8 @@
 
 	function onFieldChange(ev) {
 	  let data = ev.detail;
+	  form[data.field].value = data.value;
+	  form = form;
 	  dispatch('change', data);
 	}
 

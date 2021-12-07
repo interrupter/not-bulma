@@ -13,6 +13,7 @@ let dispatch = createEventDispatcher();
   export let rows = 10;
   export let required = true;
   export let readonly = false;
+  export let disabled = false;
   export let valid = true;
   export let validated = false;
   export let errors = false;
@@ -50,10 +51,11 @@ let dispatch = createEventDispatcher();
   <div class="control {iconClasses}">
     <textarea
     id="form-field-textarea-{fieldname}"
-    invalid="{invalid}"
+    {invalid}
+    {disabled}
+    {required} {readonly}
     on:blur={onBlur}
     class="textarea {validationClasses}"
-    required={required} {readonly}
     bind:value={value}
     name="{fieldname}"
     placeholder="{placeholder}" rows="{rows}"
