@@ -417,14 +417,14 @@ class ncCRUD extends notController {
 
   async onActionSubmit(action, item){
     try{
-      this.ui[action].setLoading();
+      this.ui[action] && this.ui[action].setLoading();
       let result = await this.getModel(item)[`$${action}`]();
       return this.processResult(this.ui[action], result);
     }catch(e){
       this.processResult(this.ui[action], e);
       return false;
     }finally{
-      this.ui[action].resetLoading();
+      this.ui[action] && this.ui[action].resetLoading();
     }
   }
 

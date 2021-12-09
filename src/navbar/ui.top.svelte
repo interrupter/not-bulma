@@ -32,8 +32,8 @@
     event.preventDefault();
     if (typeof navigate === 'function') {
       navigate({
-        full: event.target.getAttribute('href'),
-        short: event.target.dataset.href
+        full: event.currentTarget.getAttribute('href'),
+        short: event.currentTarget.dataset.href
       });
     }
     return false;
