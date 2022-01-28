@@ -177,6 +177,7 @@ export default class notApp extends notBase {
           let serv = this.getOptions(`services.${servName}`);
           const servType = notCommon.detectType(serv);
           switch (servType) {
+          case 'function':
           case 'class':
             this.setService(servName, new serv(this));
             break;

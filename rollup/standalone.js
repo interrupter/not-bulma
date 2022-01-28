@@ -55,11 +55,11 @@ export default {
         plugins: [
           '@babel/plugin-proposal-class-properties',
           "@babel/transform-arrow-functions",
-          [
+          /*[
             "@babel/transform-runtime",{
               "regenerator": true,
             }
-          ]
+          ]*/
         ],
         exclude: ['tmpl/**', 'build/**', 'node_modules/**', 'css/**', 'js/**', 'test/**', 'bower_components/**', 'assets/*', 'dist/**']
       }))/*,

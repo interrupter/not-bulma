@@ -11,8 +11,56 @@
     "partialsDir": "partials",
     "partials": {}
   },
+  "db":{
+    "mongoose":{
+      "uri": "mongodb://localhost/test?authSource=test",
+      "options": {
+        "useNewUrlParser": true,
+        "useUnifiedTopology": true,
+        "db": "test",
+        "host": "localhost",
+        "autoIndex": false
+      }
+    },
+    "redis": {},
+    "ioredis": {
+      "enableOfflineQueue": false
+    }
+  },
+  "CSP": {
+    "connect": [
+      "'self'",
+      "*",
+      "wss:",
+      "https:",
+      "'unsafe-inline'"
+    ],
+    "default": [
+      "'self'",
+      "*",
+      "wss:",
+      "https:",
+      "'unsafe-inline'"
+    ],
+    "img": [
+      "'self'",
+      "data:"
+    ],
+    "script": [
+      "'self'",
+			"'unsafe-eval'",
+			"'unsafe-inline'"
+    ],
+    "style": [
+      "'self'",
+      "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/",
+      "'unsafe-inline'",
+      "'unsafe-eval'"
+    ]
+  },
   "session": {
-    "secret": "34890752b03n984y5260g",
+    "driver": "redis",
+    "secret": "0432957h-23809457-23448v5",
     "cookie": {
       "maxAge": 2628000000
     },
@@ -32,7 +80,7 @@
       "root": {
         "username": "root",
         "email": "root@test.user.not",
-        "password": "root",
+        "password": "rootPassword",
         "role": "root"
       },
       "secret": "asdfasdfasdf",
@@ -52,5 +100,5 @@
   "middleware": {
 
   },
-  "importModulesFromNPM": ["not-error", "not-user", "not-key"]
+  "importModulesFromNPM": ["not-error", "not-user", "not-key", "not-options"]
 }

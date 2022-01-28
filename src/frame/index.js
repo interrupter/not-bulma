@@ -18,7 +18,7 @@ import * as notAPI from './api';
 */
 import notBase from './base.js';
 
-import {COMPONENTS} from './LIB.js';
+import {COMPONENTS, FIELDS, VARIANTS} from './LIB.js';
 /*
   application main infrastructure setter
 */
@@ -30,13 +30,11 @@ import notController from './controller.js';
 import notRecord from './record.js'; //  wrapper for data with server live interactions
 import notInterface from './interface.js'; //  wrapper for data with server live interactions
 
-/*
-  Form validation rails
-*/
+import {notForm, notFormUtils} from './components/form';
 
-import FormValidationBuilder from './validation/builder.js';
-import FormValidationRunner from './validation/runner.js';
-import FormValidationSession from './validation/session.js';
+import notCRUD from './controller.crud.js';
+
+const ncCRUD = notCRUD; //legacy alias
 
 export {
   notCommon,
@@ -48,8 +46,8 @@ export {
   notInterface,
   notApp,
   notAPI,
-  COMPONENTS,
-  FormValidationBuilder,
-  FormValidationRunner,
-  FormValidationSession,
+  notForm,
+  notFormUtils,
+  notCRUD, ncCRUD,
+  COMPONENTS, FIELDS, VARIANTS,
 };

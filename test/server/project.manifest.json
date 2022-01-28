@@ -1,0 +1,23 @@
+{
+	"name": "notBulmaTest",
+	"targets": {
+		"server": {
+			"name": "notBulmaTest",
+			"roles": ["root", "admin", "client", "user", "guest"],
+			"builder": "server",
+			"root": "app/front/",
+			"src": "app/front/src/",
+			"build": "app/front/build/",
+			"index": "app/front/src/index.!.js",
+			"rollup": "app/front/rollup.!.js",
+			"modules": {
+				"serverModulesDir": "app/server/modules",
+				"frontModulesDir": "app/front/src",
+				"npm": {
+					"not-ws": 											{},
+					"not-error": 										{}
+				}
+			}
+		}
+	}
+}

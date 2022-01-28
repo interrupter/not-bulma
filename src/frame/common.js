@@ -654,8 +654,22 @@ function absorbUIs(target, src){
   }
 }
 
+
+function absorbFields(target, src){
+  if (target){
+    for(let ui in src){
+      if(Object.prototype.hasOwnProperty.call(target, ui)){
+        notCommon.logError(`fields property duplication ${ui}`);
+      }
+      target[ui] = src[ui];
+    }
+  }
+}
+
+
 notCommon.register('absorb.wsc', absorbWSC);
 notCommon.register('absorb.services', absorbServices);
 notCommon.register('absorb.uis', absorbUIs);
+notCommon.register('absorb.uis', absorbFields);
 
 export default notCommon;

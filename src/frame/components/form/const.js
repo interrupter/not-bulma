@@ -1,0 +1,7 @@
+const DEFAULT_STATUS_SUCCESS = 'ok';
+const DEFAULT_STATUS_ERROR = 'error';
+
+export {
+  DEFAULT_STATUS_SUCCESS,
+  DEFAULT_STATUS_ERROR
+};
