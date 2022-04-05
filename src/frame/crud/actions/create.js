@@ -23,7 +23,7 @@ export default class CRUDActionCreate {
       }
       controller.ui[ACTION] = new notForm({
         options:{
-          target: controller.els.main,
+          target: controller.getContainerInnerElement(),
           model: controller.getModelName(),
           action: createActionName,
           name: `${controller.getName()}.${ACTION}Form`,

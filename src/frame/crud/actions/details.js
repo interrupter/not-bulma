@@ -35,7 +35,7 @@ export default class CRUDActionDetails {
 
       controller.ui[ACTION] = new notForm({
         options: {
-          target: controller.els.main,
+          target: controller.getContainerInnerElement(),
           model: controller.getModelName(),
           action: detailsActionName,
           name: `${controller.getName()}.${ACTION}Form`,
@@ -48,9 +48,9 @@ export default class CRUDActionDetails {
         data: res.result
       });
       controller.emit(`after:render:${ACTION}`);
-      controller.ui[ACTION].$on('reject', controller.goList.bind(this));
+      controller.ui[ACTION].$on('reject', controller.goList.bind(controller));
     }catch(e){
-      contoller.report(e);
+      controller.report(e);
       controller.showErrorMessage(e);
     }
   }

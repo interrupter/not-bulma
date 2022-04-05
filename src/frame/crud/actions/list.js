@@ -46,7 +46,7 @@ export default class CRUDActionList{
     };
     const TABLE_OPTIONS = {
       options: {
-        targetEl: controller.els.main,
+        targetEl: controller.getContainerInnerElement(),
         endless: false,
         actions: [
           {

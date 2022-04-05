@@ -39,7 +39,7 @@ export default class CRUDActionUpdate{
 
       controller.ui[ACTION] = new notForm({
         options:{
-          target: controller.els.main,
+          target: controller.getContainerInnerElement(),
           model: controller.getModelName(),
           action: MODEL_ACTION_UPDATE,
           name: `${controller.getName()}.${ACTION}Form`,
