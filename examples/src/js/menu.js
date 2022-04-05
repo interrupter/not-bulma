@@ -75,6 +75,21 @@ const menu = {
       priority: 9
     }],
     items: [{
+      id: 'form.ui',
+      section: 'form',
+      title: 'UIForm',
+      url: './form.UIForm.html'
+    },{
+      id: 'form.not',
+      section: 'form',
+      title: 'notForm',
+      url: './form.notForm.html'
+    },{
+      id: 'form.set',
+      section: 'form',
+      title: 'notFormSet',
+      url: './form.notFormSet.html'
+    },{
       id: 'index',
       section: 'overview',
       title: 'Индекс',

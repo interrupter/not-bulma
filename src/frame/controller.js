@@ -340,12 +340,23 @@ class notController extends notBase {
     let [routerName, ...subParams] = params,
       actionName = this.getActionName(routerName ? routerName : OPT_DEFAULT_ACTION_NAME);
     if (typeof this[actionName] === 'function') {
+      this.setCurrentAction(actionName);
       this[actionName](subParams);
     } else if (this[this.getDefaultActionName()]) {
+      this.setCurrentAction(this.getDefaultActionName());
       this[this.getDefaultActionName()](subParams);
     } else {
+      this.setCurrentAction(undefined);
       this.error('No action in router', params);
     }
+  }
+
+  setCurrentAction(actionName){
+    this.setWorking('action', actionName);
+  }
+
+  getCurrentAction(){
+    return this.getWorking('action');
   }
 
   /**
@@ -453,6 +464,8 @@ class notController extends notBase {
       controller: this
     };
   }
+
+
 
 }
 

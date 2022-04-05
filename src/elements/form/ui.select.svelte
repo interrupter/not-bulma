@@ -75,11 +75,13 @@
 
   <div class="control {iconClasses}">
     <div class="select {validationClasses} {multipleClass}">
-      {#if multiple }
       <select
         id="form-field-select-{fieldname}"
-        name="{fieldname}" size="{size}"
-        on:blur={onBlur} on:input={onInput} {readonly} {required} multiple >
+        name="{fieldname}"
+        on:blur={onBlur} on:input={onInput} {readonly} {required}
+        {multiple}
+        size="{multiple?size:false}"
+        >
         {#if placeholder.length > 0 }
         {#if value }
         <option value="{CLEAR_MACRO}" >{$LOCALE[placeholder]}</option>
@@ -88,24 +90,13 @@
         {/if}
         {/if}
         {#each variants as variant}
+        {#if multiple }
         <option value="{variant.id}" selected="{value && value.indexOf(variant.id) > -1}">{$LOCALE[variant.title]}</option>
-        {/each}
-      </select>
-      {:else}
-      <select id="form-field-select-{fieldname}"
-        name="{fieldname}" bind:value={value} on:blur={onBlur} on:input={onInput} {readonly} >
-        {#if placeholder.length > 0 }
-        {#if value }
-        <option value="{CLEAR_MACRO}">{$LOCALE[placeholder]}</option>
         {:else}
-        <option value="{CLEAR_MACRO}" selected="selected">{$LOCALE[placeholder]}</option>
-        {/if}
-        {/if}
-        {#each variants as variant}
         <option value="{variant.id}" selected="{value == variant.id}">{$LOCALE[variant.title]}</option>
+        {/if}
         {/each}
       </select>
-      {/if}
     </div>
     {#if icon }
     <span class="icon is-small is-left"><i class="fas fa-{icon}"></i></span>

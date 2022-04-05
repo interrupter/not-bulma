@@ -1,9 +1,14 @@
-import {Runner} from 'not-validation';
+import {
+  Runner
+} from 'not-validation';
 
 import Lib from '../../lib.js';
 import notCommon from '../../common';
 import notBase from '../../base';
-import FormFrameComponent from './form.frame.svelte';
+
+import UICommon from '../../../elements/common.js';
+import FormHelpers from './form.helpers.js';
+import UIFormComponent from './form.svelte';
 
 import {
   DEFAULT_STATUS_SUCCESS,
@@ -11,177 +16,380 @@ import {
 } from './const';
 
 const DEFAULT_CONTAINER_SELECTOR = '.form';
+const DEFAULT_ACTION_NAME = 'default';
 const DEFAULT_VARIANT_NAME = 'noname';
 
-class notForm extends notBase{
-  defaultAction = 'default';
-  #action = 'default';
-  #fields = new Lib();    //fields UI
-  #variants = new Lib();  //variants for UI
+class notForm extends notBase {
+  //UI renderer component class constructor
+  #uiComponent = null;
+  //form validation
+  #validationRunner = null;
+  //ui component
+  #form = null;
+  //model.action
+  #action = DEFAULT_ACTION_NAME;
+  //fields schemas
+  #fields = new Lib(); //fields of UI
+  //variants sets for select menus and so on
+  #variants = new Lib(); //variants for UI
 
-  constructor({app, name}){
+  constructor({
+    target = null,
+    name = 'Default',
+    options = {},
+    working = {},
+    data = {},
+    ui = UIFormComponent, //default UI
+  }) {
     super({
       working: {
-        name: `${name}Form`
-      }
+        name: `${name}Form`,
+        ...working,
+      },
+      options,
+      data
     });
-    this.app = app;
-    this.initFrame();
-    this.initFormMode();
-  }
-
-  /**
-  * Initalizing form frame mode, with switchers between modes
-  **/
-  initFrame(){
-    const target = this.getFrameTarget();
-    if(!target){
-      location.href = this.getMainURL();
+    if(target){
+      this.setOptions('target', target);
     }
-    target.innerHTML = '';
-    this.frame = new FormFrameComponent({
-      target,
-      props: this.getFrameProps(mode)
-    });
-    this.frame.$on('action', (ev)=>{
-      this.setAction(ev.detail);
-    });
+    this.#uiComponent = ui;
+    if (notCommon.objHas(options, 'action')) {
+      this.#action = options.action;
+    }
+    this.initForm();
   }
 
-  initFormMode(){
+  initForm() {
+    if (this.getOptions('autoInit', true)) {
+      this.initLibs();
+    }
+    if (this.getOptions('autoRender', true)) {
+      this.initUI();
+    }
+  }
+
+  initLibs() {
+    this.initFields();
+    this.initVariants();
     this.initValidator();
-    this.initUI();
   }
 
-  initUI(){
-    this.form = new UIForm({
-      target: this.getFormTargetEl(),
-      props: this.getFormProps({
+  reInit() {
+    this.initLibs();
+    this.updateUI();
+    this.resetLoading();
+  }
+
+  initFields() {
+    const manifest = this.getFormManifest();
+    if (notCommon.objHas(manifest, 'fields') && this.#fields.isEmpty()) {
+      this.#fields.import(manifest.fields); //all fields available in model manifest
+    }
+  }
+
+  initVariants() {
+    if (this.getOptions('variants') && this.#variants.isEmpty()) {
+      this.#variants.import(this.getOptions('variants'));
+    }
+  }
+
+  //creating validators runner for this specific form
+  initValidator() {
+    this.#validationRunner = Runner(this.getFormValidators());
+  }
+
+  initUI() {
+    try {
+      const props = this.#getFormProps({
         manifest: this.getFormManifest(),
-        action: this.getFormAction(),
-        options: this.getFormOptions(),
-        data: this.getFormData()
-      })
-    });
+        formOptions: this.getFormOptions(),
+        data: this.getFormData(),
+      });
+      const target = this.getFormTargetEl();
+      this.#form = new this.#uiComponent({
+        target,
+        props
+      });
+      this.#bindUIEvents();
+      this.validateForm();
+    } catch (e) {
+      this.error(e);
+    }
+  }
 
-    formUI.$on('change', async ()=>{
-      try{
-        const session = await formValidator.all(formUI.collectData(), action);
-        formUI.updateFormValidationStatus(session.getCompleteResult());
-      }catch(e){
-        formUI.updateFormValidationStatus({form:[UICommon.ERROR_DEFAULT]});
-        notCommon.report(e);
+  updateUI() {
+    try {
+      const props = this.#getFormProps({
+        manifest: this.getFormManifest(),
+        formOptions: this.getFormOptions(),
+        data: this.getFormData(),
+      });
+      this.#form.$set(props);
+      this.validateForm();
+    } catch (e) {
+      this.error(e);
+    }
+  }
+
+  #bindUIEvents() {
+    this.#form.$on('change', () => this.validateForm());
+    this.#form.$on('change',
+      (ev) => {
+        this.emit('change', ev.detail);
+        this.emit(`change.${ev.detail.field}`, ev.detail.value);
       }
-    });
-    this.form.$on('submit', (ev) => this.submit(ev.detail));
-    this.form.$on('reject', () => {location.href = '/';});
+    );
+    this.#form.$on('submit', (ev) => this.submit(ev.detail));
+    this.#form.$on('reject', () => this.reject());
+    this.#form.$on('error', ({
+      detail
+    }) => this.emit('error', detail));
   }
 
-  initValidator(){
-    const formValidator = new Runner(this.getFormValidators());
+  async validateForm() {
+    try {
+      const validationResult = await this.#validationRunner(this.#form.collectData(), this.getFormAction());
+      this.#form.updateFormValidationStatus(validationResult.getReport());
+      if (!validationResult.clean) {
+        this.emit('error', validationResult.getReport());
+      }
+    } catch (e) {
+      const report = {
+        form: [UICommon.ERROR_DEFAULT, e.message]
+      };
+      this.#form && this.#form.updateFormValidationStatus(report);
+      this.emit('error', report);
+      notCommon.report(e);
+    }
   }
 
-  destroy(){
-    delete this.app;
-    delete this.form;
-    delete this.validator;
+  submit(data) {
+    this.emit('submit', data);
+  }
+
+  reject() {
+    this.emit('reject');
+  }
+
+  setLoading() {
+    this.emit('loading');
+    this.#form.setLoading();
+  }
+
+  resetLoading() {
+    this.emit('loaded');
+    this.#form.resetLoading();
+  }
+
+  destroy() {
+    this.emit('destroy');
+    this.#form = null;
+    this.#validationRunner = null;
+    this.#action = null;
+    this.#fields = null;
+    this.#variants = null;
     this.setOptions(null);
     this.setWorking(null);
     this.setData(null);
   }
 
-  initFields({manifest, action, options = {}, data = null}){
-    if(notCommon.objHas(manifest, 'fields')){
-      this.#fields.import(manifest.fields);
+  #getFormProps({
+    manifest, //model manifest
+    formOptions = {
+      ui: {},
+      fields: {}
+    }, //some options
+    data = null //initial data for form
+  }) {
+    const action = this.#action;
+    if (typeof formOptions === 'undefined' || formOptions === null) {
+      formOptions = {
+        ui: {},
+        fields: {}
+      };
     }
 
-    if(typeof options === 'undefined' || options === null){
-      options = {};
-    }
-
-    if (manifest.actions[action] && manifest.actions[action].fields){
-      this.actionFieldsInit(manifest.actions[action].fields, options, data);
-    }
+    const form = FormHelpers.initFormByField(
+      //form seed object
+      {},
+      /*
+      Form structure
+      [
+        //each item is line of form
+        //field - field takes whole line of form
+        //[field1, field2] - few fields in one line
+        nameFirst, nameLast
+        [age, country, language],
+        [email, telephone]
+      ]
+      */
+      manifest.actions[action].fields, //form fields structure
+      this.#variants, //variants library
+      this.#fields, //fields library
+      formOptions.fields, //form wide fields options
+      data
+    );
 
     return {
-      title:        manifest.actions[action].title,
-      description:  manifest.actions[action].description,
-      fields:       manifest.actions[action].fields,
-      options
+      //if no auto init of form structure, set to loading state
+      loading: !this.getOptions('autoInit', true),
+      title: manifest.actions[action].title,
+      description: manifest.actions[action].description,
+      fields: manifest.actions[action].fields,
+      form,
+      //injecting options to UI from top level input
+      ...formOptions.ui, //form UI options
     };
   }
 
-  getName(){
+  getName() {
     return this.getWorking('name');
   }
 
-  getFrameTargetEl(){
-    return document.querySelector(this.getWorking('target', DEFAULT_CONTAINER_SELECTOR));
-  }
-
-  getFormTargetEl(){
-    return document.querySelector(this.getWorking('formTarget', DEFAULT_CONTAINER_SELECTOR));
-  }
-
-  #missingOverrideWarning(missing){
-    this.error(`${missing} for ${this.getWorking('name')} form is not defined`);
-  }
-
-  getFormValidators(){
-    this.#missingOverrideWarning('validators');
-    return {};
-  }
-
-  getFormManifest(){
-    this.#missingOverrideWarning('manifest');
-    return {};
-  }
-
-  getFormData(){
-    this.#missingOverrideWarning('data');
-    return {};
-  }
-
-  getFormAction(){
+  getFormAction() {
     return this.#action;
   }
 
-  setAction(val){
-    if(val !== this.#action){
+  setFormAction(val) {
+    if (val && val !== this.#action) {
       this.#action = val;
-      this.form.$destroy();
-      this.initFormModeAction();
+      this.#form && this.#form.$destroy();
+      this.initForm();
     }
   }
 
-  processResult(result){
-    if(result.status === DEFAULT_STATUS_SUCCESS){
-      this.frame.$set({ status: DEFAULT_STATUS_SUCCESS, message: result.message });
-      this.form.showSuccess();
-      //move success
-    }else{
+  processResult(result) {
+    if (result.status === DEFAULT_STATUS_SUCCESS) {
+      this.setFormSuccess();
+      return true;
+    } else {
       this.setFormErrors(result);
+      return false;
     }
   }
 
-  setFormErrors(result){
+  /**
+   *   Form validation result
+   **/
+  setFormSuccess() {
+    this.#form.showSuccess();
+    this.emit('success');
+  }
+
+  setFormErrors(result) {
     const status = {
       form: [],
       fields: {}
     };
-    if(result.message){
-      result.form.push(result.message);
+    if (result.message) {
+      status.form.push(result.message);
     }
-    if(result.errors && Object.keys(result.errors).length > 0 ){
-      result.errors = {...result.errors};
+    if (result.errors && Object.keys(result.errors).length > 0) {
+      status.fields = { ...result.errors
+      };
     }
-    this.form.updateFormValidationStatus(status);
+    this.#form.updateFormValidationStatus(status);
+    this.emit('error', status);
   }
 
-  getVariantTitle(name, id){
+  /**
+   * Returns variant by collection name and item id
+   * @param {string}         name  name of the variants collection
+   * @param {string|number}  id    item identificator
+   * @returns {object}             item
+   **/
+  getVariant(name, id) {
     let lib = this.#variants.get(name);
-    let result = lib.filter(item => item.id === id );
-    return result.length === 1 ? result[0]: DEFAULT_VARIANT_NAME;
+    let result = lib.find(item => item.id === id);
+    if (result) {
+      return result;
+    }
+    return null;
+  }
+
+  /***
+   * Redefinable getters
+   **/
+
+  getFormTargetEl() {
+    const targetEl = this.getOptions(
+      'target',
+      DEFAULT_CONTAINER_SELECTOR
+    );
+    if (targetEl instanceof HTMLElement) {
+      return targetEl;
+    } else if (typeof targetEl === 'string') {
+      return document.querySelector(targetEl);
+    } else {
+      throw new Error('Form parent element is not defined');
+    }
+  }
+
+  getFormValidators() {
+    if (this.getOptions('validators')) {
+      return this.getOptions('validators', {});
+    } else {
+      this.#missingOverrideWarning('validators');
+      return {};
+    }
+  }
+
+  getFormManifest() {
+    const modelName = this.getOptions('model', undefined);
+    if (modelName && notCommon.getApp()) {
+      return notCommon.getApp().getInterfaceManifest(modelName);
+    }
+    if (this.getOptions('manifest', undefined)) {
+      return this.getOptions('manifest', {});
+    } else {
+      this.#missingOverrideWarning('manifest');
+      return {};
+    }
+  }
+
+  getFormData() {
+    if (this.getData()) {
+      return this.getData();
+    } else {
+      this.#missingOverrideWarning('data');
+      return {};
+    }
+  }
+
+  getFormOptions() {
+    if (this.getOptions('ui', undefined) || this.getOptions('fields', undefined)) {
+      return {
+        ui: this.getOptions('ui', {}),
+        fields: this.getOptions('fields', {}),
+      };
+    } else {
+      this.#missingOverrideWarning('options');
+      return {
+        ui: {},
+        fields: {},
+      };
+    }
+  }
+
+  /**
+   * Override empty message
+   **/
+  #missingOverrideWarning(missing) {
+    this.error(`${missing} for ${this.getWorking('name')} form is not defined`);
+  }
+
+  /**
+   * Form operations
+   **/
+  collectData() {
+    const data = this.#form.collectData();
+    this.setData({ ...data
+    }); //update in inner store
+    return data;
+  }
+
+  updateField(fieldName, props){
+    this.#form.updateField(fieldName, props);
   }
 
 }

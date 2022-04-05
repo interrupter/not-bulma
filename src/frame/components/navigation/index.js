@@ -1,4 +1,4 @@
-import TopMenu from './top';
-import SideMenu from './side';
+import notTopMenu from './top';
+import notSideMenu from './side';
 
-export {TopMenu, SideMenu};
+export {notTopMenu, notSideMenu};

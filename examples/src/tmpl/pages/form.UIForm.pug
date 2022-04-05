@@ -1,0 +1,13 @@
+- var title = "not-bulma - формы"
+script.
+  window.EXAMPLES_SELECTED = 'UIForm';
+include ../parts/header.pug
+include ../parts/menu.pug
+include ../parts/sidemenu.pug
+
+main
+  include ../content/form.UIForm.pug
+  include ../parts/foot.pug
+  
+script(src="/js/form.UIForm.js" type="module")
+include ../parts/footer.pug

@@ -83,5 +83,7 @@ const ButtonsExamples = [
     }]
   }
 ];
-
-window.EXAMPLES.UIButtons = ButtonsExamples;
+window.EXAMPLES.UIButtonsGroups = {
+  constructor: 'Elements.Buttons.UIButtons',
+  list: ButtonsExamples
+};

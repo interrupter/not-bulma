@@ -2,7 +2,7 @@ import Menu from '../menu.js';
 import UINavbarTop from './ui.top.svelte';
 const TYPE = 'top';
 
-class TopMenu extends Menu{
+class notTopMenu extends Menu{
   static DEFAULT = {
     section: 'any',
     sectionTitle: 'Меню',
@@ -95,4 +95,4 @@ class TopMenu extends Menu{
 
 }
 
-export default TopMenu;
+export default notTopMenu;

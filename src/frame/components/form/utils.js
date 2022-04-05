@@ -1,6 +1,5 @@
 import notCommon from '../../common';
 import UICommon from '../../../elements/common.js';
-import UIForm from './form.svelte';
 
 import {FIELDS, COMPONENTS, VARIANTS} from '../../LIB.js';
 

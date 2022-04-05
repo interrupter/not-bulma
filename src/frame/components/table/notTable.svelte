@@ -121,7 +121,7 @@
 		{/each}
 	</tbody>
 </table>
-<nav class="pagination is-centered" role="navigation" aria-label="pagination">
+<nav class="pagination is-centered" aria-label="pagination">
 	<a href class="pagination-previous" on:click={goPrev}>Назад</a>
 	<a href class="pagination-next" on:click={goNext}>Вперед</a>
 	<ul class="pagination-list">

@@ -1,4 +1,4 @@
-class Breadcrumbs{
+class notBreadcrumbs{
 
   static UIConstructor = null;
   static ui = null;
@@ -52,4 +52,4 @@ class Breadcrumbs{
 
 }
 
-export default Breadcrumbs;
+export default notBreadcrumbs;

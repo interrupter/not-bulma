@@ -1,193 +1,63 @@
 <script>
 	import 'bulma-pageloader';
 	import {
-	  onMount,
 	  createEventDispatcher
 	} from 'svelte';
 	let dispatch = createEventDispatcher();
+
+	import Lib from '../../lib.js';
 
 	import {
 	  LOCALE
 	} from '../../../locale';
 
 	import UIField from './field.svelte';
+	import FormHelpers from './form.helpers.js';
 
-	import {
-	  FIELDS,
-	  VARIANTS
-	} from '../../LIB.js';
-
-	let form = {};
-
+	//validation status
 	let formErrors = [];
 	let formHasErrors = false;
 	let fieldsHasErrors = false;
 	let success = false;
 
-	$: formInvalid = formHasErrors || fieldsHasErrors;
-
-	function fieldInit(type, mutation = {}) {
-	  let field = {
-	    label: '',
-	    placeholder: '',
-	    enabled: true,
-	    visible: true,
-	    required: true,
-	    validated: false,
-	    valid: false,
-	    errors: false,
-	    variants: []
-	  };
-	  if (FIELDS.contains(type)) {
-	    field = { ...field,
-	      ...FIELDS.get(type)
-	    };
-	  }
-	  if (mutation) {
-	    field = { ...field,
-	      ...mutation
-	    };
-	  }
-	  if (
-	    Object.prototype.hasOwnProperty.call(field, 'variantsSource') &&
-			VARIANTS.contains(field.variantsSource)
-	  ) {
-	    field.variants = VARIANTS.get(field.variantsSource);
-	  }
-	  return field;
-	}
-
-	export function collectData() {
-	  let result = {};
-	  fields.flat().forEach((fieldname) => {
-	    if (Object.prototype.hasOwnProperty.call(form, fieldname) && form[fieldname].enabled && form[fieldname].visible) {
-	      if (typeof form[fieldname].value !== 'undefined') {
-	        result[fieldname] = form[fieldname].value;
-	      }
-	    }
-	  });
-	  return result;
-	}
-
-	export function setFieldInvalid(fieldName, value, errors) {
-	  form[fieldName].errors = errors;
-	  form[fieldName].validated = true;
-	  form[fieldName].valid = false;
-	  form[fieldName].value = value;
-	  form = form;
-	  fieldsHasErrors = true;
-	}
-
-	export function setFieldValid(fieldName, value) {
-	  form[fieldName].errors = false;
-	  form[fieldName].validated = true;
-	  form[fieldName].valid = true;
-	  form[fieldName].value = value;
-	  let some = false;
-	  for (let fname in form) {
-	    if (fname !== fieldName) {
-	      if (Array.isArray(form[fname].errors) && form[fname].errors.length === 0) {
-	        form[fname].errors = false;
-	      }
-	      if (form[fname].errors !== false) {
-	        some = true;
-	        break;
-	      }
-	    }
-	  }
-	  form = form;
-	  if (fieldsHasErrors !== some) {
-	    fieldsHasErrors = some;
-	  }
-	}
-
-	export function fieldIsValid(fieldName) {
-	  return !Array.isArray(form[fieldName].errors);
-	}
-
-	export function setFormFieldInvalid(fieldName, errors) {
-	  form[fieldName].formErrors = [...errors];
-	  form[fieldName].validated = true;
-	  form[fieldName].inputStarted = true;
-	  form[fieldName].valid = false;
-	  form[fieldName].formLevelError = true;
-	  form = form;
-	  dispatch(`field.invalid`, {
-	    fieldName
-	  });
-	}
-
-	export function setFormFieldValid(fieldName) {
-	  form[fieldName].formErrors = false;
-	  form[fieldName].validated = true;
-	  form[fieldName].valid = true;
-	  form[fieldName].formLevelError = false;
-	  form = form;
-	  dispatch(`field.valid`, {
-	    fieldName
-	  });
-	}
-
-	function initFormByField(fieldName) {
-	  if (Array.isArray(fieldName)) {
-	    fieldName.forEach(initFormByField);
-	  } else {
-	    let opts = {};
-	    if (Object.prototype.hasOwnProperty.call(options, 'fields')) {
-	      if (Object.prototype.hasOwnProperty.call(options.fields, fieldName)) {
-	        opts = options.fields[fieldName];
-	      }
-	    }
-	    form[fieldName] = fieldInit(fieldName, opts);
-	    if (options.readonly) {
-	      form[fieldName].readonly = true;
-	    }
-	  }
-	}
-
-	onMount(() => {
-	  initFormByField(fields);
-	  form = form;
-	});
-
-	export function updateFormValidationStatus(result /* FormValidationSession.getCompleteResult() */ ) {
-	  formHasErrors = false;
-	  fieldsHasErrors = false;
-	  if (Array.isArray(result.form) && result.form.length) {
-	    formErrors.splice(0, formErrors.length, ...result.form);
-	    formHasErrors = true;
-	  } else {
-	    formErrors.splice(0, formErrors.length);
-	  }
-	  formErrors = formErrors;
-	  if (result.fields) {
-	    for (let fieldName in result.fields) {
-	      if (Array.isArray(result.fields[fieldName]) && result.fields[fieldName].length) {
-	        setFormFieldInvalid(fieldName, result.fields[fieldName]);
-	        fieldsHasErrors = true;
-	      } else {
-	        setFormFieldValid(fieldName);
-	      }
-	    }
-	  }
-	}
-
-	function onFieldChange(ev) {
-	  let data = ev.detail;
-	  form[data.field].value = data.value;
-	  form = form;
-	  dispatch('change', data);
-	}
-
+	//input data
+	//form structure object
+	/**
+	* {
+	* 	[fieldName: string] => description: object
+	* }
+	**/
+	export let form = {};
+	//state if form loading
+	export let loading = false;
+	//hidden - no loader
+	//container - parent container of form
+	//page - whole page
+	export let loader = 'container';
+	//fields list structure
+	/**
+	* each item is a row
+	* if item is array, then there few fields in a row
+	* [
+	* [name, age],
+	* [email, telephone]
+	* bio,
+	* agreed
+	*	]
+	**/
 	export let fields = [];
-
-	export let options = {};
+	//form result labels
 	export let SUCCESS_TEXT = 'Операция завершена';
 	export let WAITING_TEXT = 'Отправка данных на сервер';
 
+	//form labels
 	export let title = 'Форма';
 	export let description = 'Заполните пожалуйста форму';
-
+	//if you want button on top
+	export let buttonsFirst = false;
+	//if form fields should have horizontal layout
+	export let horizontal = false;
+	//buttons labels and availability
 	export let submit = {
 	  caption: 'Отправить',
 	  enabled: true
@@ -198,22 +68,69 @@
 	  enabled: true
 	};
 
-	export let loading = false;
+	$: formInvalid = formHasErrors || fieldsHasErrors;
 
-	export let submitForm = (e) => {
-	  e && e.preventDefault();
-	  dispatch('submit', collectData());
-	  return false;
-	};
+	export function collectData() {
+	  return FormHelpers.collectData(fields, form);
+	}
+
+	export function setFieldInvalid(fieldName, value, errors) {
+		form = FormHelpers.setFieldInvalid(form, fieldName, value, errors);
+	  fieldsHasErrors = true;
+	}
+
+	export function setFieldValid(fieldName, value) {
+	  form = FormHelpers.setFieldValid(form, fieldName, value);
+	  if (fieldsHasErrors !== some) {
+	    fieldsHasErrors = some;
+	  }
+	}
+
+	export function isFieldValid(fieldName) {
+	  return FormHelpers.isFieldValid(form, fieldName);
+	}
+
+	export function setFormFieldInvalid(fieldName, errors) {
+	  form = FormHelpers.setFormFieldInvalid(form, fieldName, errors);
+	  dispatch(`field.invalid`, {
+	    fieldName
+	  });
+	}
+
+	export function setFormFieldValid(fieldName) {
+	  form = FormHelpers.setFormFieldValid(form, fieldName);
+	  dispatch(`field.valid`, {
+	    fieldName
+	  });
+	}
+
+	export function updateFormValidationStatus(
+		validationStatus /* FormValidationSession.getCompleteResult() */
+	) {
+		formHasErrors = false;
+		fieldsHasErrors = false;
+		if (Array.isArray(validationStatus.form) && validationStatus.form.length) {
+			formErrors.splice(0, formErrors.length, ...validationStatus.form);
+			formHasErrors = true;
+		} else {
+			formErrors.splice(0, formErrors.length);
+		}
+		formErrors = formErrors;
+		if (validationStatus.fields) {
+			for (let fieldName of Object.keys(form)) {
+				if (Array.isArray(validationStatus.fields[fieldName]) && validationStatus.fields[fieldName].length) {
+					FormHelpers.setFormFieldInvalid(form, fieldName, validationStatus.fields[fieldName]);
+					fieldsHasErrors = true;
+				} else {
+					FormHelpers.setFormFieldValid(form, fieldName);
+				}
+			}
+		}
+	}
 
 	export function showSuccess() {
 	  success = true;
 	}
-
-	export let rejectForm = () => {
-	  loading = true;
-	  dispatch('reject');
-	};
 
 	export function setLoading() {
 	  loading = true;
@@ -224,12 +141,9 @@
 	}
 
 	export function setFieldsVisibility(fieldsList, val) {
-	  if (Array.isArray(fieldsList)) {
-	    Object.keys(form).forEach(fieldName => {
-	      form[fieldName].visible = fieldsList.includes(fieldName) ? val : !val;
-	    });
-	    form = form;
-	  }
+	  if (FormHelpers.setFieldsVisibility(form, fieldsList, val)){
+			form = form;
+		}
 	}
 
 	export function setVisibleFields(fieldsList) {
@@ -241,20 +155,47 @@
 	}
 
 	export function setFieldValue(fieldName, value) {
-	  if (Object.prototype.hasOwnProperty.call(form, fieldName)) {
-	    form[fieldName].value = value;
-	    form = form;
+		if (FormHelpers.setFieldValue(form, fieldName, value)){
 	    onFieldChange({
 	      detail: {
 	        field: fieldName,
 	        value
 	      }
 	    });
-	  }
+		}
+	}
+
+	export function updateField(fieldName, props){
+		form[fieldName] = {
+			...form[fieldName],
+			...props
+		};
+		form = form;
+	}
+
+	function onFieldChange(ev) {
+		let data = ev.detail;
+		form[data.field].value = data.value;
+		form = form;
+		dispatch('change', data);
+	}
+
+	function submitForm(e){
+		e && e.preventDefault();
+		dispatch('submit', collectData());
+		return false;
+	};
+
+	function rejectForm(){
+		dispatch('reject');
 	}
 </script>
 
-<div class="pageloader {loading?'is-active':''}"><span class="title">{$LOCALE[WAITING_TEXT]}</span></div>
+<div class="form-container">
+
+{#if loader!=='hidden' }
+<div class="{loader==='page'?'pageloader':'containerloader'} {loading?'is-active':''}" ><span class="title">{$LOCALE[WAITING_TEXT]}</span></div>
+{/if}
 
 {#if success}
 <div class="notification is-success">
@@ -268,7 +209,7 @@
 <h6 class="subtitle is-6">{$LOCALE[description]}</h6>
 {/if}
 
-{#if options.buttonsFirst }
+{#if buttonsFirst }
 <div class="buttons is-grouped is-centered">
 	{#if cancel.enabled}
 	<button class="button is-outlined {cancel.classes}" on:click={rejectForm}>{$LOCALE[cancel.caption]}</button>
@@ -291,7 +232,7 @@
 	{#if form[subfield] && form[subfield].component }
 	{#if form[subfield].visible }
 	<div class="column {form[subfield].fieldSize?('is-'+form[subfield].fieldSize):''} ">
-		<UIField controls={[form[subfield]]} on:change={onFieldChange} name={subfield} horizontal={options.horizontal} label={form[subfield].label} />
+		<UIField controls={[form[subfield]]} on:change={onFieldChange} name={subfield} horizontal={horizontal} label={form[subfield].label} />
 	</div>
 	{/if}
 	{:else}
@@ -302,7 +243,7 @@
 {:else }
 {#if form[field] && form[field].component }
 {#if form[field].visible}
-<UIField controls={[form[field]]} on:change={onFieldChange} name={field} horizontal={options.horizontal} label={form[field].label} />
+<UIField controls={[form[field]]} on:change={onFieldChange} name={field} horizontal={horizontal} label={form[field].label} />
 {/if}
 {:else}
 <div class="notification is-danger">Field '{field}' is not registered</div>
@@ -310,7 +251,7 @@
 {/if}
 {/each}
 
-{#if !options.buttonsFirst }
+{#if !buttonsFirst }
 {#if formErrors.length > 0 }
 <div class="edit-form-error notification is-danger">{formErrors.join(', ')}</div>
 {/if}
@@ -324,3 +265,4 @@
 </div>
 {/if}
 {/if}
+</div>

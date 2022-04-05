@@ -3,7 +3,7 @@ import UISideMenu from './ui.side.menu.svelte';
 
 const TYPE = 'side';
 
-class SideMenu extends Menu {
+class notSideMenu extends Menu {
   static nav;
   static main;
   static aside;
@@ -182,4 +182,4 @@ class SideMenu extends Menu {
   }
 }
 
-export default SideMenu;
+export default notSideMenu;

@@ -3,8 +3,8 @@ import * as Blocks from './block';
 export {Blocks};
 
 //general elements
-import * as Elements from './various';
-export { Elements };
+import * as Various from './various';
+export { Various };
 
 //
 import * as Buttons from './button';

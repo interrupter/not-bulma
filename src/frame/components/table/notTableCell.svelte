@@ -18,12 +18,12 @@
     LOCALE
   } from '../../../locale';
 
-  import {Buttons, Links, Images, Elements} from '../../../elements';
+  import {Buttons, Links, Images, Various} from '../../../elements';
 
   const {UIButtons} = Buttons;
   const {UILinks} = Links;
   const {UIImages} = Images;
-  const {UIBooleans} = Elements;
+  const {UIBooleans} = Various;
 
   import TableSwitch from './controls/ui.switch.svelte';
   import TableTags from './controls/ui.tags.svelte';

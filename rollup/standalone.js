@@ -1,7 +1,6 @@
 import commonjs from "rollup-plugin-commonjs";
 import svelte from 'rollup-plugin-svelte';
 import babel from 'rollup-plugin-babel';
-import istanbul from 'rollup-plugin-istanbul';
 import postcss from 'rollup-plugin-postcss';
 import resolve from "rollup-plugin-node-resolve";
 import filesize from 'rollup-plugin-filesize';
@@ -44,15 +43,14 @@ export default {
               corejs: 3,
               modules: false,
               useBuiltIns: "usage",
-              targets: {
-                ie: "11"
-              }
+              targets: "> 2.5%, not dead"
             }
           ]
         ],
         babelrc: false,
         runtimeHelpers: true,
         plugins: [
+          "@babel/plugin-proposal-private-methods",
           '@babel/plugin-proposal-class-properties',
           "@babel/transform-arrow-functions",
           /*[

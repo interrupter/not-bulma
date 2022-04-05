@@ -10,6 +10,7 @@ import notCommon from './common.js';
 */
 import notPath from 'not-path';
 
+
 import notRouter from './router.js';
 
 import * as notAPI from './api';
@@ -30,9 +31,18 @@ import notController from './controller.js';
 import notRecord from './record.js'; //  wrapper for data with server live interactions
 import notInterface from './interface.js'; //  wrapper for data with server live interactions
 
-import {notForm, notFormUtils} from './components/form';
+import {
+  notTable,
+  UIForm,
+  notForm,
+  notFormSet,
+  notFormUtils,
+  notBreadcrumbs,
+  notTopMenu,
+  notSideMenu
+} from './components';
 
-import notCRUD from './controller.crud.js';
+import notCRUD from './crud/controller.crud.js';
 
 const ncCRUD = notCRUD; //legacy alias
 
@@ -46,8 +56,14 @@ export {
   notInterface,
   notApp,
   notAPI,
-  notForm,
-  notFormUtils,
   notCRUD, ncCRUD,
   COMPONENTS, FIELDS, VARIANTS,
+  notTable,
+  UIForm,
+  notForm,
+  notFormSet,
+  notFormUtils,
+  notBreadcrumbs,
+  notTopMenu,
+  notSideMenu
 };

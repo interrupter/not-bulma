@@ -1,0 +1,173 @@
+section(id="examples" class="section")
+  h1(class="title") Формы
+  h2( class="subtitle") субтитра
+  div( class="box")
+    h3( class="title") Constructor
+    h4(class="subtitle") как создать
+    div(class="block")
+      pre
+        | new notBulma.Frame.UIForm({target: HTMLElement, props: Object});
+    h3( class="title") Props
+    h4(class="subtitle") что можно задавать
+    div(class="block content")
+      dl
+        dt
+          strong
+            | form: Object = {}
+        dd
+          | список полей формы и их свойства
+          pre
+            | {
+            | ...
+            |  country: { //название поля для использования в fields
+            |    component: 'UISelect',       //название компонента (из COMPONENTS) для рендеринга
+            |    multiple: false,             //выбор сразу нескольких вариантов
+            |    variantsSource: 'countries', //название коллекции в variants, актуально для notForm
+            |    label: 'country_name',       //название. строка или метка из LOCALE
+            |    enabled: true,               //активно или нет
+            |    visible: true,               //видимо или нет
+            |    required: true,              //обязательно или нет
+            |    validated: false,            //проходило ли проверку
+            |    valid: true,                 //результат проверки
+            |    errors: false,               //ошибки, либо false, либо массив строк с сообщениями об ошибках
+            |    value: 2,                    //значение
+            |    variants: [                  //варианты для выбора из списка
+            |      {
+            |        id: 1,                   //идентификатор
+            |        title: 'UI'              //название
+            |      },
+            |      ...
+            |    ],
+            |  },
+            |  ...
+            | }
+        dt
+          strong
+            | fields: Array[String] = []
+        dd
+         | структура формы. каждый элемент строка, если элемент массив строк, то они выводятся в одной строке
+         pre
+           | [
+           | [name, age],
+           | [email, telephone]
+           | bio,
+           | agreed
+           | ]
+        dt
+          strong
+            | loading: boolean = false
+        dd
+          | индикатор загрузки. для показа обращения к серверу
+        dt
+          strong
+            | loader: string = 'container' 
+        dd
+          | как показывать индикатор загрузки.
+          | container - в блоке формы
+          | page - на всю страницу
+          | hidden - не показывать
+        dt
+          strong
+            | SUCCESS_TEXT: String = 'Операция завершена'
+        dd
+          | сообщение об успешном заполнении/отправке на сервер данных формы
+        dt
+          strong
+            | WAITING_TEXT: String = 'Отправка данных на сервер      
+        dd
+          | сообщение о провале заполнения/отправки на сервер данных формы
+        dt
+          strong
+            | title: String = 'Форма'
+        dd
+          | заголовок формы
+        dt
+          strong
+            | description: String = 'Заполните пожалуйста форму'
+        dd
+          | краткое описание формы
+        dt
+          strong
+            | buttonsFirst: boolean = false
+        dd
+          | выводить ли кнопки над полями формы
+        dt
+          strong
+            | horizontal: boolean = false
+        dd
+          | горизонтальные поля. название: поле ввода - в одну строку.
+        dt
+          strong
+            | submit: Object = {caption: 'Отправить', enabled: true }
+        dd
+          | кнопка отправить
+        dt
+          strong
+            | cancel: Object = {caption: 'Назад', enabled: true}
+        dd
+          | кнопка отменить
+    h3( class="title") Методы
+    h4(class="subtitle") что можно вызывать
+    div(class="block content")
+      dl
+        dt
+          strong collectData(): Object
+        dd возвращает данные формы
+        dt
+          strong setFieldInvalid(fieldName, value, errors): void
+        dd устанавливает ошибку поля ввода и значение, не генерирует события
+        dt
+          strong setFieldValid(fieldName, value): void
+        dd устанавливает поле валидным и значение, не генерирует события
+        dt
+          strong isFieldValid(fieldName): boolean
+        dd валидно ли поле
+        dt
+          strong setFormFieldInvalid(fieldName, errors): valid
+        dd устанавливает ошибку, генерирует событие 'field.invalid'
+        dt
+          strong setFormFieldValid(fieldName): valid
+        dd отмечает поле валидным, генерирует событие 'field.valid'
+        dt
+          strong updateFormValidationStatus(result): void
+        dd обновляет статус формы, result: typeof FormValidationSession.getCompleteResult()
+        dt
+          strong showSuccess(): void
+        dd показывает сообщение об успешном завершении заполнения формы/ отправки на сервер
+        dt
+          strong setLoading(): void
+        dd устанавливает статус загрузки, показывает заставку
+        dt
+          strong resetLoading(): void
+        dd отменяет статус загрузки, скрывает заставку
+        dt
+          strong setFieldsVisibility(fieldsList:Array[String], val:boolean): void
+        dd устанавливает видимость списка полей
+        dt
+          strong setVisibleFields(fieldsList:Array[String]): void
+        dd делает поля из списка видимыми
+        dt
+          strong setInvisibleFields(fieldsList:Array[String]): void
+        dd делает поля из списка невидимыми
+        dt
+          strong setFieldValue(fieldName, value): void
+        dd устанавливает значение поля, генерирует событие 'change'
+    h3( class="title") События
+    h4(class="subtitle") что можно слушать
+    div(class="block content")
+      dl
+        dt
+          strong field.invalid
+        dd {detail:{fieldName:string}} - название поля признаного невалидным
+        dt
+          strong field.valid
+        dd {detail:{fieldName:string}} - название поля признаного валидным
+        dt
+          strong change
+        dd {detail: {field: string, value: any}} - изменение значения поля
+        dt
+          strong submit
+        dd {detail: Object } - нажатие кнопки отправить, передаются данные формы
+        dt
+          strong reject
+        dd нажатие кнопки отмена, ничего не передаётся в параметрах

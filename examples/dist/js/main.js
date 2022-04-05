@@ -1,15 +1,15 @@
-const { SideMenu, TopMenu } = notBulma;
+const { notSideMenu, notTopMenu, COMPONENTS } = notBulma.Frame;
 
 import menu from './menu.js';
 
 function initMenu() {
-  notBulma.Frame.COMPONENTS.add(notBulma.UIProgress);
-  SideMenu.setOptions({
+  COMPONENTS.add(notBulma.Elements.Various.UIProgress);
+  notSideMenu.setOptions({
     items: menu.side.items ? menu.side.items : [],
     sections: menu.side.sections ? menu.side.sections : []
   });
-  SideMenu.render();
-  TopMenu.setOptions({
+  notSideMenu.render();
+  notTopMenu.setOptions({
     root: 'http://' + window.location.host,
     brand: {
       url: './index.html',
@@ -22,10 +22,14 @@ function initMenu() {
     items: menu.top.items ? menu.top.items : [],
     sections: menu.top.sections ? menu.top.sections : []
   });
-  TopMenu.render();
+  notTopMenu.render();
 }
 
-function initExamplesSetHTML(id, val) {
+function getConstructor(path) {
+  return notBulma.Frame.notPath.get(path, notBulma);
+}
+
+function initExamplesSetHTML(id, val, constructorPath) {
   let cont = document.querySelector('#examples');
   let box = document.createElement('div');
   box.classList.add('box');
@@ -49,25 +53,34 @@ function initExamplesSetHTML(id, val) {
   cols.appendChild(elements);
   let pre = document.createElement('pre');
   pre.classList.add('column');
-  pre.innerHTML = JSON.stringify(val.props, null, 4);
+  if (val.functions) {
+    pre.innerHTML = val.props.map(f => f.toString()).join('<br/>');
+  } else {
+    pre.innerHTML = JSON.stringify(val.props, null, 4);
+  }
   cols.appendChild(pre);
   val.props.forEach((props, i) => {
     let example = document.createElement('div');
     example.classList.add('column');
     example.id = `example-${id}-${i}`;
     elements.appendChild(example);
-    new notBulma[window.EXAMPLES_SELECTED]({
-      target: example,
-      props
-    });
+    if (typeof props === 'function') {
+      props(example);
+    } else {
+      const Constructor = getConstructor(constructorPath);
+      new Constructor({
+        target: example,
+        props
+      });
+    }
   });
 }
 
 function initExamples() {
   if (window.EXAMPLES_SELECTED && Object.prototype.hasOwnProperty.call(window.EXAMPLES, window.EXAMPLES_SELECTED)) {
-    const list = window.EXAMPLES[window.EXAMPLES_SELECTED];
-    for (let set in list) {
-      initExamplesSetHTML(set, list[set]);
+    const examplesSet = window.EXAMPLES[window.EXAMPLES_SELECTED];
+    for (let exampleDataID in examplesSet.list) {
+      initExamplesSetHTML(exampleDataID, examplesSet.list[exampleDataID], examplesSet.constructor);
     }
   }
 }
