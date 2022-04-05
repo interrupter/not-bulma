@@ -33,3 +33,6 @@ export {Modals};
 
 import * as Notifications from './notification';
 export {Notifications};
+
+import UICommon from './common';
+export {UICommon};

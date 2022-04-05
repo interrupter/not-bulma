@@ -31478,7 +31478,8 @@ var notBulma = (function (exports) {
         Layouts: index$2,
         Links: Links,
         Modals: index$1,
-        Notifications: index$7
+        Notifications: index$7,
+        UICommon: UICommon
     });
 
     const Locale = {
