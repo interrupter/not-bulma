@@ -1,6 +1,6 @@
 import UICommon from '../../elements/common';
 
-import Breadcrumbs from '../components/breadcrumbs';
+import notBreadcrumbs from '../components/breadcrumbs';
 
 import {notForm, notTable, notFormUtils} from '../components';
 
@@ -60,7 +60,7 @@ class notCRUD extends notController {
       url: this.getModelURL()
     });
     BREADCRUMBS.splice(0, BREADCRUMBS.length, ...newHead);
-    Breadcrumbs.setHead(BREADCRUMBS).render({
+    notBreadcrumbs.setHead(BREADCRUMBS).render({
       root: '',
       target: this.els.top,
       navigate: (url) => this.app.getWorking('router').navigate(url)
@@ -69,7 +69,7 @@ class notCRUD extends notController {
   }
 
   setBreadcrumbs(tail) {
-    Breadcrumbs.setTail(tail).update();
+    notBreadcrumbs.setTail(tail).update();
   }
 
   backToList() {

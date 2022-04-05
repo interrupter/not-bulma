@@ -1,7 +1,11 @@
 class Lib{
   #lib = {};
 
-  constructor(){}
+  constructor(seedLib){
+    if(seedLib instanceof Lib){
+      this.import(seedLib.getContent());
+    }
+  }
 
   /**
   *
@@ -35,6 +39,12 @@ class Lib{
 
   isEmpty(){
     return Object.keys(this.#lib).length === 0;
+  }
+
+  getContent(){
+    return {
+      ...this.#lib
+    };
   }
 }
 

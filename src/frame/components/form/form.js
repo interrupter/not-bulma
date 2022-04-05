@@ -2,6 +2,7 @@ import {
   Runner
 } from 'not-validation';
 
+import {VARIANTS} from '../../LIB.js';
 import Lib from '../../lib.js';
 import notCommon from '../../common';
 import notBase from '../../base';
@@ -31,7 +32,7 @@ class notForm extends notBase {
   //fields schemas
   #fields = new Lib(); //fields of UI
   //variants sets for select menus and so on
-  #variants = new Lib(); //variants for UI
+  #variants = null; //variants for UI
 
   constructor({
     target = null,
@@ -49,6 +50,7 @@ class notForm extends notBase {
       options,
       data
     });
+    this.#variants = new Lib(VARIANTS.getContent());
     if(target){
       this.setOptions('target', target);
     }
@@ -88,7 +90,7 @@ class notForm extends notBase {
   }
 
   initVariants() {
-    if (this.getOptions('variants') && this.#variants.isEmpty()) {
+    if (this.getOptions('variants')) {
       this.#variants.import(this.getOptions('variants'));
     }
   }
