@@ -13,8 +13,13 @@ Object.keys(Elements.Forms).forEach((fieldtype) => {
 });
 
 export {
+  //UI
   Elements,
+  //application framework
   Frame,
+  //shorts for common elements
+  notCommon: Frame.notCommon,
+  //localization
   Locale,
   LOCALE, say, notLocale
 };
