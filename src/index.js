@@ -8,6 +8,8 @@ import {LOCALE, say, notLocale} from './locale';
 
 const Locale = {LOCALE, say, notLocale};
 
+const notCommon = Frame.notCommon;
+
 Object.keys(Elements.Forms).forEach((fieldtype) => {
   Frame.notFormUtils.addComponent(fieldtype, Elements.Forms[fieldtype]);
 });
@@ -18,7 +20,7 @@ export {
   //application framework
   Frame,
   //shorts for common elements
-  notCommon: Frame.notCommon,
+  notCommon,
   //localization
   Locale,
   LOCALE, say, notLocale
