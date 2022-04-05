@@ -8,6 +8,7 @@ import notController from '../controller';
 import notCommon from '../common';
 
 import CRUDVariantsPreloader from './variants.preloader.js';
+import CRUDRouter from './router.js';
 import CRUDMessage from './message.js';
 import * as CRUDActions from './actions';
 
@@ -15,13 +16,25 @@ const BREADCRUMBS = [];
 const TITLE_FIELDS_PRIORITY = ['title', 'label', 'id', 'name'];
 
 class notCRUD extends notController {
-  #actions = {};
+
+  #actions = {...CRUDActions};
+  #router = CRUDRouter;
+  #preloader = CRUDVariantsPreloader;
+
   TITLE_FIELDS_PRIORITY = TITLE_FIELDS_PRIORITY;
   static ERROR_DEFAULT = UICommon.ERROR_DEFAULT;
 
-  constructor(app, name, CUSTOM_ACTIONS = {}) {
+  constructor(app, name, { actions, router, preloader}) {
     super(app, `CRUD.${name}`);
-    this.#actions = {...CRUDActions,...CUSTOM_ACTIONS};
+    if(actions){
+      this.#actions = {...this.#actions, ...actions};
+    }
+    if(router){
+      this.#router = router;
+    }
+    if(preloader){
+      this.#preloader = preloader;
+    }
     this.ui = {};
     this.els = {};
     this.setOptions('names', {
@@ -108,11 +121,12 @@ class notCRUD extends notController {
   }
 
   async preloadVariants(type = 'list'){
-    await CRUDVariantsPreloader.preload(this, type);
+    await this.#preloader.preload(this, type);
   }
 
   getTitleFromLib(propName, id){
-    return Form.getVariant(propName, id).title;
+    throw new Error('not suported anymore');
+    //return Form.getVariant(propName, id).title;
   }
 
   getItemTitle(item){
@@ -137,7 +151,7 @@ class notCRUD extends notController {
 
   route(params = []) {
     try{
-      return CRUDRouter.route(this, params);
+      return this.#router.route(this, params);
     }catch(e){
       this.report(e);
       this.showErrorMessage(e);

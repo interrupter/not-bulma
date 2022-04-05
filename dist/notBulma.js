@@ -1853,7 +1853,7 @@ var notBulma = (function (exports) {
       }, {});
     };
 
-    class notCommon {
+    class notCommon$1 {
       static isError(e) {
         return e instanceof Error || Object.prototype.hasOwnProperty.call(e, 'status') && e.status === 'error';
       }
@@ -1946,8 +1946,8 @@ var notBulma = (function (exports) {
         if (obj) {
           const proc = notPath.get(':' + name, obj);
 
-          if (notCommon.isFunc(proc)) {
-            if (notCommon.isAsync(proc)) {
+          if (notCommon$1.isFunc(proc)) {
+            if (notCommon$1.isAsync(proc)) {
               return await proc(...params);
             } else {
               return proc(...params);
@@ -2047,10 +2047,10 @@ var notBulma = (function (exports) {
       static genLogMsg(prefix) {
         return function () {
           //not arrow bc of arguments special var is not available in arrow functions
-          let now = notCommon.localIsoDate(); // eslint-disable-next-line no-console
+          let now = notCommon$1.localIsoDate(); // eslint-disable-next-line no-console
 
-          window[notCommon.LOG].log(`[${now}]: ${prefix}::`, ...arguments);
-          notCommon.backlogAdd([`[${now}]: ${prefix}::`, ...arguments], 'log');
+          window[notCommon$1.LOG].log(`[${now}]: ${prefix}::`, ...arguments);
+          notCommon$1.backlogAdd([`[${now}]: ${prefix}::`, ...arguments], 'log');
         };
       }
       /**
@@ -2094,10 +2094,10 @@ var notBulma = (function (exports) {
       static genLogError(prefix) {
         return function () {
           //do not change to arrow function, bc of arguments
-          let now = notCommon.localIsoDate(); // eslint-disable-next-line no-console
+          let now = notCommon$1.localIsoDate(); // eslint-disable-next-line no-console
 
-          window[notCommon.LOG].error(`[${now}]: ${prefix}::`, ...arguments);
-          notCommon.backlogAdd([`[${now}]: ${prefix}::`, ...arguments], 'error');
+          window[notCommon$1.LOG].error(`[${now}]: ${prefix}::`, ...arguments);
+          notCommon$1.backlogAdd([`[${now}]: ${prefix}::`, ...arguments], 'error');
         };
       }
 
@@ -2378,29 +2378,29 @@ var notBulma = (function (exports) {
 
     }
 
-    _defineProperty(notCommon, "MANAGER", null);
+    _defineProperty(notCommon$1, "MANAGER", null);
 
-    _defineProperty(notCommon, "LOG", 'console');
+    _defineProperty(notCommon$1, "LOG", 'console');
 
-    _defineProperty(notCommon, "deepMerge", deepmerge);
+    _defineProperty(notCommon$1, "deepMerge", deepmerge);
 
-    _defineProperty(notCommon, "TZ_OFFSET", new Date().getTimezoneOffset() / 60 * -1);
+    _defineProperty(notCommon$1, "TZ_OFFSET", new Date().getTimezoneOffset() / 60 * -1);
 
-    _defineProperty(notCommon, "DEV_ENV", 'production');
+    _defineProperty(notCommon$1, "DEV_ENV", 'production');
 
-    _defineProperty(notCommon, "ENV_TYPE", window.NOT_ENV_TYPE ? window.NOT_ENV_TYPE : notCommon.DEV_ENV);
+    _defineProperty(notCommon$1, "ENV_TYPE", window.NOT_ENV_TYPE ? window.NOT_ENV_TYPE : notCommon$1.DEV_ENV);
 
-    _defineProperty(notCommon, "NOOP", function () {});
+    _defineProperty(notCommon$1, "NOOP", function () {});
 
-    _defineProperty(notCommon, "backlog", []);
+    _defineProperty(notCommon$1, "backlog", []);
 
-    _defineProperty(notCommon, "registry", {});
+    _defineProperty(notCommon$1, "registry", {});
 
     function absorbServices(target, src) {
       if (target) {
         for (let serv in src) {
           if (Object.prototype.hasOwnProperty.call(target, serv)) {
-            notCommon.logError(`services property duplication ${serv}`);
+            notCommon$1.logError(`services property duplication ${serv}`);
           }
 
           target[serv] = src[serv];
@@ -2463,7 +2463,7 @@ var notBulma = (function (exports) {
       if (target) {
         for (let ui in src) {
           if (Object.prototype.hasOwnProperty.call(target, ui)) {
-            notCommon.logError(`uis property duplication ${ui}`);
+            notCommon$1.logError(`uis property duplication ${ui}`);
           }
 
           target[ui] = src[ui];
@@ -2475,7 +2475,7 @@ var notBulma = (function (exports) {
       if (target) {
         for (let ui in src) {
           if (Object.prototype.hasOwnProperty.call(target, ui)) {
-            notCommon.logError(`fields property duplication ${ui}`);
+            notCommon$1.logError(`fields property duplication ${ui}`);
           }
 
           target[ui] = src[ui];
@@ -2483,10 +2483,10 @@ var notBulma = (function (exports) {
       }
     }
 
-    notCommon.register('absorb.wsc', absorbWSC);
-    notCommon.register('absorb.services', absorbServices);
-    notCommon.register('absorb.uis', absorbUIs);
-    notCommon.register('absorb.uis', absorbFields);
+    notCommon$1.register('absorb.wsc', absorbWSC);
+    notCommon$1.register('absorb.services', absorbServices);
+    notCommon$1.register('absorb.uis', absorbUIs);
+    notCommon$1.register('absorb.uis', absorbFields);
 
     var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -3001,10 +3001,10 @@ var notBulma = (function (exports) {
           this.setOptions(input.options);
         }
 
-        this.log = notCommon.genLogMsg(this.getWorking('name'));
+        this.log = notCommon$1.genLogMsg(this.getWorking('name'));
         this.info = this.log;
-        this.debug = notCommon.genLogDebug(this.getWorking('name'));
-        this.error = notCommon.genLogError(this.getWorking('name'));
+        this.debug = notCommon$1.genLogDebug(this.getWorking('name'));
+        this.error = notCommon$1.genLogError(this.getWorking('name'));
       }
 
       setCommon(what, args) {
@@ -3118,13 +3118,13 @@ var notBulma = (function (exports) {
       }
 
       report(e) {
-        if (notCommon.report) {
-          notCommon.report(e);
+        if (notCommon$1.report) {
+          notCommon$1.report(e);
         }
       }
 
       getApp() {
-        return notCommon.getApp();
+        return notCommon$1.getApp();
       }
 
       destroy() {
@@ -3469,12 +3469,12 @@ var notBulma = (function (exports) {
         this.debug(`tasks [${list}]`);
         let task = this.queue.shift();
 
-        if (!notCommon.isFunc(task.action)) {
+        if (!notCommon$1.isFunc(task.action)) {
           this.error('В задании нет исполнимой части, action не функция', task.title);
           return Promise.resolve();
         }
 
-        if (!notCommon.isFunc(task.resolve)) {
+        if (!notCommon$1.isFunc(task.resolve)) {
           this.error('В задании нет возвратной части, resolve не функция', task.title);
           return task.action();
         }
@@ -3799,8 +3799,8 @@ var notBulma = (function (exports) {
             return response.json();
           });
         } catch (e) {
-          notCommon.error(e);
-          notCommon.report(e);
+          notCommon$1.error(e);
+          notCommon$1.report(e);
         }
       }
 
@@ -3808,7 +3808,7 @@ var notBulma = (function (exports) {
         try {
           let actionData = this.getActionData(actionName),
               requestParams = this.collectRequestData(actionData);
-          const WS = notCommon.getApp().getWSClient();
+          const WS = notCommon$1.getApp().getWSClient();
           const messageName = this.getWSRequestName(actionName);
           const payload = Object.assign({}, requestParams, record.getData());
 
@@ -3822,8 +3822,8 @@ var notBulma = (function (exports) {
             });
           }
         } catch (e) {
-          notCommon.error(e);
-          notCommon.report(e);
+          notCommon$1.error(e);
+          notCommon$1.report(e);
         }
       }
 
@@ -3847,9 +3847,9 @@ var notBulma = (function (exports) {
           let client;
 
           if (Object.prototype.hasOwnProperty.call(actionData, 'wsClient') && actionData.wsClient) {
-            client = notCommon.getApp().getWSClient(actionData.wsClient);
+            client = notCommon$1.getApp().getWSClient(actionData.wsClient);
           } else {
-            client = notCommon.getApp().getWSClient();
+            client = notCommon$1.getApp().getWSClient();
           }
 
           if (client) {
@@ -3924,7 +3924,7 @@ var notBulma = (function (exports) {
       }
 
       getServerURL() {
-        return notCommon.getApp() ? notCommon.getApp().getOptions('api.server.url', '') : '';
+        return notCommon$1.getApp() ? notCommon$1.getApp().getOptions('api.server.url', '') : '';
       }
 
       getWSRequestName(actionName) {
@@ -3962,7 +3962,7 @@ var notBulma = (function (exports) {
 
         if (Object.prototype.hasOwnProperty.call(actionData, 'data') && Array.isArray(actionData.data)) {
           for (let i = 0; i < actionData.data.length; i++) {
-            let dataProviderName = 'get' + notCommon.capitalizeFirstLetter(actionData.data[i]);
+            let dataProviderName = 'get' + notCommon$1.capitalizeFirstLetter(actionData.data[i]);
 
             if (this[dataProviderName] && typeof this[dataProviderName] === 'function') {
               let data = this[dataProviderName](),
@@ -4116,7 +4116,7 @@ var notBulma = (function (exports) {
         }
 
         if (item && item.isProxy) {
-          notCommon.error('this is Proxy item');
+          notCommon$1.error('this is Proxy item');
           return item;
         }
 
@@ -4152,7 +4152,7 @@ var notBulma = (function (exports) {
 
       mapToMethods() {
         let manifest = this[META_INTERFACE].manifest,
-            app = notCommon.getApp(),
+            app = notCommon$1.getApp(),
             methods = {};
 
         if (manifest.methods) {
@@ -4239,7 +4239,7 @@ var notBulma = (function (exports) {
         let prx = this.getData(what, {});
 
         if (plain) {
-          return notCommon.stripProxy(prx);
+          return notCommon$1.stripProxy(prx);
         } else {
           return prx;
         }
@@ -4297,13 +4297,13 @@ var notBulma = (function (exports) {
           options
         });
         this.log('start app');
-        notCommon.register('app', this);
+        notCommon$1.register('app', this);
         this.initManifest();
         return this;
       }
 
       initManifest() {
-        notCommon.getJSON(this.getOptions('manifestURL'), {}).then(this.setInterfaceManifest.bind(this)).catch(notCommon.report.bind(this));
+        notCommon$1.getJSON(this.getOptions('manifestURL'), {}).then(this.setInterfaceManifest.bind(this)).catch(notCommon$1.report.bind(this));
       }
 
       initRouter() {
@@ -4404,17 +4404,17 @@ var notBulma = (function (exports) {
               return new notRecord(recordManifest, recordData);
             };
 
-            window['nr' + notCommon.capitalizeFirstLetter(name)] = this.getWorking('interfaces')[name];
+            window['nr' + notCommon$1.capitalizeFirstLetter(name)] = this.getWorking('interfaces')[name];
           }
         }
       }
 
       getRecordName(name) {
-        return OPT_RECORD_PREFIX + notCommon.capitalizeFirstLetter(name);
+        return OPT_RECORD_PREFIX + notCommon$1.capitalizeFirstLetter(name);
       }
 
       getControllerName(name) {
-        return OPT_CONTROLLER_PREFIX + notCommon.capitalizeFirstLetter(name);
+        return OPT_CONTROLLER_PREFIX + notCommon$1.capitalizeFirstLetter(name);
       }
 
       getInterfaces() {
@@ -4459,7 +4459,7 @@ var notBulma = (function (exports) {
           for (let servName in this.getOptions('services')) {
             try {
               let serv = this.getOptions(`services.${servName}`);
-              const servType = notCommon.detectType(serv);
+              const servType = notCommon$1.detectType(serv);
 
               switch (servType) {
                 case 'function':
@@ -4597,7 +4597,7 @@ var notBulma = (function (exports) {
 
 
       getApp() {
-        return notCommon.getApp();
+        return notCommon$1.getApp();
       }
       /**
        *  Sets default controller model
@@ -4646,7 +4646,7 @@ var notBulma = (function (exports) {
 
 
       setModelName(modelName) {
-        this.setWorking('modelName', notCommon.lowerFirstLetter(modelName));
+        this.setWorking('modelName', notCommon$1.lowerFirstLetter(modelName));
         return this;
       }
       /**
@@ -4709,7 +4709,7 @@ var notBulma = (function (exports) {
 
 
       setModuleName(val) {
-        this.setOptions('moduleName', notCommon.lowerFirstLetter(val));
+        this.setOptions('moduleName', notCommon$1.lowerFirstLetter(val));
         this.updateAutoName();
         return this;
       }
@@ -4729,7 +4729,7 @@ var notBulma = (function (exports) {
 
 
       getModulePrefix() {
-        return [notCommon.getApp().getOptions('paths.modules'), this.getModuleName()].join('/');
+        return [notCommon$1.getApp().getOptions('paths.modules'), this.getModuleName()].join('/');
       }
       /**
        *  Returns this model URL with URL prefix
@@ -4738,7 +4738,7 @@ var notBulma = (function (exports) {
 
 
       getModelURL() {
-        return notCommon.buildURL({
+        return notCommon$1.buildURL({
           prefix: this.getURLPrefix(),
           module: this.getModuleName(),
           model: this.getModelName()
@@ -4754,7 +4754,7 @@ var notBulma = (function (exports) {
 
       getModelActionURL(id) {
         let action = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-        return notCommon.buildURL({
+        return notCommon$1.buildURL({
           prefix: this.getURLPrefix(),
           module: this.getModuleName(),
           model: this.getModelName(),
@@ -4764,7 +4764,7 @@ var notBulma = (function (exports) {
       }
 
       buildURL(val) {
-        return notCommon.buildURL(val);
+        return notCommon$1.buildURL(val);
       }
       /**
        *  Updates working name
@@ -4855,7 +4855,7 @@ var notBulma = (function (exports) {
 
       getActionName() {
         let name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : OPT_DEFAULT_ACTION_NAME;
-        return 'run' + notCommon.capitalizeFirstLetter(name);
+        return 'run' + notCommon$1.capitalizeFirstLetter(name);
       }
       /**
        *  Get default controller action name
@@ -4973,11 +4973,11 @@ var notBulma = (function (exports) {
         let path = [];
 
         if (this.MODULE_NAME && this.MODULE_NAME.length > 0) {
-          path.push(notCommon.lowerFirstLetter(this.MODULE_NAME));
+          path.push(notCommon$1.lowerFirstLetter(this.MODULE_NAME));
         }
 
         if (this.MODEL_NAME && this.MODEL_NAME.length > 0) {
-          path.push(notCommon.lowerFirstLetter(this.MODEL_NAME));
+          path.push(notCommon$1.lowerFirstLetter(this.MODEL_NAME));
         }
 
         path = [path.join('/')];
@@ -5207,7 +5207,7 @@ var notBulma = (function (exports) {
             throw new Error(`Unknown locale phrase: ${phrase}`);
           }
         } catch (e) {
-          notCommon.debug(e);
+          notCommon$1.debug(e);
           return phrase;
         }
       }
@@ -5230,7 +5230,7 @@ var notBulma = (function (exports) {
           try {
             return window.localStorage.setItem('dictionary', JSON.stringify(dict));
           } catch (e) {
-            notCommon.debug(e);
+            notCommon$1.debug(e);
             return false;
           }
         }
@@ -5250,7 +5250,7 @@ var notBulma = (function (exports) {
               return false;
             }
           } catch (e) {
-            notCommon.debug(e);
+            notCommon$1.debug(e);
             return false;
           }
         }
@@ -5799,7 +5799,7 @@ var notBulma = (function (exports) {
 
     // (53:2) {#if !isNaN(field.maxLength) && field.maxLength }
     function create_if_block_7$3(ctx) {
-    	let t_value = notCommon.strLengthCap(notPath.get(/*field*/ ctx[1].path, /*item*/ ctx[2], /*helpers*/ ctx[3]), /*field*/ ctx[1].maxLength) + "";
+    	let t_value = notCommon$1.strLengthCap(notPath.get(/*field*/ ctx[1].path, /*item*/ ctx[2], /*helpers*/ ctx[3]), /*field*/ ctx[1].maxLength) + "";
     	let t;
 
     	return {
@@ -5810,7 +5810,7 @@ var notBulma = (function (exports) {
     			insert(target, t, anchor);
     		},
     		p(ctx, dirty) {
-    			if (dirty & /*field, item, helpers*/ 14 && t_value !== (t_value = notCommon.strLengthCap(notPath.get(/*field*/ ctx[1].path, /*item*/ ctx[2], /*helpers*/ ctx[3]), /*field*/ ctx[1].maxLength) + "")) set_data(t, t_value);
+    			if (dirty & /*field, item, helpers*/ 14 && t_value !== (t_value = notCommon$1.strLengthCap(notPath.get(/*field*/ ctx[1].path, /*item*/ ctx[2], /*helpers*/ ctx[3]), /*field*/ ctx[1].maxLength) + "")) set_data(t, t_value);
     		},
     		i: noop,
     		o: noop,
@@ -9618,11 +9618,11 @@ var notBulma = (function (exports) {
             _this.actionFieldsInit(subFieldName, options, data);
           });
         } else {
-          if (!notCommon.objHas(options, 'fields')) {
+          if (!notCommon$1.objHas(options, 'fields')) {
             options.fields = {};
           }
 
-          if (!notCommon.objHas(options.fields, fieldName)) {
+          if (!notCommon$1.objHas(options.fields, fieldName)) {
             options.fields[fieldName] = {};
           } //copying initial data
 
@@ -10064,7 +10064,7 @@ var notBulma = (function (exports) {
       } //adding variants list to field from VARIANTS store
 
 
-      if (notCommon.objHas(field, 'variantsSource') && VARIANTS.contains(field.variantsSource)) {
+      if (notCommon$1.objHas(field, 'variantsSource') && VARIANTS.contains(field.variantsSource)) {
         field.variants = VARIANTS.get(field.variantsSource);
       } else {
         if (!field.variants || field.variants.length === 0) {
@@ -10100,11 +10100,11 @@ var notBulma = (function (exports) {
       } else {
         let opts = {};
 
-        if (formFieldsOptions && notCommon.objHas(formFieldsOptions, 'mutations') && notCommon.objHas(formFieldsOptions.mutations, fieldName)) {
+        if (formFieldsOptions && notCommon$1.objHas(formFieldsOptions, 'mutations') && notCommon$1.objHas(formFieldsOptions.mutations, fieldName)) {
           opts = formFieldsOptions.mutations[fieldName]; //option mutation for field
         }
 
-        if (data && notCommon.objHas(data, fieldName)) {
+        if (data && notCommon$1.objHas(data, fieldName)) {
           opts.value = data[fieldName];
         }
 
@@ -10259,7 +10259,7 @@ var notBulma = (function (exports) {
     }
 
     function setFieldValue(form, fieldName, value) {
-      if (notCommon.objHas(form, fieldName)) {
+      if (notCommon$1.objHas(form, fieldName)) {
         form[fieldName].value = value;
         return true;
       }
@@ -10268,7 +10268,7 @@ var notBulma = (function (exports) {
     }
 
     function fieldIsVisibleAndFilled(form, fieldName) {
-      return notCommon.objHas(form, fieldName) && form[fieldName].enabled && form[fieldName].visible && typeof form[fieldName].value !== 'undefined';
+      return notCommon$1.objHas(form, fieldName) && form[fieldName].enabled && form[fieldName].visible && typeof form[fieldName].value !== 'undefined';
     }
 
     function collectData(fields, form) {
@@ -12808,7 +12808,7 @@ var notBulma = (function (exports) {
 
         _classPrivateFieldSet(this, _uiComponent, ui);
 
-        if (notCommon.objHas(options, 'action')) {
+        if (notCommon$1.objHas(options, 'action')) {
           _classPrivateFieldSet(this, _action, options.action);
         }
 
@@ -12840,7 +12840,7 @@ var notBulma = (function (exports) {
       initFields() {
         const manifest = this.getFormManifest();
 
-        if (notCommon.objHas(manifest, 'fields') && _classPrivateFieldGet(this, _fields).isEmpty()) {
+        if (notCommon$1.objHas(manifest, 'fields') && _classPrivateFieldGet(this, _fields).isEmpty()) {
           _classPrivateFieldGet(this, _fields).import(manifest.fields); //all fields available in model manifest
 
         }
@@ -12911,7 +12911,7 @@ var notBulma = (function (exports) {
           };
           _classPrivateFieldGet(this, _form$1) && _classPrivateFieldGet(this, _form$1).updateFormValidationStatus(report);
           this.emit('error', report);
-          notCommon.report(e);
+          notCommon$1.report(e);
         }
       }
 
@@ -13060,8 +13060,8 @@ var notBulma = (function (exports) {
       getFormManifest() {
         const modelName = this.getOptions('model', undefined);
 
-        if (modelName && notCommon.getApp()) {
-          return notCommon.getApp().getInterfaceManifest(modelName);
+        if (modelName && notCommon$1.getApp()) {
+          return notCommon$1.getApp().getInterfaceManifest(modelName);
         }
 
         if (this.getOptions('manifest', undefined)) {
@@ -15065,7 +15065,7 @@ var notBulma = (function (exports) {
     	let { classes = '' } = $$props;
     	let sided = false;
     	let { events = {} } = $$props;
-    	let { register = notCommon.registerWidgetEvents.bind(notCommon) } = $$props;
+    	let { register = notCommon$1.registerWidgetEvents.bind(notCommon$1) } = $$props;
 
     	let { onUpdate = data => {
     		if (Object.prototype.hasOwnProperty.call(data, 'title')) {
@@ -18625,7 +18625,7 @@ var notBulma = (function (exports) {
     function instance$x($$self, $$props, $$invalidate) {
     	const dispatch = createEventDispatcher();
     	let { events = {} } = $$props;
-    	let { register = notCommon.registerWidgetEvents.bind(notCommon) } = $$props;
+    	let { register = notCommon$1.registerWidgetEvents.bind(notCommon$1) } = $$props;
     	let { closed = true } = $$props;
 
     	function toggle(e) {
@@ -19715,7 +19715,7 @@ var notBulma = (function (exports) {
             let libProps = Object.keys(preload);
             let proms = [];
             libProps.forEach(function (prop) {
-              let modelName = notCommon.lowerFirstLetter(preload[prop]);
+              let modelName = notCommon$1.lowerFirstLetter(preload[prop]);
               let Model = controller.make[modelName]({});
               proms.push(Model.$listAll());
             });
@@ -19739,6 +19739,43 @@ var notBulma = (function (exports) {
           controller.log('preload finished');
         } catch (e) {
           controller.report(e);
+          controller.showErrorMessage(e);
+        }
+      }
+
+    }
+
+    const DEFAULT_ACTION = 'list';
+    class CRUDRouter {
+      static extractActionName(params) {
+        let actionName = DEFAULT_ACTION;
+
+        if (params.length == 1) {
+          if (params[0] === 'create') {
+            actionName = 'create';
+          } else {
+            actionName = 'details';
+          }
+        } else if (params.length > 1) {
+          if (params[1] === 'delete') {
+            actionName = 'delete';
+          } else if (params[1] === 'update') {
+            actionName = 'update';
+          } else {
+            actionName = params[1];
+          }
+        }
+
+        return actionName;
+      }
+
+      static route(controller, params) {
+        try {
+          const actionName = CRUDRouter.extractActionName(params);
+          controller.setCurrentAction(actionName);
+          return controller.runAction(actionName, params);
+        } catch (e) {
+          notCommon.report(e);
           controller.showErrorMessage(e);
         }
       }
@@ -20194,7 +20231,7 @@ var notBulma = (function (exports) {
               ui: controller.getOptions(`${ACTION$2}.ui`, {}),
               fields: controller.getOptions(`${ACTION$2}.fields`, {})
             },
-            data: notCommon.stripProxy(res.result)
+            data: notCommon$1.stripProxy(res.result)
           });
           controller.ui[ACTION$2].$on('submit', async function (ev) {
             const success = await controller.onActionSubmit(ACTION$2, ev.detail);
@@ -20330,21 +20367,50 @@ var notBulma = (function (exports) {
 
     var _actions = /*#__PURE__*/new WeakMap();
 
+    var _router = /*#__PURE__*/new WeakMap();
+
+    var _preloader = /*#__PURE__*/new WeakMap();
+
     class notCRUD extends notController {
-      constructor(app, name) {
-        let CUSTOM_ACTIONS = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+      constructor(app, name, _ref) {
+        let {
+          actions,
+          router,
+          preloader
+        } = _ref;
         super(app, `CRUD.${name}`);
 
         _classPrivateFieldInitSpec(this, _actions, {
           writable: true,
-          value: {}
+          value: { ...CRUDActions
+          }
+        });
+
+        _classPrivateFieldInitSpec(this, _router, {
+          writable: true,
+          value: CRUDRouter
+        });
+
+        _classPrivateFieldInitSpec(this, _preloader, {
+          writable: true,
+          value: CRUDVariantsPreloader
         });
 
         _defineProperty(this, "TITLE_FIELDS_PRIORITY", TITLE_FIELDS_PRIORITY);
 
-        _classPrivateFieldSet(this, _actions, { ...CRUDActions,
-          ...CUSTOM_ACTIONS
-        });
+        if (actions) {
+          _classPrivateFieldSet(this, _actions, { ..._classPrivateFieldGet(this, _actions),
+            ...actions
+          });
+        }
+
+        if (router) {
+          _classPrivateFieldSet(this, _router, router);
+        }
+
+        if (preloader) {
+          _classPrivateFieldSet(this, _preloader, preloader);
+        }
 
         this.ui = {};
         this.els = {};
@@ -20452,7 +20518,7 @@ var notBulma = (function (exports) {
 
       getItemTitle(item) {
         const fieldName = this.TITLE_FIELDS_PRIORITY.find(function (key) {
-          return notCommon.objHas(item, key);
+          return notCommon$1.objHas(item, key);
         });
 
         if (fieldName) {
@@ -20475,7 +20541,7 @@ var notBulma = (function (exports) {
         let params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
         try {
-          return CRUDRouter.route(this, params);
+          return _classPrivateFieldGet(this, _router).route(this, params);
         } catch (e) {
           this.report(e);
           this.showErrorMessage(e);
@@ -20485,7 +20551,7 @@ var notBulma = (function (exports) {
       runAction(actionName, params) {
         if (Object.keys(_classPrivateFieldGet(this, _actions)).includes(actionName)) {
           return _classPrivateFieldGet(this, _actions)[actionName].run(this, params);
-        } else if (typeof this['run' + notCommon.capitalizeFirstLetter(actionName)]) {
+        } else if (typeof this['run' + notCommon$1.capitalizeFirstLetter(actionName)]) {
           throw new Error(`No such action: ${actionName} in contoller ${this.getWorking('name')}`);
         }
       }
@@ -20569,7 +20635,7 @@ var notBulma = (function (exports) {
 
     var index$5 = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        notCommon: notCommon,
+        notCommon: notCommon$1,
         notPath: notPath,
         notController: notController,
         notBase: notBase,
@@ -20658,7 +20724,7 @@ var notBulma = (function (exports) {
     	let { bottom = false } = $$props;
     	let sided = false;
     	let { events = {} } = $$props;
-    	let { register = notCommon.registerWidgetEvents.bind(notCommon) } = $$props;
+    	let { register = notCommon$1.registerWidgetEvents.bind(notCommon$1) } = $$props;
 
     	let { onUpdate = data => {
     		if (Object.prototype.hasOwnProperty.call(data, 'state')) {
@@ -21050,7 +21116,7 @@ var notBulma = (function (exports) {
     	let { username = 'John Doe' } = $$props;
     	let { role = 'admin' } = $$props;
     	let { events = {} } = $$props;
-    	let { register = notCommon.registerWidgetEvents } = $$props;
+    	let { register = notCommon$1.registerWidgetEvents } = $$props;
 
     	let { onUpdate = data => {
     		if (Object.prototype.hasOwnProperty.call(data, 'username')) {
