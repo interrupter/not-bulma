@@ -12610,7 +12610,7 @@ var notBulma = (function (exports) {
     	];
     }
 
-    class Form$1 extends SvelteComponent {
+    class Form extends SvelteComponent {
     	constructor(options) {
     		super();
 
@@ -12754,7 +12754,7 @@ var notBulma = (function (exports) {
           options = {},
           working = {},
           data: _data = {},
-          ui = Form$1 //default UI
+          ui = Form //default UI
 
         } = _ref;
         super({
@@ -13429,7 +13429,7 @@ var notBulma = (function (exports) {
       constructor(_ref) {
         let {
           options = {},
-          formComponent = Form$1,
+          formComponent = Form,
           formSetComponent = Form_set
         } = _ref;
         super({
@@ -13463,7 +13463,7 @@ var notBulma = (function (exports) {
           value: null
         });
 
-        _classPrivateFieldSet(this, _formComponent, Form$1);
+        _classPrivateFieldSet(this, _formComponent, Form);
 
         _classPrivateFieldSet(this, _formSetComponent, Form_set);
 
@@ -20099,7 +20099,7 @@ var notBulma = (function (exports) {
 
           controller.ui[ACTION$4] = new notForm({
             options: {
-              target: controller.els.main,
+              target: controller.getContainerInnerElement(),
               model: controller.getModelName(),
               action: createActionName,
               name: `${controller.getName()}.${ACTION$4}Form`,
@@ -20163,7 +20163,7 @@ var notBulma = (function (exports) {
           }]);
           controller.ui[ACTION$3] = new notForm({
             options: {
-              target: controller.els.main,
+              target: controller.getContainerInnerElement(),
               model: controller.getModelName(),
               action: detailsActionName,
               name: `${controller.getName()}.${ACTION$3}Form`,
@@ -20176,9 +20176,9 @@ var notBulma = (function (exports) {
             data: res.result
           });
           controller.emit(`after:render:${ACTION$3}`);
-          controller.ui[ACTION$3].$on('reject', controller.goList.bind(this));
+          controller.ui[ACTION$3].$on('reject', controller.goList.bind(controller));
         } catch (e) {
-          contoller.report(e);
+          controller.report(e);
           controller.showErrorMessage(e);
         }
       }
@@ -20222,7 +20222,7 @@ var notBulma = (function (exports) {
           }]);
           controller.ui[ACTION$2] = new notForm({
             options: {
-              target: controller.els.main,
+              target: controller.getContainerInnerElement(),
               model: controller.getModelName(),
               action: MODEL_ACTION_UPDATE,
               name: `${controller.getName()}.${ACTION$2}Form`,
@@ -20329,7 +20329,7 @@ var notBulma = (function (exports) {
         };
         const TABLE_OPTIONS = {
           options: {
-            targetEl: controller.els.main,
+            targetEl: controller.getContainerInnerElement(),
             endless: false,
             actions: [{
               title: 'Создать',
@@ -20509,11 +20509,11 @@ var notBulma = (function (exports) {
 
       async preloadVariants() {
         let type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'list';
-        await CRUDVariantsPreloader.preload(this, type);
+        await _classPrivateFieldGet(this, _preloader).preload(this, type);
       }
 
       getTitleFromLib(propName, id) {
-        return Form.getVariant(propName, id).title;
+        throw new Error('not suported anymore'); //return Form.getVariant(propName, id).title;
       }
 
       getItemTitle(item) {
@@ -20650,7 +20650,7 @@ var notBulma = (function (exports) {
         FIELDS: FIELDS$1,
         VARIANTS: VARIANTS,
         notTable: notTable,
-        UIForm: Form$1,
+        UIForm: Form,
         notForm: notForm,
         notFormSet: notFormSet,
         notFormUtils: notFormUtils,
