@@ -144,6 +144,9 @@ export default class notBase extends EventEmitter {
 
   destroy(){
     this.removeEvent();
+    this.setOptions(null);
+    this.setWorking(null);
+    this.setData(null);
     this.emit('destroy');
   }
 

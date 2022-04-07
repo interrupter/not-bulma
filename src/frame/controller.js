@@ -52,14 +52,11 @@ class notController extends notBase {
    *  @param {notApp} app
    */
   constructor(app, name) {
-    super({
-      working: {
-        name
-      }
-    });
+    super({});
     this.app = app;
     this.app.setCurrentController(this);
     this.setWorking({
+      name,
       ready: false,
       views: {},
       libs: {},
@@ -88,6 +85,16 @@ class notController extends notBase {
         this.make[t] = interfaces[t];
       }
     }
+    this.on('destroy', ()=>{
+      this.app = null;
+      for(let uiName in this.ui){
+        this.ui[uiName].destroy && this.ui[uiName].destroy();
+        this.ui[uiName].$destroy && this.ui[uiName].$destroy();
+        this.ui[uiName] = null;
+      }
+      this.els = null;
+      this.make = null;
+    });
     return this;
   }
 
@@ -253,7 +260,7 @@ class notController extends notBase {
    */
   updateAutoName() {
     if (this.getOptions('autoName', OPT_DEFAULT_AUTO_NAME)) {
-      this.setWorking('name', this.getModelURL());
+      //this.setWorking('name', this.getModelURL());
     }
   }
 
