@@ -18,12 +18,10 @@
     LOCALE
   } from '../../../locale';
 
-  import {Buttons, Links, Images, Various} from '../../../elements';
-
-  const {UIButtons} = Buttons;
-  const {UILinks} = Links;
-  const {UIImages} = Images;
-  const {UIBooleans} = Various;
+  import UIButtons from '../../../elements/button/ui.buttons.svelte';
+  import UILinks from '../../../elements/link/ui.links.svelte';
+  import UIImages from '../../../elements/image/ui.images.svelte';
+  import UIBooleans from '../../../elements/various/ui.booleans.svelte';
 
   import TableSwitch from './controls/ui.switch.svelte';
   import TableTags from './controls/ui.tags.svelte';

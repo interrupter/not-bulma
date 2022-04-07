@@ -1,8 +1,8 @@
 <script>
   import {onMount} from 'svelte';
-  
+
   import {LOCALE} from '../../locale';
-  import {notCommon} from '../../frame';
+  import notCommon from '../../frame/common';
   //if we want to address this tag
   export let id = 'tagId';
   export let title = 'tag';

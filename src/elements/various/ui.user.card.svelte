@@ -1,6 +1,6 @@
 <script>
   import {onMount} from 'svelte';
-  import {notCommon} from '../../frame';
+  import notCommon from '../../frame/common';
 
   export let id = 'userCard';
   export let image = 'https://bulma.io/images/placeholders/32x32.png';

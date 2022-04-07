@@ -1,6 +1,6 @@
 <script>
   import {onMount} from 'svelte';
-  import {notCommon} from '../../frame';
+  import notCommon from '../../frame/common';
   //if we want to address this indicator
   export let id = 'tagId';
 
