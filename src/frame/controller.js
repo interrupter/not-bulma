@@ -135,7 +135,7 @@ class notController extends notBase {
 
   /**
    *  Returns current model name
-   *  @return {notRecord}
+   *  @return {string}
    */
   getModelName() {
     return this.getWorking('modelName');

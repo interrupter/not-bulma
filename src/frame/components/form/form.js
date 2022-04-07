@@ -337,7 +337,7 @@ class notForm extends notBase {
   }
 
   getFormManifest() {
-    const modelName = this.getOptions('model', undefined);
+    const modelName = this.getModelName();
     if (modelName && notCommon.getApp()) {
       return notCommon.getApp().getInterfaceManifest(modelName);
     }
@@ -392,6 +392,26 @@ class notForm extends notBase {
 
   updateField(fieldName, props){
     this.#form.updateField(fieldName, props);
+  }
+
+  getModel(name, data){
+    if(typeof name === 'string'){
+      return this.getInterface(name)(data || {});
+    }else{
+      return this.getInterface()(name || {});
+    }
+  }
+
+  getInterface(name = false){
+    return notCommon.getApp().getInterface(name || this.getModelName());
+  }
+
+  /**
+   *  Returns current model name
+   *  @return {string}
+   */
+  getModelName() {
+    return this.getOptions('model');
   }
 
 }
