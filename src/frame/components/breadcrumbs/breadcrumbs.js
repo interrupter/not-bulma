@@ -7,8 +7,8 @@ class notBreadcrumbs{
 
   static render({target, root = '', navigate}){
     this.remove();
-    if(Breadcrumbs.UIConstructor){
-      this.ui = new Breadcrumbs.UIConstructor({
+    if(notBreadcrumbs.UIConstructor){
+      this.ui = new notBreadcrumbs.UIConstructor({
         target,
         props:{
           items:  this.getBreadcrumbs(),
