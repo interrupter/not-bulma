@@ -10,7 +10,7 @@ import notCommon from '../common';
 import CRUDVariantsPreloader from './variants.preloader.js';
 import CRUDRouter from './router.js';
 import CRUDMessage from './message.js';
-import * as CRUDActions from './actions';
+import CRUDActions from './actions';
 
 const BREADCRUMBS = [];
 const TITLE_FIELDS_PRIORITY = ['title', 'label', 'id', 'name'];

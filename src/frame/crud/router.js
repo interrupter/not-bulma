@@ -27,7 +27,7 @@ export default class CRUDRouter{
       controller.setCurrentAction(actionName);
       return controller.runAction(actionName, params);
     }catch(e){
-      notCommon.report(e);
+      controller.report(e);
       controller.showErrorMessage(e);
     }
   }
