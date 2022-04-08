@@ -24,7 +24,7 @@ class notCRUD extends notController {
   TITLE_FIELDS_PRIORITY = TITLE_FIELDS_PRIORITY;
   static ERROR_DEFAULT = UICommon.ERROR_DEFAULT;
 
-  constructor(app, name, { actions, router, preloader}) {
+  constructor(app, name, { actions, router, preloader} = {}) {
     super(app, `CRUD.${name}`);
     if(actions){
       this.#actions = {...this.#actions, ...actions};
