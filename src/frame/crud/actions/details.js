@@ -48,7 +48,7 @@ export default class CRUDActionDetails {
         data: res.result
       });
       controller.emit(`after:render:${ACTION}`);
-      controller.ui[ACTION].$on('reject', controller.goList.bind(controller));
+      controller.ui[ACTION].on('reject', controller.goList.bind(controller));
     }catch(e){
       controller.report(e);
       controller.showErrorMessage(e);

@@ -32,14 +32,14 @@ export default class CRUDActionCreate {
         },
         data: defData
       });
-      controller.ui[ACTION].$on('submit', async (data) => {
+      controller.ui[ACTION].on('submit', async (data) => {
         const success = await controller.onActionSubmit(createActionName, data);
         if(success){
           controller.ui[ACTION].setFormSuccess();
           setTimeout(() => controller.goList(), 1000);
         }
       });
-      controller.ui[ACTION].$on('reject', controller.goList.bind(controller));
+      controller.ui[ACTION].on('reject', controller.goList.bind(controller));
       controller.emit(`after:render:${ACTION}`);
     }catch(e){
       controller.report(e);

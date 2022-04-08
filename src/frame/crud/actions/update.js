@@ -51,13 +51,13 @@ export default class CRUDActionUpdate{
         data: notCommon.stripProxy(res.result)
       });
 
-      controller.ui[ACTION].$on('submit', async (ev) => {
+      controller.ui[ACTION].on('submit', async (ev) => {
         const success = await controller.onActionSubmit(ACTION, ev.detail);
         if(success){
           setTimeout(() => controller.goDetails(id), 1000);
         }
       });
-      controller.ui[ACTION].$on('reject', controller.goList.bind(controller));
+      controller.ui[ACTION].on('reject', controller.goList.bind(controller));
       controller.emit(`after:render:${ACTION}`);
     }catch(e){
       controller.report(e);
