@@ -276,6 +276,14 @@ class notController extends notBase {
   }
 
   /**
+   *  Gets object name
+   *  @return {string}
+   */
+  getName(val) {
+    return this.getWorking('name');
+  }
+
+  /**
    *  Preload records from server, using listAll method,
    *  returns Promise
    *  @param {object}  list  map of preloaded records
