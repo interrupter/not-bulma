@@ -108,6 +108,7 @@ class notForm extends notBase {
         data: this.getFormData(),
       });
       const target = this.getFormTargetEl();
+      while(target.children.length) target.removeChild(target.firstChild);
       this.#form = new this.#uiComponent({
         target,
         props
@@ -185,7 +186,11 @@ class notForm extends notBase {
 
   destroy() {
     this.emit('destroy');
-    this.#form = null;
+    if (this.#form){
+      this.#form.$destroy && this.#form.$destroy();
+      this.#form.destroy && this.#form.destroy();
+      this.#form = null;
+    }
     this.#validationRunner = null;
     this.#action = null;
     this.#fields = null;

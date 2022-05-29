@@ -1118,7 +1118,7 @@ var notBulma = (function (exports) {
     	}
     }
 
-    var index$c = /*#__PURE__*/Object.freeze({
+    var index$b = /*#__PURE__*/Object.freeze({
         __proto__: null,
         UIBlock: Ui_block,
         UIBox: Ui_box,
@@ -1828,7 +1828,7 @@ var notBulma = (function (exports) {
       }, {});
     };
 
-    class notCommon$2 {
+    class notCommon$1 {
       static isError(e) {
         return e instanceof Error || Object.prototype.hasOwnProperty.call(e, 'status') && e.status === 'error';
       }
@@ -1921,8 +1921,8 @@ var notBulma = (function (exports) {
         if (obj) {
           const proc = notPath.get(':' + name, obj);
 
-          if (notCommon$2.isFunc(proc)) {
-            if (notCommon$2.isAsync(proc)) {
+          if (notCommon$1.isFunc(proc)) {
+            if (notCommon$1.isAsync(proc)) {
               return await proc(...params);
             } else {
               return proc(...params);
@@ -2022,10 +2022,10 @@ var notBulma = (function (exports) {
       static genLogMsg(prefix) {
         return function () {
           //not arrow bc of arguments special var is not available in arrow functions
-          let now = notCommon$2.localIsoDate(); // eslint-disable-next-line no-console
+          let now = notCommon$1.localIsoDate(); // eslint-disable-next-line no-console
 
-          window[notCommon$2.LOG].log(`[${now}]: ${prefix}::`, ...arguments);
-          notCommon$2.backlogAdd([`[${now}]: ${prefix}::`, ...arguments], 'log');
+          window[notCommon$1.LOG].log(`[${now}]: ${prefix}::`, ...arguments);
+          notCommon$1.backlogAdd([`[${now}]: ${prefix}::`, ...arguments], 'log');
         };
       }
       /**
@@ -2069,10 +2069,10 @@ var notBulma = (function (exports) {
       static genLogError(prefix) {
         return function () {
           //do not change to arrow function, bc of arguments
-          let now = notCommon$2.localIsoDate(); // eslint-disable-next-line no-console
+          let now = notCommon$1.localIsoDate(); // eslint-disable-next-line no-console
 
-          window[notCommon$2.LOG].error(`[${now}]: ${prefix}::`, ...arguments);
-          notCommon$2.backlogAdd([`[${now}]: ${prefix}::`, ...arguments], 'error');
+          window[notCommon$1.LOG].error(`[${now}]: ${prefix}::`, ...arguments);
+          notCommon$1.backlogAdd([`[${now}]: ${prefix}::`, ...arguments], 'error');
         };
       }
 
@@ -2353,29 +2353,29 @@ var notBulma = (function (exports) {
 
     }
 
-    _defineProperty(notCommon$2, "MANAGER", null);
+    _defineProperty(notCommon$1, "MANAGER", null);
 
-    _defineProperty(notCommon$2, "LOG", 'console');
+    _defineProperty(notCommon$1, "LOG", 'console');
 
-    _defineProperty(notCommon$2, "deepMerge", deepmerge);
+    _defineProperty(notCommon$1, "deepMerge", deepmerge);
 
-    _defineProperty(notCommon$2, "TZ_OFFSET", new Date().getTimezoneOffset() / 60 * -1);
+    _defineProperty(notCommon$1, "TZ_OFFSET", new Date().getTimezoneOffset() / 60 * -1);
 
-    _defineProperty(notCommon$2, "DEV_ENV", 'production');
+    _defineProperty(notCommon$1, "DEV_ENV", 'production');
 
-    _defineProperty(notCommon$2, "ENV_TYPE", window.NOT_ENV_TYPE ? window.NOT_ENV_TYPE : notCommon$2.DEV_ENV);
+    _defineProperty(notCommon$1, "ENV_TYPE", window.NOT_ENV_TYPE ? window.NOT_ENV_TYPE : notCommon$1.DEV_ENV);
 
-    _defineProperty(notCommon$2, "NOOP", function () {});
+    _defineProperty(notCommon$1, "NOOP", function () {});
 
-    _defineProperty(notCommon$2, "backlog", []);
+    _defineProperty(notCommon$1, "backlog", []);
 
-    _defineProperty(notCommon$2, "registry", {});
+    _defineProperty(notCommon$1, "registry", {});
 
     function absorbServices(target, src) {
       if (target) {
         for (let serv in src) {
           if (Object.prototype.hasOwnProperty.call(target, serv)) {
-            notCommon$2.logError(`services property duplication ${serv}`);
+            notCommon$1.logError(`services property duplication ${serv}`);
           }
 
           target[serv] = src[serv];
@@ -2438,7 +2438,7 @@ var notBulma = (function (exports) {
       if (target) {
         for (let ui in src) {
           if (Object.prototype.hasOwnProperty.call(target, ui)) {
-            notCommon$2.logError(`uis property duplication ${ui}`);
+            notCommon$1.logError(`uis property duplication ${ui}`);
           }
 
           target[ui] = src[ui];
@@ -2450,7 +2450,7 @@ var notBulma = (function (exports) {
       if (target) {
         for (let ui in src) {
           if (Object.prototype.hasOwnProperty.call(target, ui)) {
-            notCommon$2.logError(`fields property duplication ${ui}`);
+            notCommon$1.logError(`fields property duplication ${ui}`);
           }
 
           target[ui] = src[ui];
@@ -2458,10 +2458,10 @@ var notBulma = (function (exports) {
       }
     }
 
-    notCommon$2.register('absorb.wsc', absorbWSC);
-    notCommon$2.register('absorb.services', absorbServices);
-    notCommon$2.register('absorb.uis', absorbUIs);
-    notCommon$2.register('absorb.uis', absorbFields);
+    notCommon$1.register('absorb.wsc', absorbWSC);
+    notCommon$1.register('absorb.services', absorbServices);
+    notCommon$1.register('absorb.uis', absorbUIs);
+    notCommon$1.register('absorb.uis', absorbFields);
 
     /* src/elements/various/ui.indicator.svelte generated by Svelte v3.46.6 */
 
@@ -2528,7 +2528,7 @@ var notBulma = (function (exports) {
     	let { bottom = false } = $$props;
     	let sided = false;
     	let { events = {} } = $$props;
-    	let { register = notCommon$2.registerWidgetEvents.bind(notCommon$2) } = $$props;
+    	let { register = notCommon$1.registerWidgetEvents.bind(notCommon$1) } = $$props;
 
     	let { onUpdate = data => {
     		if (Object.prototype.hasOwnProperty.call(data, 'state')) {
@@ -3318,7 +3318,7 @@ var notBulma = (function (exports) {
             throw new Error(`Unknown locale phrase: ${phrase}`);
           }
         } catch (e) {
-          notCommon$2.debug(e);
+          notCommon$1.debug(e);
           return phrase;
         }
       }
@@ -3341,7 +3341,7 @@ var notBulma = (function (exports) {
           try {
             return window.localStorage.setItem('dictionary', JSON.stringify(dict));
           } catch (e) {
-            notCommon$2.debug(e);
+            notCommon$1.debug(e);
             return false;
           }
         }
@@ -3361,7 +3361,7 @@ var notBulma = (function (exports) {
               return false;
             }
           } catch (e) {
-            notCommon$2.debug(e);
+            notCommon$1.debug(e);
             return false;
           }
         }
@@ -3478,7 +3478,7 @@ var notBulma = (function (exports) {
     	let { classes = '' } = $$props;
     	let sided = false;
     	let { events = {} } = $$props;
-    	let { register = notCommon$2.registerWidgetEvents.bind(notCommon$2) } = $$props;
+    	let { register = notCommon$1.registerWidgetEvents.bind(notCommon$1) } = $$props;
 
     	let { onUpdate = data => {
     		if (Object.prototype.hasOwnProperty.call(data, 'title')) {
@@ -3794,7 +3794,7 @@ var notBulma = (function (exports) {
     	let { username = 'John Doe' } = $$props;
     	let { role = 'admin' } = $$props;
     	let { events = {} } = $$props;
-    	let { register = notCommon$2.registerWidgetEvents } = $$props;
+    	let { register = notCommon$1.registerWidgetEvents } = $$props;
 
     	let { onUpdate = data => {
     		if (Object.prototype.hasOwnProperty.call(data, 'username')) {
@@ -3852,7 +3852,7 @@ var notBulma = (function (exports) {
     	}
     }
 
-    var index$b = /*#__PURE__*/Object.freeze({
+    var index$a = /*#__PURE__*/Object.freeze({
         __proto__: null,
         UIBooleans: Ui_booleans,
         UIIndicator: Ui_indicator,
@@ -4506,7 +4506,7 @@ var notBulma = (function (exports) {
     	}
     }
 
-    var index$a = /*#__PURE__*/Object.freeze({
+    var index$9 = /*#__PURE__*/Object.freeze({
         __proto__: null,
         UIButton: Ui_button,
         UIButtonsRow: Ui_buttons_row,
@@ -13403,7 +13403,7 @@ var notBulma = (function (exports) {
     	}
     }
 
-    var index$9 = /*#__PURE__*/Object.freeze({
+    var index$8 = /*#__PURE__*/Object.freeze({
         __proto__: null,
         UIAutocomplete: Ui_autocomplete,
         UICheckboxList: Ui_checkbox_list,
@@ -13998,7 +13998,7 @@ var notBulma = (function (exports) {
     	}
     }
 
-    var index$8 = /*#__PURE__*/Object.freeze({
+    var index$7 = /*#__PURE__*/Object.freeze({
         __proto__: null,
         UIIconButtonWithTag: Ui_icon_button_with_tag,
         UIIconFloating: Ui_icon_floating,
@@ -14230,7 +14230,7 @@ var notBulma = (function (exports) {
     	}
     }
 
-    var index$7 = /*#__PURE__*/Object.freeze({
+    var index$6 = /*#__PURE__*/Object.freeze({
         __proto__: null,
         UIImages: Ui_images
     });
@@ -14707,7 +14707,7 @@ var notBulma = (function (exports) {
     	}
     }
 
-    var index$6 = /*#__PURE__*/Object.freeze({
+    var index$5 = /*#__PURE__*/Object.freeze({
         __proto__: null,
         UIColumn: Ui_column,
         UIColumns: Ui_columns,
@@ -15206,7 +15206,7 @@ var notBulma = (function (exports) {
     	}
     }
 
-    var index$5 = /*#__PURE__*/Object.freeze({
+    var index$4 = /*#__PURE__*/Object.freeze({
         __proto__: null,
         UILink: Ui_link,
         UILinks: Ui_links
@@ -15947,7 +15947,7 @@ var notBulma = (function (exports) {
     	}
     }
 
-    var index$4 = /*#__PURE__*/Object.freeze({
+    var index$3 = /*#__PURE__*/Object.freeze({
         __proto__: null,
         UIModal: Ui_modal,
         UIOverlay: Ui_overlay
@@ -16213,7 +16213,7 @@ var notBulma = (function (exports) {
     	}
     }
 
-    var index$3 = /*#__PURE__*/Object.freeze({
+    var index$2 = /*#__PURE__*/Object.freeze({
         __proto__: null,
         UIError: Ui_error,
         UISuccess: Ui_success,
@@ -16222,18 +16222,18 @@ var notBulma = (function (exports) {
 
     //block elements
 
-    var index$2 = /*#__PURE__*/Object.freeze({
+    var index$1 = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        Blocks: index$c,
-        Various: index$b,
-        Buttons: index$a,
-        Forms: index$9,
-        Icons: index$8,
-        Images: index$7,
-        Layouts: index$6,
-        Links: index$5,
-        Modals: index$4,
-        Notifications: index$3,
+        Blocks: index$b,
+        Various: index$a,
+        Buttons: index$9,
+        Forms: index$8,
+        Icons: index$7,
+        Images: index$6,
+        Layouts: index$5,
+        Links: index$4,
+        Modals: index$3,
+        Notifications: index$2,
         UICommon: UICommon
     });
 
@@ -16268,10 +16268,10 @@ var notBulma = (function (exports) {
           this.setOptions(input.options);
         }
 
-        this.log = notCommon$2.genLogMsg(this.getWorking('name'));
+        this.log = notCommon$1.genLogMsg(this.getWorking('name'));
         this.info = this.log;
-        this.debug = notCommon$2.genLogDebug(this.getWorking('name'));
-        this.error = notCommon$2.genLogError(this.getWorking('name'));
+        this.debug = notCommon$1.genLogDebug(this.getWorking('name'));
+        this.error = notCommon$1.genLogError(this.getWorking('name'));
       }
 
       setCommon(what, args) {
@@ -16385,13 +16385,13 @@ var notBulma = (function (exports) {
       }
 
       report(e) {
-        if (notCommon$2.report) {
-          notCommon$2.report(e);
+        if (notCommon$1.report) {
+          notCommon$1.report(e);
         }
       }
 
       getApp() {
-        return notCommon$2.getApp();
+        return notCommon$1.getApp();
       }
 
       destroy() {
@@ -16739,12 +16739,12 @@ var notBulma = (function (exports) {
         this.debug(`tasks [${list}]`);
         let task = this.queue.shift();
 
-        if (!notCommon$2.isFunc(task.action)) {
+        if (!notCommon$1.isFunc(task.action)) {
           this.error('В задании нет исполнимой части, action не функция', task.title);
           return Promise.resolve();
         }
 
-        if (!notCommon$2.isFunc(task.resolve)) {
+        if (!notCommon$1.isFunc(task.resolve)) {
           this.error('В задании нет возвратной части, resolve не функция', task.title);
           return task.action();
         }
@@ -16905,7 +16905,7 @@ var notBulma = (function (exports) {
 
     _defineProperty(notAPIConnection, "online", void 0);
 
-    var index$1 = /*#__PURE__*/Object.freeze({
+    var index = /*#__PURE__*/Object.freeze({
         __proto__: null,
         notAPIQueue: notAPIQueue,
         notAPIOptions: notAPIOptions,
@@ -17078,8 +17078,8 @@ var notBulma = (function (exports) {
             return response.json();
           });
         } catch (e) {
-          notCommon$2.error(e);
-          notCommon$2.report(e);
+          notCommon$1.error(e);
+          notCommon$1.report(e);
         }
       }
 
@@ -17087,7 +17087,7 @@ var notBulma = (function (exports) {
         try {
           let actionData = this.getActionData(actionName),
               requestParams = this.collectRequestData(actionData);
-          const WS = notCommon$2.getApp().getWSClient();
+          const WS = notCommon$1.getApp().getWSClient();
           const messageName = this.getWSRequestName(actionName);
           const payload = Object.assign({}, requestParams, record.getData());
 
@@ -17101,8 +17101,8 @@ var notBulma = (function (exports) {
             });
           }
         } catch (e) {
-          notCommon$2.error(e);
-          notCommon$2.report(e);
+          notCommon$1.error(e);
+          notCommon$1.report(e);
         }
       }
 
@@ -17126,9 +17126,9 @@ var notBulma = (function (exports) {
           let client;
 
           if (Object.prototype.hasOwnProperty.call(actionData, 'wsClient') && actionData.wsClient) {
-            client = notCommon$2.getApp().getWSClient(actionData.wsClient);
+            client = notCommon$1.getApp().getWSClient(actionData.wsClient);
           } else {
-            client = notCommon$2.getApp().getWSClient();
+            client = notCommon$1.getApp().getWSClient();
           }
 
           if (client) {
@@ -17203,7 +17203,7 @@ var notBulma = (function (exports) {
       }
 
       getServerURL() {
-        return notCommon$2.getApp() ? notCommon$2.getApp().getOptions('api.server.url', '') : '';
+        return notCommon$1.getApp() ? notCommon$1.getApp().getOptions('api.server.url', '') : '';
       }
 
       getWSRequestName(actionName) {
@@ -17241,7 +17241,7 @@ var notBulma = (function (exports) {
 
         if (Object.prototype.hasOwnProperty.call(actionData, 'data') && Array.isArray(actionData.data)) {
           for (let i = 0; i < actionData.data.length; i++) {
-            let dataProviderName = 'get' + notCommon$2.capitalizeFirstLetter(actionData.data[i]);
+            let dataProviderName = 'get' + notCommon$1.capitalizeFirstLetter(actionData.data[i]);
 
             if (this[dataProviderName] && typeof this[dataProviderName] === 'function') {
               let data = this[dataProviderName](),
@@ -17395,7 +17395,7 @@ var notBulma = (function (exports) {
         }
 
         if (item && item.isProxy) {
-          notCommon$2.error('this is Proxy item');
+          notCommon$1.error('this is Proxy item');
           return item;
         }
 
@@ -17431,7 +17431,7 @@ var notBulma = (function (exports) {
 
       mapToMethods() {
         let manifest = this[META_INTERFACE].manifest,
-            app = notCommon$2.getApp(),
+            app = notCommon$1.getApp(),
             methods = {};
 
         if (manifest.methods) {
@@ -17518,7 +17518,7 @@ var notBulma = (function (exports) {
         let prx = this.getData(what, {});
 
         if (plain) {
-          return notCommon$2.stripProxy(prx);
+          return notCommon$1.stripProxy(prx);
         } else {
           return prx;
         }
@@ -17576,13 +17576,13 @@ var notBulma = (function (exports) {
           options
         });
         this.log('start app');
-        notCommon$2.register('app', this);
+        notCommon$1.register('app', this);
         this.initManifest();
         return this;
       }
 
       initManifest() {
-        notCommon$2.getJSON(this.getOptions('manifestURL'), {}).then(this.setInterfaceManifest.bind(this)).catch(notCommon$2.report.bind(this));
+        notCommon$1.getJSON(this.getOptions('manifestURL'), {}).then(this.setInterfaceManifest.bind(this)).catch(notCommon$1.report.bind(this));
       }
 
       initRouter() {
@@ -17683,17 +17683,17 @@ var notBulma = (function (exports) {
               return new notRecord(recordManifest, recordData);
             };
 
-            window['nr' + notCommon$2.capitalizeFirstLetter(name)] = this.getWorking('interfaces')[name];
+            window['nr' + notCommon$1.capitalizeFirstLetter(name)] = this.getWorking('interfaces')[name];
           }
         }
       }
 
       getRecordName(name) {
-        return OPT_RECORD_PREFIX + notCommon$2.capitalizeFirstLetter(name);
+        return OPT_RECORD_PREFIX + notCommon$1.capitalizeFirstLetter(name);
       }
 
       getControllerName(name) {
-        return OPT_CONTROLLER_PREFIX + notCommon$2.capitalizeFirstLetter(name);
+        return OPT_CONTROLLER_PREFIX + notCommon$1.capitalizeFirstLetter(name);
       }
 
       getInterfaces() {
@@ -17738,7 +17738,7 @@ var notBulma = (function (exports) {
           for (let servName in this.getOptions('services')) {
             try {
               let serv = this.getOptions(`services.${servName}`);
-              const servType = notCommon$2.detectType(serv);
+              const servType = notCommon$1.detectType(serv);
 
               switch (servType) {
                 case 'function':
@@ -17888,7 +17888,7 @@ var notBulma = (function (exports) {
 
 
       getApp() {
-        return notCommon$2.getApp();
+        return notCommon$1.getApp();
       }
       /**
        *  Sets default controller model
@@ -17937,7 +17937,7 @@ var notBulma = (function (exports) {
 
 
       setModelName(modelName) {
-        this.setWorking('modelName', notCommon$2.lowerFirstLetter(modelName));
+        this.setWorking('modelName', notCommon$1.lowerFirstLetter(modelName));
         return this;
       }
       /**
@@ -18000,7 +18000,7 @@ var notBulma = (function (exports) {
 
 
       setModuleName(val) {
-        this.setOptions('moduleName', notCommon$2.lowerFirstLetter(val));
+        this.setOptions('moduleName', notCommon$1.lowerFirstLetter(val));
         this.updateAutoName();
         return this;
       }
@@ -18020,7 +18020,7 @@ var notBulma = (function (exports) {
 
 
       getModulePrefix() {
-        return [notCommon$2.getApp().getOptions('paths.modules'), this.getModuleName()].join('/');
+        return [notCommon$1.getApp().getOptions('paths.modules'), this.getModuleName()].join('/');
       }
       /**
        *  Returns this model URL with URL prefix
@@ -18029,7 +18029,7 @@ var notBulma = (function (exports) {
 
 
       getModelURL() {
-        return notCommon$2.buildURL({
+        return notCommon$1.buildURL({
           prefix: this.getURLPrefix(),
           module: this.getModuleName(),
           model: this.getModelName()
@@ -18045,7 +18045,7 @@ var notBulma = (function (exports) {
 
       getModelActionURL(id) {
         let action = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-        return notCommon$2.buildURL({
+        return notCommon$1.buildURL({
           prefix: this.getURLPrefix(),
           module: this.getModuleName(),
           model: this.getModelName(),
@@ -18055,7 +18055,7 @@ var notBulma = (function (exports) {
       }
 
       buildURL(val) {
-        return notCommon$2.buildURL(val);
+        return notCommon$1.buildURL(val);
       }
       /**
        *  Updates working name
@@ -18078,6 +18078,15 @@ var notBulma = (function (exports) {
         this.setWorking('name', val);
         this.setOptions('autoName', false);
         return this;
+      }
+      /**
+       *  Gets object name
+       *  @return {string}
+       */
+
+
+      getName(val) {
+        return this.getWorking('name');
       }
       /**
        *  Preload records from server, using listAll method,
@@ -18144,7 +18153,7 @@ var notBulma = (function (exports) {
 
       getActionName() {
         let name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : OPT_DEFAULT_ACTION_NAME;
-        return 'run' + notCommon$2.capitalizeFirstLetter(name);
+        return 'run' + notCommon$1.capitalizeFirstLetter(name);
       }
       /**
        *  Get default controller action name
@@ -18262,11 +18271,11 @@ var notBulma = (function (exports) {
         let path = [];
 
         if (this.MODULE_NAME && this.MODULE_NAME.length > 0) {
-          path.push(notCommon$2.lowerFirstLetter(this.MODULE_NAME));
+          path.push(notCommon$1.lowerFirstLetter(this.MODULE_NAME));
         }
 
         if (this.MODEL_NAME && this.MODEL_NAME.length > 0) {
-          path.push(notCommon$2.lowerFirstLetter(this.MODEL_NAME));
+          path.push(notCommon$1.lowerFirstLetter(this.MODEL_NAME));
         }
 
         path = [path.join('/')];
@@ -18876,7 +18885,7 @@ var notBulma = (function (exports) {
 
     // (51:2) {#if !isNaN(field.maxLength) && field.maxLength }
     function create_if_block_7$1(ctx) {
-    	let t_value = notCommon$2.strLengthCap(notPath.get(/*field*/ ctx[1].path, /*item*/ ctx[2], /*helpers*/ ctx[3]), /*field*/ ctx[1].maxLength) + "";
+    	let t_value = notCommon$1.strLengthCap(notPath.get(/*field*/ ctx[1].path, /*item*/ ctx[2], /*helpers*/ ctx[3]), /*field*/ ctx[1].maxLength) + "";
     	let t;
 
     	return {
@@ -18887,7 +18896,7 @@ var notBulma = (function (exports) {
     			insert(target, t, anchor);
     		},
     		p(ctx, dirty) {
-    			if (dirty & /*field, item, helpers*/ 14 && t_value !== (t_value = notCommon$2.strLengthCap(notPath.get(/*field*/ ctx[1].path, /*item*/ ctx[2], /*helpers*/ ctx[3]), /*field*/ ctx[1].maxLength) + "")) set_data(t, t_value);
+    			if (dirty & /*field, item, helpers*/ 14 && t_value !== (t_value = notCommon$1.strLengthCap(notPath.get(/*field*/ ctx[1].path, /*item*/ ctx[2], /*helpers*/ ctx[3]), /*field*/ ctx[1].maxLength) + "")) set_data(t, t_value);
     		},
     		i: noop,
     		o: noop,
@@ -21418,11 +21427,11 @@ var notBulma = (function (exports) {
             _this.actionFieldsInit(subFieldName, options, data);
           });
         } else {
-          if (!notCommon$2.objHas(options, 'fields')) {
+          if (!notCommon$1.objHas(options, 'fields')) {
             options.fields = {};
           }
 
-          if (!notCommon$2.objHas(options.fields, fieldName)) {
+          if (!notCommon$1.objHas(options.fields, fieldName)) {
             options.fields[fieldName] = {};
           } //copying initial data
 
@@ -21864,7 +21873,7 @@ var notBulma = (function (exports) {
       } //adding variants list to field from VARIANTS store
 
 
-      if (notCommon$2.objHas(field, 'variantsSource') && VARIANTS.contains(field.variantsSource)) {
+      if (notCommon$1.objHas(field, 'variantsSource') && VARIANTS.contains(field.variantsSource)) {
         field.variants = VARIANTS.get(field.variantsSource);
       } else {
         if (!field.variants || field.variants.length === 0) {
@@ -21900,11 +21909,11 @@ var notBulma = (function (exports) {
       } else {
         let opts = {};
 
-        if (formFieldsOptions && notCommon$2.objHas(formFieldsOptions, 'mutations') && notCommon$2.objHas(formFieldsOptions.mutations, fieldName)) {
+        if (formFieldsOptions && notCommon$1.objHas(formFieldsOptions, 'mutations') && notCommon$1.objHas(formFieldsOptions.mutations, fieldName)) {
           opts = formFieldsOptions.mutations[fieldName]; //option mutation for field
         }
 
-        if (data && notCommon$2.objHas(data, fieldName)) {
+        if (data && notCommon$1.objHas(data, fieldName)) {
           opts.value = data[fieldName];
         }
 
@@ -22059,7 +22068,7 @@ var notBulma = (function (exports) {
     }
 
     function setFieldValue(form, fieldName, value) {
-      if (notCommon$2.objHas(form, fieldName)) {
+      if (notCommon$1.objHas(form, fieldName)) {
         form[fieldName].value = value;
         return true;
       }
@@ -22068,7 +22077,7 @@ var notBulma = (function (exports) {
     }
 
     function fieldIsVisibleAndFilled(form, fieldName) {
-      return notCommon$2.objHas(form, fieldName) && form[fieldName].enabled && form[fieldName].visible && typeof form[fieldName].value !== 'undefined';
+      return notCommon$1.objHas(form, fieldName) && form[fieldName].enabled && form[fieldName].visible && typeof form[fieldName].value !== 'undefined';
     }
 
     function collectData(fields, form) {
@@ -24556,7 +24565,7 @@ var notBulma = (function (exports) {
 
         _classPrivateFieldSet(this, _uiComponent, ui);
 
-        if (notCommon$2.objHas(options, 'action')) {
+        if (notCommon$1.objHas(options, 'action')) {
           _classPrivateFieldSet(this, _action, options.action);
         }
 
@@ -24588,7 +24597,7 @@ var notBulma = (function (exports) {
       initFields() {
         const manifest = this.getFormManifest();
 
-        if (notCommon$2.objHas(manifest, 'fields') && _classPrivateFieldGet(this, _fields).isEmpty()) {
+        if (notCommon$1.objHas(manifest, 'fields') && _classPrivateFieldGet(this, _fields).isEmpty()) {
           _classPrivateFieldGet(this, _fields).import(manifest.fields); //all fields available in model manifest
 
         }
@@ -24614,6 +24623,8 @@ var notBulma = (function (exports) {
           });
 
           const target = this.getFormTargetEl();
+
+          while (target.children.length) target.removeChild(target.firstChild);
 
           _classPrivateFieldSet(this, _form$1, new (_classPrivateFieldGet(this, _uiComponent))({
             target,
@@ -24659,7 +24670,7 @@ var notBulma = (function (exports) {
           };
           _classPrivateFieldGet(this, _form$1) && _classPrivateFieldGet(this, _form$1).updateFormValidationStatus(report);
           this.emit('error', report);
-          notCommon$2.report(e);
+          notCommon$1.report(e);
         }
       }
 
@@ -24686,7 +24697,12 @@ var notBulma = (function (exports) {
       destroy() {
         this.emit('destroy');
 
-        _classPrivateFieldSet(this, _form$1, null);
+        if (_classPrivateFieldGet(this, _form$1)) {
+          _classPrivateFieldGet(this, _form$1).$destroy && _classPrivateFieldGet(this, _form$1).$destroy();
+          _classPrivateFieldGet(this, _form$1).destroy && _classPrivateFieldGet(this, _form$1).destroy();
+
+          _classPrivateFieldSet(this, _form$1, null);
+        }
 
         _classPrivateFieldSet(this, _validationRunner, null);
 
@@ -24808,8 +24824,8 @@ var notBulma = (function (exports) {
       getFormManifest() {
         const modelName = this.getModelName();
 
-        if (modelName && notCommon$2.getApp()) {
-          return notCommon$2.getApp().getInterfaceManifest(modelName);
+        if (modelName && notCommon$1.getApp()) {
+          return notCommon$1.getApp().getInterfaceManifest(modelName);
         }
 
         if (this.getOptions('manifest', undefined)) {
@@ -24877,7 +24893,7 @@ var notBulma = (function (exports) {
 
       getInterface() {
         let name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-        return notCommon$2.getApp().getInterface(name || this.getModelName());
+        return notCommon$1.getApp().getInterface(name || this.getModelName());
       }
       /**
        *  Returns current model name
@@ -25674,8 +25690,8 @@ var notBulma = (function (exports) {
         } = _ref;
         this.remove();
 
-        if (Breadcrumbs.UIConstructor) {
-          this.ui = new Breadcrumbs.UIConstructor({
+        if (notBreadcrumbs.UIConstructor) {
+          this.ui = new notBreadcrumbs.UIConstructor({
             target,
             props: {
               items: this.getBreadcrumbs(),
@@ -29815,7 +29831,7 @@ var notBulma = (function (exports) {
     function instance$1($$self, $$props, $$invalidate) {
     	const dispatch = createEventDispatcher();
     	let { events = {} } = $$props;
-    	let { register = notCommon$2.registerWidgetEvents.bind(notCommon$2) } = $$props;
+    	let { register = notCommon$1.registerWidgetEvents.bind(notCommon$1) } = $$props;
     	let { closed = true } = $$props;
 
     	function toggle(e) {
@@ -30905,7 +30921,7 @@ var notBulma = (function (exports) {
             let libProps = Object.keys(preload);
             let proms = [];
             libProps.forEach(function (prop) {
-              let modelName = notCommon$2.lowerFirstLetter(preload[prop]);
+              let modelName = notCommon$1.lowerFirstLetter(preload[prop]);
               let Model = controller.make[modelName]({});
               proms.push(Model.$listAll());
             });
@@ -30965,7 +30981,7 @@ var notBulma = (function (exports) {
           controller.setCurrentAction(actionName);
           return controller.runAction(actionName, params);
         } catch (e) {
-          notCommon.report(e);
+          controller.report(e);
           controller.showErrorMessage(e);
         }
       }
@@ -31031,7 +31047,7 @@ var notBulma = (function (exports) {
             },
             data: defData
           });
-          controller.ui[ACTION$4].$on('submit', async function (data) {
+          controller.ui[ACTION$4].on('submit', async function (data) {
             const success = await controller.onActionSubmit(createActionName, data);
 
             if (success) {
@@ -31041,7 +31057,7 @@ var notBulma = (function (exports) {
               }, 1000);
             }
           });
-          controller.ui[ACTION$4].$on('reject', controller.goList.bind(controller));
+          controller.ui[ACTION$4].on('reject', controller.goList.bind(controller));
           controller.emit(`after:render:${ACTION$4}`);
         } catch (e) {
           controller.report(e);
@@ -31099,7 +31115,7 @@ var notBulma = (function (exports) {
             data: res.result
           });
           controller.emit(`after:render:${ACTION$3}`);
-          controller.ui[ACTION$3].$on('reject', controller.goList.bind(controller));
+          controller.ui[ACTION$3].on('reject', controller.goList.bind(controller));
         } catch (e) {
           controller.report(e);
           controller.showErrorMessage(e);
@@ -31154,9 +31170,9 @@ var notBulma = (function (exports) {
               ui: controller.getOptions(`${ACTION$2}.ui`, {}),
               fields: controller.getOptions(`${ACTION$2}.fields`, {})
             },
-            data: notCommon$2.stripProxy(res.result)
+            data: notCommon$1.stripProxy(res.result)
           });
-          controller.ui[ACTION$2].$on('submit', async function (ev) {
+          controller.ui[ACTION$2].on('submit', async function (ev) {
             const success = await controller.onActionSubmit(ACTION$2, ev.detail);
 
             if (success) {
@@ -31165,7 +31181,7 @@ var notBulma = (function (exports) {
               }, 1000);
             }
           });
-          controller.ui[ACTION$2].$on('reject', controller.goList.bind(controller));
+          controller.ui[ACTION$2].on('reject', controller.goList.bind(controller));
           controller.emit(`after:render:${ACTION$2}`);
         } catch (e) {
           controller.report(e);
@@ -31272,18 +31288,13 @@ var notBulma = (function (exports) {
 
     }
 
-    var index = {
+    var CRUDActions = {
       create: CRUDActionCreate,
       details: CRUDActionDetails,
       update: CRUDActionUpdate,
       delete: CRUDActionDelete,
       list: CRUDActionList
     };
-
-    var CRUDActions = /*#__PURE__*/Object.freeze({
-        __proto__: null,
-        'default': index
-    });
 
     const BREADCRUMBS = [];
     const TITLE_FIELDS_PRIORITY = ['title', 'label', 'id', 'name'];
@@ -31295,12 +31306,12 @@ var notBulma = (function (exports) {
     var _preloader = /*#__PURE__*/new WeakMap();
 
     class notCRUD extends notController {
-      constructor(app, name, _ref) {
+      constructor(app, name) {
         let {
           actions,
           router,
           preloader
-        } = _ref;
+        } = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
         super(app, `CRUD.${name}`);
 
         _classPrivateFieldInitSpec(this, _actions, {
@@ -31441,7 +31452,7 @@ var notBulma = (function (exports) {
 
       getItemTitle(item) {
         const fieldName = this.TITLE_FIELDS_PRIORITY.find(function (key) {
-          return notCommon$2.objHas(item, key);
+          return notCommon$1.objHas(item, key);
         });
 
         if (fieldName) {
@@ -31474,7 +31485,7 @@ var notBulma = (function (exports) {
       runAction(actionName, params) {
         if (Object.keys(_classPrivateFieldGet(this, _actions)).includes(actionName)) {
           return _classPrivateFieldGet(this, _actions)[actionName].run(this, params);
-        } else if (typeof this['run' + notCommon$2.capitalizeFirstLetter(actionName)]) {
+        } else if (typeof this['run' + notCommon$1.capitalizeFirstLetter(actionName)]) {
           throw new Error(`No such action: ${actionName} in contoller ${this.getWorking('name')}`);
         }
       }
@@ -31558,7 +31569,7 @@ var notBulma = (function (exports) {
 
     var Frame = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        notCommon: notCommon$2,
+        notCommon: notCommon$1,
         notPath: notPath,
         notController: notController,
         notBase: notBase,
@@ -31566,7 +31577,7 @@ var notBulma = (function (exports) {
         notRecord: notRecord,
         notInterface: notInterface,
         notApp: notApp,
-        notAPI: index$1,
+        notAPI: index,
         notCRUD: notCRUD,
         ncCRUD: ncCRUD,
         COMPONENTS: COMPONENTS$1,
@@ -31588,24 +31599,24 @@ var notBulma = (function (exports) {
       notLocale: notLocale$1
     };
     const {
-      notCommon: notCommon$1,
+      notCommon,
       COMPONENTS,
       FIELDS,
       VARIANTS,
       notFormUtils
     } = Frame;
-    Object.keys(index$9).forEach(function (fieldtype) {
-      notFormUtils$1.addComponent(fieldtype, index$9[fieldtype]);
+    Object.keys(index$8).forEach(function (fieldtype) {
+      notFormUtils$1.addComponent(fieldtype, index$8[fieldtype]);
     });
 
     exports.COMPONENTS = COMPONENTS;
-    exports.Elements = index$2;
+    exports.Elements = index$1;
     exports.FIELDS = FIELDS;
     exports.Frame = Frame;
     exports.LOCALE = LOCALE;
     exports.Locale = Locale;
     exports.VARIANTS = VARIANTS;
-    exports.notCommon = notCommon$1;
+    exports.notCommon = notCommon;
     exports.notFormUtils = notFormUtils;
     exports.notLocale = notLocale$1;
     exports.say = say;
