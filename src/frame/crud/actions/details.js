@@ -23,8 +23,8 @@ export default class CRUDActionDetails {
       }
       const detailsActionName = controller.getOptions(`${ACTION}.actionName`, MODEL_ACTION);
       let res = await controller.getModel(query)[`$${detailsActionName}`]();
-      if (res.status !== 'ok') {
-        controller.showErrorMessage(res);
+      if(!res || (res.status !== 'ok')){
+        return controller.showErrorMessage(res);
       }
 
       const title = controller.getItemTitle(res.result);
