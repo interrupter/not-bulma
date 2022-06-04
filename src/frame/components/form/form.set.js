@@ -60,6 +60,7 @@ class notFormSet extends notBase {
    **/
   initUI() {
     const target = this.getFrameTargetEl();
+    while(target.children.length) target.removeChild(target.firstChild);
     this.#frame = new this.#formSetComponent({
       target,
       props: this.#getFrameProps()
@@ -104,6 +105,7 @@ class notFormSet extends notBase {
       throw new Error('error while form rendering');
     }
     if(formConfig.form){
+      while(targetEl.children.length) targetEl.removeChild(targetEl.firstChild);
       this.#form = new formConfig.form({options:{target: targetEl}});
     }else if(formConfig.props){
       this.#form = new this.#formComponent({
