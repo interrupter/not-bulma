@@ -6,7 +6,7 @@
   let dispatch = createEventDispatcher();
 
   import AutoComplete from 'simple-svelte-autocomplete';
-
+  import ErrorsList from '../various/ui.errors.list.svelte';
   import UITextfield from './ui.textfield.svelte';
   import UICommon from '../common.js';
 
@@ -37,7 +37,7 @@
 
   $: iconClasses = (icon? ' has-icons-left ':'') + ' has-icons-right ';
   $: allErrors = [].concat(errors ? errors : [], formErrors ? formErrors : []);
-  $: helper = allErrors ? allErrors.join(', ') : placeholder;
+  $: showErrors = (!(validated && valid) && (inputStarted));
   $: invalid = ((valid === false) || (formLevelError));
   $: validationClasses = (valid === true || !inputStarted) ? UICommon.CLASS_OK : UICommon.CLASS_ERR;
 
@@ -74,9 +74,10 @@
     bind:selectedItem={value}
     />
 </div>
-{#if !(validated && valid) && (inputStarted) }
-<p class="help {validationClasses}" id="input-field-helper-{fieldname}">
-  {helper}
-</p>
-{/if}
+<ErrorsList
+  bind:errors={allErrors}
+  bind:show={showErrors}
+  bind:classes={validationClasses}
+  id="input-field-helper-{fieldname}"
+  />
 {/if}

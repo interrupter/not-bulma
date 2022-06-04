@@ -2,7 +2,7 @@
   import {LOCALE} from '../../locale';
   import 'bulma-switch';
   import UICommon from '../common.js';
-
+  import ErrorsList from '../various/ui.errors.list.svelte';
   import {createEventDispatcher} from 'svelte';
   let dispatch = createEventDispatcher();
 
@@ -24,7 +24,7 @@ export let formLevelError = false;
 
 $: iconClasses = (icon? ' has-icons-left ':'') + ' has-icons-right ';
 $: allErrors = [].concat(errors?errors:[], formErrors?formErrors:[]);
-$: helper = allErrors?allErrors.join(', '): placeholder;
+$: showErrors = (!(validated && valid) && (inputStarted));
 $: invalid = ((valid===false) || (formLevelError));
 $: validationClasses = (valid===true || !inputStarted)?UICommon.CLASS_OK:UICommon.CLASS_ERR;
 
@@ -65,8 +65,9 @@ function onInput(ev){
          />
         <label class="label" for="form-field-switch-{fieldname}">{$LOCALE[label]}</label>
   </div>
-  <p class="help {validationClasses}" id="form-field-helper-{fieldname}">
-    {#if !(validated && valid) && (inputStarted) }
-    {helper}
-    {:else}&nbsp;{/if}
-  </p>
+  <ErrorsList
+    bind:errors={allErrors}
+    bind:show={showErrors}
+    bind:classes={validationClasses}
+    id="input-field-helper-{fieldname}"
+    />

@@ -1,5 +1,6 @@
 <script>
   import {LOCALE} from '../../locale';
+    import ErrorsList from '../various/ui.errors.list.svelte';
   import UICommon from '../common.js';
   const CLEAR_MACRO = '__CLEAR__';
 
@@ -24,7 +25,7 @@
 
   $: iconClasses = (icon? ' has-icons-left ':'') + ' has-icons-right ';
   $: allErrors = [].concat(errors?errors:[], formErrors?formErrors:[]);
-  $: helper = allErrors?allErrors.join(', '): placeholder;
+  $: showErrors = (!(validated && valid) && (inputStarted));
   $: invalid = ((valid===false) || (formLevelError));
   $: validationClasses = (valid===true || !inputStarted)?UICommon.CLASS_OK:UICommon.CLASS_ERR;
   $: multipleClass = multiple?' is-multiple ':'';
@@ -111,8 +112,9 @@
     </span>
     {/if}
   </div>
-  <p class="help {validationClasses}" id="input-field-helper-{fieldname}">
-    {#if !(validated && valid) && (inputStarted) }
-    {helper}
-    {:else}&nbsp;{/if}
-  </p>
+  <ErrorsList
+    bind:errors={allErrors}
+    bind:show={showErrors}
+    bind:classes={validationClasses}
+    id="input-field-helper-{fieldname}"
+    />
