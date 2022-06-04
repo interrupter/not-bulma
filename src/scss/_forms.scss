@@ -1,3 +1,7 @@
 .form-container{
   position:relative;
 }
+
+.edit-form-error.notification.is-danger span:not(:first-child)::before{
+  content: ', '
+}

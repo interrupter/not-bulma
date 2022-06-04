@@ -253,7 +253,11 @@
 
 {#if !buttonsFirst }
 {#if formErrors.length > 0 }
-<div class="edit-form-error notification is-danger">{formErrors.join(', ')}</div>
+<div class="edit-form-error notification is-danger">
+{#each formErrors as formError}
+<span>{$LOCALE[formError]}</span>
+{/each}
+</div>
 {/if}
 <div class="buttons is-grouped is-centered">
 	{#if cancel.enabled}
