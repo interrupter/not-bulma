@@ -6,4 +6,4 @@ import UITitle from './ui.title.svelte';
 import UIErrorsList from './ui.errors.list.svelte';
 import UIUserCard from './ui.user.card.svelte';
 
-export { UIBooleans, UIIndicator, UIProgress, UITag, UIUserCard, UITitle };
+export { UIErrorsList, UIBooleans, UIIndicator, UIProgress, UITag, UIUserCard, UITitle };
