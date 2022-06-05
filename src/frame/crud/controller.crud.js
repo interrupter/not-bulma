@@ -192,7 +192,7 @@ class notCRUD extends notController {
   }
 
   async onActionSubmit(action, item){
-    let result = true;
+    let state = true;
     const actionUI = this.ui[action];
     if(actionUI){
       try{
