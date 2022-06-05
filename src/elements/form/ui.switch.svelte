@@ -3,6 +3,7 @@
   import 'bulma-switch';
   import UICommon from '../common.js';
   import ErrorsList from '../various/ui.errors.list.svelte';
+  import UIBooleans from '../various/ui.booleans.svelte';
   import {createEventDispatcher} from 'svelte';
   let dispatch = createEventDispatcher();
 
@@ -51,6 +52,14 @@ function onInput(ev){
 </script>
 
   <div class="control">
+    {#if readonly }
+      {#if value }
+      <UIBooleans values={[{value: false}]} />
+      {:else}
+      <UIBooleans values={[{value: true}]} />
+      {/if}
+    {:else}
+      <UIBooleans values={[{value: false}]} />
       <input type="checkbox"
         class="switch {styling}"
         id="form-field-switch-{fieldname}"
@@ -63,7 +72,8 @@ function onInput(ev){
         aria-controls="input-field-helper-{fieldname}"
         aria-describedby="input-field-helper-{fieldname}"
          />
-        <label class="label" for="form-field-switch-{fieldname}">{$LOCALE[label]}</label>
+        <label class="label" for="form-field-switch-{fieldname}"><UIBooleans values={[{value: true }]} /></label>
+    {/if}
   </div>
   <ErrorsList
     bind:errors={allErrors}

@@ -47,6 +47,9 @@
 
 </script>
   <div class="control {iconClasses}">
+    {#if readonly }
+    <p>{value}</p>
+    {:else}
     <input id="form-field-textfield-{fieldname}"
       class="input {validationClasses}"
       type="text" name="{fieldname}"
@@ -69,6 +72,7 @@
       <i class="fas fa-exclamation-triangle"></i>
       {/if}
     </span>
+    {/if}
     {/if}
   </div>
   <ErrorsList

@@ -51,9 +51,13 @@ $: showErrors = (!(validated && valid) && (inputStarted));
 
 <div class="control {iconClasses}">
   <label class="checkbox" disabled={disabled} for="form-field-checkbox-{fieldname}">
+    {#if readonly }
+      <UIBooleans LC_TRUE={label} LC_FALSE={label} values={[{value}]} />
+    {:else}
     <input type="checkbox" id="form-field-checkbox-{fieldname}" bind:checked={value} placeholder="{placeholder}" name="{fieldname}" required={required} {readonly} invalid="{invalid}" on:change={onBlur} on:input={onInput} aria-controls="input-field-helper-{fieldname}"
       aria-describedby="input-field-helper-{fieldname}" disabled={disabled}>
-    {$LOCALE[label]}
+      {$LOCALE[label]}
+    {/if}
   </label>
 </div>
 <ErrorsList

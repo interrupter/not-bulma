@@ -49,6 +49,9 @@ let dispatch = createEventDispatcher();
 </script>
 
   <div class="control {iconClasses}">
+    {#if readonly }
+    <p>{value}</p>
+    {:else}
     <textarea
     id="form-field-textarea-{fieldname}"
     {invalid}
@@ -72,6 +75,7 @@ let dispatch = createEventDispatcher();
       <i class="fas fa-exclamation-triangle"></i>
       {/if}
     </span>
+    {/if}
     {/if}
   </div>
   <ErrorsList

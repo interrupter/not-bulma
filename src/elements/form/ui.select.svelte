@@ -1,7 +1,8 @@
 <script>
   import {LOCALE} from '../../locale';
-    import ErrorsList from '../various/ui.errors.list.svelte';
+  import ErrorsList from '../various/ui.errors.list.svelte';
   import UICommon from '../common.js';
+
   const CLEAR_MACRO = '__CLEAR__';
 
   import {createEventDispatcher} from 'svelte';
@@ -29,6 +30,17 @@
   $: invalid = ((valid===false) || (formLevelError));
   $: validationClasses = (valid===true || !inputStarted)?UICommon.CLASS_OK:UICommon.CLASS_ERR;
   $: multipleClass = multiple?' is-multiple ':'';
+  $: selectedVariants = Array.isArray(variants)?variants.filter(filterSelectedVariants):[];
+
+  function filterSelectedVariants(variant){
+    if(Array.isArray(value) && multiple){
+      return value.indexOf(variant.id) > -1;
+    }else if(value){
+      return value == variant.id;
+    }else{
+      return false;
+    }
+  }
 
   function onBlur(ev){
     let data = {
@@ -75,6 +87,11 @@
 </script>
 
   <div class="control {iconClasses}">
+    {#if readonly }
+      {#each selectedVariants as selectedVariant }
+      <span class="mr-2">{selectedVariant.title}</span>
+      {/each}
+    {:else}
     <div class="select {validationClasses} {multipleClass}">
       <select
         id="form-field-select-{fieldname}"
@@ -110,6 +127,7 @@
       <i class="fas fa-exclamation-triangle"></i>
       {/if}
     </span>
+    {/if}
     {/if}
   </div>
   <ErrorsList

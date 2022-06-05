@@ -58,6 +58,9 @@
   <UITextfield value={value?value.title:''} {fieldname} {placeholder} {icon} />
 {:else}
 <div class="control">
+  {#if readonly }
+    <p>{value}</p>
+    {:else}
   <AutoComplete
     {showClear}
     {disabled}
@@ -73,6 +76,7 @@
     {maxItemsToShowInList}
     bind:selectedItem={value}
     />
+  {/if}
 </div>
 <ErrorsList
   bind:errors={allErrors}

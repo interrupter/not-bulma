@@ -50,6 +50,9 @@
 
 
   <div class="control {iconClasses}">
+    {#if readonly }
+    <p>{value}</p>
+    {:else}
     <input class="input {validationClasses}"
       id="form-field-email-{fieldname}"
       type="email" name="{fieldname}"
@@ -62,17 +65,18 @@
       aria-controls="input-field-helper-{fieldname}"
       on:change={onBlur} on:input={onInput}
       aria-describedby="input-field-helper-{fieldname}" />
-    {#if icon }
-    <span class="icon is-small is-left"><i class="fas fa-{icon}"></i></span>
-    {/if}
-    {#if validated === true }
-    <span class="icon is-small is-right">
-      {#if valid === true }
-      <i class="fas fa-check"></i>
-      {:else if (valid === false) }
-      <i class="fas fa-exclamation-triangle"></i>
+      {#if icon }
+      <span class="icon is-small is-left"><i class="fas fa-{icon}"></i></span>
       {/if}
-    </span>
+      {#if validated === true }
+      <span class="icon is-small is-right">
+        {#if valid === true }
+        <i class="fas fa-check"></i>
+        {:else if (valid === false) }
+        <i class="fas fa-exclamation-triangle"></i>
+        {/if}
+      </span>
+      {/if}
     {/if}
   </div>
   <ErrorsList
