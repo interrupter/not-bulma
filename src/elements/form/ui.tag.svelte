@@ -20,7 +20,7 @@
 
   function remove(e){
     e && e.preventDefault();
-    let id = parseInt(e.currentTarget.dataset.id);
+    let id = e.currentTarget.dataset.id;
     let item = items.find(el => el.id === id);
     if(item){
       items.splice(items.indexOf(item), 1);
@@ -32,7 +32,7 @@
 
   function add(e){
     e && e.preventDefault();
-    let id = parseInt(e.currentTarget.parentNode.querySelector('select').value);
+    let id = e.currentTarget.parentNode.querySelector('select').value;
     let item = variants.find(el => el.id === id);
     if(!beforeAdd(item, items)){
       return false;
