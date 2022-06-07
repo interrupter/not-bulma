@@ -2,6 +2,7 @@
   import {LOCALE} from '../../locale';
   import UICommon from '../common.js';
   import ErrorsList from '../various/ui.errors.list.svelte';
+  import UIBooleans from '../various/ui.booleans.svelte';
 
   import {createEventDispatcher} from 'svelte';
   let dispatch = createEventDispatcher();

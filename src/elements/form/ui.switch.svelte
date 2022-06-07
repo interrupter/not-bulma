@@ -9,7 +9,7 @@
 
 export let inputStarted = false;
 export let value = false;
-export let label = 'textfield';
+//export let label = 'textfield';
 export let placeholder = 'input some text here, please';
 export let fieldname = 'textfield';
 export let icon = false;

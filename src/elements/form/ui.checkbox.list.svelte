@@ -9,7 +9,7 @@
   export let inputStarted = false;
   export let value = [];
   export let fieldname = 'checkbox-list';
-  export let placeholder = '';
+//  export let placeholder = '';
   export let readonly = false;
   export let disabled = false;
   export let valid = true;
