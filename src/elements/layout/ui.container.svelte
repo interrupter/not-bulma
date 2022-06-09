@@ -1,14 +1,11 @@
 <script>
-  export let id='';
+  export let id = '';
   export let classes = '';
-
   export let widescreen = false;
   export let fullhd = false;
   export let maxDesktop = false;
   export let maxWidescreen = false;
   export let fluid = false;
-
-
 </script>
 
 <div

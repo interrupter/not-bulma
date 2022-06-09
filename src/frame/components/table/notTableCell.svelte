@@ -44,9 +44,25 @@
   {:else if field.type === 'tag' }
   <TableTags values={ notPath.get(field.path, item, helpers) } />
   {:else if field.type === 'switch' }
-  <TableSwitch id={getItemId(item)} fieldname={field.path} on:change="{field.onChange}" value={ notPath.get(field.path, item, helpers) } disabled={field.disabled} readonly={field.readonly} />
+  <TableSwitch
+    id={getItemId(item)}
+    fieldname={field.path}
+    on:change="{field.onChange}"
+    value={ notPath.get(field.path, item, helpers) }
+    disabled={field.disabled}
+    readonly={field.readonly}
+    />
   {:else if field.type === 'component' }
-  <svelte:component id={getItemId(item)} this={field.component} on:change="{field.onChange}" fieldname={field.path} disabled={field.disabled} readonly={field.readonly} value={ notPath.get(field.path, item, helpers) } {...field.options} />
+  <svelte:component
+    id={getItemId(item)}
+    this={field.component}
+    on:change="{field.onChange}"
+    fieldname={field.path}
+    disabled={field.disabled}
+    readonly={field.readonly}
+    value={ notPath.get(field.path, item, helpers) }
+    {...field.options}
+    />
   {:else}
   {#if !isNaN(field.maxLength) && field.maxLength }
   {notCommon.strLengthCap(notPath.get(field.path, item, helpers), field.maxLength)}

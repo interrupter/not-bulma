@@ -1,5 +1,7 @@
 import {notTable} from './table';
 
+import notActionUI from './action/action.ui.js';
+
 import {
   notForm,
   notFormSet,
@@ -13,6 +15,7 @@ import {notTopMenu, notSideMenu} from './navigation';
 
 
 export {
+  notActionUI,
   notTable,
   UIForm,
   notForm,

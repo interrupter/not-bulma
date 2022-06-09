@@ -1,10 +1,31 @@
+import notActionUI from '../../components/action/action.ui.js';
+
 const ACTION = 'delete';
 const MODEL_ACTION = 'delete';
 
 export default class CRUDActionDelete{
   static async run(controller, params) {
     try{
-      await controller.preloadVariants(ACTION);
+
+      if (controller.ui[ACTION]) {
+        return;
+      } else {
+        controller.$destroyUI();
+      }
+
+      controller.ui[ACTION] = new notActionUI({
+        name: 'CRUDDelete',
+        target: controller.getContainerInnerElement(),
+        options: {
+          loaderActive: true,
+          loaderStyle: 'container',
+          loaderTitle: 'not-node:crud_delete_action_waiting',
+          container: {
+            id: `crud-delete-action-${params[0]}`
+          }
+        }
+      });
+
       controller.setBreadcrumbs([{
         title: 'Удаление',
         url: controller.getModelActionURL(params[0], ACTION)
@@ -18,9 +39,9 @@ export default class CRUDActionDelete{
         if(success){
           controller.goList();
         }
-      } else {
-        controller.goList();
+        return;
       }
+      controller.goList();
     }catch(e){
       controller.report(e);
       controller.showErrorMessage(e);

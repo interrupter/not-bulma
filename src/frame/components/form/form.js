@@ -14,7 +14,7 @@ import UIFormComponent from './form.svelte';
 import {
   DEFAULT_STATUS_SUCCESS,
   DEFAULT_STATUS_ERROR
-} from './const';
+} from '../../const';
 
 const DEFAULT_CONTAINER_SELECTOR = '.form';
 const DEFAULT_ACTION_NAME = 'default';
