@@ -52,7 +52,7 @@ export default class CRUDActionUpdate{
       });
 
       controller.ui[ACTION].on('submit', async (ev) => {
-        const success = await controller.onActionSubmit(ACTION, ev);
+        const success = await controller.onActionSubmit(ACTION, Object.assign({}, query, ev));
         if(success){
           setTimeout(() => controller.goDetails(id), 1000);
         }
