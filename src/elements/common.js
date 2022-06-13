@@ -60,6 +60,23 @@ export default class UICommon {
     return `${this.MONEY_SIGN}${major}.${minor}`;
   }
 
+  static formatLocaleDatetime(dt){
+    const date = dt.toLocaleDateString(window.navigator.language);
+    const time = dt.toLocaleTimeString(window.navigator.language);
+    return `${date} ${time}`
+  }
+
+  static tryFormatLocaleDateTime(value){
+    if(typeof value == 'string'){
+      const dt = new Date(value);
+      return UICommon.formatLocaleDatetime(dt);
+    }else if(typeof value == 'object'){
+      return UICommon.formatLocaleDatetime(value);
+    }else{
+      return '';
+    }
+  }
+
   static formatTimestamp(timestamp, offset = 0) {
     let offsetLocal = new Date().getTimezoneOffset();
     let deltaOffset = (offsetLocal - parseInt(offset)) * 60 * 1000;

@@ -50,7 +50,7 @@
 
   <div class="control {iconClasses}">
     {#if readonly }
-    <p>{value}</p>
+    <p><time datetime="{value}">{UICommon.tryFormatLocaleDateTime(value)}</time></p>
     {:else}
     <input class="input {validationClasses}"
     id="form-field-date-{fieldname}"

@@ -7636,6 +7636,23 @@ var notBulma = (function (exports) {
         return `${this.MONEY_SIGN}${major}.${minor}`;
       }
 
+      static formatLocaleDatetime(dt) {
+        const date = dt.toLocaleDateString(window.navigator.language);
+        const time = dt.toLocaleTimeString(window.navigator.language);
+        return `${date} ${time}`;
+      }
+
+      static tryFormatLocaleDateTime(value) {
+        if (typeof value == 'string') {
+          const dt = new Date(value);
+          return UICommon.formatLocaleDatetime(dt);
+        } else if (typeof value == 'object') {
+          return UICommon.formatLocaleDatetime(value);
+        } else {
+          return '';
+        }
+      }
+
       static formatTimestamp(timestamp) {
         let offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
         let offsetLocal = new Date().getTimezoneOffset();
@@ -10249,19 +10266,28 @@ var notBulma = (function (exports) {
     // (52:4) {#if readonly }
     function create_if_block$v(ctx) {
     	let p;
+    	let time;
+    	let t_value = UICommon.tryFormatLocaleDateTime(/*value*/ ctx[0]) + "";
     	let t;
 
     	return {
     		c() {
     			p = element("p");
-    			t = text(/*value*/ ctx[0]);
+    			time = element("time");
+    			t = text(t_value);
+    			attr(time, "datetime", /*value*/ ctx[0]);
     		},
     		m(target, anchor) {
     			insert(target, p, anchor);
-    			append(p, t);
+    			append(p, time);
+    			append(time, t);
     		},
     		p(ctx, dirty) {
-    			if (dirty & /*value*/ 1) set_data(t, /*value*/ ctx[0]);
+    			if (dirty & /*value*/ 1 && t_value !== (t_value = UICommon.tryFormatLocaleDateTime(/*value*/ ctx[0]) + "")) set_data(t, t_value);
+
+    			if (dirty & /*value*/ 1) {
+    				attr(time, "datetime", /*value*/ ctx[0]);
+    			}
     		},
     		d(detaching) {
     			if (detaching) detach(p);
