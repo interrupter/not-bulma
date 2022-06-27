@@ -1,6 +1,8 @@
 <script>
+  import {createEventDispatcher } from 'svelte';
+  const dispatch = createEventDispatcher(); 
   import {LOCALE} from '../../locale';
-  
+
   export let title = '';
   export let light = false;
   export let loading = false;
@@ -17,10 +19,17 @@
   export let icon = false;
   export let iconSide = 'right';
   export let action = ()=>{ return true; };
+
+
+  function onClick(e){
+    dispatch('click', e);
+    return action(e);
+  }
+  
 </script>
 
 <button
-  on:click="{action}"
+  on:click={onClick}
   {disabled}
   type={type?type:""}
   class="
@@ -37,17 +46,19 @@
     {size?`is-${size}`:''}
     "
   >
-  {#if icon }
-  {#if iconSide === 'left' }
-  <span class="icon"><i class="fas fa-{icon} {size?`is-${size}`:''}"></i></span>
-    {/if}
-  {#if title }
-  <span>{$LOCALE[title]}</span>
-  {/if}
-  {#if iconSide === 'right' }
+  <slot>
+    {#if icon }
+    {#if iconSide === 'left' }
     <span class="icon"><i class="fas fa-{icon} {size?`is-${size}`:''}"></i></span>
-  {/if}
-  {:else}
-  {$LOCALE[title]}
-  {/if}
+      {/if}
+    {#if title }
+    <span>{$LOCALE[title]}</span>
+    {/if}
+    {#if iconSide === 'right' }
+      <span class="icon"><i class="fas fa-{icon} {size?`is-${size}`:''}"></i></span>
+    {/if}
+    {:else}
+    {$LOCALE[title]}
+    {/if}
+  </slot>
 </button>
