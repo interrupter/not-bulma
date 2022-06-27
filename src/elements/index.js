@@ -28,6 +28,9 @@ export {Layouts};
 import * as Links from './link';
 export {Links};
 
+import * as Lists from './list';
+export {Lists};
+
 import * as Modals from './modal';
 export {Modals};
 

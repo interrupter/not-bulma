@@ -11,7 +11,7 @@
   export let inputStarted = false;
   export let variants = [];
   export let fieldname = 'tag';
-  export let required = true;
+  //export let required = true;
   export let readonly = false;
   export let valid = true;
   export let validated = false;

@@ -6,5 +6,6 @@ import UITag from './ui.tag.svelte';
 import UITitle from './ui.title.svelte';
 import UIErrorsList from './ui.errors.list.svelte';
 import UIUserCard from './ui.user.card.svelte';
+import UISimpleSearchInput from './ui.simple.search.input.svelte';
 
-export { UIErrorsList, UIBooleans, UIIndicator, UILoader, UIProgress, UITag, UIUserCard, UITitle };
+export { UIErrorsList, UIBooleans, UIIndicator, UILoader, UIProgress, UITag, UIUserCard, UITitle,UISimpleSearchInput };
