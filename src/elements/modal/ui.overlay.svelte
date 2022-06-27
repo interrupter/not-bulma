@@ -38,9 +38,15 @@
 	}
 
 	function closeOverlay(e) {
-	  if(e && e.originalTarget && e.originalTarget.classList && e.originalTarget.classList.contains('is-overlay')){
-	    rejectOverlay();
-	  }
+		try{
+			if(e && e.originalTarget){
+				const target = e.originalTarget;
+				if(target.classList && target.classList.contains('is-overlay')){
+					rejectOverlay();
+				}	   			
+	  		}
+		}
+		catch(_){}
 	}
 
 	function rejectOverlay(data = {}) {
