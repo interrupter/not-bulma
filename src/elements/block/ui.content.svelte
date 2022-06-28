@@ -3,6 +3,6 @@
   export let classes = '';
 </script>
 
-<div {id} class="content {classes}">
+<div {id} class="content {classes}" on:click >
   <slot></slot>
 </div>

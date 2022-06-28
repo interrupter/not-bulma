@@ -5,6 +5,6 @@
 
 </script>
 
-<div {id} class="box {classes} ">
+<div {id} class="box {classes} " on:click >
   <slot></slot>
 </div>
