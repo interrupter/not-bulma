@@ -20,6 +20,7 @@ class notActionUI extends notBase {
     name = 'Default',
     options = {},
     working = {},
+    data = {},
     ui = UIActionContainer, //default UI
   }) {
     super({
