@@ -97,12 +97,11 @@ class notForm extends notBase {
 
     initUI() {
         try {
-            const propsInjection = this.getFormInjectedProps();
             const props = this.#getFormProps({
                 manifest: this.getFormManifest(),
                 formOptions: this.getFormOptions(),
                 data: this.getFormData(),
-                ...propsInjection,
+                injectedProps: this.getFormInjectedProps(),
             });
             const target = this.getFormTargetEl();
             while (target.children.length)
@@ -124,6 +123,7 @@ class notForm extends notBase {
                 manifest: this.getFormManifest(),
                 formOptions: this.getFormOptions(),
                 data: this.getFormData(),
+                injectedProps: this.getFormInjectedProps(),
             });
             this.#form.$set(props);
             this.validateForm();
@@ -207,6 +207,7 @@ class notForm extends notBase {
             fields: {},
         }, //some options
         data = null, //initial data for form
+        injectedProps = {},
     }) {
         const action = this.#action;
         if (typeof formOptions === "undefined" || formOptions === null) {
@@ -246,6 +247,7 @@ class notForm extends notBase {
             form,
             //injecting options to UI from top level input
             ...formOptions.ui, //form UI options
+            ...injectedProps,
         };
     }
 
