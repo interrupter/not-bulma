@@ -381,7 +381,7 @@ class notForm extends notBase {
     }
 
     getFormInjectedProps() {
-        return {};
+        return this.getOptions("injected", {});
     }
 
     /**
