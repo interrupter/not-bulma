@@ -9,7 +9,7 @@
   export let align = 'left';
 
   let size2;
-  $: size2 = subsize?subsize:(size<6?size+1:size);
+  $: size2 = subsize?subsize:(parseInt(size)<6?parseInt(size)+1:size);
   $: spacedStyle = (spaced?'is-spaced':'');
 
   $: resultTitle = `<h${size} style="text-align: ${align};" class="title ${spacedStyle} is-${size}">${$LOCALE[title]}</h${size}>`;
