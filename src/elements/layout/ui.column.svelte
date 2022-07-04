@@ -1,7 +1,8 @@
 <script>
   export let classes = "";
+  export let title = "";
 </script>
 
-<div class="column {classes}">
+<div {title} class="column {classes}">
   <slot></slot>
 </div>
