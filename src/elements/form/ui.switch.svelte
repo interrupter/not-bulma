@@ -70,7 +70,9 @@
             <UIBooleans values={[{ value: true }]} />
         {/if}
     {:else}
-        <UIBooleans values={[{ value: false }]} />
+        {#if !label}
+            <UIBooleans values={[{ value: false }]} />
+        {/if}
         <input
             type="checkbox"
             class="switch {styling}"
