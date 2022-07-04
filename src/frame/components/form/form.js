@@ -174,6 +174,13 @@ class notForm extends notBase {
         this.emit("reject");
     }
 
+    //binding event to actual UI
+    $on() {
+        if (this.#form) {
+            this.#form.$on(...arguments);
+        }
+    }
+
     setLoading() {
         this.emit("loading");
         this.#form.setLoading();
