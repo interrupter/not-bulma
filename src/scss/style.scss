@@ -1,3 +1,5 @@
+@import "bulma/sass/utilities/_all.sass";
+
 @import "./_menu.scss";
 @import "./_position.scss";
 @import "./_forms.scss";
@@ -6,6 +8,7 @@
 @import "./_overlay.scss";
 @import "./_breadcrumbs.scss";
 
+@import "./_bulma-list.scss";
 .navbar-menu.is-active{
   display: flex;
 }

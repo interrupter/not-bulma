@@ -14,6 +14,7 @@ import UITelephone from "./ui.telephone.svelte";
 import UITextarea from "./ui.textarea.svelte";
 import UITextfield from "./ui.textfield.svelte";
 import UIRange from "./ui.range.svelte";
+import UINumber from "./ui.number.svelte";
 
 export {
     UIAutocomplete,
@@ -32,4 +33,5 @@ export {
     UITextarea,
     UITextfield,
     UIRange,
+    UINumber,
 };
