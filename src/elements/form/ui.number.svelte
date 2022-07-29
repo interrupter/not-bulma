@@ -8,8 +8,8 @@
     export let value = 0;
     export let placeholder = "0.0";
     export let min = 0;
-    export let max = 0;
-    export let step = 0;
+    export let max = 100;
+    export let step = 1;
     export let fieldname = "number";
     export let icon = false;
     export let required = true;
