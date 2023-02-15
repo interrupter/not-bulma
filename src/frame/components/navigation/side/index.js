@@ -67,6 +67,7 @@ class notSideMenu extends Menu {
             },
         });
         this.initSizeResponse();
+
         this.interval = setInterval(this.updateMenuActiveItem.bind(this), 200);
         this.bindToggle();
     }
@@ -158,21 +159,33 @@ class notSideMenu extends Menu {
 
     static toggle(e) {
         e && e.preventDefault();
-        this.aside.classList.toggle("is-active");
+        if (this.isTouch()) {
+            this.aside.classList.toggle("is-active");
+        } else {
+            this.aside.classList.toggle("is-closed");
+        }
         this.resizeMain();
         return false;
     }
 
     static hide(e) {
         e && e.preventDefault();
-        this.aside.classList.remove("is-active");
+        if (this.isTouch()) {
+            this.aside.classList.remove("is-active");
+        } else {
+            this.aside.classList.add("is-closed");
+        }
         this.resizeMain();
         return false;
     }
 
     static show(e) {
         e && e.preventDefault();
-        this.classList.add("is-active");
+        if (this.isTouch()) {
+            this.classList.add("is-active");
+        } else {
+            this.aside.classList.remove("is-closed");
+        }
         this.resizeMain();
         return false;
     }

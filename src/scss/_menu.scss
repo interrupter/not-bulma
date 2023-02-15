@@ -17,6 +17,14 @@ aside.menu{
   }
 }
 
+
+aside.menu.is-closed{
+  left: 0px;  
+  width: 0px;
+  display:none;
+}
+
+
 @media screen and (min-width: 1024px){
   aside.menu{
     width: 20em;
