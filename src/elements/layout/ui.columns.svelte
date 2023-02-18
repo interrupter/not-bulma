@@ -1,7 +1,7 @@
 <script>
-  export let classes = "";
+    export let classes = "";
 </script>
 
-<div class="columns {classes}">
-  <slot></slot>
+<div class="columns {classes}" on:click>
+    <slot />
 </div>

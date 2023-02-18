@@ -1,10 +1,9 @@
 <script>
-  export let id='';
-  export let size; //medium, large
-  export let classes = '';
-
+    export let id = "";
+    export let size; //medium, large
+    export let classes = "";
 </script>
 
-<section {id} class="section {size?('is-'+size):''}  {classes}">
-  <slot></slot>
+<section {id} class="section {size ? 'is-' + size : ''}  {classes}" on:click>
+    <slot />
 </section>
