@@ -10,6 +10,7 @@
     export let inputStarted = false;
     export let value = false;
     export let label = "";
+    export let hideLabel = false;
     export let placeholder = "input some text here, please";
     export let fieldname = "textfield";
     export let icon = false;
@@ -90,10 +91,12 @@
             aria-describedby="input-field-helper-{fieldname}"
         />
         <label class="label" for="form-field-switch-{fieldname}">
-            {#if label}
-                {$LOCALE[label]}
-            {:else}
-                <UIBooleans values={[{ value: true }]} />
+            {#if !hideLabel}
+                {#if label}
+                    {$LOCALE[label]}
+                {:else}
+                    <UIBooleans values={[{ value: true }]} />
+                {/if}
             {/if}
         </label>
     {/if}
