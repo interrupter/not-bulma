@@ -12,7 +12,7 @@ class notSideMenu extends Menu {
         section: "any",
         sectionTitle: "Меню",
         priority: 0,
-        open: false,
+        open: true,
     };
 
     static options = {
@@ -22,9 +22,11 @@ class notSideMenu extends Menu {
         targetSelector: `#${TYPE}-menu`,
         toggleSelector: `.${TYPE}-menu-toggle`,
         root: "/",
-        open: false,
+        open: true,
         navigate: (urls) => {
-            this.hide();
+            if (this.isTouch()) {
+                this.hide();
+            }
             if (!this.isDirectNavigation() && this.app) {
                 let func = this.app.getWorking("router");
                 if (func) {
@@ -109,10 +111,12 @@ class notSideMenu extends Menu {
         this.resizeAsideAndMain(this.aside, this.main, this.nav);
         this.resizeMain(this.main, this.aside);
         window.addEventListener("resize", this.resizeMain.bind(this));
-        if (this.getOptions().open) {
-            this.show();
-        } else {
-            this.hide();
+        if (this.isTouch()) {
+            if (this.getOptions().open) {
+                this.show();
+            } else {
+                this.hide();
+            }
         }
     }
 
@@ -192,7 +196,11 @@ class notSideMenu extends Menu {
 
     static isOpen() {
         if (this.aside) {
-            return this.aside.classList.contains("is-active");
+            if (this.isTouch()) {
+                return this.aside.classList.contains("is-active");
+            } else {
+                return !this.aside.classList.contains("is-closed");
+            }
         } else {
             return true;
         }
