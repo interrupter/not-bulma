@@ -1,6 +1,6 @@
 {
   "name": "not-bulma",
-  "version": "1.0.51",
+  "version": "1.0.52",
   "description": "not-* family UI components on Bulma CSS Framework",
   "main": "src/index.js",
   "svelte": "src/index.js",
@@ -56,6 +56,7 @@
   "dependencies": {
     "babel-polyfill": "^6.26.0",
     "bulma": "^0.9.4",
+    "bulma-slider": "*",
     "bulma-pageloader": "*",
     "bulma-switch": "^2.0.4",
     "core-js": "^3.27.2",
