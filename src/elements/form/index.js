@@ -14,6 +14,7 @@ import UITelephone from "./ui.telephone.svelte";
 import UITextarea from "./ui.textarea.svelte";
 import UITextfield from "./ui.textfield.svelte";
 import UIRange from "./ui.range.svelte";
+import UIRangeLogarithmic from "./ui.range.logarithmic.svelte";
 import UINumber from "./ui.number.svelte";
 
 export {
@@ -33,5 +34,6 @@ export {
     UITextarea,
     UITextfield,
     UIRange,
+    UIRangeLogarithmic,
     UINumber,
 };
