@@ -4,6 +4,7 @@ import notActionUI from "./action/action.ui.js";
 
 import {
     notForm,
+    notFormRules,
     notFormSet,
     notFormUtils,
     notFormHelpers,
@@ -19,6 +20,7 @@ export {
     notTable,
     UIForm,
     notForm,
+    notFormRules,
     notFormSet,
     notFormUtils,
     notFormHelpers,

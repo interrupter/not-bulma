@@ -8,6 +8,7 @@ import notBase from "../../base";
 import UICommon from "../../../elements/common.js";
 import FormHelpers from "./form.helpers.js";
 import UIFormComponent from "./form.svelte";
+import notFormRules from "./form.rules.js";
 
 import { DEFAULT_STATUS_SUCCESS, DEFAULT_STATUS_ERROR } from "../../const";
 
@@ -141,6 +142,34 @@ class notForm extends notBase {
         this.#form.$on("submit", (ev) => this.submit(ev.detail));
         this.#form.$on("reject", () => this.reject());
         this.#form.$on("error", ({ detail }) => this.emit("error", detail));
+        this.#bindMasterSlaveEvents();
+    }
+
+    #bindMasterSlaveEvents() {
+        const masters = this.getOptions("masters", false);
+        if (!masters) {
+            return;
+        }
+        for (let master in masters) {
+            const rules = masters[master];
+            for (let ruleName in rules) {
+                const ruleSlaves = rules[ruleName];
+                this.#addMasterSlaveEvents(ruleName, master, ruleSlaves);
+            }
+        }
+    }
+
+    #addMasterSlaveEvents(rule, master, slaves = []) {
+        this.on(`change.${master}`, (value) => {
+            this.#execSlaveRule(rule, slaves, value);
+        });
+    }
+
+    #execSlaveRule(rule, slaves, value) {
+        const cmd = notFormRules.exec(rule, value);
+        slaves.forEach((slaveField) => {
+            this.updateField(slaveField, cmd);
+        });
     }
 
     async validateForm() {
