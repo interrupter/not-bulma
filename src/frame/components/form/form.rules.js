@@ -39,7 +39,7 @@ export default class notFormRules {
         }
     }
 
-    static exec(name, value) {
-        return this.#RULES[name](value);
+    static exec(rule, master, slaves, value, form) {
+        return this.#RULES[rule](value, master, slaves, form);
     }
 }

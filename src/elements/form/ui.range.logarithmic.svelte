@@ -68,14 +68,28 @@
         lMin = 0,
         lMax = 100,
         lScale = 10,
-        lStep = 0.1,
+        lStep = 0.01,
         posValue = 1;
 
-    onMount(() => {
+    function updateRange() {
         lMin = Math.log(min || 1);
         lMax = Math.log(max || MAX);
         lScale = (lMax - lMin) / (posMax - posMin);
-        posValue = getLogarithmicPosition(parseInt(value));
+        if (value > max) {
+            value = max;
+        } else if (value < min) {
+            value = min;
+        } else {
+            value = value;
+        }
+    }
+
+    $: {
+        min, max, updateRange();
+    }
+
+    onMount(() => {
+        updateRange();
     });
 
     function getLogarithmicValue(pos) {
@@ -85,7 +99,7 @@
 
     function getLogarithmicPosition(val) {
         val = parseInt(val);
-        return min + (Math.log(val) - lMin) / lScale;
+        return posMin + (Math.log(val) - lMin) / lScale;
     }
 </script>
 
@@ -114,7 +128,9 @@
             on:input={onInput}
             aria-describedby="input-field-helper-{fieldname}"
         />
-        <output for="form-field-range-{fieldname}">{value}</output>
+        <output for="form-field-range-{fieldname}" editable="true"
+            >{value}</output
+        >
         {#if Array.isArray(tickmarks) && tickmarks.length}
             <datalist id="form-field-range-{fieldname}-tickmarks">
                 {#each tickmarks as tickmark}

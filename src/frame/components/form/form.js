@@ -161,12 +161,12 @@ class notForm extends notBase {
 
     #addMasterSlaveEvents(rule, master, slaves = []) {
         this.on(`change.${master}`, (value) => {
-            this.#execSlaveRule(rule, slaves, value);
+            this.#execSlaveRule(rule, master, slaves, value);
         });
     }
 
-    #execSlaveRule(rule, slaves, value) {
-        const cmd = notFormRules.exec(rule, value);
+    #execSlaveRule(rule, master, slaves, value) {
+        const cmd = notFormRules.exec(rule, master, slaves, value, this);
         slaves.forEach((slaveField) => {
             this.updateField(slaveField, cmd);
         });
