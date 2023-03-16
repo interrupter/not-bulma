@@ -1,5 +1,6 @@
 <script>
     import { LOCALE } from "../../locale";
+    import UICommon from "../common";
 
     export let id = `title-${Math.random()}`;
     export let title = "";
@@ -9,9 +10,9 @@
     export let spaced = false;
     export let align = "left";
 
-    export const scrollToTop = () => {
+    export const scrollToTop = (options = UICommon.SCROLL_OPTIONS) => {
         setTimeout(() => {
-            document.getElementById(id).scrollIntoView(true);
+            document.getElementById(id).scrollIntoView(options);
         }, 100);
     };
 
