@@ -186,7 +186,7 @@ class notSideMenu extends Menu {
     static show(e) {
         e && e.preventDefault();
         if (this.isTouch()) {
-            this.classList.add("is-active");
+            this.aside.classList.add("is-active");
         } else {
             this.aside.classList.remove("is-closed");
         }

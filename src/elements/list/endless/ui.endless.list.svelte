@@ -3,7 +3,7 @@
     const dispatch = createEventDispatcher();
 
     import UIEndlessListSimpleItem from "./ui.endless.list.simple.item.svelte";
-    import UIEndlessListEmptyPlaceholder from "..ui.list.empty.placeholder.svelte";
+    import UIEndlessListEmptyPlaceholder from "../ui.list.empty.placeholder.svelte";
     import UIEndlessListNavigation from "./ui.endless.list.navigation.svelte";
 
     export let data = {

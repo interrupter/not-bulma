@@ -1,57 +1,95 @@
 <script>
     import { createEventDispatcher } from "svelte";
     const dispatch = createEventDispatcher();
+
+    import UITitle from "../various/ui.title.svelte";
     import UIButtons from "../button/ui.buttons.svelte";
-    export let id;
+
     export let title;
     export let description;
     export let actions = [];
     export let classes = "";
     export let image = "";
+    //value of item, will be passed to event handlers
+    export let value;
+    //customization
+    export let titleComponent = UITitle;
+    export let titleComponentProps = { size: 6 };
+    export let descriptionComponent;
+    export let descriptionComponentProps = {};
+    export let imageComponent;
+    export let imageComponentProps = {};
+
+    function onClick() {
+        dispatch("click", value);
+    }
 </script>
 
-<div
-    class="list-item {classes}"
-    on:click|preventDefault={() => {
-        dispatch("click", { id, title, image });
-    }}
->
+<div class="list-item {classes}" on:click|preventDefault={onClick}>
     {#if image}
         <div
             class="list-item-image"
             on:click|preventDefault={() => {
-                dispatch("clickImage", { id, title, image });
+                onClick();
+                dispatch("clickImage", value);
             }}
         >
-            <figure class="image is-64x64">
-                <img class="is-rounded" src={image} alt={title} />
-            </figure>
+            {#if imageComponent}
+                <svelte:component
+                    this={imageComponent}
+                    value={image}
+                    {...imageComponentProps}
+                />
+            {:else}
+                <figure class="image is-64x64">
+                    <img class="is-rounded" src={image} alt={title} />
+                </figure>
+            {/if}
         </div>
     {/if}
     <div
         class="list-item-content"
         on:click|preventDefault={() => {
-            dispatch("clickContent", { id, title, image });
+            onClick();
+            dispatch("clickContent", value);
         }}
     >
         {#if title}
             <div
                 class="list-item-title"
                 on:click|preventDefault={() => {
-                    dispatch("clickTitle", { id, title, image });
+                    onClick();
+                    dispatch("clickTitle", value);
                 }}
             >
-                {title}
+                {#if titleComponent}
+                    <svelte:component
+                        this={titleComponent}
+                        {title}
+                        {...titleComponentProps}
+                    />
+                {:else}
+                    {description}
+                {/if}
             </div>
         {/if}
         {#if description}
             <div
                 class="list-item-description"
                 on:click|preventDefault={() => {
-                    dispatch("clickDescription", { id, title, image });
+                    onClick();
+                    dispatch("clickDescription", value);
                 }}
             >
-                {description}
+                {#if descriptionComponent}
+                    <svelte:component
+                        this={descriptionComponent}
+                        value={description}
+                        {...descriptionComponentProps}
+                    />
+                {:else}
+                    {description}
+                {/if}
             </div>
         {/if}
     </div>
