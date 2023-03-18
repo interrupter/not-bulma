@@ -1,5 +1,4 @@
 import {
-    UIEndlessListEmptyPlaceholder,
     UIEndlessListNavigation,
     UIEndlessListSimpleItem,
     UIEndlessList,
@@ -10,7 +9,6 @@ import UIListItem from "./ui.list.item.svelte";
 import UIListEmptyPlaceholder from "./ui.list.empty.placeholder.svelte";
 
 export {
-    UIEndlessListEmptyPlaceholder,
     UIEndlessListNavigation,
     UIEndlessListSimpleItem,
     UIEndlessList,
