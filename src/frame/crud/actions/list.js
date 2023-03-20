@@ -46,6 +46,7 @@ export default class CRUDActionList {
                 id: -1,
             },
             filter: undefined,
+            ui: undefined,
         };
         const TABLE_OPTIONS = {
             options: {

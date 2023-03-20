@@ -84,36 +84,33 @@ class notTable extends EventEmitter {
         //pagination, items information
         this.stores.state.subscribe(this.onStateUpdate.bind(this));
 
-        if (
-            Object.prototype.hasOwnProperty.call(input, "data") &&
-            Array.isArray(input.data)
-        ) {
+        if (Object.hasOwn(input, "data") && Array.isArray(input.data)) {
             this.stores.raw.update((val) => {
                 val = input.data;
                 return val;
             });
         }
-        if (Object.prototype.hasOwnProperty.call(this.options, "filter")) {
+        if (Object.hasOwn(this.options, "filter")) {
             this.setFilter(this.options.filter, true);
         } else {
             this.resetFilter();
         }
-        if (Object.prototype.hasOwnProperty.call(this.options, "pager")) {
+        if (Object.hasOwn(this.options, "pager")) {
             this.setPager(this.options.pager, true);
         } else {
             this.resetPager();
         }
-        if (Object.prototype.hasOwnProperty.call(this.options, "sorter")) {
+        if (Object.hasOwn(this.options, "sorter")) {
             this.setSorter(this.options.sorter, true);
         } else {
             this.resetSorter(true);
         }
-        if (Object.prototype.hasOwnProperty.call(this.options, "return")) {
+        if (Object.hasOwn(this.options, "return")) {
             this.setReturn(this.options.return);
         } else {
             this.setReturn();
         }
-        if (Object.prototype.hasOwnProperty.call(this.options, "search")) {
+        if (Object.hasOwn(this.options, "search")) {
             this.setSearch(this.options.search, true);
         } else {
             this.setSearch();
@@ -618,14 +615,8 @@ class notTable extends EventEmitter {
                 this.loadData()
                     .then((data) => {
                         let full =
-                            Object.prototype.hasOwnProperty.call(
-                                data,
-                                "status"
-                            ) &&
-                            Object.prototype.hasOwnProperty.call(
-                                data,
-                                "result"
-                            );
+                            Object.hasOwn(data, "status") &&
+                            Object.hasOwn(data, "result");
                         this.stores.filtered.update((val) => {
                             if (!this.getOptions("endless", false)) {
                                 this.clearFilteredData();
@@ -634,10 +625,7 @@ class notTable extends EventEmitter {
                                 val.push(...data.result.list);
                             } else {
                                 if (
-                                    Object.prototype.hasOwnProperty.call(
-                                        data,
-                                        "list"
-                                    ) &&
+                                    Object.hasOwn(data, "list") &&
                                     Array.isArray(data.list)
                                 ) {
                                     val.push(...data.list);
@@ -783,12 +771,7 @@ class notTable extends EventEmitter {
                         item,
                         this.getOptions("helpers")
                     );
-                if (
-                    Object.prototype.hasOwnProperty.call(
-                        field,
-                        OPT_FIELD_NAME_PRE_PROC
-                    )
-                ) {
+                if (Object.hasOwn(field, OPT_FIELD_NAME_PRE_PROC)) {
                     try {
                         preprocessed = field[OPT_FIELD_NAME_PRE_PROC](
                             val,
