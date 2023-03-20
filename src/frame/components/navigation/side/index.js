@@ -26,6 +26,7 @@ class notSideMenu extends Menu {
         navigate: (urls) => {
             if (this.isTouch()) {
                 this.hide();
+                this.app.emit("top-navbar-burger:update", { closed: true });
             }
             if (!this.isDirectNavigation() && this.app) {
                 let func = this.app.getWorking("router");
