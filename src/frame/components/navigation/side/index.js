@@ -164,34 +164,40 @@ class notSideMenu extends Menu {
 
     static toggle(e) {
         e && e.preventDefault();
-        if (this.isTouch()) {
-            this.aside.classList.toggle("is-active");
-        } else {
-            this.aside.classList.toggle("is-closed");
+        if (this.aside) {
+            if (this.isTouch()) {
+                this.aside.classList.toggle("is-active");
+            } else {
+                this.aside.classList.toggle("is-closed");
+            }
+            this.resizeMain();
         }
-        this.resizeMain();
         return false;
     }
 
     static hide(e) {
         e && e.preventDefault();
-        if (this.isTouch()) {
-            this.aside.classList.remove("is-active");
-        } else {
-            this.aside.classList.add("is-closed");
+        if (this.aside) {
+            if (this.isTouch()) {
+                this.aside.classList.remove("is-active");
+            } else {
+                this.aside.classList.add("is-closed");
+            }
+            this.resizeMain();
         }
-        this.resizeMain();
         return false;
     }
 
     static show(e) {
         e && e.preventDefault();
-        if (this.isTouch()) {
-            this.aside.classList.add("is-active");
-        } else {
-            this.aside.classList.remove("is-closed");
+        if (this.aside) {
+            if (this.isTouch()) {
+                this.aside.classList.add("is-active");
+            } else {
+                this.aside.classList.remove("is-closed");
+            }
+            this.resizeMain();
         }
-        this.resizeMain();
         return false;
     }
 
