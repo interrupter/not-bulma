@@ -34,10 +34,10 @@ class notTable extends EventEmitter {
     constructor(input = {}) {
         super();
         this.id = "table-" + Math.random();
-        this.options = Object.assign(
-            DEFAULT_OPTIONS,
-            input.options ? input.options : {}
-        );
+        this.options = {
+            ...DEFAULT_OPTIONS,
+            ...(input.options ? input.options : {}),
+        };
         this.ui = {};
         this.data = {
             raw: [],

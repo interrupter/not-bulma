@@ -1,14 +1,17 @@
 <script>
-  export let value;
-  export let max = 100;
-  export let color = '';
-  export let size = '';
-  export let classes = '';
-
+    export let value;
+    export let max = 100;
+    export let color = "";
+    export let size = "";
+    export let classes = "";
 </script>
 
-<progress class="
+<progress
+    class="
   progress
   {classes}
-  {color?`is-${color}`:''}
-  {size?`is-${size}`:''}" {value} {max}>{value}%</progress>
+  {color ? `is-${color}` : ''}
+  {size ? `is-${size}` : ''}"
+    {value}
+    {max}>{value}%</progress
+>

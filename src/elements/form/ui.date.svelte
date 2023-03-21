@@ -2,7 +2,7 @@
     import UICommon from "../common.js";
     import ErrorsList from "../various/ui.errors.list.svelte";
 
-    import { createEventDispatcher } from "svelte";
+    import { createEventDispatcher, onMount } from "svelte";
     let dispatch = createEventDispatcher();
 
     export let inputStarted = false;
@@ -31,6 +31,14 @@
         valid === true || !inputStarted
             ? UICommon.CLASS_OK
             : UICommon.CLASS_ERR;
+
+    onMount(() => {
+        if (value instanceof Date) {
+            value = value.toISOString().split("T")[0];
+        } else if (value.indexOf("T") > 0) {
+            value = value.split("T")[0];
+        }
+    });
 
     function onBlur(ev) {
         let data = {
