@@ -149,11 +149,13 @@ class notCommon {
 
     static TZ_OFFSET = (new Date().getTimezoneOffset() / 60) * -1;
     static DEV_ENV = "production";
-    static ENV_TYPE = window.NOT_ENV_TYPE ? window.NOT_ENV_TYPE : this.DEV_ENV;
+    static ENV_TYPE = window.NOT_ENV_TYPE
+        ? window.NOT_ENV_TYPE
+        : notCommon.DEV_ENV;
     static NOOP = () => {};
 
     static mute() {
-        this.ENV_TYPE = "production";
+        notCommon.ENV_TYPE = "production";
     }
 
     static pad(n) {
@@ -263,7 +265,7 @@ class notCommon {
         if (typeof testie !== "function") {
             return typeof testie;
         } else {
-            if (this.isClass(testie)) {
+            if (notCommon.isClass(testie)) {
                 return "class";
             } else {
                 return "function";
@@ -281,15 +283,15 @@ class notCommon {
         let localIsoString =
             date.getFullYear() +
             "-" +
-            this.pad(date.getMonth() + 1) +
+            notCommon.pad(date.getMonth() + 1) +
             "-" +
-            this.pad(date.getDate()) +
+            notCommon.pad(date.getDate()) +
             "T" +
-            this.pad(date.getHours()) +
+            notCommon.pad(date.getHours()) +
             ":" +
-            this.pad(date.getMinutes()) +
+            notCommon.pad(date.getMinutes()) +
             ":" +
-            this.pad(date.getSeconds());
+            notCommon.pad(date.getSeconds());
         return localIsoString;
     }
 
@@ -298,44 +300,44 @@ class notCommon {
         let date =
             today.getFullYear() +
             "-" +
-            this.pad(today.getMonth() + 1) +
+            notCommon.pad(today.getMonth() + 1) +
             "-" +
-            this.pad(today.getDate());
+            notCommon.pad(today.getDate());
         return date;
     }
 
     static backlog = [];
 
     static backlogAdd(msg, type = "log") {
-        if (this.get("backlog") === true) {
-            this.backlog.push({ msg, type });
+        if (notCommon.get("backlog") === true) {
+            notCommon.backlog.push({ msg, type });
         }
     }
 
     static dumpBacklog() {
-        while (this.backlog.length) {
-            let row = this.backlog.shift();
-            window[this.LOG][row.type](...row.msg);
+        while (notCommon.backlog.length) {
+            let row = notCommon.backlog.shift();
+            window[notCommon.LOG][row.type](...row.msg);
         }
     }
 
     static logMsg() {
-        let now = this.localIsoDate();
+        let now = notCommon.localIsoDate();
         // eslint-disable-next-line no-console
-        window[this.LOG].log(`[${now}]: `, ...arguments);
-        this.backlogAdd([`[${now}]: `, ...arguments], "log");
+        window[notCommon.LOG].log(`[${now}]: `, ...arguments);
+        notCommon.backlogAdd([`[${now}]: `, ...arguments], "log");
     }
 
     static log() {
-        this.logMsg(...arguments);
+        notCommon.logMsg(...arguments);
     }
 
     static createLogger(prefix) {
         return {
-            log: this.genLogMsg(prefix),
-            error: this.genLogError(prefix),
-            debug: this.genLogDebug(prefix),
-            report: this.report,
+            log: notCommon.genLogMsg(prefix),
+            error: notCommon.genLogError(prefix),
+            debug: notCommon.genLogDebug(prefix),
+            report: notCommon.report,
         };
     }
 
@@ -358,35 +360,35 @@ class notCommon {
      * @returns  {boolean} true если это запущено в окружении разработки
      **/
     static isDev() {
-        return this.ENV_TYPE === this.DEV_ENV;
+        return notCommon.ENV_TYPE === notCommon.DEV_ENV;
     }
 
     static debug() {
-        if (this.isDev()) {
-            return this.logMsg(...arguments);
+        if (notCommon.isDev()) {
+            return notCommon.logMsg(...arguments);
         } else {
-            return this.NOOP;
+            return notCommon.NOOP;
         }
     }
 
     static genLogDebug(prefix) {
-        if (this.isDev()) {
-            return this.genLogMsg(prefix);
+        if (notCommon.isDev()) {
+            return notCommon.genLogMsg(prefix);
         } else {
-            return this.NOOP;
+            return notCommon.NOOP;
         }
     }
 
     static error() {
-        this.logError(...arguments);
+        notCommon.logError(...arguments);
     }
 
     //Функция вывода сообщения об ошибке
     static logError() {
-        let now = this.localIsoDate();
+        let now = notCommon.localIsoDate();
         // eslint-disable-next-line no-console
-        window[this.LOG].error(`[${now}]: `, ...arguments);
-        this.backlogAdd([`[${now}]: `, ...arguments], "error");
+        window[notCommon.LOG].error(`[${now}]: `, ...arguments);
+        notCommon.backlogAdd([`[${now}]: `, ...arguments], "error");
     }
 
     static genLogError(prefix) {
@@ -403,21 +405,21 @@ class notCommon {
     }
 
     static report(e) {
-        if (this.getApp()) {
-            let reporter = this.getApp().getService("nsErrorReporter");
+        if (notCommon.getApp()) {
+            let reporter = notCommon.getApp().getService("nsErrorReporter");
             if (reporter) {
-                reporter.report(e).catch(this.error.bind(this));
+                reporter.report(e).catch(notCommon.error);
             }
         } else {
-            if (!this.get("production")) {
-                this.error(...arguments);
+            if (!notCommon.get("production")) {
+                notCommon.error(...arguments);
             }
         }
     }
 
     static trace() {
-        if (!this.get("production")) {
-            this.trace(...arguments);
+        if (!notCommon.get("production")) {
+            notCommon.trace(...arguments);
         }
     }
 
@@ -440,19 +442,19 @@ class notCommon {
     static buildURL({ prefix, module, model, id, action }) {
         let url = ["/"];
         if (prefix) {
-            url.push(encodeURIComponent(this.trimBackslash(prefix)));
+            url.push(encodeURIComponent(notCommon.trimBackslash(prefix)));
         }
         if (module) {
-            url.push(encodeURIComponent(this.trimBackslash(module)));
+            url.push(encodeURIComponent(notCommon.trimBackslash(module)));
         }
         if (model) {
-            url.push(encodeURIComponent(this.trimBackslash(model)));
+            url.push(encodeURIComponent(notCommon.trimBackslash(model)));
         }
         if (id) {
-            url.push(encodeURIComponent(this.trimBackslash(id)));
+            url.push(encodeURIComponent(notCommon.trimBackslash(id)));
         }
         if (action) {
-            url.push(encodeURIComponent(this.trimBackslash(action)));
+            url.push(encodeURIComponent(notCommon.trimBackslash(action)));
         }
         url = url.filter((el) => el !== "");
         return url.join("/").replace(/\/\//g, "/");
@@ -488,11 +490,11 @@ class notCommon {
     }
 
     static getApp() {
-        return this.get("app");
+        return notCommon.get("app");
     }
 
     static extendAppConfig(conf, conf2) {
-        return this.deepMerge(conf, conf2);
+        return notCommon.deepMerge(conf, conf2);
     }
 
     static absorbModule() {
@@ -510,7 +512,7 @@ class notCommon {
                 delete targets.mod;
             }
         } else {
-            this.log(
+            notCommon.log(
                 "WARNING: absorbModule format obsoleted, use object {defaultConf, mod, services, uis, wsc, etc}"
             );
             defaultConf = arguments[0];
@@ -528,17 +530,20 @@ class notCommon {
         for (let prop in mod) {
             //add manifest to other
             if (prop === "manifest") {
-                defaultConf = this.extendAppConfig(defaultConf, mod.manifest);
+                defaultConf = notCommon.extendAppConfig(
+                    defaultConf,
+                    mod.manifest
+                );
                 continue;
             }
-            if (typeof this.get(`absorb.${prop}`) === "function") {
+            if (typeof notCommon.get(`absorb.${prop}`) === "function") {
                 if (!Object.prototype.hasOwnProperty.call(targets, prop)) {
                     targets[prop] = {};
-                    this.log(
+                    notCommon.log(
                         `WARNING: no accamulator object provided for '${prop}' collection`
                     );
                 }
-                this.get(`absorb.${prop}`)(targets[prop], mod[prop]);
+                notCommon.get(`absorb.${prop}`)(targets[prop], mod[prop]);
             } else if (prop.indexOf("nc") === 0) {
                 if (
                     !Object.prototype.hasOwnProperty.call(
@@ -569,12 +574,12 @@ class notCommon {
     static registry = {};
 
     static register(key, val) {
-        this.registry[key] = val;
+        notCommon.registry[key] = val;
     }
 
     static get(key) {
-        return Object.prototype.hasOwnProperty.call(this.registry, key)
-            ? this.registry[key]
+        return Object.prototype.hasOwnProperty.call(notCommon.registry, key)
+            ? notCommon.registry[key]
             : null;
     }
 
@@ -598,7 +603,7 @@ class notCommon {
                 }
                 for (let t in obj) {
                     if (Object.prototype.hasOwnProperty.call(obj, t)) {
-                        obj[t] = this.stripProxy(obj[t]);
+                        obj[t] = notCommon.stripProxy(obj[t]);
                     }
                 }
             }
@@ -615,15 +620,17 @@ class notCommon {
     }
 
     static getAPI(type) {
-        return this.getManager() ? this.getManager().getAPI(type) : null;
+        return notCommon.getManager()
+            ? notCommon.getManager().getAPI(type)
+            : null;
     }
 
     static setManager(v) {
-        this.MANAGER = v;
+        notCommon.MANAGER = v;
     }
 
     static getManager() {
-        return this.MANAGER;
+        return notCommon.MANAGER;
     }
 
     static getJSON(url) {
@@ -637,15 +644,16 @@ class notCommon {
     }
 
     static registerWidgetEvents(events) {
-        if (this.getApp()) {
+        if (notCommon.getApp()) {
             Object.keys(events).forEach((eventName) => {
-                this.getApp().on(eventName, events[eventName]);
+                notCommon.getApp().on(eventName, events[eventName]);
             });
         }
     }
 
     static navigate(url) {
-        this.getApp() && this.getApp().getWorking("router").navigate(url);
+        notCommon.getApp() &&
+            notCommon.getApp().getWorking("router").navigate(url);
     }
 }
 
