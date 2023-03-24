@@ -43,6 +43,7 @@ import {
     notSideMenu,
 } from "./components";
 
+import createCRUDActionUIView from "./crud/create.crud.action.ui.view.js";
 import notCRUD from "./crud/controller.crud.js";
 
 const ncCRUD = notCRUD; //legacy alias
@@ -53,6 +54,7 @@ export {
     UIForm,
     VARIANTS,
     ncCRUD,
+    createCRUDActionUIView,
     notAPI,
     notApp,
     notBase,
