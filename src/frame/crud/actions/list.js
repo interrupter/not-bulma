@@ -23,6 +23,7 @@ export default class CRUDActionList {
             controller.ui[ACTION] = new notTable(
                 CRUDActionList.prepareOptions(controller)
             );
+
             controller.emit(`after:render:${ACTION}`);
         } catch (e) {
             controller.report(e);

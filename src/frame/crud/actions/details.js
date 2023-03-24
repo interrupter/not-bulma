@@ -1,57 +1,75 @@
-import {notForm} from '../../components';
+import { notForm } from "../../components";
+import { DEFAULT_TRASFORMER } from "../const";
 
-const ACTION = 'details';
-const MODEL_ACTION = 'get';
+const ACTION = "details";
+const MODEL_ACTION = "get";
 
 export default class CRUDActionDetails {
-  static async run(controller, params) {
-    try{
-      await controller.preloadVariants(ACTION);
+    static async run(controller, params) {
+        try {
+            await controller.preloadVariants(ACTION);
 
-      const idField = controller.getOptions(`${ACTION}.idField`, '_id'),
-        query = {[idField]: params[0]};
+            const idField = controller.getOptions(`${ACTION}.idField`, "_id"),
+                query = { [idField]: params[0] };
 
-      controller.setBreadcrumbs([{
-        title: 'Просмотр',
-        url: controller.getModelActionURL(params[0], false)
-      }]);
+            controller.setBreadcrumbs([
+                {
+                    title: "Просмотр",
+                    url: controller.getModelActionURL(params[0], false),
+                },
+            ]);
 
-      if (controller.ui[ACTION]) {
-        return;
-      } else {
-        controller.$destroyUI();
-      }
-      const detailsActionName = controller.getOptions(`${ACTION}.actionName`, MODEL_ACTION);
-      let res = await controller.getModel(query)[`$${detailsActionName}`]();
-      if(!res || (res.status !== 'ok')){
-        return controller.showErrorMessage(res);
-      }
+            if (controller.ui[ACTION]) {
+                return;
+            } else {
+                controller.$destroyUI();
+            }
+            const detailsActionName = controller.getOptions(
+                `${ACTION}.actionName`,
+                MODEL_ACTION
+            );
+            let res = await controller
+                .getModel(query)
+                [`$${detailsActionName}`]();
+            if (!res || res.status !== "ok") {
+                return controller.showErrorMessage(res);
+            }
 
-      const title = controller.getItemTitle(res.result);
-      controller.setBreadcrumbs([{
-        title: `Просмотр "${title}"`,
-        url: controller.getModelActionURL(params[0], false)
-      }]);
+            const title = controller.getItemTitle(res.result);
+            controller.setBreadcrumbs([
+                {
+                    title: `Просмотр "${title}"`,
+                    url: controller.getModelActionURL(params[0], false),
+                },
+            ]);
 
-      controller.ui[ACTION] = new notForm({
-        options: {
-          target: controller.getContainerInnerElement(),
-          model: controller.getModelName(),
-          action: detailsActionName,
-          name: `${controller.getName()}.${ACTION}Form`,
-          fields:{
-            readonly: true,
-          },
-          validators: controller.getOptions('Validators'),
-          variants: controller.getOptions(`variants.${ACTION}`, {}),
-        },
-        data: res.result
-      });
-      controller.emit(`after:render:${ACTION}`);
-      controller.ui[ACTION].on('reject', controller.goList.bind(controller));
-    }catch(e){
-      controller.report(e);
-      controller.showErrorMessage(e);
+            const resultTransformer = controller.getOptions(
+                `${ACTION}.transformer`,
+                DEFAULT_TRASFORMER
+            );
+
+            controller.ui[ACTION] = new notForm({
+                options: {
+                    target: controller.getContainerInnerElement(),
+                    model: controller.getModelName(),
+                    action: detailsActionName,
+                    name: `${controller.getName()}.${ACTION}Form`,
+                    fields: {
+                        readonly: true,
+                    },
+                    validators: controller.getOptions("Validators"),
+                    variants: controller.getOptions(`variants.${ACTION}`, {}),
+                },
+                data: resultTransformer(res.result),
+            });
+            controller.emit(`after:render:${ACTION}`);
+            controller.ui[ACTION].on(
+                "reject",
+                controller.goList.bind(controller)
+            );
+        } catch (e) {
+            controller.report(e);
+            controller.showErrorMessage(e);
+        }
     }
-  }
 }
