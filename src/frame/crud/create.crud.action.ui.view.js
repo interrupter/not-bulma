@@ -1,6 +1,6 @@
 export default (ACTION, TITLE, UIConstructor) => {
     return class {
-        static async run(controller, c) {
+        static async run(controller, params) {
             try {
                 controller.setBreadcrumbs([
                     {
