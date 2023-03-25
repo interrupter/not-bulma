@@ -63,13 +63,21 @@
                 }}
             >
                 {#if titleComponent}
-                    <svelte:component
-                        this={titleComponent}
-                        {title}
-                        {...titleComponentProps}
-                    />
+                    {#if typeof title === "string"}
+                        <svelte:component
+                            this={titleComponent}
+                            {title}
+                            {...titleComponentProps}
+                        />
+                    {:else}
+                        <svelte:component
+                            this={titleComponent}
+                            {...title}
+                            {...titleComponentProps}
+                        />
+                    {/if}
                 {:else}
-                    {description}
+                    {title}
                 {/if}
             </div>
         {/if}

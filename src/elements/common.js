@@ -65,18 +65,24 @@ export default class UICommon {
         return `${this.MONEY_SIGN}${major}.${minor}`;
     }
 
-    static formatLocaleDatetime(dt) {
+    static formatLocaleDatetime(dt, opts = { date: true, time: true }) {
         const date = dt.toLocaleDateString(window.navigator.language);
         const time = dt.toLocaleTimeString(window.navigator.language);
-        return `${date} ${time}`;
+        if (opts.date && opts.time) {
+            return `${date} ${time}`;
+        } else if (opts.date && !opts.time) {
+            return date;
+        } else {
+            return time;
+        }
     }
 
-    static tryFormatLocaleDateTime(value) {
-        if (typeof value == "string") {
+    static tryFormatLocaleDateTime(value, opts = { date: true, time: true }) {
+        if (typeof value == "string" || typeof value == "number") {
             const dt = new Date(value);
-            return UICommon.formatLocaleDatetime(dt);
+            return UICommon.formatLocaleDatetime(dt, opts);
         } else if (typeof value == "object") {
-            return UICommon.formatLocaleDatetime(value);
+            return UICommon.formatLocaleDatetime(value, opts);
         } else {
             return "";
         }
