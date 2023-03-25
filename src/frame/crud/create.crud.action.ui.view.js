@@ -1,5 +1,5 @@
 import notCommon from "../common";
-import { DEFAULT_TRASFORMER } from "../const";
+import { DEFAULT_TRASFORMER } from "./const";
 export default ({ ACTION, TITLE, UIConstructor, dataProvider, goBack }) => {
     return class {
         static async run(controller, params) {
