@@ -6,6 +6,7 @@
 
     export let classes = "";
     export let items = [];
+    export let actions = [];
 
     export let actionsVisible = false;
     export let itemsHoverable = false;
@@ -54,6 +55,7 @@
             {descriptionComponentProps}
             {imageComponent}
             {imageComponentProps}
+            {actions}
             on:click
             on:clickContent
             on:clickDescription

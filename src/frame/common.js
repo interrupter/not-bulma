@@ -655,6 +655,14 @@ class notCommon {
         notCommon.getApp() &&
             notCommon.getApp().getWorking("router").navigate(url);
     }
+
+    static select(variantsSet, value, def) {
+        if (Object.hasOwn(variantsSet, value)) {
+            return variantsSet[value];
+        } else {
+            return def;
+        }
+    }
 }
 
 function absorbServices(target, src) {

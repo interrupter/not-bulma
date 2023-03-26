@@ -1,5 +1,5 @@
 <script>
-    import { createEventDispatcher } from "svelte";
+    import { createEventDispatcher, onMount } from "svelte";
     const dispatch = createEventDispatcher();
 
     import UITitle from "../various/ui.title.svelte";
@@ -8,6 +8,7 @@
     export let title;
     export let description;
     export let actions = [];
+    export let listActions = [];
     export let classes = "";
     export let image = "";
     //value of item, will be passed to event handlers
@@ -23,6 +24,10 @@
     function onClick() {
         dispatch("click", value);
     }
+    let allActions = [];
+    $: allActions = [...actions, ...listActions].map((btn) => {
+        return { ...btn, action: () => btn.action(value) };
+    });
 </script>
 
 <div class="list-item {classes}" on:click|preventDefault={onClick}>
@@ -101,9 +106,9 @@
             </div>
         {/if}
     </div>
-    {#if actions && actions.length}
+    {#if allActions && allActions.length}
         <div class="list-item-controls">
-            <UIButtons values={actions} right={true} />
+            <UIButtons values={allActions} right={true} />
         </div>
     {/if}
 </div>

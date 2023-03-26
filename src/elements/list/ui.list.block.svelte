@@ -3,6 +3,7 @@
     import UITitle from "../various/ui.title.svelte";
     export let idFieldName = "id";
     export let items = [];
+    export let actions = [];
 
     export let itemClasses = "";
 
@@ -28,6 +29,7 @@
         {imageComponent}
         {imageComponentProps}
         {...item}
+        listActions={actions}
         classes={itemClasses}
         value={item}
         on:click
