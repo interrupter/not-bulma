@@ -3,21 +3,41 @@ import notRecord from "./record.js";
 import notBase from "./base.js";
 import notRouter from "./router.js";
 
-const OPT_CONTROLLER_PREFIX = "nc",
-    OPT_RECORD_PREFIX = "nr",
-    DEFAULT_WS_CLIENT_NAME = "main";
+/**
+ * @const {string} [OPT_CONTROLLER_PREFIX = "nc"] controller names prefix nc aka NotController
+ */
+const OPT_CONTROLLER_PREFIX = "nc";
+/**
+ * @const {string} [OPT_RECORD_PREFIX = "nr"] record names prefix nr aka NotRecord
+ */
+const OPT_RECORD_PREFIX = "nr";
+/**
+ * @const {string} [DEFAULT_WS_CLIENT_NAME = "main"] default name of WS client
+ */
+const DEFAULT_WS_CLIENT_NAME = "main";
 
-export default class notApp extends notBase {
+/**
+ * Class of application
+ * @class
+ */
+class notApp extends notBase {
+    /**
+     *  @static {function} DEFAULT_WS_CLIENT_NAME  function to perform deep merges of objects
+     */
     static DEFAULT_WS_CLIENT_NAME = DEFAULT_WS_CLIENT_NAME;
+    /**
+     * @class
+     * @param {object} options              application options
+     * @param {string} options.name         name
+     * @param {object} options.controllers  controllers
+     * @param {string}  options.manifestURL URL of network manifest with all available models/actions/fields requests options
+     */
     constructor(options) {
         super({
             working: {
                 name: options.name,
                 interfaces: {},
-                controllers: Object.prototype.hasOwnProperty.call(
-                    options,
-                    "controllers"
-                )
+                controllers: Object.hasOwn(options, "controllers")
                     ? options.controllers
                     : {},
                 initController: null,
@@ -35,6 +55,9 @@ export default class notApp extends notBase {
         return this;
     }
 
+    /**
+     * Initializes application according to network manifest, which is retrieved from server
+     */
     initManifest() {
         notCommon
             .getJSON(this.getOptions("manifestURL"), {})
@@ -42,12 +65,18 @@ export default class notApp extends notBase {
             .catch(notCommon.report.bind(this));
     }
 
+    /**
+     * One page routing initialization
+     */
     initRouter() {
         this.setWorking("router", notRouter);
         this.getWorking("router").setRoot(this.getOptions("router.root"));
         notRouter.reRouteExisted();
     }
 
+    /**
+     * Creates all the routes handlers and pushes them into router
+     */
     execRouter() {
         var routieInput = {};
         for (let t = 0; t < this.getOptions("router.manifest").length; t++) {
@@ -69,12 +98,21 @@ export default class notApp extends notBase {
         this.getWorking("router").addList(routieInput).listen(); //.navigate(this.getOptions('router.index'));
     }
 
+    /**
+     * Sets interface manifest option
+     * @param {object}  manifest    interface manifest
+     */
     setInterfaceManifest(manifest) {
         this.setOptions("interfaceManifest", manifest);
         this.initRouter();
         this.update();
     }
 
+    /**
+     * returns constructor of interface model
+     * @param {string}  modelName   model name
+     * @returns {object}    interface model constructor
+     */
     getInterfaceManifest(modelName) {
         if (modelName) {
             return this.getOptions("interfaceManifest")[modelName];
@@ -83,6 +121,9 @@ export default class notApp extends notBase {
         }
     }
 
+    /**
+     * Updating Application, reloads interfaces, init controller launched, start again
+     */
     update() {
         //нужно инициализировать
         //модели полученными интерфейсами
@@ -92,6 +133,9 @@ export default class notApp extends notBase {
         this.startApp();
     }
 
+    /**
+     * Initialization of services, startup of routing
+     */
     startApp() {
         this.initServices();
         //создать контроллеры
@@ -100,6 +144,12 @@ export default class notApp extends notBase {
         this.emit("afterStarted", this);
     }
 
+    /**
+     *
+     * @param {object} controllerName controller constructor
+     * @param {string[]} controllerPathScheme
+     * @returns {function} function creates new controller instance and pass in notApp instance, arguments from router parser and pathScheme
+     */
     bindController(controllerName, controllerPathScheme) {
         let app = this;
         return function () {
@@ -107,6 +157,10 @@ export default class notApp extends notBase {
         };
     }
 
+    /**
+     * Initializes 'initialization' controller which is runs once,
+     * to perform custom initializations routines by application code
+     */
     initController() {
         if (typeof this.getOptions("initController") !== "undefined") {
             let initController = this.getOptions("initController");
@@ -114,10 +168,19 @@ export default class notApp extends notBase {
         }
     }
 
+    /**
+     * Returns working controller
+     * @returns {object} working controller
+     */
     getCurrentController() {
         return this.getWorking("currentController");
     }
 
+    /**
+     * Destroyes working controller then sets provided as working
+     * @param {object} ctrl controller instance
+     * @returns {object} notApp instance
+     */
     setCurrentController(ctrl) {
         let oldCtrl = this.getCurrentController();
         if (oldCtrl && oldCtrl.destroy) {
@@ -127,6 +190,9 @@ export default class notApp extends notBase {
         return this;
     }
 
+    /**
+     * Clears interfaces, recreates all according to Options.interafaceManifest
+     */
     updateInterfaces() {
         this.clearInterfaces();
         let manifests = this.getOptions("interfaceManifest");
@@ -146,47 +212,100 @@ export default class notApp extends notBase {
         }
     }
 
+    /**
+     * Converts interface name (modelName) to standartizied prefixModelName
+     * @param {string} name interface model name
+     * @returns {string}    not record name
+     */
     getRecordName(name) {
         return OPT_RECORD_PREFIX + notCommon.capitalizeFirstLetter(name);
     }
 
+    /**
+     * Converts controller name (controllerName) to standartizied prefixControllerName
+     * @param {string} name controller name
+     * @returns {string}    not controller name
+     */
     getControllerName(name) {
         return OPT_CONTROLLER_PREFIX + notCommon.capitalizeFirstLetter(name);
     }
 
+    /**
+     * Returns all network interfaces
+     * @returns {object} all network insterfaces
+     */
     getInterfaces() {
         return this.getWorking("interfaces");
     }
 
+    /**
+     * Sets interfaces list clear
+     * @returns {object} notApp instance
+     */
     clearInterfaces() {
         this.setWorking("interfaces", {});
         return this;
     }
 
+    /**
+     * Sets WebSockets client
+     * @param {string} [name=DEFAULT_WS_CLIENT_NAME] name of client
+     * @param {object} wsc  notWSClient instance
+     * @returns {object} notApp instance
+     */
     setWSClient(name = DEFAULT_WS_CLIENT_NAME, wsc) {
         return this.setWorking(`wsc.${name}`, wsc);
     }
 
+    /**
+     * Returns web sockets client instance by name
+     * @param {string} [name=DEFAULT_WS_CLIENT_NAME]
+     * @returns {object} instance of notWSClient
+     */
     getWSClient(name = DEFAULT_WS_CLIENT_NAME) {
         return this.getWorking(`wsc.${name}`);
     }
 
+    /**
+     * returns network interface class initializator
+     * @param {string} name name of network interface
+     * @returns {function} interface class initializator
+     */
     getInterface(name) {
         return this.getInterfaces()[name];
     }
 
+    /**
+     * Returns network interface (model) initialized with provided data
+     * @param {string} name interface(modelName)
+     * @param {string} [data={}]    model data
+     * @returns network interface initializes with provided data
+     */
     getModel(name, data = {}) {
         return this.getInterface(name)(data);
     }
 
+    /**
+     * Sets service
+     * @param {string} name name of the service
+     * @param {object|function} val service
+     */
     setService(name, val) {
         return this.setWorking(`services.${name}`, val);
     }
 
+    /**
+     * Returns service
+     * @param {string} name name of the service
+     * @returns {object|function} service
+     */
     getService(name) {
         return this.getWorking(`services.${name}`);
     }
 
+    /**
+     * Initializes all provided services
+     */
     initServices() {
         if (this.getOptions("services")) {
             for (let servName in this.getOptions("services")) {
@@ -208,6 +327,11 @@ export default class notApp extends notBase {
         }
     }
 
+    /**
+     * Returns module dedicated options reader
+     * @param {string} moduleName   module name
+     * @returns {object} reader object {get(pathToValue, defaultValue)}
+     */
     getConfigReaderForModule(moduleName = "") {
         const modConfPath = ["modules", moduleName].join(".");
         return {
@@ -224,7 +348,13 @@ export default class notApp extends notBase {
         };
     }
 
+    /**
+     * Returns module dedicated options reader
+     * @param {string} [moduleName='']   module name
+     * @returns {object} reader object {get(pathToValue, defaultValue)}
+     */
     moduleConfig(moduleName = "") {
         return this.getConfigReaderForModule(moduleName);
     }
 }
+export default notApp;

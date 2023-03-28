@@ -133,12 +133,28 @@ deepmerge.all = function deepmergeAll(array, optionsArgument) {
     }, {});
 };
 
+/**
+ *  Collection of common functions
+ *  @class
+ */
 class notCommon {
+    /**
+     *  @static {Object} [MANAGER=null]  application manager, in some cases used to control initialization routine
+     */
     static MANAGER = null;
+    /**
+     *  @static {string} [LOG="console"]  logger, window[LOG]
+     */
     static LOG = "console";
-
+    /**
+     *  @static {function} deepMerge  function to perform deep merges of objects
+     */
     static deepMerge = deepmerge;
 
+    /**
+     *  @static {function} isError  function to perform object test, if it's an error object or not
+     * @param   {object}    e   object to test
+     */
     static isError(e) {
         return (
             e instanceof Error ||

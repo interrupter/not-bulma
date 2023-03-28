@@ -95,6 +95,7 @@
     "ioredis": "^5.3.1",
     "istanbul": "^0.4.5",
     "istanbul-lib-coverage": "^3.2.0",
+    "jsdoc": "^4.0.2",
     "method-override": "^3.0.0",
     "mongodb-memory-server": "^8.12.1",
     "mongoose": "^7.0.2",
@@ -131,6 +132,7 @@
     "simple-svelte-autocomplete": "^2.5.2",
     "svelte": "^3.57.0",
     "svelte-loader": "^3.1.7",
+    "taffydb": "^2.7.3",
     "terser": "^5.16.6"
   },
   "nyc": {
