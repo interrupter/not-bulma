@@ -56,6 +56,7 @@
             {imageComponent}
             {imageComponentProps}
             {actions}
+            on:change
             on:click
             on:clickContent
             on:clickDescription

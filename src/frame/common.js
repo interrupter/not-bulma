@@ -673,7 +673,11 @@ class notCommon {
     }
 
     static select(variantsSet, value, def) {
-        if (Object.hasOwn(variantsSet, value)) {
+        if (
+            variantsSet &&
+            typeof variantsSet == "object" &&
+            Object.hasOwn(variantsSet, value)
+        ) {
             return variantsSet[value];
         } else {
             return def;

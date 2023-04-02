@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Documentation Class: notCommon</title>
+	<title>Documentation Class: CRUDGenericActionUpdate</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -72,16 +72,16 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: notCommon</h1>
+	<h1 class="page-title">Class: CRUDGenericActionUpdate</h1>
 <section>
 
 <header>
     
         <h2>
-        notCommon
+        CRUDGenericActionUpdate
         </h2>
         
-            <div class="class-description">Collection of common functions</div>
+            <div class="class-description">Generic CRUD Update action class</div>
         
     
 </header>
@@ -93,7 +93,7 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="notCommon"><span class="type-signature"></span>new notCommon()</h4>
+    <h4 class="name" id="CRUDGenericActionUpdate"><span class="type-signature"></span>new CRUDGenericActionUpdate()</h4>
     
     
 </dt>
@@ -182,8 +182,8 @@
         <dl>
             
 <hr>
-<dt class="name" id="LOG">
-    <h4 id="LOG"><span class="type-signature"></span>LOG<span class="type-signature"></span></h4>
+<dt class="name" id=".ACTION">
+    <h4 id=".ACTION"><span class="type-signature">&lt;static> </span>ACTION<span class="type-signature"></span></h4>
 
     
 </dt>
@@ -238,8 +238,8 @@
         
             
 <hr>
-<dt class="name" id="MANAGER">
-    <h4 id="MANAGER"><span class="type-signature"></span>MANAGER<span class="type-signature"></span></h4>
+<dt class="name" id=".MODEL_ACTION_GET">
+    <h4 id=".MODEL_ACTION_GET"><span class="type-signature">&lt;static> </span>MODEL_ACTION_GET<span class="type-signature"></span></h4>
 
     
 </dt>
@@ -294,12 +294,132 @@
         
             
 <hr>
-<dt class="name" id="deepMerge">
-    <h4 id="deepMerge"><span class="type-signature"></span>deepMerge<span class="type-signature"></span></h4>
+<dt class="name" id=".MODEL_ACTION_PUT">
+    <h4 id=".MODEL_ACTION_PUT"><span class="type-signature">&lt;static> </span>MODEL_ACTION_PUT<span class="type-signature"></span></h4>
 
     
 </dt>
 <dd>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id=".breadcrumbsTails">
+    <h4 id=".breadcrumbsTails"><span class="type-signature">&lt;static> </span>breadcrumbsTails<span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Libarary of breadcrumbs tails strings templates
+    </div>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id=".deafultBreadcrumbsTail">
+    <h4 id=".deafultBreadcrumbsTail"><span class="type-signature">&lt;static> </span>deafultBreadcrumbsTail<span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Default breadcrumbs tail template string
+    </div>
     
 
     
@@ -357,7 +477,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id=".buildURL"><span class="type-signature">&lt;static> </span>buildURL()</h4>
+    <h4 class="name" id=".bindUIEvents"><span class="type-signature">&lt;static> </span>bindUIEvents(controller, params, response)</h4>
     
     
 </dt>
@@ -365,110 +485,7 @@
 
     
     <div class="description">
-        Builds URL with structure like prefix/module/model/id/action
-If some part absent or set to false it will be excluded from result
-    </div>
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    url path
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">string</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id=".copyObj"><span class="type-signature">&lt;static> </span>copyObj(obj)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Copies object to secure it from changes
+        Binds events to action UI
     </div>
     
 
@@ -503,7 +520,7 @@ If some part absent or set to false it will be excluded from result
 
         <tr>
             
-                <td class="name"><code>obj</code></td>
+                <td class="name"><code>controller</code></td>
             
 
             <td class="type">
@@ -520,183 +537,7 @@ If some part absent or set to false it will be excluded from result
 
             
 
-            <td class="description last">original object</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    copy of object
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">object</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id=".executeObjectFunction"><span class="type-signature">&lt;async, static> </span>executeObjectFunction(obj, name, params)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Executes method of object in appropriate way inside Promise
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>obj</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">original object</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>name</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">method name to execute</td>
+            <td class="description last">instance of controller</td>
         </tr>
 
     
@@ -709,7 +550,7 @@ If some part absent or set to false it will be excluded from result
             <td class="type">
             
                 
-<span class="param-type">Array</span>
+<span class="param-type">Array.&lt;string></span>
 
 
 
@@ -720,7 +561,31 @@ If some part absent or set to false it will be excluded from result
 
             
 
-            <td class="description last">array of params</td>
+            <td class="description last">list of route params</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>response</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">API response</td>
         </tr>
 
     
@@ -780,30 +645,6 @@ If some part absent or set to false it will be excluded from result
     
 
     
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    results of method execution
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
 
     
 </dd>
@@ -812,7 +653,7 @@ If some part absent or set to false it will be excluded from result
             
 <hr>
 <dt>
-    <h4 class="name" id=".getTodayDate"><span class="type-signature">&lt;static> </span>getTodayDate()</h4>
+    <h4 class="name" id=".isUIRendered"><span class="type-signature">&lt;static> </span>isUIRendered(controller)</h4>
     
     
 </dt>
@@ -820,109 +661,8 @@ If some part absent or set to false it will be excluded from result
 
     
     <div class="description">
-        Returns today Date object without hours, minutes, seconds
-    </div>
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    current date with 00:00:00 in ms of unix time
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">number</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id=".isAsync"><span class="type-signature">&lt;static> </span>isAsync(func)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Returns true if argument is Async function
+        true, if UI of this action already exists,
+false, if UI of this action wasn't existed and other UIs were destoryed
     </div>
     
 
@@ -957,13 +697,13 @@ If some part absent or set to false it will be excluded from result
 
         <tr>
             
-                <td class="name"><code>func</code></td>
+                <td class="name"><code>controller</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">function</span>
+<span class="param-type">object</span>
 
 
 
@@ -974,7 +714,7 @@ If some part absent or set to false it will be excluded from result
 
             
 
-            <td class="description last">to test</td>
+            <td class="description last">instance of controller</td>
         </tr>
 
     
@@ -1038,7 +778,7 @@ If some part absent or set to false it will be excluded from result
     
             
 <div class="param-desc">
-    if this function is constructed as AsyncFunction
+    true if UI of this action exists, false if UI of other was destroyed
 </div>
 
 
@@ -1066,7 +806,7 @@ If some part absent or set to false it will be excluded from result
             
 <hr>
 <dt>
-    <h4 class="name" id=".isDev"><span class="type-signature">&lt;static> </span>isDev()</h4>
+    <h4 class="name" id=".prepareUIOptions"><span class="type-signature">&lt;static> </span>prepareUIOptions(controller, response)</h4>
     
     
 </dt>
@@ -1074,106 +814,8 @@ If some part absent or set to false it will be excluded from result
 
     
     <div class="description">
-        Определяет является ли окружение окружением разработки
+        Creates object with all options needed to initialize UI component
     </div>
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    true если это запущено в окружении разработки
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">boolean</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id=".isError"><span class="type-signature">&lt;static> </span>isError(e)</h4>
-    
-    
-</dt>
-<dd>
-
     
 
     
@@ -1207,7 +849,7 @@ If some part absent or set to false it will be excluded from result
 
         <tr>
             
-                <td class="name"><code>e</code></td>
+                <td class="name"><code>controller</code></td>
             
 
             <td class="type">
@@ -1224,470 +866,14 @@ If some part absent or set to false it will be excluded from result
 
             
 
-            <td class="description last">object to test</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id=".isFunc"><span class="type-signature">&lt;static> </span>isFunc(func)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Test argument type to be 'function'
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>func</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">any</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">possible function</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    if this is a function
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">boolean</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id=".mapBind"><span class="type-signature">&lt;static> </span>mapBind(from, name, list)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Executes method of object in apropriate way inside Promise
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>from</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">original object</td>
+            <td class="description last">instance of controller</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>name</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">method name to execute</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>list</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">array of params</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    results of method execution
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id=".objHas"><span class="type-signature">&lt;static> </span>objHas(obj, name)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Returns true if object has field of name
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>obj</code></td>
+                <td class="name"><code>response</code></td>
             
 
             <td class="type">
@@ -1704,31 +890,7 @@ If some part absent or set to false it will be excluded from result
 
             
 
-            <td class="description last">some object</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>name</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">field name</td>
+            <td class="description last">API reponse object</td>
         </tr>
 
     
@@ -1792,7 +954,7 @@ If some part absent or set to false it will be excluded from result
     
             
 <div class="param-desc">
-    if object contains field with name
+    ui options object
 </div>
 
 
@@ -1803,7 +965,7 @@ If some part absent or set to false it will be excluded from result
     </dt>
     <dd>
         
-<span class="param-type">boolean</span>
+<span class="param-type">object</span>
 
 
 
@@ -1820,7 +982,7 @@ If some part absent or set to false it will be excluded from result
             
 <hr>
 <dt>
-    <h4 class="name" id=".partCopyObj"><span class="type-signature">&lt;static> </span>partCopyObj(obj)</h4>
+    <h4 class="name" id=".run"><span class="type-signature">&lt;async, static> </span>run(controller, params)</h4>
     
     
 </dt>
@@ -1828,7 +990,7 @@ If some part absent or set to false it will be excluded from result
 
     
     <div class="description">
-        Copies object to secure it from changes
+        Performing action preparation and renders UI
     </div>
     
 
@@ -1863,7 +1025,7 @@ If some part absent or set to false it will be excluded from result
 
         <tr>
             
-                <td class="name"><code>obj</code></td>
+                <td class="name"><code>controller</code></td>
             
 
             <td class="type">
@@ -1880,7 +1042,31 @@ If some part absent or set to false it will be excluded from result
 
             
 
-            <td class="description last">original object</td>
+            <td class="description last">instance of controller</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>params</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;string></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">list of route params</td>
         </tr>
 
     
@@ -1943,10 +1129,6 @@ If some part absent or set to false it will be excluded from result
     <h5>Returns:</h5>
     
             
-<div class="param-desc">
-    copy of object
-</div>
-
 
 
 <dl>
@@ -1955,7 +1137,7 @@ If some part absent or set to false it will be excluded from result
     </dt>
     <dd>
         
-<span class="param-type">object</span>
+<span class="param-type">undefined</span>
 
 
 

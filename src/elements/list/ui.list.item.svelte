@@ -44,6 +44,7 @@
                     this={imageComponent}
                     value={image}
                     {...imageComponentProps}
+                    on:change
                 />
             {:else}
                 <figure class="image is-64x64">
@@ -73,12 +74,14 @@
                             this={titleComponent}
                             {title}
                             {...titleComponentProps}
+                            on:change
                         />
                     {:else}
                         <svelte:component
                             this={titleComponent}
                             {...title}
                             {...titleComponentProps}
+                            on:change
                         />
                     {/if}
                 {:else}
@@ -99,6 +102,7 @@
                         this={descriptionComponent}
                         value={description}
                         {...descriptionComponentProps}
+                        on:change
                     />
                 {:else}
                     {description}

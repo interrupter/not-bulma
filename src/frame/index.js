@@ -45,6 +45,9 @@ import {
 
 import createCRUDActionUIView from "./crud/create.crud.action.ui.view.js";
 import notCRUD from "./crud/controller.crud.js";
+import notCRUDRouter from "./crud/router.js";
+import notCRUDRouterPlain from "./crud/router.plain.js";
+import notCRUDRouterSwitch from "./crud/router.switch.js";
 
 const ncCRUD = notCRUD; //legacy alias
 
@@ -70,6 +73,9 @@ export {
     notPath,
     notRecord,
     notRouter,
+    notCRUDRouter,
+    notCRUDRouterPlain,
+    notCRUDRouterSwitch,
     notSideMenu,
     notStores,
     notTable,
