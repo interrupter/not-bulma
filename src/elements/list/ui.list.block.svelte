@@ -30,7 +30,7 @@
         {imageComponentProps}
         {...item}
         listActions={actions}
-        classes={itemClasses}
+        commonClasses={itemClasses}
         value={item}
         on:click
         on:clickContent

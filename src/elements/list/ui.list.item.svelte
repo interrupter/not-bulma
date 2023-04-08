@@ -10,6 +10,7 @@
     export let actions = [];
     export let listActions = [];
     export let classes = "";
+    export let commonClasses = "";
     export let image = "";
     //value of item, will be passed to event handlers
     export let value;
@@ -30,7 +31,10 @@
     });
 </script>
 
-<div class="list-item {classes}" on:click|preventDefault={onClick}>
+<div
+    class="list-item {classes} {commonClasses}"
+    on:click|preventDefault={onClick}
+>
     {#if image}
         <div
             class="list-item-image"
