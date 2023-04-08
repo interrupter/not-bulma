@@ -12,6 +12,7 @@ $list-item-title-weight: $weight-semibold !default;
     @content;
   }
 }
+
 .list {
   color: $list-color;
   display: flex;
@@ -37,7 +38,12 @@ $list-item-title-weight: $weight-semibold !default;
       visibility: hidden;
     }
   }
+  &.selectable-items .list-item:hover,
+  &.selectable-items .list-item.is-active{
+    background-color: $info-light;
+  }
 }
+
 .list-item {
   align-items: center;
   display: flex;
@@ -49,7 +55,7 @@ $list-item-title-weight: $weight-semibold !default;
       opacity: initial;
       visibility: initial;
     }
-  }
+  }  
   &:not(.box) {
     padding: $list-item-padding;
   }
