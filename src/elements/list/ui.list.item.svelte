@@ -17,8 +17,10 @@
     //customization
     export let titleComponent = UITitle;
     export let titleComponentProps = { size: 6 };
+    //
     export let descriptionComponent;
     export let descriptionComponentProps = {};
+    //
     export let imageComponent;
     export let imageComponentProps = {};
 

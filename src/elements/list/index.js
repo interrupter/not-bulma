@@ -11,6 +11,7 @@ import UIListEmptyPlaceholder from "./ui.list.empty.placeholder.svelte";
 //form element based on UIList alike component
 
 import UIListSelect from "./ui.list.select.svelte";
+import UIListSelectGroup from "./ui.list.select.group.svelte";
 
 export {
     UIEndlessListNavigation,
@@ -20,4 +21,5 @@ export {
     UIListItem,
     UIListEmptyPlaceholder,
     UIListSelect,
+    UIListSelectGroup,
 };

@@ -37,7 +37,7 @@
     }
 
     onMount(() => {
-        if (selectedClass) {
+        if (defaultSelectAll) {
             variants.forEach((val) => {
                 values.push(getId(val));
             });
