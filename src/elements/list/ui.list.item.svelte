@@ -46,12 +46,19 @@
             }}
         >
             {#if imageComponent}
-                <svelte:component
-                    this={imageComponent}
-                    value={image}
-                    {...imageComponentProps}
-                    on:change
-                />
+                {#if typeof image === "string"}
+                    <svelte:component
+                        this={imageComponent}
+                        value={image}
+                        {...imageComponentProps}
+                    />
+                {:else}
+                    <svelte:component
+                        this={imageComponent}
+                        {...image}
+                        {...imageComponentProps}
+                    />
+                {/if}
             {:else}
                 <figure class="image is-64x64">
                     <img class="is-rounded" src={image} alt={title} />
@@ -104,12 +111,23 @@
                 }}
             >
                 {#if descriptionComponent}
-                    <svelte:component
-                        this={descriptionComponent}
-                        value={description}
-                        {...descriptionComponentProps}
-                        on:change
-                    />
+                    {#if typeof description === "string"}
+                        <svelte:component
+                            this={descriptionComponent}
+                            value={description}
+                            {...descriptionComponentProps}
+                            on:change
+                            on:click
+                        />
+                    {:else}
+                        <svelte:component
+                            this={descriptionComponent}
+                            {...description}
+                            {...descriptionComponentProps}
+                            on:change
+                            on:click
+                        />
+                    {/if}
                 {:else}
                     {description}
                 {/if}
