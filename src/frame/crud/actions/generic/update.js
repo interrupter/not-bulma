@@ -160,4 +160,4 @@ class CRUDGenericActionUpdate extends CRUDGenericAction {
     }
 }
 
-export default CRUDGenericAction;
+export default CRUDGenericActionUpdate;

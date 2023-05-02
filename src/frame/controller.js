@@ -511,6 +511,8 @@ class notController extends notBase {
             controller: this,
         };
     }
+
+    static getMenu() {}
 }
 
 export default notController;
