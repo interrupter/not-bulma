@@ -63,8 +63,8 @@ class CRUDGenericActionUpdate extends CRUDGenericAction {
                 name: `${controller.getName()}.${this.ACTION}Form`,
                 validators: controller.getOptions("Validators"),
                 variants: controller.getOptions(`variants.${this.ACTION}`, {}),
-                ui: controller.getOptions(`${ACTION}.ui`, {}),
-                fields: controller.getOptions(`${ACTION}.fields`, {}),
+                ui: controller.getOptions(`${this.ACTION}.ui`, {}),
+                fields: controller.getOptions(`${this.ACTION}.fields`, {}),
             },
             data: this.TRANSFORMER(notCommon.stripProxy(res.result)),
         };
