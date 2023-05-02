@@ -66,7 +66,7 @@ class CRUDGenericActionUpdate extends CRUDGenericAction {
                 ui: controller.getOptions(`${this.ACTION}.ui`, {}),
                 fields: controller.getOptions(`${this.ACTION}.fields`, {}),
             },
-            data: this.TRANSFORMER(notCommon.stripProxy(res.result)),
+            data: this.TRANSFORMER(notCommon.stripProxy(response.result)),
         };
     }
 
