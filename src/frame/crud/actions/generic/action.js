@@ -175,6 +175,7 @@ class CRUDGenericAction {
                 },
                 validators: controller.getOptions("Validators"),
                 variants: controller.getOptions(`variants.${this.ACTION}`, {}),
+                masters: controller.getOptions(`${this.ACTION}.masters`, {}),
             },
             data: this.TRANSFORMER(response.result),
         };

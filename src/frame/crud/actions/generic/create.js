@@ -1,5 +1,5 @@
 import CRUDGenericAction from "./action";
-import notCommon from '../../../common';
+import notCommon from "../../../common";
 const ACTION = "create";
 const DEFAUL_BREADCRUMB_TAIL = "Создание";
 
@@ -41,7 +41,7 @@ class CRUDGenericActionCreate extends CRUDGenericAction {
         return !reponse;
     }
 
-    static getTitle(contoller, params, response){
+    static getTitle(contoller, params, response) {
         return contoller.getItemTitle(response);
     }
 
@@ -55,11 +55,11 @@ class CRUDGenericActionCreate extends CRUDGenericAction {
                 name: `${controller.getName()}.${this.ACTION}Form`,
                 validators: controller.getOptions("Validators"),
                 variants: controller.getOptions(`variants.${this.ACTION}`, {}),
+                masters: controller.getOptions(`${this.ACTION}.masters`, {}),
             },
             data: this.TRANSFORMER(response),
         };
     }
-
 
     /**
      * Binds events to action UI
