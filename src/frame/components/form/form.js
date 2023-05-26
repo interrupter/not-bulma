@@ -163,6 +163,7 @@ class notForm extends notBase {
         this.on(`change.${master}`, (value) => {
             this.#execSlaveRule(rule, master, slaves, value);
         });
+        this.emit(`change.${master}`, this.getFormData()[master]);
     }
 
     #execSlaveRule(rule, master, slaves, value) {
