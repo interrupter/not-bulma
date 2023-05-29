@@ -4,6 +4,8 @@ import {
     UIEndlessList,
 } from "./endless";
 
+import FUINamedNumbersList from "./field.ui.named.numbers.list.svelte";
+
 import UIList from "./ui.list.svelte";
 import UIListItem from "./ui.list.item.svelte";
 import UIListEmptyPlaceholder from "./ui.list.empty.placeholder.svelte";
@@ -20,4 +22,5 @@ export {
     UIListItem,
     UIListEmptyPlaceholder,
     UIListSelect,
+    FUINamedNumbersList,
 };
