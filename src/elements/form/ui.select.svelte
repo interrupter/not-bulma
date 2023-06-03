@@ -24,6 +24,8 @@
     export let formErrors = false;
     export let formLevelError = false;
 
+    let selectedVariants = [];
+
     $: iconClasses = (icon ? " has-icons-left " : "") + " has-icons-right ";
     $: allErrors = [].concat(
         errors ? errors : [],
@@ -36,9 +38,12 @@
             ? UICommon.CLASS_OK
             : UICommon.CLASS_ERR;
     $: multipleClass = multiple ? " is-multiple " : "";
-    $: selectedVariants = Array.isArray(variants)
-        ? variants.filter(filterSelectedVariants)
-        : [];
+    $: {
+        value;
+        selectedVariants = Array.isArray(variants)
+            ? variants.filter(filterSelectedVariants)
+            : [];
+    }
 
     function filterSelectedVariants(variant) {
         if (Array.isArray(value) && multiple) {
