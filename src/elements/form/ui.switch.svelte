@@ -66,9 +66,9 @@
 <div class="control">
     {#if readonly}
         {#if value}
-            <UIBooleans values={[{ value: false }]} />
-        {:else}
             <UIBooleans values={[{ value: true }]} />
+        {:else}
+            <UIBooleans values={[{ value: false }]} />
         {/if}
     {:else}
         {#if !label}
