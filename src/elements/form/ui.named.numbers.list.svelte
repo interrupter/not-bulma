@@ -5,8 +5,8 @@
 
     import { UIColumns, UIColumn } from "../layout";
     import { UIButton } from "../button";
-    import UINumber from "../form/ui.number.svelte";
-    import UITextfield from "../form/ui.textfield.svelte";
+    import UINumber from "./ui.number.svelte";
+    import UITextfield from "./ui.textfield.svelte";
     import { UITitle } from "../various";
 
     export let fieldname = "numbers_list";
