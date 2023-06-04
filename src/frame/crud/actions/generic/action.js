@@ -207,10 +207,28 @@ class CRUDGenericAction {
      */
     static bindUIEvents(controller, params, response) {
         if (notCommon.isFunc(controller.goBack)) {
-            this.getUI(controller).on(
+            this.bindUIEvent(
+                controller,
                 "reject",
                 controller.goBack.bind(controller)
             );
+        }
+    }
+
+    /**
+     * Bind event handler named event to UI. Checks different binder notation $on/on
+     * @param {object} controller   instance of controller
+     * @param {string} event        event name
+     * @param {function} callback   callback function on event
+     * @returns
+     */
+    static bindUIEvent(controller, event, callback) {
+        const ui = this.getUI(controller);
+        if (ui.$on) {
+            return ui.$on(event, callback);
+        }
+        if (ui.on) {
+            return ui.on(event, callback);
         }
     }
 
