@@ -155,6 +155,14 @@ class notTable extends EventEmitter {
         }
     }
 
+    onFilterChange(filter) {
+        if (filter) {
+            this.setFilter(filter);
+        } else {
+            this.resetFilter();
+        }
+    }
+
     onSelectedUpdate(val) {
         this.data.selected = val;
     }
@@ -211,6 +219,7 @@ class notTable extends EventEmitter {
             this.ui.table = new this.options.ui({
                 target: this.options.targetEl,
                 props: {
+                    filterUI: this.getOptions("filterUI", undefined),
                     id: this.id,
                     helpers: Object.assign({}, this.getHelpers()),
                     fields: this.getOptions("fields"),
@@ -221,10 +230,12 @@ class notTable extends EventEmitter {
                     showSearch: this.getOptions("showSearch"),
                     idField: this.getOptions("idField"),
                     getItemId: this.getOptions("getItemId"),
+                    filter: this.getFilter(),
                 },
             });
         }
         this.ui.table.$on("searchChange", (e) => this.onSearchChange(e.detail));
+        this.ui.table.$on("filterChange", (e) => this.onFilterChange(e.detail));
         this.ui.table.$on("goToPage", (e) => this.goToPage(e.detail));
         this.ui.table.$on("goToNextPage", () => this.goToNext());
         this.ui.table.$on("goToPrevPage", () => this.goToPrev());

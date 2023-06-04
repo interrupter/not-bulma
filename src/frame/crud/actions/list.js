@@ -42,6 +42,7 @@ export default class CRUDActionList {
             getItemId: undefined,
             idField: undefined,
             preload: {},
+            filterUI: controller.getOptions(`${ACTION}.filterUI`),
             pager: { size: 50, page: 0 },
             sorter: {
                 id: -1,
