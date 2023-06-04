@@ -1,4 +1,5 @@
 export default class UICommon {
+    static CLEAR_MACRO = "__CLEAR__";
     static ERROR_DEFAULT = "Что пошло не так.";
     static DEFAULT_REDIRECT_TIMEOUT = 3000;
     static CLASS_OK = "is-success";

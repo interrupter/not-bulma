@@ -2,8 +2,7 @@
     import { LOCALE } from "../../locale";
     import ErrorsList from "../various/ui.errors.list.svelte";
     import UICommon from "../common.js";
-
-    const CLEAR_MACRO = "__CLEAR__";
+    import notCommon from "../../frame/common";
 
     import { createEventDispatcher } from "svelte";
     let dispatch = createEventDispatcher();
@@ -55,19 +54,31 @@
         }
     }
 
+    let lastChange;
+
     function onBlur(ev) {
         let data = {
             field: fieldname,
             value: ev.currentTarget.value,
         };
+        if (lastChange === data.value) {
+            return true;
+        } else {
+            if (
+                Array.isArray(data.value) &&
+                notCommon.compareTwoArrays(lastChange, data.value)
+            ) {
+                return true;
+            }
+        }
         if (multiple) {
             value = Array.from(ev.target.selectedOptions).map((el) => el.value);
-            if (value.indexOf(CLEAR_MACRO) > -1) {
+            if (value.indexOf(UICommon.CLEAR_MACRO) > -1) {
                 value = [];
             }
             data.value = value;
         } else {
-            if (data.value === CLEAR_MACRO) {
+            if (data.value === UICommon.CLEAR_MACRO) {
                 value = "";
             }
         }
@@ -83,16 +94,17 @@
         };
         if (multiple) {
             value = Array.from(ev.target.selectedOptions).map((el) => el.value);
-            if (value.indexOf(CLEAR_MACRO) > -1) {
+            if (value.indexOf(UICommon.CLEAR_MACRO) > -1) {
                 value = [];
             }
             data.value = value;
         } else {
-            if (data.value === CLEAR_MACRO) {
+            if (data.value === UICommon.CLEAR_MACRO) {
                 value = "";
             }
         }
         inputStarted = true;
+        lastChange = data.value;
         dispatch("change", data);
         return true;
     }
@@ -117,11 +129,11 @@
             >
                 {#if placeholder.length > 0}
                     {#if value}
-                        <option value={CLEAR_MACRO}
+                        <option value={UICommon.CLEAR_MACRO}
                             >{$LOCALE[placeholder]}</option
                         >
                     {:else}
-                        <option value={CLEAR_MACRO} selected="selected"
+                        <option value={UICommon.CLEAR_MACRO} selected="selected"
                             >{$LOCALE[placeholder]}</option
                         >
                     {/if}

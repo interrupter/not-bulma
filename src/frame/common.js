@@ -220,6 +220,13 @@ class notCommon {
         return JSON.parse(JSON.stringify(partObj));
     }
 
+    static compareTwoArrays(a, b) {
+        return (
+            a.length === b.length &&
+            a.every((element, index) => element === b[index])
+        );
+    }
+
     /**
      * Test argument type to be 'function'
      * @param {any}  func    possible function
