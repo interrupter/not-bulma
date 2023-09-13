@@ -89,7 +89,7 @@ class CRUDGenericActionUpdate extends CRUDGenericAction {
             this.bindUIEvent(controller, "submit", async (ev) => {
                 const success = await controller.onActionSubmit(this.ACTION, {
                     ...this.loadDataQuery(controller, params),
-                    ...ev,
+                    ...ev.detail,
                 });
                 if (success) {
                     if (notCommon.isFunc(controller.goBack)) {
