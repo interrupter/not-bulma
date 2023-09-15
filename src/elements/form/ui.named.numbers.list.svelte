@@ -59,7 +59,7 @@
 
     const createNewVal = () => {
         return {
-            id: placeholder,
+            id: "",
             number: 0,
         };
     };
@@ -86,7 +86,7 @@
 {#if !readonly}
     <UIColumns>
         <UIColumn classes="is-6">
-            <UITextfield bind:value={newVal.id} />
+            <UITextfield bind:value={newVal.id} bind:placeholder />
         </UIColumn>
         <UIColumn classes="is-4">
             <UINumber bind:value={newVal.number} />
