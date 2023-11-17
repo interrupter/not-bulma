@@ -1,5 +1,6 @@
 <script>
-    import { LOCALE } from "../../locale";
+    import { LOCALE } from "../../locale/index";
+
     import { createEventDispatcher } from "svelte";
     let dispatch = createEventDispatcher();
 

@@ -79,7 +79,7 @@
             class="switch {styling}"
             id="form-field-switch-{fieldname}"
             bind:checked={value}
-            {placeholder}
+            placeholder={$LOCALE[placeholder]}
             name={fieldname}
             {disabled}
             {required}

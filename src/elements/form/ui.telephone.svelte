@@ -1,4 +1,5 @@
 <script>
+    import { LOCALE } from "../../locale/index";
     import UICommon from "../common.js";
     import ErrorsList from "../various/ui.errors.list.svelte";
     import { createEventDispatcher } from "svelte";
@@ -69,7 +70,7 @@
             {invalid}
             {required}
             {readonly}
-            {placeholder}
+            placeholder={$LOCALE[placeholder]}
             autocomplete={fieldname}
             on:change={onBlur}
             on:input={onInput}

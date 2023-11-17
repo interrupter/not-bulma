@@ -70,7 +70,7 @@
                 type="checkbox"
                 id="form-field-checkbox-{fieldname}"
                 bind:checked={value}
-                {placeholder}
+                placeholder={$LOCALE[placeholder]}
                 name={fieldname}
                 {required}
                 {readonly}

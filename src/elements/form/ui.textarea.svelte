@@ -1,4 +1,5 @@
 <script>
+    import { LOCALE } from "../../locale/index";
     import UICommon from "../common.js";
     import ErrorsList from "../various/ui.errors.list.svelte";
     import { createEventDispatcher } from "svelte";
@@ -69,7 +70,7 @@
             class="textarea {validationClasses}"
             bind:value
             name={fieldname}
-            {placeholder}
+            placeholder={$LOCALE[placeholder]}
             {rows}
             aria-controls="input-field-helper-{fieldname}"
             aria-describedby="input-field-helper-{fieldname}"

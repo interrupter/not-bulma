@@ -1,4 +1,5 @@
 import UICommon from "../../elements/common";
+import { say } from "../../locale";
 
 import notBreadcrumbs from "../components/breadcrumbs";
 
@@ -165,7 +166,7 @@ class notCRUD extends notController {
     createDefault() {
         let newRecord = this.getModel({
             _id: null,
-            title: this.getOptions("names.single"),
+            title: say(this.getOptions("names.single")),
             products: [],
         });
         return newRecord;

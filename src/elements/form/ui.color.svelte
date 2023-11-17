@@ -1,4 +1,5 @@
 <script>
+    import { LOCALE } from "../../locale/index";
     import UICommon from "../common.js";
     import ErrorsList from "../various/ui.errors.list.svelte";
     import { createEventDispatcher } from "svelte";
@@ -58,7 +59,7 @@
         name={fieldname}
         {invalid}
         {required}
-        {placeholder}
+        placeholder={$LOCALE[placeholder]}
         bind:value
         autocomplete={fieldname}
         aria-controls="input-field-helper-{fieldname}"

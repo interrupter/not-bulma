@@ -1,5 +1,5 @@
-import LOCALE from './store.js';
-import notLocale from './notLocale.js';
+import LOCALE from "./store.js";
+import notLocale from "./notLocale.js";
 const say = notLocale.say.bind(notLocale);
 
-export {LOCALE, say, notLocale};
+export { LOCALE, say, notLocale };

@@ -1,4 +1,5 @@
 <script>
+    import { LOCALE } from "../../locale/index";
     import "bulma-slider/src/sass/index.sass";
 
     import UICommon from "../common.js";
@@ -74,7 +75,7 @@
             {disabled}
             {required}
             {readonly}
-            {placeholder}
+            placeholder={$LOCALE[placeholder]}
             bind:value
             autocomplete={fieldname}
             aria-controls="input-field-helper-{fieldname}"

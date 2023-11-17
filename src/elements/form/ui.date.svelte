@@ -1,4 +1,5 @@
 <script>
+    import { LOCALE } from "../../locale/index";
     import UICommon from "../common.js";
     import ErrorsList from "../various/ui.errors.list.svelte";
 
@@ -76,7 +77,7 @@
             name={fieldname}
             {invalid}
             {required}
-            {placeholder}
+            placeholder={$LOCALE[placeholder]}
             bind:value
             {pattern}
             {readonly}

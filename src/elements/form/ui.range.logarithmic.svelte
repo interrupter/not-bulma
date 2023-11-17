@@ -1,4 +1,5 @@
 <script>
+    import { LOCALE } from "../../locale/index";
     const MAX = Number.MAX_SAFE_INTEGER;
     import "bulma-slider/src/sass/index.sass";
 
@@ -11,7 +12,7 @@
     export let value = 10;
     export let min = 0;
     export let max = 100;
-    export let step = 1;
+    //export let step = 1;
     export let tickmarks = false;
     export let placeholder = "range placeholder";
     export let fieldname = "range";
@@ -120,7 +121,7 @@
             {disabled}
             {required}
             {readonly}
-            {placeholder}
+            placeholder={$LOCALE[placeholder]}
             bind:value={posValue}
             autocomplete={fieldname}
             aria-controls="input-field-helper-{fieldname}"

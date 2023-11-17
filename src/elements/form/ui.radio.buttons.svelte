@@ -1,4 +1,5 @@
 <script>
+    import { LOCALE } from "../../locale/index";
     import { onMount, createEventDispatcher } from "svelte";
     const dispatch = createEventDispatcher();
     //
