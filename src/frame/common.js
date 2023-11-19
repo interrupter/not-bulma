@@ -683,7 +683,9 @@ class notCommon {
         if (
             variantsSet &&
             typeof variantsSet == "object" &&
-            Object.hasOwn(variantsSet, value)
+            notCommon.objHas(variantsSet, value) &&
+            typeof variantsSet[value] !== "undefined" &&
+            variantsSet[value] !== null
         ) {
             return variantsSet[value];
         } else {

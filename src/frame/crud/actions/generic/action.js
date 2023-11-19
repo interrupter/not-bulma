@@ -2,7 +2,7 @@ import { notLocale } from "../../../../locale";
 import notCommon from "../../../common";
 import { notForm } from "../../../components";
 import { DEFAULT_TRASFORMER } from "../../const";
-
+import { ExceptionCRUDControllerBreadcrumbsTailsIsNotSet } from "../../exceptions";
 const DEFAUL_BREADCRUMB_TAIL = "Просмотр";
 /**
  * Generic CRUD action class
@@ -34,6 +34,9 @@ class CRUDGenericAction {
      * @returns {string}    template string
      */
     static getBreadcrumbsTail(name) {
+        if (!this.breadcrumbsTails) {
+            return "";
+        }
         return notCommon.select(
             this.breadcrumbsTails,
             name,
@@ -140,7 +143,9 @@ class CRUDGenericAction {
         const breadcrumbsTailTemplate = this.getBreadcrumbsTail("set");
         controller.setBreadcrumbs([
             {
-                title: notLocale.format(breadcrumbsTailTemplate, { title }),
+                title: breadcrumbsTailTemplate
+                    ? notLocale.format(breadcrumbsTailTemplate, { title })
+                    : title,
                 url: controller.getModelActionURL(params[0], false),
             },
         ]);
