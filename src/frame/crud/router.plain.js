@@ -1,8 +1,10 @@
+const ROUTE_LIST = "list";
 /**
  * Runs controller action by name that gets from URI params
  * @class
  */
 class notCRUDPlainRouter {
+    static DEFAULT_ROUTE = ROUTE_LIST;
     /**
      * Returns first item from params or throws Error
      * @param {string[]} params array of strings parsed from URI by route rules
@@ -12,7 +14,7 @@ class notCRUDPlainRouter {
         if (params.length > 0) {
             return params[0];
         }
-        throw new Error("no action name");
+        return DEFAULT_ROUTE;
     }
 
     /**
