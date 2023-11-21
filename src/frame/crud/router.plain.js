@@ -14,7 +14,7 @@ class notCRUDPlainRouter {
         if (params.length > 0) {
             return params[0];
         }
-        return DEFAULT_ROUTE;
+        return this.DEFAULT_ROUTE;
     }
 
     /**
