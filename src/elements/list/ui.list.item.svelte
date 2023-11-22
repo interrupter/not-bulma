@@ -14,6 +14,12 @@
     export let image = "";
     //value of item, will be passed to event handlers
     export let value;
+    //index in array 0-length
+    export let index = -1;
+    //if first
+    export let first = false;
+    //if last
+    export let last = false;
     //customization
     export let titleComponent = UITitle;
     export let titleComponentProps = { size: 6 };
@@ -34,7 +40,12 @@
 </script>
 
 <div
-    class="list-item {classes} {commonClasses}"
+    class="list-item {classes} {commonClasses} {last
+        ? 'list-item-last'
+        : ''} {first
+        ? 'list-item-first'
+        : ''}  {`list-item-at-${index}`} {`list-item-` +
+        (index % 2 ? 'odd' : 'even')}"
     on:click|preventDefault={onClick}
 >
     {#if image}

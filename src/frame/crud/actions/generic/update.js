@@ -119,7 +119,7 @@ class CRUDGenericActionUpdate extends CRUDGenericAction {
      * Performing action preparation and renders UI
      * @param {object} controller   instance of controller
      * @param {string[]} params     list of route params
-     * @returns {undefined}
+     * @returns {Promise<undefined>}
      */
     static async run(controller, params) {
         try {

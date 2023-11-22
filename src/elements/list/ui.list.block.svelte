@@ -18,7 +18,7 @@
     export let imageComponentProps = {};
 </script>
 
-{#each items as item (item[idFieldName])}
+{#each items as item, index (item[idFieldName])}
     <svelte:component
         this={listItemComponent}
         {...listItemComponentProps}
@@ -31,7 +31,10 @@
         {...item}
         listActions={actions}
         commonClasses={itemClasses}
-        value={item}
+        bind:value={item}
+        {index}
+        first={index === 0}
+        last={index === items.length - 1}
         on:click
         on:clickContent
         on:clickDescription
