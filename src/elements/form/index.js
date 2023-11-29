@@ -3,6 +3,7 @@ import UICheckbox from "./ui.checkbox.svelte";
 import UICheckboxList from "./ui.checkbox.list.svelte";
 import UIColor from "./ui.color.svelte";
 import UIDate from "./ui.date.svelte";
+import UIDatetimeInTZ from "./ui.datetime.in.tz.svelte";
 import UIEmail from "./ui.email.svelte";
 import UIHidden from "./ui.hidden.svelte";
 import UILabel from "./ui.label.svelte";
@@ -25,6 +26,7 @@ export {
     UICheckboxList,
     UIColor,
     UIDate,
+    UIDatetimeInTZ,
     UIEmail,
     UIHidden,
     UILabel,
