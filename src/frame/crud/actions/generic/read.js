@@ -9,12 +9,12 @@ class CRUDGenericActionRead extends CRUDGenericAction {
      * Performing action preparation and renders UI
      * @param {object} controller   instance of controller
      * @param {string[]} params     list of route params
-     * @returns {undefined}
+     * @returns {Promise<undefined>}
      */
     static async run(controller, params) {
         try {
             //inform that we are starting
-            controller.emit(`before:render:${this.ACTION}`, [params]);
+            controller.emit(`before:render:${this.ACTION}`, params);
             //if UI for this action exists exiting
             if (this.isUIRendered(controller)) {
                 return;
@@ -40,10 +40,10 @@ class CRUDGenericActionRead extends CRUDGenericAction {
             //bind events to UI
             this.bindUIEvents(controller, params, response);
             //inform that we are ready
-            controller.emit(`after:render:${this.ACTION}`);
+            controller.emit(`after:render:${this.ACTION}`, params, response);
         } catch (e) {
             //informing about exception
-            controller.emit(`exception:render:${this.ACTION}`, [params, e]);
+            controller.emit(`exception:render:${this.ACTION}`, params, e);
             //reporting exception
             controller.report(e);
             //showing error message

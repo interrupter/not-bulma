@@ -30,7 +30,7 @@
     };
 
     onMount(() => {
-        if (!Object.hasOwn(events, getStandartUpdateEventName())) {
+        if (!notCommon.objHas(events, getStandartUpdateEventName())) {
             events[getStandartUpdateEventName()] = onUpdate;
         }
         register(events);

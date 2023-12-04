@@ -2,7 +2,7 @@ import { notLocale } from "../../../../locale";
 import notCommon from "../../../common";
 import { notForm } from "../../../components";
 import { DEFAULT_TRASFORMER } from "../../const";
-import { ExceptionCRUDControllerBreadcrumbsTailsIsNotSet } from "../../exceptions";
+
 const DEFAUL_BREADCRUMB_TAIL = "Просмотр";
 /**
  * Generic CRUD action class
@@ -261,7 +261,7 @@ class CRUDGenericAction {
     static async run(controller, params) {
         try {
             //inform that we are starting
-            controller.emit(`before:render:${this.ACTION}`, [params]);
+            controller.emit(`before:render:${this.ACTION}`, params);
             //if UI for this action exists exiting
             if (this.isUIRendered(controller)) {
                 return;
@@ -287,10 +287,10 @@ class CRUDGenericAction {
             //bind events to UI
             this.bindUIEvents(controller, params, response);
             //inform that we are ready
-            controller.emit(`after:render:${this.ACTION}`);
+            controller.emit(`after:render:${this.ACTION}`, params, response);
         } catch (e) {
             //informing about exception
-            controller.emit(`exception:render:${this.ACTION}`, [params, e]);
+            controller.emit(`exception:render:${this.ACTION}`, params, e);
             //reporting exception
             controller.report(e);
             //showing error message

@@ -37,13 +37,13 @@ class notInterface extends notBase {
         if (this.getActionsCount() > 0) {
             let actions = this.getActions();
             for (let actionName in actions) {
-                this.initAction(actionName, actions[actionName]);
+                this.initAction(actionName);
             }
         }
     }
 
     initAction(actionName) {
-        if (!Object.hasOwn(this, [DEFAULT_ACTION_PREFIX + actionName])) {
+        if (!notCommon.objHas(this, DEFAULT_ACTION_PREFIX + actionName)) {
             this[DEFAULT_ACTION_PREFIX + actionName] = (
                 opts,
                 headers,
@@ -96,6 +96,7 @@ class notInterface extends notBase {
                     ) === -1
                 ) {
                     opts = {
+                        method: actionData.method,
                         body: JSON.stringify(
                             record.getData &&
                                 typeof record.getData === "function"
@@ -130,7 +131,7 @@ class notInterface extends notBase {
             const messageName = this.getWSRequestName(actionName);
             const payload = Object.assign({}, requestParams, record.getData());
             if (
-                Object.hasOwn(actionData, "type") &&
+                notCommon.objHas(actionData, "type") &&
                 typeof actionData.type === "string" &&
                 actionData.type.length &&
                 actionData.type !== "request"
@@ -164,7 +165,10 @@ class notInterface extends notBase {
     wsIsUp(actionData) {
         if (actionData.ws === true) {
             let client;
-            if (Object.hasOwn(actionData, "wsClient") && actionData.wsClient) {
+            if (
+                notCommon.objHas(actionData, "wsClient") &&
+                actionData.wsClient
+            ) {
                 client = notCommon.getApp().getWSClient(actionData.wsClient);
             } else {
                 client = notCommon.getApp().getWSClient();
@@ -180,7 +184,7 @@ class notInterface extends notBase {
         if (this.wsIsUp(actionData)) {
             return "ws"; //for ws/wss
         }
-        if (Object.hasOwn(actionData, "method")) {
+        if (notCommon.objHas(actionData, "method")) {
             return "http"; //for http/https
         }
         return false; //for offline
@@ -218,7 +222,11 @@ class notInterface extends notBase {
             }
             fieldName = line.slice(startSlice, endSlice);
             if (fieldName == "") break;
-            this.log(start + fieldName + end, notPath.get(fieldName, record));
+            this.log &&
+                this.log(
+                    start + fieldName + end,
+                    notPath.get(fieldName, record)
+                );
             line = line.replace(
                 start + fieldName + end,
                 notPath.get(fieldName, record)
@@ -238,7 +246,7 @@ class notInterface extends notBase {
     getURL(record, actionData, actionName) {
         var line =
             this.parseLine(this.manifest.url, record, actionName) +
-            (Object.hasOwn(actionData, "postFix")
+            (notCommon.objHas(actionData, "postFix")
                 ? this.parseLine(actionData.postFix, record, actionName)
                 : "");
         return line;
@@ -286,7 +294,7 @@ class notInterface extends notBase {
     collectRequestData(actionData) {
         let requestData = {};
         if (
-            Object.hasOwn(actionData, "data") &&
+            notCommon.objHas(actionData, "data") &&
             Array.isArray(actionData.data)
         ) {
             for (let i = 0; i < actionData.data.length; i++) {
@@ -322,14 +330,14 @@ class notInterface extends notBase {
         let resultId,
             list = OPT_DEFAULT_INDEX_FIELD_NAME_PRIORITY,
             prefixes = ["", this.manifest.model];
-        if (Object.hasOwn(actionData, "index") && actionData.index) {
+        if (notCommon.objHas(actionData, "index") && actionData.index) {
             list = [actionData.index].concat(
                 OPT_DEFAULT_INDEX_FIELD_NAME_PRIORITY
             );
         }
         for (let pre of prefixes) {
             for (let t of list) {
-                if (Object.hasOwn(record, pre + t)) {
+                if (notCommon.objHas(record, pre + t)) {
                     resultId = record[pre + t];
                     break;
                 }
@@ -406,16 +414,20 @@ class notInterface extends notBase {
         return this;
     }
 
-    setPager(pageSize = DEFAULT_PAGE_SIZE, pageNumber = DEFAULT_PAGE_NUMBER) {
-        if (pageSize.constructor === Number) {
+    //pageSize = DEFAULT_PAGE_SIZE, pageNumber = DEFAULT_PAGE_NUMBER
+    setPager() {
+        if (
+            (arguments.length < 2 ||
+                isNaN(arguments[0]) ||
+                isNaN(arguments[1])) &&
+            arguments[0].constructor === Object &&
+            notCommon.objHas(arguments[0], "page") &&
+            notCommon.objHas(arguments[0], "size")
+        ) {
+            const pager = arguments[0];
             this.setWorking("pager", {
-                size: pageSize,
-                page: pageNumber,
-            });
-        } else if (pageSize.constructor === Object) {
-            this.setWorking("pager", {
-                size: pageSize.size || DEFAULT_PAGE_SIZE,
-                page: pageSize.page || DEFAULT_PAGE_NUMBER,
+                size: pager.size || DEFAULT_PAGE_SIZE,
+                page: pager.page || DEFAULT_PAGE_NUMBER,
             });
         }
         return this;

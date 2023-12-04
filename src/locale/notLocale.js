@@ -51,7 +51,7 @@ class notLocale extends EventEmitter {
      */
     say(phrase, params = false) {
         try {
-            if (Object.hasOwn(this.dict, phrase)) {
+            if (notCommon.objHas(this.dict, phrase)) {
                 let tmpl = this.dict[phrase],
                     result = "";
                 if (params) {

@@ -24,8 +24,14 @@ export default class CRUDActionList {
                 CRUDActionList.prepareOptions(controller)
             );
 
-            controller.emit(`after:render:${ACTION}`);
+            controller.emit(
+                `after:render:${ACTION}`,
+                params,
+                controller.ui[ACTION]
+            );
         } catch (e) {
+            //informing about exception
+            controller.emit(`exception:render:${ACTION}`, params, e);
             controller.report(e);
             controller.showErrorMessage(e);
         }

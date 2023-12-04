@@ -28,9 +28,18 @@ class notCRUD extends notController {
     MAIN_CLASS = ["box"];
     BOTTOM_CLASS = ["box"];
 
-    constructor(app, name, { actions, router, preloader } = {}) {
+    constructor(
+        app,
+        name,
+        { actions, router, preloader } = {
+            actions: undefined,
+            router: undefined,
+            preloader: undefined,
+        }
+    ) {
         super(app, `CRUD.${name}`);
         if (actions) {
+            // @ts-ignore
             this.#actions = { ...this.#actions, ...actions };
         }
         if (router) {
@@ -48,7 +57,7 @@ class notCRUD extends notController {
         });
         this.setOptions(
             "containerSelector",
-            this.app.getOptions("crud.containerSelector")
+            this.app?.getOptions("crud.containerSelector")
         );
         this.buildFrame();
         return this;
@@ -70,7 +79,7 @@ class notCRUD extends notController {
         notBreadcrumbs.setHead(BREADCRUMBS).render({
             root: "",
             target: this.els.top,
-            navigate: (url) => this.app.getWorking("router").navigate(url),
+            navigate: (url) => this.app?.getWorking("router").navigate(url),
         });
         this.route(this.getOptions("params"));
     }
@@ -80,7 +89,7 @@ class notCRUD extends notController {
     }
 
     backToList() {
-        this.app.getWorking("router").navigate(this.linkBackToList());
+        this.app?.getWorking("router").navigate(this.linkBackToList());
     }
 
     linkBackToList() {
@@ -88,7 +97,7 @@ class notCRUD extends notController {
     }
 
     afterAction(action = "list") {
-        let navBack = this.app.getOptions("crud.navigateBackAfter", []);
+        let navBack = this.app?.getOptions("crud.navigateBackAfter", []);
         if (navBack && Array.isArray(navBack) && navBack.indexOf(action) > -1) {
             window.history.back();
         } else {
@@ -98,7 +107,7 @@ class notCRUD extends notController {
 
     buildFrame() {
         let el = document.querySelector(
-            this.app.getOptions("crud.containerSelector", "body")
+            this.app?.getOptions("crud.containerSelector", "body")
         );
         while (el.firstChild) {
             el.removeChild(el.firstChild);
@@ -198,34 +207,34 @@ class notCRUD extends notController {
     goCreate() {
         this.$destroyUI();
         this.app
-            .getWorking("router")
-            .navigate(this.getModelActionURL(false, "create"));
+            ?.getWorking("router")
+            .navigate(this.getModelActionURL("", "create"));
     }
 
     goDetails(value) {
         this.$destroyUI();
         this.app
-            .getWorking("router")
-            .navigate(this.getModelActionURL(value, false));
+            ?.getWorking("router")
+            .navigate(this.getModelActionURL(value, ""));
     }
 
     goUpdate(value) {
         this.$destroyUI();
         this.app
-            .getWorking("router")
+            ?.getWorking("router")
             .navigate(this.getModelActionURL(value, "update"));
     }
 
     goDelete(value) {
         this.$destroyUI();
         this.app
-            .getWorking("router")
+            ?.getWorking("router")
             .navigate(this.getModelActionURL(value, "delete"));
     }
 
     goList() {
         this.$destroyUI();
-        this.app.getWorking("router").navigate(this.getModelURL());
+        this.app?.getWorking("router").navigate(this.getModelURL());
     }
 
     async onActionSubmit(action, item) {
@@ -255,7 +264,7 @@ class notCRUD extends notController {
     }
 
     showErrorMessage(res) {
-        this.error(res);
+        this.error && this.error(res);
         CRUDMessage.error(
             this,
             "Произошла ошибка",

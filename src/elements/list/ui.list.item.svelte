@@ -40,6 +40,8 @@
 </script>
 
 <div
+    role="button"
+    tabindex="0"
     class="list-item {classes} {commonClasses} {last
         ? 'list-item-last'
         : ''} {first
@@ -47,10 +49,23 @@
         : ''}  {`list-item-at-${index}`} {`list-item-` +
         (index % 2 ? 'odd' : 'even')}"
     on:click|preventDefault={onClick}
+    on:keyup|preventDefault={(e) => {
+        if (e && e.key == "Enter") {
+            onClick();
+        }
+    }}
 >
     {#if image}
         <div
+            role="button"
+            tabindex="0"
             class="list-item-image"
+            on:keyup|preventDefault={(e) => {
+                if (e && e.key == "Enter") {
+                    onClick();
+                    dispatch("clickImage", value);
+                }
+            }}
             on:click|preventDefault={() => {
                 onClick();
                 dispatch("clickImage", value);
@@ -78,15 +93,31 @@
         </div>
     {/if}
     <div
+        role="button"
+        tabindex="0"
         class="list-item-content"
         on:click|preventDefault={() => {
             onClick();
             dispatch("clickContent", value);
         }}
+        on:keyup|preventDefault={(e) => {
+            if (e && e.key == "Enter") {
+                onClick();
+                dispatch("clickContent", value);
+            }
+        }}
     >
         {#if title}
             <div
                 class="list-item-title"
+                role="button"
+                tabindex="0"
+                on:keyup|preventDefault={(e) => {
+                    if (e && e.key == "Enter") {
+                        onClick();
+                        dispatch("clickTitle", value);
+                    }
+                }}
                 on:click|preventDefault={() => {
                     onClick();
                     dispatch("clickTitle", value);
@@ -115,6 +146,14 @@
         {/if}
         {#if description}
             <div
+                role="button"
+                tabindex="0"
+                on:keyup|preventDefault={(e) => {
+                    if (e && e.key == "Enter") {
+                        onClick();
+                        dispatch("clickDescription", value);
+                    }
+                }}
                 class="list-item-description"
                 on:click|preventDefault={() => {
                     onClick();

@@ -84,33 +84,33 @@ class notTable extends EventEmitter {
         //pagination, items information
         this.stores.state.subscribe(this.onStateUpdate.bind(this));
 
-        if (Object.hasOwn(input, "data") && Array.isArray(input.data)) {
+        if (notCommon.objHas(input, "data") && Array.isArray(input.data)) {
             this.stores.raw.update((val) => {
                 val = input.data;
                 return val;
             });
         }
-        if (Object.hasOwn(this.options, "filter")) {
+        if (notCommon.objHas(this.options, "filter")) {
             this.setFilter(this.options.filter, true);
         } else {
             this.resetFilter();
         }
-        if (Object.hasOwn(this.options, "pager")) {
+        if (notCommon.objHas(this.options, "pager")) {
             this.setPager(this.options.pager, true);
         } else {
             this.resetPager();
         }
-        if (Object.hasOwn(this.options, "sorter")) {
+        if (notCommon.objHas(this.options, "sorter")) {
             this.setSorter(this.options.sorter, true);
         } else {
             this.resetSorter(true);
         }
-        if (Object.hasOwn(this.options, "return")) {
+        if (notCommon.objHas(this.options, "return")) {
             this.setReturn(this.options.return);
         } else {
             this.setReturn();
         }
-        if (Object.hasOwn(this.options, "search")) {
+        if (notCommon.objHas(this.options, "search")) {
             this.setSearch(this.options.search, true);
         } else {
             this.setSearch();
@@ -626,8 +626,8 @@ class notTable extends EventEmitter {
                 this.loadData()
                     .then((data) => {
                         let full =
-                            Object.hasOwn(data, "status") &&
-                            Object.hasOwn(data, "result");
+                            notCommon.objHas(data, "status") &&
+                            notCommon.objHas(data, "result");
                         this.stores.filtered.update((val) => {
                             if (!this.getOptions("endless", false)) {
                                 this.clearFilteredData();
@@ -636,7 +636,7 @@ class notTable extends EventEmitter {
                                 val.push(...data.result.list);
                             } else {
                                 if (
-                                    Object.hasOwn(data, "list") &&
+                                    notCommon.objHas(data, "list") &&
                                     Array.isArray(data.list)
                                 ) {
                                     val.push(...data.list);
@@ -782,7 +782,7 @@ class notTable extends EventEmitter {
                         item,
                         this.getOptions("helpers")
                     );
-                if (Object.hasOwn(field, OPT_FIELD_NAME_PRE_PROC)) {
+                if (notCommon.objHas(field, OPT_FIELD_NAME_PRE_PROC)) {
                     try {
                         preprocessed = field[OPT_FIELD_NAME_PRE_PROC](
                             val,

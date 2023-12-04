@@ -1,9 +1,10 @@
+import notCommon from "./common";
 import { writable } from "svelte/store";
 
 const ALL = {};
 
 function exist(key) {
-    return Object.hasOwn(ALL, key);
+    return notCommon.objHas(ALL, key);
 }
 
 function get(key) {

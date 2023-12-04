@@ -150,10 +150,10 @@ class CRUDGenericActionUpdate extends CRUDGenericAction {
             //bind events to UI
             this.bindUIEvents(controller, params, response);
             //inform that we are ready
-            controller.emit(`after:render:${this.ACTION}`);
+            controller.emit(`after:render:${this.ACTION}`, params);
         } catch (e) {
             //informing about exception
-            controller.emit(`exception:render:${this.ACTION}`, [params, e]);
+            controller.emit(`exception:render:${this.ACTION}`, params, e);
             //reporting exception
             controller.report(e);
             //showing error message

@@ -4,7 +4,6 @@ import babel from "rollup-plugin-babel";
 import postcss from "rollup-plugin-postcss";
 import resolve from "rollup-plugin-node-resolve";
 import filesize from "rollup-plugin-filesize";
-import sizes from "rollup-plugin-sizes";
 
 export default {
     input: "src/index.js",
@@ -81,6 +80,5 @@ export default {
       exclude: ['rollup', 'cypress', 'node_modules/**', 'node_modules/@babel/runtime/helpers/**', 'node_modules/@babel/runtime/regenerator/**', 'node_modules/regenerator-runtime/**']
     }))*/,
         filesize(),
-        sizes(),
     ],
 };

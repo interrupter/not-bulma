@@ -1,38 +1,33 @@
 {
-  "parser": "babel-eslint",
-  "parserOptions": {
-    "ecmaVersion": 2021
-  },
-  "env": {
-    "browser": true,
-    "es6": true,
-    "node": true,
-    "mongo": true,
-    "mocha": true
-  },
-  "plugins": [
-    "svelte3"
-  ],
-  "overrides": [
-    {
-      "files": ["*.svelte"],
-      "processor": "svelte3/svelte3"
+    "parser": "@babel/eslint-parser",
+    "parserOptions": {
+        "ecmaVersion": 2021
+    },
+    "env": {
+        "browser": true,
+        "es6": true,
+        "mongo": true,
+        "mocha": true
+    },
+    "plugins": [],
+    "globals": {
+        "ENV": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:storybook/recommended",
+        "plugin:svelte/recommended"
+    ],
+    "overrides": [
+        {
+            "files": ["*.svelte"],
+            "parser": "svelte-eslint-parser"
+        }
+    ],
+    "rules": {
+        "indent": ["error", 2],
+        "linebreak-style": ["error", "unix"],
+        "semi": ["error", "always"],
+        "no-useless-escape": [0]
     }
-  ],
-  "globals": {
-    "ENV": true
-  },
-  "extends": ["eslint:recommended", "plugin:storybook/recommended"],
-  "rules": {
-    "indent": ["error", 2],
-    "linebreak-style": [
-      "error",
-      "unix"
-    ],
-    "semi": [
-      "error",
-      "always"
-    ],
-    "no-useless-escape": [0]
-  }
 }

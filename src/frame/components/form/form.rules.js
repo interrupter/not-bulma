@@ -25,14 +25,14 @@ export default class notFormRules {
     static #RULES = { ...DEFAULT_RULES };
 
     static add(name, func) {
-        if (!Object.hasOwn(this.#RULES, name)) {
+        if (!notCommon.objHas(this.#RULES, name)) {
             this.#RULES[name] = func;
         }
     }
 
     static remove(name) {
         if (
-            Object.hasOwn(this.#RULES, name) &&
+            notCommon.objHas(this.#RULES, name) &&
             !Object.keys(DEFAULT_RULES).includes(name)
         ) {
             delete this.#RULES[name];

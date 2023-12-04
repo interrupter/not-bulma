@@ -42,7 +42,7 @@
             : UICommon.CLASS_ERR;
 
     function remove(id) {
-        if (Object.hasOwn(value, id)) {
+        if (notCommon.objHas(value, id)) {
             delete value[id];
             value = value;
             dispatch("change", { value, field: fieldname });
@@ -52,7 +52,7 @@
     function add() {
         const id = newVal.id.trim();
         const number = parseInt(newVal.number);
-        if (id && id !== "" && !isNaN(number) && !Object.hasOwn(value, id)) {
+        if (id && id !== "" && !isNaN(number) && !notCommon.objHas(value, id)) {
             value[id] = number;
         }
         dispatch("change", { value, field: fieldname });

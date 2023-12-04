@@ -1,5 +1,6 @@
 import notCommon from "../common";
 import { DEFAULT_TRASFORMER } from "./const";
+import notForm from "../components/form/form";
 
 export default ({
     MODEL_NAME,
@@ -31,6 +32,8 @@ export default ({
                     controller.$destroyUI();
                 }
 
+                let data = {};
+
                 if (dataProvider) {
                     if (notCommon.isFunc(dataProvider)) {
                         if (notCommon.isAsync(dataProvider)) {
@@ -55,6 +58,8 @@ export default ({
                     DEFAULT_TRASFORMER
                 );
 
+                const transformedData = resultTransformer(data);
+
                 controller.ui[ACTION] = new notForm({
                     options: {
                         target: controller.getContainerInnerElement(),
@@ -69,9 +74,13 @@ export default ({
                         ui: controller.getOptions(`${ACTION}.ui`, {}),
                         fields: controller.getOptions(`${ACTION}.fields`, {}),
                     },
-                    data: resultTransformer(data),
+                    data: transformedData,
                 });
-                controller.emit(`after:render:${ACTION}`);
+                controller.emit(
+                    `after:render:${ACTION}`,
+                    params,
+                    transformedData
+                );
                 if (goBack && notCommon.isFunc(goBack)) {
                     controller.ui[ACTION].on("reject", () => goBack());
                 }

@@ -22,7 +22,7 @@ class notCRUDRouterSwitch {
      * @returns {boolean}
      */
     static isRouteVariantValid(name) {
-        return name && name !== "" && Object.hasOwn(this.routesVariants, name);
+        return name !== "" && notCommon.objHas(this.routesVariants, name);
     }
 
     /**
@@ -31,7 +31,9 @@ class notCRUDRouterSwitch {
      * @param {string[]}    params  params passed to router
      * @returns {Promise<string>}    name of route variant
      */
-    static async determineRoute(controller, params = []) {}
+    static async determineRoute(controller, params = []) {
+        return "";
+    }
 
     /**
      * Runs controller action or throws
