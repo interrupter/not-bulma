@@ -1,5 +1,5 @@
 <script>
-    import UIListItem from "not-bulma/src/elements/list/ui.list.item.svelte";
+    import UIListItem from "./ui.list.item.svelte";
     import UITitle from "../various/ui.title.svelte";
     export let idFieldName = "id";
     export let items = [];

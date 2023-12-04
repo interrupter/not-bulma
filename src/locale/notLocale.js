@@ -11,7 +11,7 @@ import notPath from "not-path";
 import LOCALE from "./store";
 
 /**
- * Stings localization and formating model
+ * strings localization and formating model
  * @class
  */
 class notLocale extends EventEmitter {

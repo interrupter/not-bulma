@@ -3,8 +3,8 @@
     const MAX = Number.MAX_SAFE_INTEGER;
     import "bulma-slider/src/sass/index.sass";
 
-    import UICommon from "not-bulma/src/elements/common.js";
-    import ErrorsList from "not-bulma/src/elements/various/ui.errors.list.svelte";
+    import UICommon from "../common.js";
+    import ErrorsList from "../various/ui.errors.list.svelte";
     import { createEventDispatcher, onMount } from "svelte";
     let dispatch = createEventDispatcher();
 

@@ -13,7 +13,8 @@ export default class UICommon {
 
     /**
      *  Reformats input from any string to strict phone format
-     *  @param {string}    phone    free style phone number
+     *  @param {string}    val    free style phone number
+     *  @param {string}    [filler=UICommon.FILLER]    free style phone number
      *  @returns {string}          phone number
      **/
     static formatPhone(val, filler = this.FILLER) {
@@ -59,11 +60,18 @@ export default class UICommon {
         this.MONEY_SIGN = val;
     }
 
+    /**
+     *
+     *
+     * @static
+     * @param {number} price
+     * @return {string}
+     * @memberof UICommon
+     */
     static formatPrice(price) {
-        let major = parseInt(Math.floor(price / 100)),
-            minor = parseInt(price % 100);
-        major = "" + major;
-        return `${this.MONEY_SIGN}${major}.${minor}`;
+        let major = Math.floor(price / 100),
+            minor = price % 100;
+        return `${this.MONEY_SIGN}${major.toString()}.${minor.toString()}`;
     }
 
     static formatLocaleDatetime(dt, opts = { date: true, time: true }) {

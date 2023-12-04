@@ -165,8 +165,10 @@ class notCommon {
 
     static TZ_OFFSET = (new Date().getTimezoneOffset() / 60) * -1;
     static DEV_ENV = "production";
+    // @ts-ignore
     static ENV_TYPE = window.NOT_ENV_TYPE
-        ? window.NOT_ENV_TYPE
+        ? // @ts-ignore
+          window.NOT_ENV_TYPE
         : notCommon.DEV_ENV;
     static NOOP = () => {};
 
@@ -268,9 +270,9 @@ class notCommon {
     /**
      *  Executes method of object in apropriate way inside Promise
      * @param {Object}   from     original object
-     * @param {Object}   name    method name to execute
+     * @param {Object}   to    method name to execute
      * @param {Array}     list  array of params
-     * @return {Promise}          results of method execution
+     * @return {undefined}          results of method execution
      **/
     static mapBind(from, to, list) {
         list.forEach((item) => {
@@ -459,10 +461,23 @@ class notCommon {
     /**
      *  Builds URL with structure like prefix/module/model/id/action
      * If some part absent or set to false it will be excluded from result
-     *
+     *  @param {object} urlParts
+     *  @param {string} [urlParts.prefix='']
+     *  @param {string} [urlParts.module='']
+     *  @param {string} [urlParts.model='']
+     *  @param {string} [urlParts.id='']
+     *  @param {string} [urlParts.action='']
      *  @return {string}  url path
      */
-    static buildURL({ prefix, module, model, id, action }) {
+    static buildURL(
+        { prefix, module, model, id, action } = {
+            prefix: "",
+            module: "",
+            model: "",
+            id: "",
+            action: "",
+        }
+    ) {
         let url = ["/"];
         if (prefix) {
             url.push(encodeURIComponent(notCommon.trimBackslash(prefix)));
@@ -580,8 +595,10 @@ class notCommon {
             } else {
                 //in case of some other stuff presented, isolating it in special var
                 if (!Object.prototype.hasOwnProperty.call(window, "notEnv")) {
+                    // @ts-ignore
                     window.notEnv = {};
                 }
+                // @ts-ignore
                 window.notEnv[prop] = mod[prop];
             }
         }
@@ -644,7 +661,8 @@ class notCommon {
 
     static getAPI(type) {
         return notCommon.getManager()
-            ? notCommon.getManager().getAPI(type)
+            ? // @ts-ignore
+              notCommon.getManager()?.getAPI(type)
             : null;
     }
 

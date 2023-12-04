@@ -49,8 +49,27 @@ class notController extends notBase {
      */
     static MODEL_NAME = "MODEL_NAME";
     /**
+     *
+     * @type    {object|null}
+     * @memberof notController
+     */
+    els;
+    /**
+     *
+     * @type    {object|null}
+     * @memberof notController
+     */
+    make;
+    /**
+     *
+     * @type    {null|import('./app.js').default}
+     * @memberof notController
+     */
+    app;
+    /**
      *  @class
-     *  @param {notApp} app
+     *  @param {import('./app.js').default} app
+     *  @param  {string}    name
      */
     constructor(app, name) {
         super({});
@@ -101,7 +120,7 @@ class notController extends notBase {
 
     /**
      *  Returns current notApp
-     *  @return {notApp}
+     *  @return {import('./app.js').default}
      */
     getApp() {
         return notCommon.getApp();
@@ -109,7 +128,7 @@ class notController extends notBase {
 
     /**
      *  Sets default controller model
-     *  @param {notRecord}  model  notRecord interface object
+     *  @param {import('./record.js')}  model  notRecord interface object
      *  @return {notController}
      */
     setModel(model) {
@@ -118,20 +137,24 @@ class notController extends notBase {
     }
 
     /**
-     *  Returns current model
-     *  @param {object} data   model data
-     *  @return {notRecord}
+     *  If zero or one argument provided this modelName instance will be returned
+     *  If two provided and first is a string than instance of name will be returned initialized with second object param or empty object
+     *  @param {string|object}      name    modelName of instance to return or initial data for instance
+     *  @param {object}             data    model data
+     *  @return {import('./record.js')}
      */
-    getModel(name, data) {
+    getModel(name, data = undefined) {
         if (typeof name === "string") {
-            return this.getInterface(name)(data || {});
+            const int = this.getInterface(name);
+            return int && int(data || {});
         } else {
-            return this.getInterface()(name || {});
+            const int = this.getInterface();
+            return int && int(name || {});
         }
     }
 
-    getInterface(name = false) {
-        return this.app.getInterface(name || this.getModelName());
+    getInterface(name = "") {
+        return this.app?.getInterface(name || this.getModelName());
     }
 
     /**
@@ -153,7 +176,7 @@ class notController extends notBase {
 
     /**
      *  Returns current model primary ID field name
-     *  @return {notRecord}
+     *  @return {import('./record.js')}
      */
     getModelIDFieldName() {
         return this.getWorking("modelIDFieldName", "_id");
@@ -161,7 +184,7 @@ class notController extends notBase {
 
     /**
      *  Sets current model primary ID field name
-     *  @return {notRecord}
+     *  @return {notController}
      */
     setModelIDFieldName(val = "_id") {
         return this.setWorking("modelIDFieldName", val);
@@ -179,7 +202,7 @@ class notController extends notBase {
 
     /**
      *  Sets module URL prefix
-     *  @param {sting} val URL prefix
+     *  @param {string} val URL prefix
      *  @return {notController} this
      */
     setURLPrefix(val) {
@@ -198,7 +221,7 @@ class notController extends notBase {
 
     /**
      *  Sets module name
-     *  @param {sting} val name of the module
+     *  @param {string} val name of the module
      *  @return {notController} this
      */
     setModuleName(val) {
@@ -243,7 +266,7 @@ class notController extends notBase {
      * @param  {string}   action   action name
      *  @return {string}  url path
      */
-    getModelActionURL(id, action = false) {
+    getModelActionURL(id, action = "") {
         return notCommon.buildURL({
             prefix: this.getURLPrefix(),
             module: this.getModuleName(),
@@ -263,18 +286,18 @@ class notController extends notBase {
 
     /**
      *  Updates working name
-     *  @param {sting} val name of the module
      *  @return {notController} this
      */
     updateAutoName() {
         if (this.getOptions("autoName", OPT_DEFAULT_AUTO_NAME)) {
             //this.setWorking('name', this.getModelURL());
         }
+        return this;
     }
 
     /**
      *  Sets object name
-     *  @param {sting} val name of the object
+     *  @param {string} val name of the object
      *  @return {notController} this
      */
     setName(val) {
@@ -300,7 +323,7 @@ class notController extends notBase {
     preloadLib(list = {}) {
         return new Promise((resolve, reject) => {
             if (typeof list !== "object") {
-                resolve();
+                resolve(undefined);
             } else {
                 this.setWorking("loading", []);
                 for (let t in list) {
@@ -321,7 +344,7 @@ class notController extends notBase {
                                 );
                             }
                             if (this.getWorking("loading").length === 0) {
-                                resolve();
+                                resolve(undefined);
                             }
                         })
                         .catch((err) => {
@@ -330,7 +353,7 @@ class notController extends notBase {
                         });
                 }
                 if (this.getWorking("loading").length === 0) {
-                    resolve();
+                    resolve(undefined);
                 }
             }
         });
@@ -380,7 +403,7 @@ class notController extends notBase {
             this[this.getDefaultActionName()](subParams);
         } else {
             this.setCurrentAction(undefined);
-            this.error("No action in router", params);
+            this.error && this.error("No action in router", params);
         }
     }
 
@@ -408,7 +431,7 @@ class notController extends notBase {
         try {
             return this.getApp().getOptions();
         } catch (e) {
-            this.error(e);
+            this.error && this.error(e);
         }
     }
 
@@ -424,7 +447,7 @@ class notController extends notBase {
                 ["modules", moduleName || this.getModuleName()].join(".")
             );
         } catch (e) {
-            this.error(e);
+            this.error && this.error(e);
         }
     }
 
@@ -440,7 +463,7 @@ class notController extends notBase {
                 ["services", moduleName || this.getModuleName()].join(".")
             );
         } catch (e) {
-            this.error(e);
+            this.error && this.error(e);
         }
     }
 
@@ -456,16 +479,16 @@ class notController extends notBase {
                 ["components", moduleName || this.getModuleName()].join(".")
             );
         } catch (e) {
-            this.error(e);
+            this.error && this.error(e);
         }
     }
 
     /**
      *  Refreshes current URL, re-run all action
-     *  @param {integer} timeout time to wait in ms
+     *  @param {number} timeout time to wait in ms
      */
     refresh(timeout = 0) {
-        this.app.getWorking("router").refresh(timeout);
+        this.app?.getWorking("router").refresh(timeout);
     }
 
     /**

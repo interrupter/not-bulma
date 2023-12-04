@@ -37,7 +37,7 @@ class notApp extends notBase {
             working: {
                 name: options.name,
                 interfaces: {},
-                controllers: Object.hasOwn(options, "controllers")
+                controllers: notCommon.objHas(options, "controllers")
                     ? options.controllers
                     : {},
                 initController: null,
@@ -49,7 +49,7 @@ class notApp extends notBase {
             },
             options,
         });
-        this.log("start app");
+        this?.log && this.log("start app");
         notCommon.register("app", this);
         this.initManifest();
         return this;
@@ -60,7 +60,7 @@ class notApp extends notBase {
      */
     initManifest() {
         notCommon
-            .getJSON(this.getOptions("manifestURL"), {})
+            .getJSON(this.getOptions("manifestURL"))
             .then(this.setInterfaceManifest.bind(this))
             .catch(notCommon.report.bind(this));
     }
@@ -253,6 +253,7 @@ class notApp extends notBase {
      * @param {object} wsc  notWSClient instance
      * @returns {object} notApp instance
      */
+    // @ts-ignore
     setWSClient(name = DEFAULT_WS_CLIENT_NAME, wsc) {
         return this.setWorking(`wsc.${name}`, wsc);
     }
@@ -278,7 +279,7 @@ class notApp extends notBase {
     /**
      * Returns network interface (model) initialized with provided data
      * @param {string} name interface(modelName)
-     * @param {string} [data={}]    model data
+     * @param {object} [data={}]    model data
      * @returns network interface initializes with provided data
      */
     getModel(name, data = {}) {
@@ -321,7 +322,8 @@ class notApp extends notBase {
                             this.setService(servName, serv);
                     }
                 } catch (e) {
-                    this.error(`Service (${servName}) init error`, e);
+                    this?.error &&
+                        this.error(`Service (${servName}) init error`, e);
                 }
             }
         }
