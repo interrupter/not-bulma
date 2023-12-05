@@ -2,6 +2,7 @@ import UIBooleans from "./ui.booleans.svelte";
 import UIIndicator from "./ui.indicator.svelte";
 import UILoader from "./ui.loader.svelte";
 import UIProgress from "./ui.progress.svelte";
+import UIShowOneFromList from "./ui.show.one.from.list.svelte";
 import UITag from "./ui.tag.svelte";
 import UITagValue from "./ui.tag.value.svelte";
 import UITitle from "./ui.title.svelte";
@@ -10,14 +11,15 @@ import UIUserCard from "./ui.user.card.svelte";
 import UISimpleSearchInput from "./ui.simple.search.input.svelte";
 
 export {
-    UIErrorsList,
     UIBooleans,
+    UIErrorsList,
     UIIndicator,
     UILoader,
     UIProgress,
+    UIShowOneFromList,
+    UISimpleSearchInput,
     UITag,
     UITagValue,
-    UIUserCard,
     UITitle,
-    UISimpleSearchInput,
+    UIUserCard,
 };
