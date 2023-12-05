@@ -1,3 +1,5 @@
+import notCommon from "../../common";
+
 const DEFAULT_RULES = {
     notReadonly(v) {
         return {

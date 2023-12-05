@@ -1,5 +1,4 @@
 <script>
-    import { LOCALE } from "../../locale/index";
     import UICommon from "../common";
     import ErrorsList from "../various/ui.errors.list.svelte";
     import { createEventDispatcher } from "svelte";
