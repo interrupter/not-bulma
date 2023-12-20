@@ -82,9 +82,7 @@ class CRUDGenericActionCreate extends CRUDGenericAction {
                     ...ev.detail,
                 });
                 if (success) {
-                    if (notCommon.isFunc(controller.goBack)) {
-                        setTimeout(() => controller.goBack(), 1000);
-                    }
+                    this.goBack();
                 }
             });
         }

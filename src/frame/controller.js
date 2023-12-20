@@ -1,5 +1,6 @@
 import notCommon from "./common.js";
 import notBase from "./base.js";
+import { NAVIGATION_DELAY_DEFAULT } from "./const.js";
 
 /**
  * @const {string}  [OPT_DEFAULT_ACTION_NAME = "default"]      default action name
@@ -533,6 +534,31 @@ class notController extends notBase {
             paths: this.getControllerRoutes(this.PARAMS_LENGTH),
             controller: this,
         };
+    }
+
+    /**
+     * Returns Application router
+     * @returns {import('./router.js')}
+     */
+    getRouter() {
+        return this.app?.getWorking("router");
+    }
+
+    /**
+     * Changes location to `url` after `delay` ms
+     * @param {string} url
+     * @param {number|string}   delay   number in ms or name of delay
+     */
+    navigateWithDelay(url, delay = NAVIGATION_DELAY_DEFAULT) {
+        return this.getRouter().navigateWithDelay(url, delay);
+    }
+
+    /**
+     * Changes location to `url`
+     * @param {string} url
+     */
+    navigate(url) {
+        return this.getRouter().navigate(url);
     }
 
     static getMenu() {}

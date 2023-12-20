@@ -87,7 +87,7 @@ class notCRUD extends notController {
     }
 
     backToList() {
-        this.app?.getWorking("router").navigate(this.linkBackToList());
+        this.navigate(this.linkBackToList());
     }
 
     linkBackToList() {
@@ -202,37 +202,60 @@ class notCRUD extends notController {
         }
     }
 
-    goCreate() {
+    /**
+     *  Changes location to create page, after delay
+     *  @param {number|string} [delay=0] number for ms, or string if we use `delays` alises aka SHORT, NORMAL, LONG
+     */
+    goCreate(delay = 0) {
         this.$destroyUI();
-        this.app
-            ?.getWorking("router")
-            .navigate(this.getModelActionURL("", "create"));
+        this.navigateWithDelay(this.getModelActionURL("", "create"), delay);
     }
 
-    goDetails(value) {
+    /**
+     *  Changes location to document details page, after delay
+     *  @param {string}         id          target document id
+     *  @param {number|string}  [delay=0]   number for ms, or string if we use `delays` alises aka SHORT, NORMAL, LONG
+     */
+    goDetails(id, delay = 0) {
         this.$destroyUI();
-        this.app
-            ?.getWorking("router")
-            .navigate(this.getModelActionURL(value, ""));
+        this.navigateWithDelay(this.getModelActionURL(id, ""), delay);
     }
 
-    goUpdate(value) {
+    /**
+     * Changes location to document update page, after delay
+     * @param {string}          id          target document id
+     *  @param {number|string}  [delay=0]   number for ms, or string if we use `delays` alises aka SHORT, NORMAL, LONG
+     */
+    goUpdate(id, delay = 0) {
         this.$destroyUI();
-        this.app
-            ?.getWorking("router")
-            .navigate(this.getModelActionURL(value, "update"));
+        this.navigateWithDelay(this.getModelActionURL(id, "update"), delay);
     }
 
-    goDelete(value) {
+    /**
+     *  Changes location to document delete page, after delay
+     *  @param {string}         id          target document id
+     *  @param {number|string}  [delay=0]   number for ms, or string if we use `delays` alises aka SHORT, NORMAL, LONG
+     */
+    goDelete(id, delay = 0) {
         this.$destroyUI();
-        this.app
-            ?.getWorking("router")
-            .navigate(this.getModelActionURL(value, "delete"));
+        this.navigateWithDelay(this.getModelActionURL(id, "delete"), delay);
     }
 
-    goList() {
+    /**
+     *  Changes location to documents list page, after delay
+     *  @param {number|string}  [delay=0]   number for ms, or string if we use `delays` alises aka SHORT, NORMAL, LONG
+     */
+    goList(delay = 0) {
         this.$destroyUI();
-        this.app?.getWorking("router").navigate(this.getModelURL());
+        this.navigateWithDelay(this.getModelURL(), delay);
+    }
+
+    /**
+     *  Changes location to documents list page, after delay
+     *  @param {number|string}  [delay=0]   number for ms, or string if we use `delays` alises aka SHORT, NORMAL, LONG
+     */
+    goBack(delay = 0) {
+        this.goList(delay);
     }
 
     async onActionSubmit(action, item) {

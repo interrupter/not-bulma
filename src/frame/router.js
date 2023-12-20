@@ -1,5 +1,7 @@
 import notBase from "./base.js";
 
+import { NAVIGATION_DELAYS, NAVIGATION_DELAY_DEFAULT } from "./const.js";
+
 const OPT_MODE_HISTORY = Symbol("history"),
     OPT_MODE_HASH = Symbol("hash"),
     OPT_DEFAULT_CHECK_INTERVAL = 50;
@@ -13,20 +15,90 @@ class notRouter extends notBase {
                 mode: OPT_MODE_HISTORY,
                 root: "/", //always in slashes /user/, /, /input/. and no /user or input/level
                 initialized: false,
+                delays: NAVIGATION_DELAYS,
+                delay_default: NAVIGATION_DELAY_DEFAULT,
             },
         });
         return this;
     }
 
+    /**
+     * Set object with named delays
+     * @param {Object.<string, number>} delays
+     * @returns {notRouter}
+     */
+    setDelays(delays) {
+        this.setWorking("delays", delays);
+        return this;
+    }
+
+    /**
+     * Set default navigation delay, provided as name of one of `delays` or in number form
+     * @param {string|number} delay
+     * @returns {notRouter}
+     */
+    setDefaultNavigationDelay(delay) {
+        this.setWorking("delay_default", this.delayAsMs(delay));
+        return this;
+    }
+
+    /**
+     * Returns number of ms, if not set returns NAVIGATION_DELAY_DEFAULT
+     * @returns {number}
+     */
+    getDefaultNavigationDelay() {
+        return this.getWorking(`delay_default`, NAVIGATION_DELAY_DEFAULT);
+    }
+
+    /**
+     *  Ensures that delay is in ms, if its provided as name of alias, searches for it and returns, if not found - returns working default_delay
+     * @param {string|number} delay    name of delay alias or number of ms
+     * @returns {number}               delay in ms
+     */
+    delayAsMs(delay) {
+        if (typeof delay === "number") {
+            return delay;
+        } else {
+            if (typeof delay === "string" && delay.length > 0) {
+                return this.getWorking(
+                    `delays.${delay}`,
+                    this.getDefaultNavigationDelay()
+                );
+            } else {
+                return this.getDefaultNavigationDelay();
+            }
+        }
+    }
+
+    /**
+     *
+     *  @param {string}              url     we go to url
+     *  @param {string|number}       delay   name of delay alias or number of ms
+     *  @returns {NodeJS.Timeout}            timeout identificator
+     */
+    navigateWithDelay(url, delay) {
+        return setTimeout(() => this.navigate(url), this.delayAsMs(delay));
+    }
+
+    /**
+     * Use browser History API
+     */
     history() {
         this.setWorking("mode", OPT_MODE_HISTORY);
     }
 
+    /**
+     * Use hash part as container for location information
+     */
     hash() {
         this.setWorking("mode", OPT_MODE_HASH);
     }
 
-    // root should start and end with /
+    /**
+     * root should start and end with
+     * @param {string} root
+     * @returns {notRouter}
+     */
     setRoot(root) {
         this.setWorking(
             "root",
@@ -35,8 +107,12 @@ class notRouter extends notBase {
         return this;
     }
 
+    /**
+     * clear first and last slashes from string
+     * @param {string} path
+     * @returns {string}
+     */
     clearSlashes(path) {
-        //first and last slashes removal
         return path.toString().replace(/\/$/, "").replace(/^\//, "");
     }
 
@@ -187,6 +263,11 @@ class notRouter extends notBase {
         }
     }
 
+    /**
+     * Changes locations
+     * @param {string} path
+     * @returns
+     */
     navigate(path) {
         path = path ? path : "";
         switch (this.getWorking("mode")) {
@@ -210,9 +291,14 @@ class notRouter extends notBase {
         return this;
     }
 
+    /**
+     *  returns app root + path
+     * @param {string} path
+     * @returns {string}
+     */
     getFullRoute(path = "") {
         path = this.clearSlashes(path);
-        let root = this.getWorking("root");
+        const root = this.getWorking("root");
         if (root !== "/") {
             if (path.indexOf(root.substring(1)) === 0) {
                 return "/" + path;
@@ -221,12 +307,16 @@ class notRouter extends notBase {
         return this.getWorking("root") + this.clearSlashes(path);
     }
 
+    /**
+     * Returns all links with n-href attribute
+     * @returns {Array<HTMLAnchorElement>}
+     */
     getAllLinks() {
-        var allElements = document.body.querySelectorAll("a");
-        var list = [];
-        for (var j = 0; j < allElements.length; j++) {
+        const allElements = document.body.querySelectorAll("a");
+        let list = [];
+        for (let j = 0; j < allElements.length; j++) {
             for (
-                var i = 0, atts = allElements[j].attributes, n = atts.length;
+                let i = 0, atts = allElements[j].attributes, n = atts.length;
                 i < n;
                 i++
             ) {
@@ -239,15 +329,28 @@ class notRouter extends notBase {
         return list;
     }
 
+    /**
+     * Reroute all links(anchor tags) with n-href attribute.
+     * Disable navigation to href.
+     * @returns {notRouter}
+     */
     reRouteExisted() {
-        let list = this.getAllLinks();
+        const list = this.getAllLinks();
         for (let t = 0; t < list.length; t++) {
             this.initRerouting(list[t], list[t].getAttribute("n-href"));
         }
         return this;
     }
 
+    /**
+     * If `el` is not initialized, adds onclick listener to navigate to `link` location.
+     * Disables default navigation to href.
+     * @param {HTMLAnchorElement}   el
+     * @param {string}              link
+     * @returns
+     */
     initRerouting(el, link) {
+        // @ts-ignore
         if (!el.notRouterInitialized) {
             let fullLink = this.getFullRoute(link);
             el.setAttribute("href", fullLink);
@@ -256,6 +359,7 @@ class notRouter extends notBase {
                 this.navigate(link);
                 return false;
             });
+            // @ts-ignore
             el.notRouterInitialized = true;
         }
         return this;

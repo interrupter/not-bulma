@@ -2,13 +2,18 @@ import { notLocale } from "../../../../locale";
 import notCommon from "../../../common";
 import { notForm } from "../../../components";
 import { DEFAULT_TRASFORMER } from "../../const";
+import { NAVIGATION_DELAY_DEFAULT } from "../../../const";
 
 const DEFAUL_BREADCRUMB_TAIL = "Просмотр";
+
 /**
  * Generic CRUD action class
  * @class
  */
 class CRUDGenericAction {
+    static get NAVIGATION_DELAY() {
+        return NAVIGATION_DELAY_DEFAULT;
+    }
     /**
      * Default breadcrumbs tail template string
      * @returns {string}
@@ -296,6 +301,10 @@ class CRUDGenericAction {
             //showing error message
             controller.showErrorMessage(e);
         }
+    }
+
+    static goBack(controller) {
+        controller.goBack(this.NAVIGATION_DELAY);
     }
 }
 
