@@ -72,7 +72,7 @@ class CRUDGenericActionCreate extends CRUDGenericAction {
             this.bindUIEvent(
                 controller,
                 "reject",
-                controller.goBack.bind(controller)
+                ()=> this.goBack(controller)
             );
         }
         if (notCommon.isFunc(controller.onActionSubmit)) {
@@ -82,7 +82,7 @@ class CRUDGenericActionCreate extends CRUDGenericAction {
                     ...ev.detail,
                 });
                 if (success) {
-                    this.goBack();
+                    this.goBackAfterDelay(controller)
                 }
             });
         }

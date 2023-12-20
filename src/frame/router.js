@@ -76,8 +76,11 @@ class notRouter extends notBase {
      *  @param {string|number}       delay   name of delay alias or number of ms
      *  @returns {NodeJS.Timeout}            timeout identificator
      */
-    navigateWithDelay(url, delay) {
-        return setTimeout(() => this.navigate(url), this.delayAsMs(delay));
+    navigateWithDelay(url, delay, doBefore) {
+        return setTimeout(() => {
+            typeof doBefore === 'function' && doBefore();
+            this.navigate(url);
+        }, this.delayAsMs(delay));
     }
 
     /**

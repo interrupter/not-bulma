@@ -82,7 +82,7 @@ class CRUDGenericActionUpdate extends CRUDGenericAction {
             this.bindUIEvent(
                 controller,
                 "reject",
-                controller.goBack.bind(controller)
+                () => this.goBack(controller)
             );
         }
         if (notCommon.isFunc(controller.onActionSubmit)) {
@@ -92,9 +92,7 @@ class CRUDGenericActionUpdate extends CRUDGenericAction {
                     ...ev.detail,
                 });
                 if (success) {
-                    if (notCommon.isFunc(controller.goBack)) {
-                        setTimeout(() => controller.goBack(), 1000);
-                    }
+                    this.goBackAfterDelay(controller);
                 }
             });
         }

@@ -207,8 +207,7 @@ class notCRUD extends notController {
      *  @param {number|string} [delay=0] number for ms, or string if we use `delays` alises aka SHORT, NORMAL, LONG
      */
     goCreate(delay = 0) {
-        this.$destroyUI();
-        this.navigateWithDelay(this.getModelActionURL("", "create"), delay);
+        this.goAfterDelay(this.getModelActionURL("", "create"), delay);
     }
 
     /**
@@ -216,9 +215,8 @@ class notCRUD extends notController {
      *  @param {string}         id          target document id
      *  @param {number|string}  [delay=0]   number for ms, or string if we use `delays` alises aka SHORT, NORMAL, LONG
      */
-    goDetails(id, delay = 0) {
-        this.$destroyUI();
-        this.navigateWithDelay(this.getModelActionURL(id, ""), delay);
+    goDetails(id, delay = 0) {        
+        this.goAfterDelay(this.getModelActionURL(id, ""), delay);
     }
 
     /**
@@ -226,9 +224,8 @@ class notCRUD extends notController {
      * @param {string}          id          target document id
      *  @param {number|string}  [delay=0]   number for ms, or string if we use `delays` alises aka SHORT, NORMAL, LONG
      */
-    goUpdate(id, delay = 0) {
-        this.$destroyUI();
-        this.navigateWithDelay(this.getModelActionURL(id, "update"), delay);
+    goUpdate(id, delay = 0) {        
+        this.goAfterDelay(this.getModelActionURL(id, "update"), delay);
     }
 
     /**
@@ -236,18 +233,25 @@ class notCRUD extends notController {
      *  @param {string}         id          target document id
      *  @param {number|string}  [delay=0]   number for ms, or string if we use `delays` alises aka SHORT, NORMAL, LONG
      */
-    goDelete(id, delay = 0) {
-        this.$destroyUI();
-        this.navigateWithDelay(this.getModelActionURL(id, "delete"), delay);
+    goDelete(id, delay = 0) {        
+        this.goAfterDelay(this.getModelActionURL(id, "delete"), delay);
     }
 
     /**
      *  Changes location to documents list page, after delay
      *  @param {number|string}  [delay=0]   number for ms, or string if we use `delays` alises aka SHORT, NORMAL, LONG
      */
-    goList(delay = 0) {
-        this.$destroyUI();
-        this.navigateWithDelay(this.getModelURL(), delay);
+    goList(delay = 0) {        
+        this.goAfterDelay(this.getModelURL(), delay);
+    }
+
+    /**
+     * 
+     * @param {string} url 
+     * @param {number|string} delay 
+     */
+    goAfterDelay(url, delay = 0){
+        this.navigateWithDelay(url, delay, ()=>this.$destroyUI());
     }
 
     /**

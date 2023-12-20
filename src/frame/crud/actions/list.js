@@ -63,7 +63,7 @@ export default class CRUDActionList {
                 actions: [
                     {
                         title: "Создать",
-                        action: controller.goCreate.bind(controller),
+                        action: () => controller.goCreate(),
                     },
                     ...controller.getOptions(`${ACTION}.actions`, []),
                 ],

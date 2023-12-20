@@ -549,8 +549,8 @@ class notController extends notBase {
      * @param {string} url
      * @param {number|string}   delay   number in ms or name of delay
      */
-    navigateWithDelay(url, delay = NAVIGATION_DELAY_DEFAULT) {
-        return this.getRouter().navigateWithDelay(url, delay);
+    navigateWithDelay(url, delay = NAVIGATION_DELAY_DEFAULT, doBefore = ()=>{}) {
+        return this.getRouter().navigateWithDelay(url, delay, doBefore);
     }
 
     /**

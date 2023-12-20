@@ -220,7 +220,7 @@ class CRUDGenericAction {
             this.bindUIEvent(
                 controller,
                 "reject",
-                controller.goBack.bind(controller)
+                () => controller.goBack()
             );
         }
     }
@@ -303,8 +303,12 @@ class CRUDGenericAction {
         }
     }
 
-    static goBack(controller) {
+    static goBackAfterDelay(controller) {
         controller.goBack(this.NAVIGATION_DELAY);
+    }
+
+    static goBack(controller) {
+        controller.goBack(0);
     }
 }
 
