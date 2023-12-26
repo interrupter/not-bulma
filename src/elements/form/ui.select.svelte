@@ -1,7 +1,8 @@
 <script>
     import { LOCALE } from "../../locale";
+    import UISelectOption from "./ui.select.option.svelte";
     import ErrorsList from "../various/ui.errors.list.svelte";
-    import UICommon from "../common.js";
+    import UICommon from "../common";
     import notCommon from "../../frame/common";
 
     import { createEventDispatcher } from "svelte";
@@ -129,28 +130,31 @@
             >
                 {#if placeholder.length > 0}
                     {#if value}
-                        <option value={UICommon.CLEAR_MACRO}
-                            >{$LOCALE[placeholder]}</option
-                        >
+                        <UISelectOption
+                            value={UICommon.CLEAR_MACRO}
+                            title={placeholder}
+                        />
                     {:else}
-                        <option value={UICommon.CLEAR_MACRO} selected="selected"
-                            >{$LOCALE[placeholder]}</option
-                        >
+                        <UISelectOption
+                            value={UICommon.CLEAR_MACRO}
+                            selected="selected"
+                            title={placeholder}
+                        />
                     {/if}
                 {/if}
                 {#each variants as variant}
                     {#if multiple}
-                        <option
+                        <UISelectOption
                             value={variant.id}
                             selected={value && value.indexOf(variant.id) > -1}
-                            >{$LOCALE[variant.title]}</option
-                        >
+                            title={variant.title}
+                        />
                     {:else}
-                        <option
+                        <UISelectOption
                             value={variant.id}
                             selected={value == variant.id}
-                            >{$LOCALE[variant.title]}</option
-                        >
+                            title={variant.title}
+                        />
                     {/if}
                 {/each}
             </select>

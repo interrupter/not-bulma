@@ -10,9 +10,12 @@ const Locale = {LOCALE, say, notLocale};
 
 const { notCommon, COMPONENTS, FIELDS, VARIANTS, notFormUtils } = Frame;
 
-Object.keys(Elements.Forms).forEach((fieldtype) => {
-  Frame.notFormUtils.addComponent(fieldtype, Elements.Forms[fieldtype]);
+Object.keys(Elements).forEach(componentsSetName=>{
+  Object.keys(Elements[componentsSetName]).forEach((componentName) => {
+    Frame.notFormUtils.addComponent(componentName, Elements[componentsSetName][componentName]);
+  });
 });
+
 
 export {
   //UI

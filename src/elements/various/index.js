@@ -1,6 +1,7 @@
 import UIBooleans from "./ui.booleans.svelte";
 import UIIndicator from "./ui.indicator.svelte";
 import UILoader from "./ui.loader.svelte";
+import UISelectFromModelOnDemandInline from "./ui.select.from.model.on.demand.inline.svelte";
 import UIProgress from "./ui.progress.svelte";
 import UIShowOneFromList from "./ui.show.one.from.list.svelte";
 import UITag from "./ui.tag.svelte";
@@ -15,6 +16,7 @@ export {
     UIErrorsList,
     UIIndicator,
     UILoader,
+    UISelectFromModelOnDemandInline,
     UIProgress,
     UIShowOneFromList,
     UISimpleSearchInput,
