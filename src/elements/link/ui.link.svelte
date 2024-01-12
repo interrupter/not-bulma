@@ -52,6 +52,7 @@
         {#if title}
             <span>{$LOCALE[title]}</span>
         {/if}
+        <slot />
         {#if iconSide === "right"}
             <span class="icon"
                 ><i class="fas fa-{icon} {size ? `is-${size}` : ''}" /></span
@@ -59,5 +60,6 @@
         {/if}
     {:else}
         {$LOCALE[title]}
+        <slot />
     {/if}
 </a>
