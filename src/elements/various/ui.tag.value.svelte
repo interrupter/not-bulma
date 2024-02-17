@@ -10,6 +10,9 @@
 
 <div class="tags has-addons {classes}" {id}>
     {#if title}
-        <UITag {...title} />{/if}{#if value}<UITag {...value} />
+        <UITag {...title} />
+    {/if}
+    {#if value}
+        <UITag {...value} />
     {/if}
 </div>

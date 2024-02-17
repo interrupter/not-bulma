@@ -6,11 +6,9 @@
     import { DEFAULT_STATUS_SUCCESS } from "../../frame/const";
 
     import { onMount, createEventDispatcher } from "svelte";
-    const dispatch = createEventDispatcher();
 
     export let inputStarted = false;
     export let value;
-    export let variants = [];
     export let placeholder = "empty select item";
     export let fieldname = "selectFromModel";
     export let modelName = "";
@@ -37,6 +35,7 @@
     }
 
     let loaded = false;
+    let variants = [];
 
     $: disabled = !loaded;
 
@@ -68,7 +67,7 @@
 <UISelect
     {inputStarted}
     {value}
-    {variants}
+    bind:variants
     {placeholder}
     {fieldname}
     {icon}
