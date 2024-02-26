@@ -70,6 +70,14 @@
         }
     }
 
+    function onSearchChange({ detail }) {
+        try {
+            dispatch("searchChange", detail);
+        } catch (e) {
+            return;
+        }
+    }
+
     function onFilterChange({ detail }) {
         try {
             dispatch("filterChange", detail);
@@ -119,6 +127,7 @@
             this={filterUI}
             bind:filter
             on:change={onFilterChange}
+            on:searchChange={onSearchChange}
         />
     {:else}
         <div class="field">
