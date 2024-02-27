@@ -17,6 +17,9 @@
     class:is-max-widescreen={maxWidescreen}
     class:is-fluid={fluid}
     on:click
+    on:keyup
+    role="button"
+    tabindex="0"
 >
     <slot />
 </div>

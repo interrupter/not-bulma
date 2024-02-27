@@ -68,6 +68,9 @@
         class="is-overlay not-overlay {classes}"
         transition:fade
         on:click={overlayClick}
+        on:keyup={overlayClick}
+        role="button"
+        tabindex="0"
         style="z-index: {zIndexStep * layer};"
     >
         {#if closeButton}

@@ -11,7 +11,7 @@
     export let inputStarted = false;
     export let value = "";
     export let variants = [];
-    export let placeholder = "empty select item";
+    export let placeholder = "";
     export let fieldname = "select";
     export let icon = false;
     export let required = true;

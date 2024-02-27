@@ -3,6 +3,13 @@
     export let title = "";
 </script>
 
-<div {title} class="column {classes}" on:click>
+<div
+    {title}
+    class="column {classes}"
+    on:click
+    on:keyup
+    role="button"
+    tabindex="0"
+>
     <slot />
 </div>

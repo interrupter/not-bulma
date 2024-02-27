@@ -6,10 +6,10 @@
     import { createEventDispatcher, onMount } from "svelte";
     const dispatch = createEventDispatcher();
     //field props
+    // svelte-ignore unused-export-let
     export let inputStarted = false;
     export let value = [];
-    export let variants = [];
-    export let placeholder = "empty select item";
+    export let placeholder = "";
     export let fieldname = "selectFromModel";
     export let required = true;
     export let readonly = false;
@@ -128,6 +128,16 @@
         {actionSearch}
         {optionId}
         {optionTitle}
+        bind:placeholder
+        bind:fieldname
+        bind:required
+        bind:multiple
+        bind:size
+        bind:valid
+        bind:validated
+        bind:errors
+        bind:formErrors
+        bind:formLevelError
         on:resolve={(e) => addItem(e.detail)}
     />
 {/if}

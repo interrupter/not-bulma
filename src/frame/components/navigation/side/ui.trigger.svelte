@@ -1,27 +1,29 @@
 <script>
+    import { createEventDispatcher } from "svelte";
+    const dispatch = createEventDispatcher();
 
-  import { createEventDispatcher } from 'svelte';
-  const dispatch = createEventDispatcher();
+    const CLASS_ICON = {
+        OPENED: "fa-angle-down",
+        CLOSED: "fa-angle-up",
+    };
 
-  const CLASS_ICON = {
-    OPENED: 'fa-angle-down',
-    CLOSED: 'fa-angle-up',
-  };
+    export let icon_opened = CLASS_ICON.OPENED;
+    export let icon_closed = CLASS_ICON.CLOSED;
 
-  export let icon_opened = CLASS_ICON.OPENED;
-  export let icon_closed = CLASS_ICON.CLOSED;
+    export let closed = false;
 
-  export let closed = false;
-
-  function onClick(e){
-    e && e.preventDefault() && e.stopPropagation();
-    closed = !closed;
-    dispatch('toggle', {closed});
-    return false;
-  }
-
+    function onClick(e) {
+        e && e.preventDefault() && e.stopPropagation();
+        closed = !closed;
+        dispatch("toggle", { closed });
+        return false;
+    }
 </script>
 
-<span class="icon is-small is-toggle-submenu is-pulled-right" on:click={onClick}>
-  <i class="fas {closed?icon_closed:icon_opened}" aria-hidden="true"></i>
+<span
+    class="icon is-small is-toggle-submenu is-pulled-right"
+    on:click={onClick}
+    on:keyup={onClick}
+>
+    <i class="fas {closed ? icon_closed : icon_opened}" aria-hidden="true"></i>
 </span>

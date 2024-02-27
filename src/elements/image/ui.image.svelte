@@ -19,7 +19,13 @@
         </figure>
     </a>
 {:else}
-    <figure class="image {sizeStyle} {containedStyle} {coveredStyle}" on:click>
+    <figure
+        class="image {sizeStyle} {containedStyle} {coveredStyle}"
+        on:click
+        on:keyup
+        role="button"
+        tabindex="0"
+    >
         <img class="" alt={title} src={url} crossOrigin={cors} />
     </figure>
 {/if}
