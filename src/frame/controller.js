@@ -571,15 +571,19 @@ class notController extends notBase {
      *
      * @param {string} id
      * @param {string} [action=""]
+     * @param {number} [delay=0]            delay in ms before navigate
+     * @param   {function}  [doBefore]      will executed only if delayed after delay but before navigate
      * @return {*}
      * @memberof notController
      */
-    navigateAction(id, action = "") {
+    navigateAction(id, action = "", delay = 0, doBefore = () => {}) {
         return this.navigateModuleAction(
             this.getModuleName(),
             this.getModelName(),
             id,
-            action
+            action,
+            delay,
+            doBefore
         );
     }
 
@@ -590,15 +594,25 @@ class notController extends notBase {
      * @param {string} modelName
      * @param {string} id
      * @param {string} [action=""]
+     * @param {number} [delay=0]            delay in ms before navigate
+     * @param   {function}  [doBefore]      will executed only if delayed after delay but before navigate
      * @return {*}
      * @memberof notController
      */
-    navigateModelAction(modelName, id, action = "") {
+    navigateModelAction(
+        modelName,
+        id,
+        action = "",
+        delay = 0,
+        doBefore = () => {}
+    ) {
         return this.navigateModuleAction(
             this.getModuleName(),
             modelName,
             id,
-            action
+            action,
+            delay,
+            doBefore
         );
     }
 
@@ -610,19 +624,42 @@ class notController extends notBase {
      * @param {string} modelName
      * @param {string} id
      * @param {string} [action=""]
+     * @param {number} [delay=0]            delay in ms before navigate
+     * @param   {function}  [doBefore]      will executed only if delayed after delay but before navigate
      * @return {*}
      * @memberof notController
      */
-    navigateModuleAction(moduleName, modelName, id, action = "") {
-        return this.getRouter().navigate(
-            notCommon.buildURL({
-                prefix: this.getURLPrefix(),
-                module: moduleName,
-                model: modelName,
-                id,
-                action,
-            })
-        );
+    navigateModuleAction(
+        moduleName,
+        modelName,
+        id,
+        action = "",
+        delay = 0,
+        doBefore = () => {}
+    ) {
+        if (delay) {
+            return this.getRouter().navigateWithDelay(
+                notCommon.buildURL({
+                    prefix: this.getURLPrefix(),
+                    module: moduleName,
+                    model: modelName,
+                    id,
+                    action,
+                }),
+                delay,
+                doBefore
+            );
+        } else {
+            return this.getRouter().navigate(
+                notCommon.buildURL({
+                    prefix: this.getURLPrefix(),
+                    module: moduleName,
+                    model: modelName,
+                    id,
+                    action,
+                })
+            );
+        }
     }
 
     static getMenu() {}

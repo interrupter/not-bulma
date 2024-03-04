@@ -78,7 +78,7 @@ class notRouter extends notBase {
      */
     navigateWithDelay(url, delay, doBefore) {
         return setTimeout(() => {
-            typeof doBefore === 'function' && doBefore();
+            typeof doBefore === "function" && doBefore();
             this.navigate(url);
         }, this.delayAsMs(delay));
     }
