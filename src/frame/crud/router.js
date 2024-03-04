@@ -1,11 +1,13 @@
 const DEFAULT_ACTION = "list";
 
 class notCRUDRouter {
-    static extractActionName(params) {
+    static extractActionName(controller, params) {
         let actionName = DEFAULT_ACTION;
-        if (params.length == 1) {
+        if (params.length === 1) {
             if (params[0] === "create") {
                 actionName = "create";
+            } else if (controller.actionHandlerExists(params[0])) {
+                actionName = params[0];
             } else {
                 actionName = "details";
             }
@@ -23,7 +25,10 @@ class notCRUDRouter {
 
     static route(controller, params) {
         try {
-            const actionName = notCRUDRouter.extractActionName(params);
+            const actionName = notCRUDRouter.extractActionName(
+                controller,
+                params
+            );
             controller.setCurrentAction(actionName);
             return controller.runAction(actionName, params);
         } catch (e) {

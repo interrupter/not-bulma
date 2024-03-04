@@ -188,12 +188,30 @@ class notCRUD extends notController {
         }
     }
 
+    actionHandlerExists(actionName) {
+        if (Object.keys(this.#actions).includes(actionName)) {
+            return true;
+        }
+        if (
+            typeof this["run" + notCommon.capitalizeFirstLetter(actionName)] ===
+            "function"
+        ) {
+            return true;
+        }
+        return false;
+    }
+
     runAction(actionName, params) {
         if (Object.keys(this.#actions).includes(actionName)) {
             return this.#actions[actionName].run(this, params);
         } else if (
-            typeof this["run" + notCommon.capitalizeFirstLetter(actionName)]
+            typeof this["run" + notCommon.capitalizeFirstLetter(actionName)] ===
+            "function"
         ) {
+            return this["run" + notCommon.capitalizeFirstLetter(actionName)](
+                params
+            );
+        } else {
             throw new Error(
                 `No such action: ${actionName} in contoller ${this.getWorking(
                     "name"
@@ -215,7 +233,7 @@ class notCRUD extends notController {
      *  @param {string}         id          target document id
      *  @param {number|string}  [delay=0]   number for ms, or string if we use `delays` alises aka SHORT, NORMAL, LONG
      */
-    goDetails(id, delay = 0) {        
+    goDetails(id, delay = 0) {
         this.goAfterDelay(this.getModelActionURL(id, ""), delay);
     }
 
@@ -224,7 +242,7 @@ class notCRUD extends notController {
      * @param {string}          id          target document id
      *  @param {number|string}  [delay=0]   number for ms, or string if we use `delays` alises aka SHORT, NORMAL, LONG
      */
-    goUpdate(id, delay = 0) {        
+    goUpdate(id, delay = 0) {
         this.goAfterDelay(this.getModelActionURL(id, "update"), delay);
     }
 
@@ -233,7 +251,7 @@ class notCRUD extends notController {
      *  @param {string}         id          target document id
      *  @param {number|string}  [delay=0]   number for ms, or string if we use `delays` alises aka SHORT, NORMAL, LONG
      */
-    goDelete(id, delay = 0) {        
+    goDelete(id, delay = 0) {
         this.goAfterDelay(this.getModelActionURL(id, "delete"), delay);
     }
 
@@ -241,17 +259,17 @@ class notCRUD extends notController {
      *  Changes location to documents list page, after delay
      *  @param {number|string}  [delay=0]   number for ms, or string if we use `delays` alises aka SHORT, NORMAL, LONG
      */
-    goList(delay = 0) {        
+    goList(delay = 0) {
         this.goAfterDelay(this.getModelURL(), delay);
     }
 
     /**
-     * 
-     * @param {string} url 
-     * @param {number|string} delay 
+     *
+     * @param {string} url
+     * @param {number|string} delay
      */
-    goAfterDelay(url, delay = 0){
-        this.navigateWithDelay(url, delay, ()=>this.$destroyUI());
+    goAfterDelay(url, delay = 0) {
+        this.navigateWithDelay(url, delay, () => this.$destroyUI());
     }
 
     /**

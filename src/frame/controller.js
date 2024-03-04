@@ -549,7 +549,11 @@ class notController extends notBase {
      * @param {string} url
      * @param {number|string}   delay   number in ms or name of delay
      */
-    navigateWithDelay(url, delay = NAVIGATION_DELAY_DEFAULT, doBefore = ()=>{}) {
+    navigateWithDelay(
+        url,
+        delay = NAVIGATION_DELAY_DEFAULT,
+        doBefore = () => {}
+    ) {
         return this.getRouter().navigateWithDelay(url, delay, doBefore);
     }
 
@@ -559,6 +563,66 @@ class notController extends notBase {
      */
     navigate(url) {
         return this.getRouter().navigate(url);
+    }
+
+    /**
+     *  Navigating to this controller main model `action` with provided `id`,
+     *  empty `id` will be dropped from resulting url
+     *
+     * @param {string} id
+     * @param {string} [action=""]
+     * @return {*}
+     * @memberof notController
+     */
+    navigateAction(id, action = "") {
+        return this.navigateModuleAction(
+            this.getModuleName(),
+            this.getModelName(),
+            id,
+            action
+        );
+    }
+
+    /**
+     *  Navigating to this controller module model of `modelName` `action` with provided `id`,
+     *  empty `id` will be dropped from resulting url
+     *
+     * @param {string} modelName
+     * @param {string} id
+     * @param {string} [action=""]
+     * @return {*}
+     * @memberof notController
+     */
+    navigateModelAction(modelName, id, action = "") {
+        return this.navigateModuleAction(
+            this.getModuleName(),
+            modelName,
+            id,
+            action
+        );
+    }
+
+    /**
+     *  Navigating to `moduleName` `modelName` `action` with provided `id`,
+     *  empty `id` will be dropped from resulting url
+     *
+     * @param {string} moduleName
+     * @param {string} modelName
+     * @param {string} id
+     * @param {string} [action=""]
+     * @return {*}
+     * @memberof notController
+     */
+    navigateModuleAction(moduleName, modelName, id, action = "") {
+        return this.getRouter().navigate(
+            notCommon.buildURL({
+                prefix: this.getURLPrefix(),
+                module: moduleName,
+                model: modelName,
+                id,
+                action,
+            })
+        );
     }
 
     static getMenu() {}
