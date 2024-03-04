@@ -37,10 +37,6 @@ class CRUDGenericActionCreate extends CRUDGenericAction {
         return defData;
     }
 
-    static isResponseBad(reponse) {
-        return !reponse;
-    }
-
     static getTitle(contoller, params, response) {
         return contoller.getItemTitle(response);
     }
