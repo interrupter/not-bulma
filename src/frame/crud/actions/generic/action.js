@@ -4,7 +4,7 @@ import { notForm } from "../../../components";
 import { DEFAULT_TRASFORMER } from "../../const";
 import { NAVIGATION_DELAY_DEFAULT } from "../../../const";
 
-const DEFAUL_BREADCRUMB_TAIL = "Просмотр";
+const DEFAULT_BREADCRUMB_TAIL = "Просмотр";
 
 /**
  * Generic CRUD action class
@@ -19,7 +19,7 @@ class CRUDGenericAction {
      * @returns {string}
      */
     static get deafultBreadcrumbsTail() {
-        return DEFAUL_BREADCRUMB_TAIL;
+        return DEFAULT_BREADCRUMB_TAIL;
     }
 
     /**
@@ -28,7 +28,7 @@ class CRUDGenericAction {
      */
     static get breadcrumbsTails() {
         return {
-            preset: DEFAUL_BREADCRUMB_TAIL,
+            preset: DEFAULT_BREADCRUMB_TAIL,
             set: 'Просмотр, "{:title}"',
         };
     }
@@ -217,11 +217,7 @@ class CRUDGenericAction {
      */
     static bindUIEvents(controller, params, response) {
         if (notCommon.isFunc(controller.goBack)) {
-            this.bindUIEvent(
-                controller,
-                "reject",
-                () => controller.goBack()
-            );
+            this.bindUIEvent(controller, "reject", () => controller.goBack());
         }
     }
 

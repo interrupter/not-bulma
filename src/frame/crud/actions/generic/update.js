@@ -1,7 +1,7 @@
 import notCommon from "../../../common";
 import CRUDGenericAction from "./action";
 
-const DEFAUL_BREADCRUMB_TAIL = "Редактирование";
+const DEFAULT_BREADCRUMB_TAIL = "Редактирование";
 /**
  * Generic CRUD Update action class
  * @class
@@ -12,7 +12,7 @@ class CRUDGenericActionUpdate extends CRUDGenericAction {
      * @returns {string}
      */
     static get deafultBreadcrumbsTail() {
-        return DEFAUL_BREADCRUMB_TAIL;
+        return DEFAULT_BREADCRUMB_TAIL;
     }
 
     /**
@@ -21,8 +21,8 @@ class CRUDGenericActionUpdate extends CRUDGenericAction {
      */
     static get breadcrumbsTails() {
         return {
-            preset: DEFAUL_BREADCRUMB_TAIL,
-            set: `${DEFAUL_BREADCRUMB_TAIL}: "{:title}"`,
+            preset: DEFAULT_BREADCRUMB_TAIL,
+            set: `${DEFAULT_BREADCRUMB_TAIL}: "{:title}"`,
         };
     }
 
@@ -79,10 +79,8 @@ class CRUDGenericActionUpdate extends CRUDGenericAction {
      */
     static bindUIEvents(controller, params, response) {
         if (notCommon.isFunc(controller.goBack)) {
-            this.bindUIEvent(
-                controller,
-                "reject",
-                () => this.goBack(controller)
+            this.bindUIEvent(controller, "reject", () =>
+                this.goBack(controller)
             );
         }
         if (notCommon.isFunc(controller.onActionSubmit)) {
