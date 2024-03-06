@@ -210,6 +210,40 @@ class CRUDGenericAction {
     }
 
     /**
+     *  Sets via `.$set` method `loading` to `true`
+     *
+     * @static
+     * @param {import('../../controller.crud')} controller
+     * @memberof CRUDGenericAction
+     */
+    static setUILoading(controller) {
+        this.getUI(controller).$set({ loading: true });
+    }
+
+    /**
+     *  Sets via `.$set` method `loading` to `false`
+     *
+     * @static
+     * @param {import('../../controller.crud')} controller
+     * @memberof CRUDGenericAction
+     */
+    static setUILoaded(controller) {
+        this.getUI(controller).$set({ loading: false });
+    }
+
+    /**
+     *  Sets via `.$set` method `error` to `message`
+     *
+     * @static
+     * @param {import('../../controller.crud')} controller
+     * @param   {Error} message     error message
+     * @memberof CRUDGenericAction
+     */
+    static setUIError(controller, message) {
+        this.getUI(controller).$set({ error: message });
+    }
+
+    /**
      * Binds events to action UI
      * @param {object} controller   instance of controller
      * @param {string[]} params     list of route params
