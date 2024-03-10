@@ -308,6 +308,11 @@ class notCRUD extends notController {
 
     showErrorMessage(res) {
         this.error && this.error(res);
+        this.app &&
+            this.app.emit("error", {
+                title: "Произошла ошибка",
+                message: res.message ? res.message : UICommon.ERROR_DEFAULT,
+            });
         CRUDMessage.error(
             this,
             "Произошла ошибка",
@@ -316,6 +321,7 @@ class notCRUD extends notController {
     }
 
     showSuccessMessage(title, message) {
+        this.app && this.app.emit("success", { title, message });
         CRUDMessage.success(this, title, message);
     }
 
