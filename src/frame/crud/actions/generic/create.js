@@ -29,12 +29,21 @@ class CRUDGenericActionCreate extends CRUDGenericAction {
         return ACTION;
     }
 
+    /**
+     *
+     * @param {import('../../controller.crud')} controller
+     * @param {any}                         params
+     * @returns {import('not-node/src/types').notAppResponse}
+     */
     static loadData(controller, params) {
         let defData = controller.createDefault();
         if (defData.getData) {
             defData = defData.getData();
         }
-        return defData;
+        return {
+            status: "ok",
+            result: defData,
+        };
     }
 
     static getTitle(contoller, params, response) {
