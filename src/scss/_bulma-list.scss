@@ -1,5 +1,7 @@
+@import "bulma/sass/utilities/mixins.scss";
+
 $list-color: $text !default;
-$list-item-description-color: $text-light !default;
+$list-item-description-color: $text-weak !default;
 $list-item-divider-color: $border !default;
 $list-item-hover-color: $scheme-main-bis !default;
 $list-item-image-margin: 0.75em !default;
@@ -40,7 +42,7 @@ $list-item-title-weight: $weight-semibold !default;
   }
   &.selectable-items .list-item:hover,
   &.selectable-items .list-item.is-active{
-    background-color: $info-light;
+    background-color: $info;
   }
 }
 
@@ -63,7 +65,7 @@ $list-item-title-weight: $weight-semibold !default;
     border-bottom: 1px solid $list-item-divider-color;
   }
   @include mobile {
-    .list:not(.has-overflow-ellipsis) & {
+    .list:not(.has-overflow-ellipsis) &{
       flex-wrap: wrap;
     }
   }

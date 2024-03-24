@@ -1,6 +1,6 @@
 <script>
     import { LOCALE } from "../../locale/index";
-    import "bulma-slider/src/sass/index.sass";
+    //import "bulma-slider/src/sass/index.sass";
 
     import UICommon from "../common.js";
     import ErrorsList from "../various/ui.errors.list.svelte";
