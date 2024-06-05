@@ -17,7 +17,7 @@ import UIRangeLogarithmic from "./ui.range.logarithmic.svelte";
 import UISelectFromModel from "./ui.select.from.model.svelte";
 import UISelect from "./ui.select.svelte";
 import UISwitch from "./ui.switch.svelte";
-import UITag from "./ui.tag.svelte";
+import UITagSelect from "./ui.tag.select.svelte";
 import UITelephone from "./ui.telephone.svelte";
 import UITextarea from "./ui.textarea.svelte";
 import UITextfield from "./ui.textfield.svelte";
@@ -42,7 +42,7 @@ export {
     UISelectFromModel,
     UISelect,
     UISwitch,
-    UITag,
+    UITagSelect,
     UITelephone,
     UITextarea,
     UITextfield,
