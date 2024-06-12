@@ -3,6 +3,40 @@ import { notTable } from "../../components";
 const ACTION = "list";
 
 export default class CRUDActionList {
+    static createActionsButtons(
+        controller,
+        value,
+        delay = 0,
+        actions = ["details", "update", "delete"]
+    ) {
+        const ACTIONS = {
+            details: {
+                action: () => controller.goDetails(value, delay),
+                title: "Подробнее",
+                size: "small",
+            },
+            update: {
+                action: () => controller.goUpdate(value, delay),
+                title: "Изменить",
+                size: "small",
+            },
+            delete: {
+                action: () => controller.goDelete(value, delay),
+                color: "danger",
+                title: "Удалить",
+                size: "small",
+                style: "outlined",
+            },
+        };
+        const actionsButtons = [];
+        if (Array.isArray(actions)) {
+            actions.forEach((actionName) =>
+                actionsButtons.push(ACTIONS[actionName])
+            );
+        }
+        return actionsButtons;
+    }
+
     static async run(controller, params) {
         try {
             await controller.preloadVariants(ACTION);
