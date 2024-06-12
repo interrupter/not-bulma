@@ -7,7 +7,9 @@ export default class CRUDActionList {
         controller,
         value,
         delay = 0,
-        actions = ["details", "update", "delete"]
+        actions = ["details", "update", "delete"],
+        prepend = [],
+        append = []
     ) {
         const ACTIONS = {
             details: {
@@ -28,12 +30,13 @@ export default class CRUDActionList {
                 style: "outlined",
             },
         };
-        const actionsButtons = [];
+        const actionsButtons = [...prepend];
         if (Array.isArray(actions)) {
             actions.forEach((actionName) =>
                 actionsButtons.push(ACTIONS[actionName])
             );
         }
+        actionsButtons.push(...append);
         return actionsButtons;
     }
 
