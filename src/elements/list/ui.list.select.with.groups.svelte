@@ -93,7 +93,7 @@
     };
     export let uiOff = (item) => {
         item.color = false;
-        item.outlined = true;
+        item.outlined = false;
     };
 
     onMount(() => {
