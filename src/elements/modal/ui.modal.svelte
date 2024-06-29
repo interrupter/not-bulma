@@ -7,7 +7,6 @@
     import UIContent from "../block/ui.content.svelte";
 
     import UITitle from "../various/ui.title.svelte";
-    import UIButton from "../button/ui.button.svelte";
     import UIButtonsRow from "../button/ui.buttons.row.svelte";
 
     export let buttonsPosition = "bottom";
@@ -37,26 +36,18 @@
                 <span class="title">{$LOCALE[WAITING_TEXT]}</span>
             </div>
             {#if buttonsPosition === "top"}
-                <UIButtonsRow>
-                    {#if closeButton}
-                        <slot name="left"><UIButton {...closeButton} /></slot>
-                    {/if}
-                    {#if applyButton}
-                        <slot name="right"><UIButton {...applyButton} /></slot>
-                    {/if}
-                </UIButtonsRow>
+                <UIButtonsRow
+                    left={closeButton ? [closeButton] : []}
+                    right={applyButton ? [applyButton] : []}
+                ></UIButtonsRow>
             {/if}
             <slot />
 
             {#if buttonsPosition === "bottom"}
-                <UIButtonsRow>
-                    {#if closeButton}
-                        <slot name="left"><UIButton {...closeButton} /></slot>
-                    {/if}
-                    {#if applyButton}
-                        <slot name="right"><UIButton {...applyButton} /></slot>
-                    {/if}
-                </UIButtonsRow>
+                <UIButtonsRow
+                    left={closeButton ? [closeButton] : []}
+                    right={applyButton ? [applyButton] : []}
+                ></UIButtonsRow>
             {/if}
         </UIContent>
     </UIBox>
