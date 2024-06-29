@@ -1,5 +1,4 @@
 <script>
-    import { set } from "not-path";
     import UIButton from "./ui.button.svelte";
     import { createEventDispatcher } from "svelte";
 
@@ -34,21 +33,24 @@
     };
 
     export let action = () => {
-        selected = !selected;
-        return selected;
+        return !selected;
     };
 
     export let value;
     export let selected = false;
 
     function onClick(event) {
-        action(event, value, selected);
+        selected = action(event, value, selected);
         dispatch("click", { event, value, selected });
     }
 
     let uiElement;
 
-    $: selected ? uiElement.$set(uiOn()) : uiElement.$set(uiOff());
+    $: {
+        if (uiElement) {
+            selected ? uiElement.$set(uiOn()) : uiElement.$set(uiOff());
+        }
+    }
 </script>
 
 <UIButton
