@@ -5,6 +5,15 @@ import CRUDGenericAction from "./action";
  * @class
  */
 class CRUDGenericActionRead extends CRUDGenericAction {
+    static tweakUIOptions(options) {
+        options.options.ui = {
+            submit: {
+                enabled: false,
+            },
+        };
+        return options;
+    }
+
     /**
      * Performing action preparation and renders UI
      * @param {object} controller   instance of controller
@@ -35,7 +44,11 @@ class CRUDGenericActionRead extends CRUDGenericAction {
             const uiComponent = this.UIConstructor;
             this.setUI(
                 controller,
-                new uiComponent(this.prepareUIOptions(controller, response))
+                new uiComponent(
+                    this.tweakUIOptions(
+                        this.prepareUIOptions(controller, response)
+                    )
+                )
             );
             //bind events to UI
             this.bindUIEvents(controller, params, response);

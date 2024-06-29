@@ -141,7 +141,11 @@ class CRUDGenericActionUpdate extends CRUDGenericAction {
             const uiComponent = this.UIConstructor;
             this.setUI(
                 controller,
-                new uiComponent(this.prepareUIOptions(controller, response))
+                new uiComponent(
+                    this.tweakUIOptions(
+                        this.prepareUIOptions(controller, response)
+                    )
+                )
             );
             //bind events to UI
             this.bindUIEvents(controller, params, response);

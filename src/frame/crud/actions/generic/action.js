@@ -287,6 +287,10 @@ class CRUDGenericAction {
         return false;
     }
 
+    static tweakUIOptions(options) {
+        return options;
+    }
+
     /**
      * Performing action preparation and renders UI
      * @param {object} controller   instance of controller
@@ -317,7 +321,11 @@ class CRUDGenericAction {
             const uiComponent = this.UIConstructor;
             this.setUI(
                 controller,
-                new uiComponent(this.prepareUIOptions(controller, response))
+                new uiComponent(
+                    this.tweakUIOptions(
+                        this.prepareUIOptions(controller, response)
+                    )
+                )
             );
             //bind events to UI
             this.bindUIEvents(controller, params, response);

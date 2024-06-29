@@ -3,6 +3,10 @@ import { notTable } from "../../components";
 const ACTION = "list";
 
 export default class CRUDActionList {
+    static tweakUIOptions(options) {
+        return options;
+    }
+
     static createActionsButtons(
         controller,
         value,
@@ -58,7 +62,7 @@ export default class CRUDActionList {
             }
 
             controller.ui[ACTION] = new notTable(
-                CRUDActionList.prepareOptions(controller)
+                this.tweakUIOptions(CRUDActionList.prepareOptions(controller))
             );
 
             controller.emit(
