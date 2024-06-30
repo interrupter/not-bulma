@@ -24,6 +24,7 @@
     export let value;
 
     function onClick(event) {
+        event.stopPropagation();
         dispatch("click", { event, value });
         return action(event, value);
     }

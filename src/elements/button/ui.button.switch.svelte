@@ -41,7 +41,15 @@
 
     function onClick(event) {
         selected = action(event, value, selected);
-        dispatch("click", { event, value, selected });
+        dispatch("click", { value, selected });
+        onChange();
+    }
+
+    function onChange() {
+        dispatch("change", {
+            value,
+            selected,
+        });
     }
 
     let uiElement;

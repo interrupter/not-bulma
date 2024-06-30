@@ -7,6 +7,7 @@
     export let centered = false;
     export let right = false;
     export let classes = "";
+    export let buttonComponent = UIButton;
 
     export let action = (e) => {
         dispatch("click", e);
@@ -18,9 +19,11 @@
         ? 'is-right'
         : ''} {classes}"
 >
-    {#each values as item (item)}
-        <UIButton
+    {#each values as item (item.id)}
+        <svelte:component
+            this={buttonComponent}
             {...item}
+            bind:value={item.value}
             action={item.action ? item.action : action}
             on:click
         />

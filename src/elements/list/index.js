@@ -13,6 +13,8 @@ import UIListEmptyPlaceholder from "./ui.list.empty.placeholder.svelte";
 import UIListSelect from "./ui.list.select.svelte";
 import UIListSelectWithGroups from "./ui.list.select.with.groups.svelte";
 
+import UIListSelectButtonsWithGroups from "./ui.list.select.buttons.with.groups.svelte";
+
 export {
     UIEndlessListNavigation,
     UIEndlessListSimpleItem,
@@ -22,4 +24,5 @@ export {
     UIListEmptyPlaceholder,
     UIListSelect,
     UIListSelectWithGroups,
+    UIListSelectButtonsWithGroups,
 };
