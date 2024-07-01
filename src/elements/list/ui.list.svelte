@@ -6,7 +6,9 @@
 
     export let classes = "";
     export let items = [];
+
     export let actions = [];
+    export let links = [];
 
     export let actionsVisible = false;
     export let itemsHoverable = false;
@@ -56,6 +58,7 @@
             {imageComponent}
             {imageComponentProps}
             {actions}
+            {links}
             on:change
             on:click
             on:clickContent

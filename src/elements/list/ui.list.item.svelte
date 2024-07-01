@@ -4,11 +4,14 @@
 
     import UITitle from "../various/ui.title.svelte";
     import UIButtons from "../button/ui.buttons.svelte";
+    import UILinks from "../link/ui.links.svelte";
 
     export let title;
     export let description;
     export let actions = [];
+    export let links = [];
     export let listActions = [];
+    export let listLinks = [];
     export let classes = "";
     export let commonClasses = "";
     export let image = "";
@@ -33,10 +36,14 @@
     function onClick() {
         dispatch("click", value);
     }
+
     let allActions = [];
     $: allActions = [...actions, ...listActions].map((btn) => {
         return { ...btn, action: () => btn.action(value) };
     });
+
+    let allLinks = [];
+    $: allLinks = [...links, ...listLinks];
 </script>
 
 <div
@@ -184,9 +191,14 @@
             </div>
         {/if}
     </div>
+
     {#if allActions && allActions.length}
         <div class="list-item-controls">
             <UIButtons values={allActions} right={true} />
         </div>
+    {/if}
+
+    {#if allLinks && allLinks.length}
+        <UILinks values={allLinks} right={true} />
     {/if}
 </div>

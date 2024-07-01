@@ -3,7 +3,7 @@
     export let title = "";
     export let url = "";
     export let download;
-    export let target = "blank";
+    export let target = "_blank";
     export let light = false;
     export let loading = false;
     export let raised = false;
@@ -17,6 +17,7 @@
     export let classes = "button ";
     export let icon = false;
     export let iconSide = "right";
+
     export let action = () => {
         return true;
     };
@@ -32,7 +33,7 @@
 
 <a
     on:click={action}
-    target="_{target}"
+    {target}
     href={url}
     {download}
     class="{classes} {state ? `is-${state}` : ''} {inverted

@@ -4,6 +4,7 @@
     export let idFieldName = "id";
     export let items = [];
     export let actions = [];
+    export let links = [];
 
     export let itemClasses = "";
 
@@ -30,6 +31,7 @@
         {imageComponentProps}
         {...item}
         listActions={actions}
+        listLinks={links}
         commonClasses={itemClasses}
         bind:value={item}
         {index}
