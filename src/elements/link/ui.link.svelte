@@ -2,6 +2,7 @@
     import { LOCALE } from "../../locale";
     export let title = "";
     export let url = "";
+    export let download;
     export let target = "blank";
     export let light = false;
     export let loading = false;
@@ -33,6 +34,7 @@
     on:click={action}
     target="_{target}"
     href={url}
+    {download}
     class="{classes} {state ? `is-${state}` : ''} {inverted
         ? `is-inverted`
         : ''} {outlined ? `is-outlined` : ''} {raised
