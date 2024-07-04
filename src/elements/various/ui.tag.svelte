@@ -26,9 +26,13 @@
     export let register = notCommon.registerWidgetEvents.bind(notCommon);
     //
     export let onUpdate = (data) => {
-        if (Object.prototype.hasOwnProperty.call(data, "title")) {
+        if (Object.hasOwn(data, "title")) {
             title = data.title;
         }
+    };
+
+    export let action = () => {
+        return true;
     };
 
     function getStandartUpdateEventName() {
@@ -36,12 +40,7 @@
     }
 
     onMount(() => {
-        if (
-            !Object.prototype.hasOwnProperty.call(
-                events,
-                getStandartUpdateEventName()
-            )
-        ) {
+        if (!Object.hasOwn(events, getStandartUpdateEventName())) {
             events[getStandartUpdateEventName()] = onUpdate;
         }
         register(events);
@@ -50,6 +49,7 @@
 
 {#if title}
     <span
+        on:click={action ? action : undefined}
         id="tag-{id}"
         class="
   tag

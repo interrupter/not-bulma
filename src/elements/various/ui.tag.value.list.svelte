@@ -1,9 +1,15 @@
 <script>
-    import UITagValue from "./ui.tag.value.svelte";
+    import UITagValue from "not-bulma/src/elements/various/ui.tag.value.svelte";
 
     export let value = [];
 </script>
 
-{#each value as tagValueProps}
-    <UITagValue {...tagValueProps} />
-{/each}
+{#if value.length}
+    <div class="field is-grouped is-grouped-multiline">
+        {#each value as tagValueProps}
+            <div class="control">
+                <UITagValue {...tagValueProps} />
+            </div>
+        {/each}
+    </div>
+{/if}

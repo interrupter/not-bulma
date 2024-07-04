@@ -35,12 +35,14 @@
             <div class="pageloader {loading ? 'is-active' : ''}">
                 <span class="title">{$LOCALE[WAITING_TEXT]}</span>
             </div>
+
             {#if buttonsPosition === "top"}
                 <UIButtonsRow
                     left={closeButton ? [closeButton] : []}
                     right={applyButton ? [applyButton] : []}
                 ></UIButtonsRow>
             {/if}
+
             <slot />
 
             {#if buttonsPosition === "bottom"}
