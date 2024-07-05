@@ -158,8 +158,7 @@ class notCommon {
     static isError(e) {
         return (
             e instanceof Error ||
-            (Object.prototype.hasOwnProperty.call(e, "status") &&
-                e.status === "error")
+            (Object.hasOwn(e, "status") && e.status === "error")
         );
     }
 
@@ -195,7 +194,7 @@ class notCommon {
      *  @return {boolean}          if object contains field with name
      **/
     static objHas(obj, name) {
-        return Object.prototype.hasOwnProperty.call(obj, name);
+        return Object.hasOwn(obj, name);
     }
 
     /**
@@ -575,7 +574,7 @@ class notCommon {
                 continue;
             }
             if (typeof notCommon.get(`absorb.${prop}`) === "function") {
-                if (!Object.prototype.hasOwnProperty.call(targets, prop)) {
+                if (!Object.hasOwn(targets, prop)) {
                     targets[prop] = {};
                     notCommon.log(
                         `WARNING: no accamulator object provided for '${prop}' collection`
@@ -583,18 +582,13 @@ class notCommon {
                 }
                 notCommon.get(`absorb.${prop}`)(targets[prop], mod[prop]);
             } else if (prop.indexOf("nc") === 0) {
-                if (
-                    !Object.prototype.hasOwnProperty.call(
-                        defaultConf,
-                        "controllers"
-                    )
-                ) {
+                if (!Object.hasOwn(defaultConf, "controllers")) {
                     defaultConf.controllers = {};
                 }
                 defaultConf.controllers[prop] = mod[prop];
             } else {
                 //in case of some other stuff presented, isolating it in special var
-                if (!Object.prototype.hasOwnProperty.call(window, "notEnv")) {
+                if (!Object.hasOwn(window, "notEnv")) {
                     // @ts-ignore
                     window.notEnv = {};
                 }
@@ -606,7 +600,7 @@ class notCommon {
     }
 
     static defineIfNotExists(obj, key, defaultValue) {
-        if (!Object.prototype.hasOwnProperty.call(obj, key)) {
+        if (!Object.hasOwn(obj, key)) {
             obj[key] = defaultValue;
         }
     }
@@ -618,16 +612,16 @@ class notCommon {
     }
 
     static get(key) {
-        return Object.prototype.hasOwnProperty.call(notCommon.registry, key)
+        return Object.hasOwn(notCommon.registry, key)
             ? notCommon.registry[key]
             : null;
     }
 
-    static moveItem(array, old_index, new_index) {        
-        const inRange = num => num < array.length && num > -1;
-        if(inRange(new_index)&&inRange(old_index)){
+    static moveItem(array, old_index, new_index) {
+        const inRange = (num) => num < array.length && num > -1;
+        if (inRange(new_index) && inRange(old_index)) {
             array.splice(new_index, 0, array.splice(old_index, 1)[0]);
-        }        
+        }
     }
 
     static stripProxy(obj) {
@@ -639,7 +633,7 @@ class notCommon {
                     obj = Object.assign({}, obj);
                 }
                 for (let t in obj) {
-                    if (Object.prototype.hasOwnProperty.call(obj, t)) {
+                    if (Object.hasOwn(obj, t)) {
                         obj[t] = notCommon.stripProxy(obj[t]);
                     }
                 }
@@ -712,7 +706,7 @@ class notCommon {
 function absorbServices(target, src) {
     if (target) {
         for (let serv in src) {
-            if (Object.prototype.hasOwnProperty.call(target, serv)) {
+            if (Object.hasOwn(target, serv)) {
                 notCommon.logError(`services property duplication ${serv}`);
             }
             target[serv] = src[serv];
@@ -721,7 +715,7 @@ function absorbServices(target, src) {
 }
 
 function extendWSClient(wcs, wscName, wscOptions) {
-    if (!Object.prototype.hasOwnProperty.call(wcs, wscName)) {
+    if (!Object.hasOwn(wcs, wscName)) {
         wcs[wscName] = {
             connection: {},
             router: {
@@ -731,15 +725,10 @@ function extendWSClient(wcs, wscName, wscOptions) {
         };
     }
     let target = wcs[wscName];
-    if (Object.prototype.hasOwnProperty.call(wscOptions, "router")) {
-        if (Object.prototype.hasOwnProperty.call(wscOptions.router, "routes")) {
+    if (Object.hasOwn(wscOptions, "router")) {
+        if (Object.hasOwn(wscOptions.router, "routes")) {
             for (let routeType in wscOptions.router.routes) {
-                if (
-                    !Object.prototype.hasOwnProperty.call(
-                        target.router.routes,
-                        routeType
-                    )
-                ) {
+                if (!Object.hasOwn(target.router.routes, routeType)) {
                     target.router.routes[routeType] = {};
                 }
                 Object.assign(target.router.routes[routeType], {
@@ -748,14 +737,14 @@ function extendWSClient(wcs, wscName, wscOptions) {
             }
         }
     }
-    if (Object.prototype.hasOwnProperty.call(wscOptions, "messenger")) {
+    if (Object.hasOwn(wscOptions, "messenger")) {
         Object.assign(target.messenger, { ...wscOptions.messenger });
     }
-    if (Object.prototype.hasOwnProperty.call(wscOptions, "connection")) {
+    if (Object.hasOwn(wscOptions, "connection")) {
         Object.assign(target.connection, { ...wscOptions.connection });
     }
     for (let t of ["name", "getToken", "logger", "identity", "credentials"]) {
-        if (Object.prototype.hasOwnProperty.call(wscOptions, t)) {
+        if (Object.hasOwn(wscOptions, t)) {
             target[t] = wscOptions[t];
         }
     }
@@ -772,7 +761,7 @@ function absorbWSC(target, src) {
 function absorbUIs(target, src) {
     if (target) {
         for (let ui in src) {
-            if (Object.prototype.hasOwnProperty.call(target, ui)) {
+            if (Object.hasOwn(target, ui)) {
                 notCommon.logError(`uis property duplication ${ui}`);
             }
             target[ui] = src[ui];
@@ -783,7 +772,7 @@ function absorbUIs(target, src) {
 function absorbFields(target, src) {
     if (target) {
         for (let ui in src) {
-            if (Object.prototype.hasOwnProperty.call(target, ui)) {
+            if (Object.hasOwn(target, ui)) {
                 notCommon.logError(`fields property duplication ${ui}`);
             }
             target[ui] = src[ui];

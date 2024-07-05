@@ -68,7 +68,7 @@ class notRecord extends notBase {
         }
         if (methods) {
             for (let t in methods) {
-                if (Object.prototype.hasOwnProperty.call(methods, t)) {
+                if (Object.hasOwn(methods, t)) {
                     this[t] = methods[t];
                 }
             }
@@ -93,11 +93,7 @@ class notRecord extends notBase {
     }
 
     actionUp(index) {
-        if (
-            !Object.prototype.hasOwnProperty.call(this, [
-                DEFAULT_ACTION_PREFIX + index,
-            ])
-        ) {
+        if (!Object.hasOwn(this, [DEFAULT_ACTION_PREFIX + index])) {
             this[DEFAULT_ACTION_PREFIX + index] = (...params) =>
                 this[META_INTERFACE].request(this, index, ...params);
         }

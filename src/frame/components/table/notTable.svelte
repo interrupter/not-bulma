@@ -43,12 +43,7 @@
                     if (!items.some((item) => getItemId(item) === itemId)) {
                         delete selected[itemId];
                     } else {
-                        if (
-                            !Object.prototype.hasOwnProperty.call(
-                                selected,
-                                itemId
-                            )
-                        ) {
+                        if (!Object.hasOwn(selected, itemId)) {
                             selected[itemId] = false;
                         }
                     }
