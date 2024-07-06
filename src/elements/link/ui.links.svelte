@@ -4,16 +4,29 @@
     export let classes = "";
     export let centered = false;
     export let right = false;
+    export let joined = true;
 </script>
 
-<div
-    class="field has-addons {centered ? 'is-centered' : ''} {right
-        ? 'is-right'
-        : ''} {classes}"
->
-    <p class="control">
+{#if joined}
+    <div
+        class="field has-addons {centered ? 'is-centered' : ''} {right
+            ? 'is-right'
+            : ''} {classes}"
+    >
+        <p class="control">
+            {#each values as item (item.id)}
+                <UILink {...item} />
+            {/each}
+        </p>
+    </div>
+{:else}
+    <div
+        class="buttons {centered ? 'is-centered' : ''} {right
+            ? 'is-right'
+            : ''} {classes}"
+    >
         {#each values as item (item.id)}
             <UILink {...item} />
         {/each}
-    </p>
-</div>
+    </div>
+{/if}
