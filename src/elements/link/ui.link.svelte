@@ -1,20 +1,25 @@
 <script>
     import { LOCALE } from "../../locale";
+    //attributes
     export let title = "";
     export let url = "";
     export let download;
     export let target = "_blank";
+    //visual
     export let light = false;
     export let loading = false;
     export let raised = false;
     export let outlined = false;
     export let inverted = false;
     export let rounded = false;
+    export let button = true;
     export let state = "";
     export let type = "";
     export let color = "";
     export let size = "";
-    export let classes = "button ";
+    export let classes = "";
+
+    //icons
     export let icon = false;
     export let iconSide = "right";
 
@@ -24,6 +29,7 @@
 
     $: {
         classes =
+            (button ? "button " : "") +
             (state && state.length > 0 ? ` is-${state} ` : "") +
             (light ? ` is-light ` : "") +
             (type && type.length > 0 ? ` is-${type} ` : "") +

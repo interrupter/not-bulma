@@ -18,9 +18,11 @@
     export let classes = "";
     export let icon = false;
     export let iconSide = "right";
+
     export let action = () => {
         return true;
     };
+
     export let value;
 
     function onClick(event) {
