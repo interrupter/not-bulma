@@ -6,6 +6,7 @@
     export let size = 64;
     export let contained = true;
     export let covered = true;
+    export let classes = "";
 
     $: sizeStyle = isNaN(size) ? `is-${size}` : `is-${size}x${size}`;
     $: containedStyle = contained ? "is-contained" : "";
@@ -14,13 +15,15 @@
 
 {#if urlFull}
     <a href={urlFull} alt={title} on:click>
-        <figure class="image {sizeStyle} {containedStyle} {coveredStyle}">
+        <figure
+            class="image {sizeStyle} {containedStyle} {coveredStyle} {classes}"
+        >
             <img class="" alt={title} src={url} crossOrigin={cors} />
         </figure>
     </a>
 {:else}
     <figure
-        class="image {sizeStyle} {containedStyle} {coveredStyle}"
+        class="image {sizeStyle} {containedStyle} {coveredStyle} {classes}"
         on:click
         on:keyup
         role="button"
