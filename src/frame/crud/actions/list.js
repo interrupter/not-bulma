@@ -3,6 +3,16 @@ import { notTable } from "../../components";
 const ACTION = "list";
 
 export default class CRUDActionList {
+    static tweakActionsList(controller, ACTIONS_LIST) {
+        if (controller.getOptions(`${ACTION}.createAction`, true)) {
+            ACTIONS_LIST.push({
+                title: "Создать",
+                action: () => controller.goCreate(),
+            });
+        }
+        return ACTIONS_LIST;
+    }
+
     static tweakUIOptions(options) {
         return options;
     }
@@ -46,6 +56,9 @@ export default class CRUDActionList {
 
     static async run(controller, params) {
         try {
+            //indicating that we are working
+            controller.renderLoadingScreen && controller.renderLoadingScreen();
+
             await controller.preloadVariants(ACTION);
 
             controller.setBreadcrumbs([
@@ -97,17 +110,15 @@ export default class CRUDActionList {
             filter: undefined,
             ui: undefined,
         };
+        //forming actions buttons list
+        let ACTIONS_LIST = [...controller.getOptions(`${ACTION}.actions`, [])];
+        ACTIONS_LIST = this.tweakActionsList(controller, ACTIONS_LIST);
+        //
         const TABLE_OPTIONS = {
             options: {
                 targetEl: controller.getContainerInnerElement(),
                 endless: false,
-                actions: [
-                    {
-                        title: "Создать",
-                        action: () => controller.goCreate(),
-                    },
-                    ...controller.getOptions(`${ACTION}.actions`, []),
-                ],
+                actions: ACTIONS_LIST,
             },
         };
         Object.keys(DEFAULT_OPTIONS_TABLE).forEach((key) => {

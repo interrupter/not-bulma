@@ -3,6 +3,8 @@ import { say } from "../../locale";
 
 import notBreadcrumbs from "../components/breadcrumbs";
 
+import UILoader from "../../elements/various/ui.loader.svelte";
+
 import notController from "../controller";
 import notCommon from "../common";
 
@@ -20,6 +22,7 @@ class notCRUD extends notController {
     #preloader = CRUDVariantsPreloader;
 
     TITLE_FIELDS_PRIORITY = TITLE_FIELDS_PRIORITY;
+
     static ERROR_DEFAULT = UICommon.ERROR_DEFAULT;
 
     TOP_CLASS = ["box"];
@@ -351,6 +354,20 @@ class notCRUD extends notController {
 
     getActionUI() {
         return this.ui[this.getCurrentAction()];
+    }
+
+    renderLoadingScreen() {
+        this.setUI("loading_screen", this.createLoaderUI());
+    }
+
+    createLoaderUI() {
+        return new UILoader({
+            target: this.getContainerInnerElement(),
+            props: {
+                loading: true,
+                title: "",
+            },
+        });
     }
 }
 

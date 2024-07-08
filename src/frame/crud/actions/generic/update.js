@@ -125,6 +125,8 @@ class CRUDGenericActionUpdate extends CRUDGenericAction {
             if (this.isUIRendered(controller)) {
                 return;
             }
+            //indicating that we are working
+            controller.renderLoadingScreen && controller.renderLoadingScreen();
             //preloading form variants
             await controller.preloadVariants(this.ACTION);
             //setting initial state of breadcrumbs tail
