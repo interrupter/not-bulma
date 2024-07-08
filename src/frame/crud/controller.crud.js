@@ -26,6 +26,8 @@ class notCRUD extends notController {
     MAIN_CLASS = ["box"];
     BOTTOM_CLASS = ["box"];
 
+    WS_CHECK_INTERVAL = 200;
+
     constructor(
         app,
         name,
@@ -80,6 +82,23 @@ class notCRUD extends notController {
             navigate: (url) => this.app?.getWorking("router").navigate(url),
         });
         this.route(this.getOptions("params"));
+    }
+
+    startWhenWSClientReady() {
+        if (this.app?.getWSClient()) {
+            if (this.app?.getWSClient().isConnected()) {
+                this.start();
+            } else {
+                this.app
+                    .getWSClient()
+                    .once("connected", this.startWhenWSClientReady.bind(this));
+            }
+        } else {
+            setTimeout(
+                () => this.startWhenWSClientReady(),
+                this.WS_CHECK_INTERVAL
+            );
+        }
     }
 
     setBreadcrumbs(tail) {
