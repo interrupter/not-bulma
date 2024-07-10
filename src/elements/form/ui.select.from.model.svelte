@@ -6,6 +6,7 @@
     import { DEFAULT_STATUS_SUCCESS } from "../../frame/const";
 
     import { onMount, createEventDispatcher } from "svelte";
+    const dispatch = createEventDispatcher();
 
     export let inputStarted = false;
     export let value;
@@ -29,6 +30,7 @@
     export let errors = false;
     export let formErrors = false;
     export let formLevelError = false;
+    export let returnVariant = false;
 
     function argumentsSetProvided() {
         return modelName && actionName && actionFilter;
@@ -62,6 +64,17 @@
             }
         }
     });
+
+    function onChange(e) {
+        if (returnVariant) {
+            dispatch("change", {
+                ...e.detail,
+                value: variants.find((itm) => itm.id === e.detail.value),
+            });
+        } else {
+            dispatch("change", e.detail);
+        }
+    }
 </script>
 
 <UISelect
@@ -81,5 +94,5 @@
     {errors}
     {formErrors}
     {formLevelError}
-    on:change
+    on:change={onChange}
 />
