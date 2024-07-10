@@ -5,6 +5,7 @@
     export let url = "";
     export let download;
     export let target = "_blank";
+    export let rel;
     //visual
     export let light = false;
     export let loading = false;
@@ -42,6 +43,7 @@
     {target}
     href={url}
     {download}
+    {rel}
     class="{classes} {state ? `is-${state}` : ''} {inverted
         ? `is-inverted`
         : ''} {outlined ? `is-outlined` : ''} {raised
