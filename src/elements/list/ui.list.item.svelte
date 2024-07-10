@@ -55,8 +55,8 @@
         ? 'list-item-first'
         : ''}  {`list-item-at-${index}`} {`list-item-` +
         (index % 2 ? 'odd' : 'even')}"
-    on:click|preventDefault={onClick}
-    on:keyup|preventDefault={(e) => {
+    on:click={onClick}
+    on:keyup={(e) => {
         if (e && e.key == "Enter") {
             onClick();
         }
@@ -192,13 +192,14 @@
         {/if}
     </div>
 
-    {#if allActions && allActions.length}
+    {#if (allActions && allActions.length) || (allLinks && allLinks.length)}
         <div class="list-item-controls">
-            <UIButtons values={allActions} right={true} />
+            {#if allActions && allActions.length}
+                <UIButtons values={allActions} right={true} />
+            {/if}
+            {#if allLinks && allLinks.length}
+                <UILinks values={allLinks} right={true} />
+            {/if}
         </div>
-    {/if}
-
-    {#if allLinks && allLinks.length}
-        <UILinks values={allLinks} right={true} />
     {/if}
 </div>
