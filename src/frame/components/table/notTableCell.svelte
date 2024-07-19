@@ -6,7 +6,16 @@
 
     onMount(() => {
         if (typeof field.type === "undefined") {
-            title = notPath.get(field.path, item, helpers);
+            if (Object.hasOwn(field, "titlePath")) {
+                title = notPath.get(field.titlePath, item, helpers);
+            } else if (
+                Object.hasOwn("titleComposer") &&
+                typeof field.titleComposer === "function"
+            ) {
+                title = field.titleComposer(item, helpers);
+            } else {
+                title = notPath.get(field.path, item, helpers);
+            }
         }
     });
 
