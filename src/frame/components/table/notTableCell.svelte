@@ -9,7 +9,7 @@
             if (Object.hasOwn(field, "titlePath")) {
                 title = notPath.get(field.titlePath, item, helpers);
             } else if (
-                Object.hasOwn("titleComposer") &&
+                Object.hasOwn(field, "titleComposer") &&
                 typeof field.titleComposer === "function"
             ) {
                 title = field.titleComposer(item, helpers);
