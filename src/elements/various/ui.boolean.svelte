@@ -5,6 +5,7 @@
     export let LC_FALSE = "not-node:booleans_false";
 
     export let value;
+    export let inverted = false;
 
     const FALSE_VALUE = {
         title: LC_FALSE,
@@ -15,7 +16,11 @@
         color: "success",
     };
 
-    $: tagValue = value ? TRUE_VALUE : FALSE_VALUE;
+    const variants = [FALSE_VALUE, TRUE_VALUE];
+
+    $: tagValue = value
+        ? variants.at(1 + (inverted ? 1 : 0))
+        : variants.at(0 + (inverted ? 1 : 0));
 </script>
 
 <UITag {...tagValue} />

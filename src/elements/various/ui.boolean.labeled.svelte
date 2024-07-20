@@ -4,6 +4,7 @@
 
     export let value;
     export let label;
+    export let inverted = false;
 </script>
 
-<span class="label">{$LOCALE[label]}: <UIBoolean {value} /></span>
+<span class="label">{$LOCALE[label]}: <UIBoolean {value} {inverted} /></span>
