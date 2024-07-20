@@ -1,14 +1,21 @@
 <script>
-    import { LOCALE } from "../../locale";
+    import UITag from "./ui.tag.svelte";
 
     export let LC_TRUE = "not-node:booleans_true";
     export let LC_FALSE = "not-node:booleans_false";
 
     export let value;
+
+    const FALSE_VALUE = {
+        title: LC_FALSE,
+        color: "danger",
+    };
+    const TRUE_VALUE = {
+        title: LC_TRUE,
+        color: "success",
+    };
+
+    $: tagValue = value ? TRUE_VALUE : FALSE_VALUE;
 </script>
 
-{#if value}
-    <span class="tag is-success">{$LOCALE[LC_TRUE]}</span>
-{:else}
-    <span class="tag is-danger">{$LOCALE[LC_FALSE]}</span>
-{/if}
+<UITag {...tagValue} />

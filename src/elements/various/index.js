@@ -1,4 +1,5 @@
 import UIBoolean from "./ui.boolean.svelte";
+import UIBooleanLabeled from "./ui.boolean.labeled.svelte";
 import UIBooleans from "./ui.booleans.svelte";
 import UIIndicator from "./ui.indicator.svelte";
 import UILoader from "./ui.loader.svelte";
@@ -14,6 +15,7 @@ import UISimpleSearchInput from "./ui.simple.search.input.svelte";
 
 export {
     UIBoolean,
+    UIBooleanLabeled,
     UIBooleans,
     UIErrorsList,
     UIIndicator,
