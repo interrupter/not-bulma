@@ -156,6 +156,14 @@ class notTable extends EventEmitter {
         }
     }
 
+    onSorterChange(sorter) {
+        if (sorter) {
+            this.setSorter(sorter);
+        } else {
+            this.resetSorter();
+        }
+    }
+
     onFilterChange(filter) {
         if (filter) {
             this.setFilter(filter);
@@ -229,6 +237,7 @@ class notTable extends EventEmitter {
                     search: "",
                     showSelect: this.getOptions("showSelect"),
                     showSearch: this.getOptions("showSearch"),
+                    showSort: this.getOptions("showSort"),
                     idField: this.getOptions("idField"),
                     getItemId: this.getOptions("getItemId"),
                     filter: this.getFilter(),
@@ -236,6 +245,7 @@ class notTable extends EventEmitter {
             });
         }
         this.ui.table.$on("searchChange", (e) => this.onSearchChange(e.detail));
+        this.ui.table.$on("sorterChange", (e) => this.onSorterChange(e.detail));
         this.ui.table.$on("filterChange", (e) => this.onFilterChange(e.detail));
         this.ui.table.$on("goToPage", (e) => this.goToPage(e.detail));
         this.ui.table.$on("goToNextPage", () => this.goToNext());

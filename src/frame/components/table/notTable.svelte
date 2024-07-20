@@ -7,6 +7,7 @@
 
     import { UILinks } from "../../../elements/link";
     import { UIButtons } from "../../../elements/button";
+    import UIIcon from "../../../elements/icon/ui.icon.font.svelte";
 
     import { onMount, createEventDispatcher } from "svelte";
     let dispatch = createEventDispatcher();
@@ -18,6 +19,7 @@
     export let helpers = {};
     export let state = {};
     export let filter = {};
+    export let sorter = {};
     export let fields = [];
     export let selected = {};
     export let items = [];
@@ -104,6 +106,18 @@
             return value;
         });
     }
+
+    function onFieldHeadClick(field) {
+        const propPath = field.path.substring(1);
+        if (Object.hasOwn(sorter, propPath)) {
+            sorter[propPath] = parseInt(sorter[propPath]) * -1;
+        } else {
+            sorter = {
+                [propPath]: 1,
+            };
+        }
+        dispatch("sorterChange", sorter);
+    }
 </script>
 
 {#if links.length}
@@ -153,9 +167,20 @@
             >
         {/if}
         {#each fields as field}
-            <th class={field.hideOnMobile ? "is-hidden-touch" : ""}
-                >{$LOCALE[field.title]}</th
+            {@const propPath = field.path.substring(1)}
+            <th
+                class={field.hideOnMobile ? "is-hidden-touch" : ""}
+                on:click={onFieldHeadClick(field)}
             >
+                {#if field.sortable && Object.hasOwn(sorter, propPath)}
+                    <UIIcon
+                        font={sorter[propPath] > 0 ? "sort-up" : "sort-down"}
+                        title={field.title}
+                    />
+                {:else}
+                    {$LOCALE[field.title]}
+                {/if}
+            </th>
         {/each}
     </thead>
     <tbody>
