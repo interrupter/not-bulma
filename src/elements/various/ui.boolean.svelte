@@ -9,18 +9,16 @@
 
     const FALSE_VALUE = {
         title: LC_FALSE,
-        color: "danger",
+        color: inverted ? "success" : "danger",
     };
+
     const TRUE_VALUE = {
         title: LC_TRUE,
-        color: "success",
+        color: inverted ? "danger" : "success",
     };
 
-    const variants = [FALSE_VALUE, TRUE_VALUE];
-
-    $: tagValue = value
-        ? variants.at(1 + (inverted ? 1 : 0))
-        : variants.at(0 + (inverted ? 1 : 0));
+    //if inverted === true, inverts value
+    $: tagValue = value ? TRUE_VALUE : FALSE_VALUE;
 </script>
 
 <UITag {...tagValue} />

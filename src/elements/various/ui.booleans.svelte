@@ -3,12 +3,12 @@
 
     export let values = [];
     export let inverted = false;
-    export let componentContructor = UIBoolean;
+    export let componentConstructor = UIBoolean;
 </script>
 
 {#each values as item}
     <svelte:component
-        this={componentContructor}
+        this={componentConstructor}
         {...item}
         inverted={inverted || item.inverted}
     />
