@@ -12,10 +12,14 @@
      * @property {string} [size=''] medium|large
      **/
     export let size = "";
+    /**
+     * @property {boolean} [pointable=false] medium|large
+     **/
+    export let pointable = false;
 </script>
 
 {#if title}
-    <span class="icon-text">
+    <span class="icon-text {pointable ? 'is-pointable' : ''}">
         <span class="icon {size ? `is-${size}` : ''}">
             <i
                 class="fas
@@ -29,7 +33,9 @@
     </span>
 {:else}
     <span
-        class="icon {size ? `is-${size}` : ''} {size == 'medium' ? 'fa-lg' : ''}
+        class="
+        {pointable ? 'is-pointable' : ''}
+        icon {size ? `is-${size}` : ''} {size == 'medium' ? 'fa-lg' : ''}
 {size == 'large' ? 'fa-2x' : ''}"
     >
         <i class="fas fa-{font}"></i>

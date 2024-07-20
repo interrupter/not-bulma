@@ -176,6 +176,7 @@
                     <UIIcon
                         font={sorter[propPath] > 0 ? "sort-up" : "sort-down"}
                         title={field.title}
+                        pointable={true}
                     />
                 {:else}
                     {$LOCALE[field.title]}
