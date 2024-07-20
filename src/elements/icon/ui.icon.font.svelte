@@ -19,22 +19,22 @@
 </script>
 
 {#if title}
-    <span class="icon-text {pointable ? 'is-pointable' : ''}">
+    <span class="icon-text {pointable ? 'is-clickable' : ''}">
         <span class="icon {size ? `is-${size}` : ''}">
             <i
-                class="fas
+                class="is-title-icon fas
       fa-{font}
       {size == 'medium' ? 'fa-lg' : ''}
       {size == 'large' ? 'fa-2x' : ''}
       "
             ></i>
+            <span>{$LOCALE[title]}</span>
         </span>
-        <span>{$LOCALE[title]}</span>
     </span>
 {:else}
     <span
         class="
-        {pointable ? 'is-pointable' : ''}
+        {pointable ? 'is-clickable' : ''}
         icon {size ? `is-${size}` : ''} {size == 'medium' ? 'fa-lg' : ''}
 {size == 'large' ? 'fa-2x' : ''}"
     >

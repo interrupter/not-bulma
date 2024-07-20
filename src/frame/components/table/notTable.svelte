@@ -169,7 +169,8 @@
         {#each fields as field}
             {@const propPath = field.path.substring(1)}
             <th
-                class={field.hideOnMobile ? "is-hidden-touch" : ""}
+                class={(field.hideOnMobile ? " is-hidden-touch" : "") +
+                    (field.sortable ? " is-clickable" : "")}
                 on:click={onFieldHeadClick(field)}
             >
                 {#if field.sortable && Object.hasOwn(sorter, propPath)}
