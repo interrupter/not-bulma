@@ -438,7 +438,7 @@ class notController extends notBase {
 
     /**
      *  Returns module options
-     *  @param  {string}   moduleName    name of the module which options requested
+     *  @param  {string}   [moduleName]    name of the module which options requested
      *  @return {object}
      */
 

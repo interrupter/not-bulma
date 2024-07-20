@@ -1,3 +1,4 @@
+import UIBoolean from "./ui.boolean.svelte";
 import UIBooleans from "./ui.booleans.svelte";
 import UIIndicator from "./ui.indicator.svelte";
 import UILoader from "./ui.loader.svelte";
@@ -12,6 +13,7 @@ import UIUserCard from "./ui.user.card.svelte";
 import UISimpleSearchInput from "./ui.simple.search.input.svelte";
 
 export {
+    UIBoolean,
     UIBooleans,
     UIErrorsList,
     UIIndicator,
