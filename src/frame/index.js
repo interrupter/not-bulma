@@ -49,6 +49,7 @@ import notCRUD from "./crud/controller.crud.js";
 import notCRUDRouter from "./crud/router.js";
 import notCRUDRouterPlain from "./crud/router.plain.js";
 import notCRUDRouterSwitch from "./crud/router.switch.js";
+import notServiceModelSearch from "./crud/search.service.js";
 
 const ncCRUD = notCRUD; //legacy alias
 
@@ -78,6 +79,7 @@ export {
     notCRUDRouter,
     notCRUDRouterPlain,
     notCRUDRouterSwitch,
+    notServiceModelSearch,
     notSideMenu,
     notStores,
     notTable,
