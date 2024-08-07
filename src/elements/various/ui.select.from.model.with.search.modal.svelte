@@ -26,7 +26,7 @@
     export let serviceName = "";
     /**
      * Set this
-     * @property {string}   serviceName    method of service to open modal with selector
+     * @property {string}   serviceOpenSelectorMethod    method of service to open modal with selector
      */
     export let serviceOpenSelectorMethod = "openSelector";
     /**

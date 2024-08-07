@@ -24,17 +24,6 @@ export default class notServiceModelSearch {
         delete this.app;
     }
 
-    augmentValidators(validators) {
-        return Builder(validators, () => this.getValidatorEnv());
-    }
-
-    getValidatorEnv() {
-        return {
-            config: this.app.getConfigReaderForModule(this.modelName),
-            validator: Validator,
-        };
-    }
-
     getSearchRouteName() {
         return "listAndCount";
     }

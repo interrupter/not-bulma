@@ -2,6 +2,7 @@ import UIAutocomplete from "./ui.autocomplete.svelte";
 import UICheckbox from "./ui.checkbox.svelte";
 import UICheckboxList from "./ui.checkbox.list.svelte";
 import UIColor from "./ui.color.svelte";
+import UIControl from "./ui.control.svelte";
 import UIDate from "./ui.date.svelte";
 import UIDatetimeInTZ from "./ui.datetime.in.tz.svelte";
 import UIEmail from "./ui.email.svelte";
@@ -27,6 +28,7 @@ export {
     UICheckbox,
     UICheckboxList,
     UIColor,
+    UIControl,
     UIDate,
     UIDatetimeInTZ,
     UIEmail,
