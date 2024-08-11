@@ -1,6 +1,7 @@
 import UIBoolean from "./ui.boolean.svelte";
 import UIBooleanLabeled from "./ui.boolean.labeled.svelte";
 import UIBooleans from "./ui.booleans.svelte";
+import UICensored from "./ui.censored.svelte";
 import UIIndicator from "./ui.indicator.svelte";
 import UILoader from "./ui.loader.svelte";
 import UISelectFromModelOnDemandInline from "./ui.select.from.model.on.demand.inline.svelte";
@@ -18,6 +19,7 @@ export {
     UIBoolean,
     UIBooleanLabeled,
     UIBooleans,
+    UICensored,
     UIErrorsList,
     UIIndicator,
     UILoader,
