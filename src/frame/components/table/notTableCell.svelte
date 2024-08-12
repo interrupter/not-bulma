@@ -57,7 +57,7 @@
             disabled={field.disabled}
             readonly={field.readonly}
         />
-    {:else if field.type === "component"}
+    {:else if field.component}
         <svelte:component
             this={field.component}
             id={getItemId(item)}

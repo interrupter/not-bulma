@@ -60,6 +60,7 @@
     "bulma-pageloader": "*",
     "bulma-slider": "*",
     "bulma-switch": "^2.0.4",
+    "bulma-tooltip": "^3.0.2",
     "core-js": "^3.36.1",
     "mocha": "^10.3.0",
     "not-path": "^1.0.5",
