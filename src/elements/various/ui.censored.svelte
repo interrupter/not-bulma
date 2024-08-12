@@ -8,6 +8,7 @@
     export let showIcon = "eye";
     export let hideIcon = "eye-slash";
     export let maxLength = 20;
+    export let shadowClass = "has-background-primary-90";
     export let tooltip = true;
     export let tooltipTTL = 2000;
     export let tooltipText = "Скопировано в буфер";
@@ -42,24 +43,25 @@
     $: tooltipActive = tooltip && contentCopied;
 </script>
 
-<p>
+<span
+    class={(hidden ? "is-censored " + shadowClass : "") +
+        " is-vertical-middle "}
+    style={`display:inline-block; width: ${maxLength}rem; height: var(--bulma-size-medium); overflow-x:hidden;`}
+    >{hidden ? "" : value}</span
+>
+{#if copiable}
     <span
-        class={hidden ? "is-censored has-background-primary-90" : ""}
-        style={`display:inline-block; width: ${maxLength}rem; height: var(--bulma-size-normal);overflow-x:hidden;`}
-        >{hidden ? "" : value}</span
+        bind:this={tooltipTarget}
+        on:click={copyContent}
+        class={"icon is-small is-right is-clickable " +
+            (tooltipActive ? ` ${tooltipClass} ` : "") +
+            " is-vertical-middle"}><i class="fas fa-{copyIcon}" /></span
     >
-    {#if copiable}
-        <span
-            bind:this={tooltipTarget}
-            on:click={copyContent}
-            class={"icon is-small is-right is-clickable " +
-                (tooltipActive ? ` ${tooltipClass} ` : "")}
-            ><i class="fas fa-{copyIcon}" /></span
-        >
-    {/if}
-    {#if showable}
-        <span class="icon is-small is-right is-clickable" on:click={toggleView}
-            ><i class="fas fa-{hidden ? showIcon : hideIcon}" /></span
-        >
-    {/if}
-</p>
+{/if}
+{#if showable}
+    <span
+        class="icon is-small is-right is-clickable is-vertical-middle"
+        on:click={toggleView}
+        ><i class="fas fa-{hidden ? showIcon : hideIcon}" /></span
+    >
+{/if}
