@@ -662,6 +662,17 @@ class notController extends notBase {
         }
     }
 
+    static getCommonMenu(childConstructor) {
+        return [
+            {
+                title: childConstructor.LABELS.plural,
+                url: `/${notCommon.lowerFirstLetter(
+                    childConstructor.MODULE_NAME
+                )}/${notCommon.lowerFirstLetter(childConstructor.MODEL_NAME)}`,
+            },
+        ];
+    }
+
     static getMenu() {}
 }
 
