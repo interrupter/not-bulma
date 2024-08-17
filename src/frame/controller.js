@@ -665,6 +665,7 @@ class notController extends notBase {
     static getCommonMenu(childConstructor) {
         return [
             {
+                section: childConstructor.MODULE_NAME,
                 title: childConstructor.LABELS.plural,
                 url: `/${notCommon.lowerFirstLetter(
                     childConstructor.MODULE_NAME
