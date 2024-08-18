@@ -44,11 +44,23 @@ class notController extends notBase {
     /**
      *  @static {string} MODULE_NAME  name of module
      */
-    static MODULE_NAME = "MODULE_NAME";
+    static get MODULE_NAME() {
+        return OPT_DEFAULT_MODULE_NAME;
+    }
     /**
      *  @static {string} MODEL_NAME  name of model
      */
-    static MODEL_NAME = "MODEL_NAME";
+    static get MODEL_NAME() {
+        return "ModelName";
+    }
+
+    static get LABELS() {
+        return {
+            plural: `${OPT_DEFAULT_MODULE_NAME}:model_label_plural`,
+            single: `${OPT_DEFAULT_MODULE_NAME}:model_label_single`,
+        };
+    }
+
     /**
      *
      * @type    {object|null}

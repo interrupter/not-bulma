@@ -68,7 +68,7 @@ class notCRUD extends notController {
 
     setValidators(validators) {
         //not-module-name -> [not,module,name]
-        const ModuleNameParts = this.MODULE_NAME.split("-");
+        const ModuleNameParts = this.getModuleName().split("-");
         //[not,module,name] -> ModuleName
         const ModuleName = (
             ModuleNameParts[0] === "not"
