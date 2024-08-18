@@ -58,7 +58,7 @@ class CRUDGenericActionCreate extends CRUDGenericAction {
                 model: controller.getModelName(),
                 action: actionName,
                 name: `${controller.getName()}.${this.ACTION}Form`,
-                validators: controller.getOptions("Validators"),
+                validators: this.getValidators(controller),
                 variants: controller.getOptions(`variants.${this.ACTION}`, {}),
                 masters: controller.getOptions(`${this.ACTION}.masters`, {}),
             },

@@ -61,7 +61,7 @@ class CRUDGenericActionUpdate extends CRUDGenericAction {
                 model: controller.getModelName(),
                 action: this.MODEL_ACTION_PUT, //will be used to get form fields information from manifest
                 name: `${controller.getName()}.${this.ACTION}Form`,
-                validators: controller.getOptions("Validators"),
+                validators: this.getValidators(controller),
                 variants: controller.getOptions(`variants.${this.ACTION}`, {}),
                 ui: controller.getOptions(`${this.ACTION}.ui`, {}),
                 fields: controller.getOptions(`${this.ACTION}.fields`, {}),

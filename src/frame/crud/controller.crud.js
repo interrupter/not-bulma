@@ -66,6 +66,29 @@ class notCRUD extends notController {
         return this;
     }
 
+    setValidators(validators) {
+        //not-module-name -> [not,module,name]
+        const ModuleNameParts = this.MODULE_NAME.split("-");
+        //[not,module,name] -> ModuleName
+        const ModuleName = (
+            ModuleNameParts[0] === "not"
+                ? ModuleNameParts.splice(1)
+                : ModuleNameParts
+        )
+            .map(notCommon.capitalizeFirstLetter)
+            .join("");
+        const serviceName = `ns${ModuleName}Common`;
+        const CommonModuleService = this.app?.getService(serviceName);
+        this.setWorking(
+            "validators",
+            CommonModuleService.augmentValidators(validators)
+        );
+    }
+
+    getValidators() {
+        return this.getWorking("validators");
+    }
+
     start() {
         let newHead = [];
         if (this.getModuleName() && this.getOptions("names.module")) {

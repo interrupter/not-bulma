@@ -166,6 +166,13 @@ class CRUDGenericAction {
         return !response || response.status !== "ok";
     }
 
+    static getValidators(controller) {
+        return (
+            (controller.getValidators && controller.getValidators()) ||
+            controller.getOptions("Validators")
+        );
+    }
+
     /**
      * Creates object with all options needed to initialize UI component
      * @param {object} controller   instance of controller
@@ -183,7 +190,7 @@ class CRUDGenericAction {
                 fields: {
                     readonly: true,
                 },
-                validators: controller.getOptions("Validators"),
+                validators: this.getValidators(controller),
                 variants: controller.getOptions(`variants.${this.ACTION}`, {}),
                 masters: controller.getOptions(`${this.ACTION}.masters`, {}),
                 injected: controller.getOptions(`${this.ACTION}.injected`, {}),
