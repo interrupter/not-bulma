@@ -12,6 +12,7 @@
     export let value = "";
     export let variants = [];
     export let placeholder = "";
+    export let emptyValueTitle = "";
     export let fieldname = "select";
     export let icon = false;
     export let required = true;
@@ -113,9 +114,13 @@
 
 <div class="control {iconClasses}">
     {#if readonly}
-        {#each selectedVariants as selectedVariant}
-            <span class="mr-2">{$LOCALE[selectedVariant.title]}</span>
-        {/each}
+        {#if value}
+            {#each selectedVariants as selectedVariant}
+                <span class="mr-2">{$LOCALE[selectedVariant.title]}</span>
+            {/each}
+        {:else}
+            <span class="mr-2">{$LOCALE[emptyValueTitle]}</span>
+        {/if}
     {:else}
         <div class="select {validationClasses} {multipleClass}">
             <select
