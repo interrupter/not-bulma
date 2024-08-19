@@ -11,6 +11,7 @@
     export let inputStarted = false;
     export let value;
     export let placeholder = "empty select item";
+    export let emptyValueTitle = "";
     export let fieldname = "selectFromModel";
     export let modelName = "";
     export let actionName = "";
@@ -82,6 +83,7 @@
     {value}
     bind:variants
     {placeholder}
+    {emptyValueTitle}
     {fieldname}
     {icon}
     {required}
