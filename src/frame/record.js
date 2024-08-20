@@ -39,6 +39,10 @@ class notRecord extends notBase {
         return this;
     }
 
+    toDefault() {
+        return this.setData(this[META_INTERFACE].getDefaultAsPlainObject());
+    }
+
     mapToInterface() {
         let rec = this;
         for (let t of META_MAP_TO_INTERFACE) {

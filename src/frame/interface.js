@@ -444,6 +444,19 @@ class notInterface extends notBase {
     getRecord() {
         this.getData();
     }
+
+    getDefaultAsPlainObject() {
+        if (!this.manifest || !this.manifest.fields) {
+            return {};
+        }
+        const result = {};
+        for (const fieldName of Object.keys(this.manifest.fields)) {
+            if (Object.hasOwn(this.manifest.fields[fieldName], "default")) {
+                result[fieldName] = this.manifest.fields[fieldName].default;
+            }
+        }
+        return result;
+    }
 }
 
 export default notInterface;

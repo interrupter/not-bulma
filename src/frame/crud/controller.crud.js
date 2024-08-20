@@ -216,12 +216,7 @@ class notCRUD extends notController {
     }
 
     createDefault() {
-        let newRecord = this.getModel({
-            _id: null,
-            title: say(this.getOptions("names.single")),
-            products: [],
-        });
-        return newRecord;
+        return this.getModel({}).toDefault();
     }
 
     route(params = []) {
