@@ -150,5 +150,5 @@
 </script>
 
 <div class="control">
-    <UIButtons values={VISIBLE_BUTTONS}></UIButtons>
+    <UIButtons values={VISIBLE_BUTTONS} classes={"is-no-flex-wrap"}></UIButtons>
 </div>
