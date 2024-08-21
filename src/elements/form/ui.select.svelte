@@ -82,6 +82,8 @@
         } else {
             if (data.value === UICommon.CLEAR_MACRO) {
                 value = "";
+            } else {
+                value = data.value;
             }
         }
         inputStarted = true;
@@ -103,6 +105,8 @@
         } else {
             if (data.value === UICommon.CLEAR_MACRO) {
                 value = "";
+            } else {
+                value = data.value;
             }
         }
         inputStarted = true;
