@@ -205,7 +205,7 @@ class CRUDGenericAction {
      * @returns {object}    instance of UI component
      */
     static getUI(controller) {
-        return controller.ui[this.ACTION];
+        return controller.getUI(this.ACTION);
     }
 
     /**
@@ -214,7 +214,7 @@ class CRUDGenericAction {
      * @param {object} ui           instance of UI component
      */
     static setUI(controller, ui) {
-        controller.ui[this.ACTION] = ui;
+        controller.setUI(this.ACTION, ui);
     }
 
     /**
@@ -348,6 +348,8 @@ class CRUDGenericAction {
             controller.report(e);
             //showing error message
             controller.showErrorMessage(e);
+        } finally {
+            controller.removeLoadingScreen && controller.removeLoadingScreen();
         }
     }
 

@@ -16,6 +16,8 @@ import CRUDActions from "./actions";
 const BREADCRUMBS = [];
 const TITLE_FIELDS_PRIORITY = ["title", "label", "id", "name"];
 
+const LOADING_SCREEN_UI_NAME = "loading_screen";
+
 class notCRUD extends notController {
     #actions = { ...CRUDActions };
     #router = CRUDRouter;
@@ -340,6 +342,12 @@ class notCRUD extends notController {
 
     $destroyUI() {
         for (let name in this.ui) {
+            this.destroyUIByName(name);
+        }
+    }
+
+    destroyUIByName(name) {
+        if (Object.hasOwn(this.ui, name)) {
             this.ui[name].$destroy && this.ui[name].$destroy();
             this.ui[name].destroy && this.ui[name].destroy();
             delete this.ui[name];
@@ -365,9 +373,15 @@ class notCRUD extends notController {
         CRUDMessage.success(this, title, message);
     }
 
-    setUI(name, val) {
-        this.$destroyUI();
+    setUI(name, val, singleUI = true) {
+        if (singleUI) {
+            this.$destroyUI();
+        }
         this.ui[name] = val;
+    }
+
+    getUI(name) {
+        return this.ui[name];
     }
 
     getActionUI() {
@@ -375,7 +389,11 @@ class notCRUD extends notController {
     }
 
     renderLoadingScreen() {
-        this.setUI("loading_screen", this.createLoaderUI());
+        this.setUI(LOADING_SCREEN_UI_NAME, this.createLoaderUI());
+    }
+
+    removeLoadingScreen() {
+        this.destroyUIByName(LOADING_SCREEN_UI_NAME);
     }
 
     createLoaderUI() {

@@ -63,6 +63,8 @@ class CRUDGenericActionRead extends CRUDGenericAction {
             controller.report(e);
             //showing error message
             controller.showErrorMessage(e);
+        } finally {
+            controller.removeLoadingScreen && controller.removeLoadingScreen();
         }
     }
 }

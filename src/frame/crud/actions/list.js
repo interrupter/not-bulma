@@ -88,6 +88,8 @@ export default class CRUDActionList {
             controller.emit(`exception:render:${ACTION}`, params, e);
             controller.report(e);
             controller.showErrorMessage(e);
+        } finally {
+            controller.removeLoadingScreen && controller.removeLoadingScreen();
         }
     }
 

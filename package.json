@@ -1,6 +1,6 @@
 {
   "name": "not-bulma",
-  "version": "1.2.50",
+  "version": "1.2.51",
   "description": "not-* family UI components on Bulma CSS Framework",
   "main": "src/index.js",
   "svelte": "src/index.js",
@@ -78,6 +78,8 @@
     "@babel/plugin-transform-runtime": "^7.24.3",
     "@babel/preset-env": "^7.24.3",
     "@cypress/code-coverage": "^3.12.30",
+    "@rollup/plugin-commonjs": "^26.0.1",
+    "@rollup/plugin-node-resolve": "^15.2.3",
     "autoprefixer": "^10.4.19",
     "babel-cli": "^6.26.0",
     "babel-loader": "^9.1.3",

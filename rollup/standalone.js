@@ -1,8 +1,8 @@
-import commonjs from "rollup-plugin-commonjs";
+import commonjs from "@rollup/plugin-commonjs";
 import svelte from "rollup-plugin-svelte";
 import babel from "rollup-plugin-babel";
 import postcss from "rollup-plugin-postcss";
-import resolve from "rollup-plugin-node-resolve";
+import resolve from "@rollup/plugin-node-resolve";
 import filesize from "rollup-plugin-filesize";
 
 export default {
@@ -19,6 +19,7 @@ export default {
         }),
         resolve({
             browser: true,
+            preferBuiltins: true,
             dedupe: (importee) =>
                 importee === "svelte" || importee.startsWith("svelte/"),
         }),
