@@ -1,5 +1,4 @@
 import UICommon from "../../elements/common";
-import { say } from "../../locale";
 
 import notBreadcrumbs from "../components/breadcrumbs";
 
@@ -32,6 +31,25 @@ class notCRUD extends notController {
     BOTTOM_CLASS = ["box"];
 
     WS_CHECK_INTERVAL = 200;
+
+    static get LABELS() {
+        return Object.freeze({
+            plural: `${this.MODULE_NAME}:${this.MODEL_NAME}_label_plural`,
+            single: `${this.MODULE_NAME}:${this.MODEL_NAME}_label_single`,
+        });
+    }
+
+    static getMenu() {
+        return [
+            {
+                section: this.MODULE_NAME,
+                title: this.LABELS.plural,
+                url: `/${notCommon.lowerFirstLetter(
+                    this.MODULE_NAME
+                )}/${notCommon.lowerFirstLetter(this.MODEL_NAME)}`,
+            },
+        ];
+    }
 
     constructor(
         app,
