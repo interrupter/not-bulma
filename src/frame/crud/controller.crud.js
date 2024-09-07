@@ -39,7 +39,7 @@ class notCRUD extends notController {
         });
     }
 
-    static getMenu() {
+    static getMenu(itemCustomProps = {}) {
         return [
             {
                 section: this.MODULE_NAME,
@@ -47,6 +47,7 @@ class notCRUD extends notController {
                 url: `/${notCommon.lowerFirstLetter(
                     this.MODULE_NAME
                 )}/${notCommon.lowerFirstLetter(this.MODEL_NAME)}`,
+                ...itemCustomProps,
             },
         ];
     }
