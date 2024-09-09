@@ -71,7 +71,7 @@
             <UIBooleans values={[{ value: false }]} />
         {/if}
     {:else}
-        {#if !label}
+        {#if !label && !hideLabel}
             <UIBooleans values={[{ value: false }]} />
         {/if}
         <input
