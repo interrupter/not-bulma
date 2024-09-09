@@ -221,8 +221,25 @@ class notCRUD extends notController {
     }
 
     getTitleFromLib(propName, id) {
-        throw new Error("not suported anymore");
-        //return Form.getVariant(propName, id).title;
+        const actionName = this.getCurrentAction();
+        this.debug(
+            "notCRUD.getTitleFromLib is obsolete, use notCRUD.getPreloadedVariantTitle(actionName, propName, id)"
+        );
+        return this.getPreloadedVariantTitle(actionName, propName, id);
+    }
+
+    getPreloadedVariants(actionName, propName) {
+        return this.getOptions(`variants.${actionName}.${propName}`, []);
+    }
+
+    getPreloadedVariantTitle(actionName, propName, id) {
+        const variants = this.getPreloadedVariants(actionName, propName);
+        const item = variants.find((item) => item.id === id);
+        if (item) {
+            return item.title;
+        } else {
+            return id;
+        }
     }
 
     getItemTitle(item) {
