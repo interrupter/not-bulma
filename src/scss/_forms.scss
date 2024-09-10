@@ -1,7 +1,12 @@
-.form-container{
-  position:relative;
+.form-container {
+    position: relative;
 }
 
-.edit-form-error.notification.is-danger span:not(:first-child)::before{
-  content: ', '
+.edit-form-error.notification.is-danger span:not(:first-child)::before {
+    content: ", ";
+}
+
+.switch-list-item {
+    display: inline-block;
+    margin-right: 4rem;
 }
