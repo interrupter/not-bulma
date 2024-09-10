@@ -24,26 +24,26 @@ export default class CRUDActionList {
         actions = ["details", "update", "delete"],
         prepend = [],
         append = [],
-        iconsOnly = true
+        onlyIcons = true
     ) {
         const ACTIONS = {
             details: {
                 action: () => controller.goDetails(value, delay),
-                ...(iconsOnly
-                    ? { title: "Подробнее" }
-                    : { icon: "circle-info" }),
+                ...(onlyIcons
+                    ? { icon: "circle-info" }
+                    : { title: "Подробнее" }),
                 size: "small",
             },
             update: {
                 action: () => controller.goUpdate(value, delay),
-                ...(iconsOnly ? { title: "Изменить" } : { icon: "edit" }),
+                ...(onlyIcons ? { icon: "edit" } : { title: "Изменить" }),
                 color: "warning",
                 size: "small",
             },
             delete: {
                 action: () => controller.goDelete(value, delay),
                 color: "danger",
-                ...(iconsOnly ? { title: "Удалить" } : { icon: "trash" }),
+                ...(onlyIcons ? { icon: "trash" } : { title: "Удалить" }),
                 size: "small",
                 style: "outlined",
             },
