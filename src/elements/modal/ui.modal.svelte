@@ -19,6 +19,7 @@
     export let subtitle = "";
     export let classes = "";
     export let overlayClasses = "";
+    export let buttonsClasses = "";
 
     export let WAITING_TEXT = "Обработка";
 </script>
@@ -38,6 +39,7 @@
 
             {#if buttonsPosition === "top"}
                 <UIButtonsRow
+                    classes={buttonsClasses}
                     left={closeButton ? [closeButton] : []}
                     right={applyButton ? [applyButton] : []}
                 ></UIButtonsRow>
@@ -47,6 +49,7 @@
 
             {#if buttonsPosition === "bottom"}
                 <UIButtonsRow
+                    classes={buttonsClasses || "is-footer"}
                     left={closeButton ? [closeButton] : []}
                     right={applyButton ? [applyButton] : []}
                 ></UIButtonsRow>

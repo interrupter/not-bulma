@@ -19,3 +19,17 @@
 .is-no-flex-wrap {
     flex-wrap: nowrap !important;
 }
+
+.is-footer {
+    position: absolute;
+    bottom: 0px;
+    transform: translateY(-50%);
+    width: 100%;
+}
+
+.is-fullscreen {
+    height: 100%;
+    width: 100%;
+    margin: 0px;
+    border: none;
+}

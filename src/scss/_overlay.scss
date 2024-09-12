@@ -1,17 +1,16 @@
 .not-overlay {
-  position: fixed!important;
-  top: 0px;
-  left: 0px;
-  width: 100vw;
-  height: 100vh;
-  margin: 0px;
-  display: block;
-  opacity: 1;
-  overflow: hidden;
+    position: fixed !important;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    margin: 0px;
+    display: block;
+    opacity: 1;
+    overflow: hidden;
 }
 
-
 .stop-scrolling {
-  height: 100%;
-  overflow: hidden;
+    height: 100%;
+    overflow: hidden;
 }
