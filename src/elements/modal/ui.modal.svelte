@@ -13,6 +13,7 @@
     export let closeButton = false;
     export let applyButton = false;
 
+    export let titleSize = 2;
     export let show = false;
     export let loading = false;
     export let title = "Modal window";
@@ -31,7 +32,11 @@
     classes={overlayClasses}
 >
     <UIBox {classes}>
-        <UITitle size="2" title={$LOCALE[title]} subtitle={$LOCALE[subtitle]} />
+        <UITitle
+            size={titleSize}
+            title={$LOCALE[title]}
+            subtitle={$LOCALE[subtitle]}
+        />
         <UIContent>
             <div class="pageloader {loading ? 'is-active' : ''}">
                 <span class="title">{$LOCALE[WAITING_TEXT]}</span>

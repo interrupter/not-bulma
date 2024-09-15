@@ -429,6 +429,15 @@ class notInterface extends notBase {
                 size: pager.size || DEFAULT_PAGE_SIZE,
                 page: pager.page || DEFAULT_PAGE_NUMBER,
             });
+        } else if (
+            arguments.length === 2 &&
+            !isNaN(arguments[0]) &&
+            !isNaN(arguments[1])
+        ) {
+            this.setWorking("pager", {
+                size: arguments[0] || DEFAULT_PAGE_SIZE,
+                page: arguments[1] || DEFAULT_PAGE_NUMBER,
+            });
         }
         return this;
     }
