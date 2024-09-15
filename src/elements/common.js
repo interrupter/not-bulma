@@ -4,12 +4,21 @@ export default class UICommon {
     static DEFAULT_REDIRECT_TIMEOUT = 3000;
     static CLASS_OK = "is-success";
     static CLASS_ERR = "is-danger";
+    static SCROLL_DISABLER_CLASS = "remove-scroll";
     static FILLER = "_";
 
     static SCROLL_OPTIONS = {
         top: 0,
         behavior: "smooth",
     };
+
+    static removeBodyScroll() {
+        document.body.classList.add(this.SCROLL_DISABLER_CLASS);
+    }
+
+    static restoreBodyScroll() {
+        document.body.classList.remove(this.SCROLL_DISABLER_CLASS);
+    }
 
     /**
      *  Reformats input from any string to strict phone format
