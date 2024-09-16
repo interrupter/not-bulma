@@ -54,7 +54,7 @@
 
             {#if buttonsPosition === "bottom"}
                 <UIButtonsRow
-                    classes={buttonsClasses || "is-footer"}
+                    classes={buttonsClasses || "is-footer is-mobile"}
                     left={closeButton ? [closeButton] : []}
                     right={applyButton ? [applyButton] : []}
                 ></UIButtonsRow>

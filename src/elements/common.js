@@ -12,6 +12,24 @@ export default class UICommon {
         behavior: "smooth",
     };
 
+    static MOBILE_WIDTH_BREAK_POINT = 760;
+
+    static isMobile() {
+        const testMobile = window.matchMedia || window.msMatchMedia;
+        if (testMobile) {
+            let testQuery = "(pointer:coarse)";
+            if (arguments.length) {
+                const max_width =
+                    typeof arguments[0] === "boolean"
+                        ? this.MOBILE_WIDTH_BREAK_POINT
+                        : arguments[0];
+                testQuery = `only screen and (max-width: ${max_width}px)`;
+            }
+            return testMobile(testQuery).matches;
+        }
+        return false;
+    }
+
     static removeBodyScroll() {
         document.body.classList.add(this.SCROLL_DISABLER_CLASS);
     }
