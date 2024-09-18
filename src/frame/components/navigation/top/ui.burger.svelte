@@ -2,6 +2,7 @@
     const COMPONENT_NAME = "top-navbar-burger";
 
     import { createEventDispatcher, onMount } from "svelte";
+    import SideMenuStore from "../side/store";
 
     const dispatch = createEventDispatcher();
 
@@ -34,6 +35,11 @@
             events[getStandartUpdateEventName()] = onUpdate;
         }
         register(events);
+    });
+
+    SideMenuStore.subscribe((val) => {
+        closed = !val.open;
+        return val;
     });
 </script>
 
