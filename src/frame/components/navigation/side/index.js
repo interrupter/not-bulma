@@ -1,6 +1,8 @@
 import Menu from "../menu.js";
 import UISideMenu from "./ui.side.menu.svelte";
 
+import SideMenuState from "./store.js";
+
 const TYPE = "side";
 
 class notSideMenu extends Menu {
@@ -13,9 +15,11 @@ class notSideMenu extends Menu {
         sectionTitle: "Меню",
         priority: 0,
         open: true,
+        type: "link",
     };
 
     static options = {
+        directNavigation: false,
         type: TYPE,
         items: [],
         sections: [],
@@ -185,6 +189,10 @@ class notSideMenu extends Menu {
             }
             this.resizeMain();
         }
+        SideMenuState.update((val) => {
+            val.open = false;
+            return val;
+        });
         return false;
     }
 
@@ -198,6 +206,10 @@ class notSideMenu extends Menu {
             }
             this.resizeMain();
         }
+        SideMenuState.update((val) => {
+            val.open = true;
+            return val;
+        });
         return false;
     }
 

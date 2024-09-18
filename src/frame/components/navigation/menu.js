@@ -1,13 +1,16 @@
 import { COMPONENTS } from "../../LIB.js";
+import UICommon from "../../../elements/common.js";
 
 class Menu {
     static MAX_TOUCH_WIDTH = 1023;
+
     static DEFAULT = {
         section: "any",
         sectionTitle: "Меню",
         priority: 0,
         //link, button, dropdown, component
         type: "link",
+        open: false,
     };
     static app = false;
     static directNavigation = false;
@@ -250,7 +253,7 @@ class Menu {
     }
 
     static isTouch() {
-        return window.innerWidth <= this.MAX_TOUCH_WIDTH;
+        return UICommon.isMobile(true);
     }
 
     static getSectionComponent() {}
