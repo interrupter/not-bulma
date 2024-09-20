@@ -166,6 +166,13 @@ class notController extends notBase {
         }
     }
 
+    /**
+     * Returns controller interface if name is not specified or interface of specified
+     *
+     * @param {string} [name=""]
+     * @return {*}
+     * @memberof notController
+     */
     getInterface(name = "") {
         return this.app?.getInterface(name || this.getModelName());
     }
@@ -674,6 +681,14 @@ class notController extends notBase {
         }
     }
 
+    /**
+     * Creates menu item from child class constructor
+     *
+     * @static
+     * @param {notController} childConstructor
+     * @return {Array<import('./types.js').NavigationItem>}
+     * @memberof notController
+     */
     static getCommonMenu(childConstructor) {
         return [
             {

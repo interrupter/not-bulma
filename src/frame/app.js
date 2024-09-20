@@ -191,6 +191,18 @@ class notApp extends notBase {
     }
 
     /**
+     * Creates arrow function: (modelInitData = {}) => notRecord
+     * Factory that creates notRecord instances with binded
+     * recordManifest and provided data to initialize record
+     * @param {Object} recordManifest
+     * @return {function}
+     * @memberof notApp
+     */
+    createInterfaceModelFactory(recordManifest) {
+        return (recordData) => new notRecord(recordManifest, recordData);
+    }
+
+    /**
      * Clears interfaces, recreates all according to Options.interafaceManifest
      */
     updateInterfaces() {
@@ -204,10 +216,9 @@ class notApp extends notBase {
                         {}
                     );
                 recordManifest.methods = recordMethods;
-                this.getWorking("interfaces")[name] = (recordData) =>
-                    new notRecord(recordManifest, recordData);
-                window["nr" + notCommon.capitalizeFirstLetter(name)] =
-                    this.getWorking("interfaces")[name];
+                const nameInt =
+                    this.createInterfaceModelFactory(recordManifest);
+                this.setInterface(name, nameInt);
             }
         }
     }
@@ -228,6 +239,18 @@ class notApp extends notBase {
      */
     getControllerName(name) {
         return OPT_CONTROLLER_PREFIX + notCommon.capitalizeFirstLetter(name);
+    }
+
+    /**
+     * Sets named interface factory function
+     *
+     * @param {string} name
+     * @param {function} modelFactory
+     * @return {notApp}
+     * @memberof notApp
+     */
+    setInterface(name, modelFactory) {
+        return this.setWorking(`interfaces.${name}`, modelFactory);
     }
 
     /**
