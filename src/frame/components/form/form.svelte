@@ -47,7 +47,7 @@
     export let WAITING_TEXT = "Отправка данных на сервер";
 
     //form labels
-    export let title = "Форма";
+    export let title = "";
     export let description = "";
     //if you want button on top
     export let buttonsFirst = false;
@@ -219,7 +219,6 @@
         {#if description}
             <h6 class="subtitle is-6">{$LOCALE[description]}</h6>
         {/if}
-
         {#if buttonsFirst}
             <div class="buttons is-grouped is-centered">
                 {#if cancel.enabled}
