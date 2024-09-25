@@ -91,6 +91,14 @@ class notTable extends EventEmitter {
                 return val;
             });
         }
+
+        this.setCombinedActionName(
+            this.getOptions(
+                "interface.combinedAction",
+                OPT_DEFAULT_COMBINED_ACTION
+            )
+        );
+
         if (notCommon.objHas(this.options, "filter")) {
             this.setFilter(this.options.filter, true);
         } else {
@@ -164,7 +172,10 @@ class notTable extends EventEmitter {
         }
     }
 
-    onFilterChange(filter) {
+    onFilterChange({ filter, actionName }) {
+        if (actionName.indexOf(OPT_DEFAULT_COMBINED_ACTION) === 0) {
+            this.setCombinedActionName(actionName);
+        }
         if (filter) {
             this.setFilter(filter);
         } else {
@@ -484,9 +495,13 @@ class notTable extends EventEmitter {
             : OPT_DEFAULT_LIST_ACTION;
     }
 
+    setCombinedActionName(actionName = OPT_DEFAULT_COUNT_ACTION) {
+        this.setWorking("interface.combinedAction", actionName);
+    }
+
     getCombinedActionName() {
-        return this.getOptions("interface.combinedAction")
-            ? this.getOptions("interface.combinedAction")
+        return this.getWorking("interface.combinedAction")
+            ? this.getWorking("interface.combinedAction")
             : OPT_DEFAULT_COMBINED_ACTION;
     }
 
