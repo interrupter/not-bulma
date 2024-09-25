@@ -37,7 +37,11 @@
     export let helpers = {};
 </script>
 
-<td class={field.hideOnMobile ? "is-hidden-touch" : ""} {title}>
+<td
+    class={(field.hideOnMobile ? " is-hidden-touch " : "") +
+        (field.classes ? ` ${field.classes} ` : "")}
+    {title}
+>
     {#if field.type === "link"}
         <UILinks values={notPath.get(field.path, item, helpers)} />
     {:else if field.type === "button"}
