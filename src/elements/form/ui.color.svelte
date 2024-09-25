@@ -7,7 +7,7 @@
 
     export let inputStarted = false;
     export let value = "";
-    export let placeholder = "Select you favorite color";
+    export let placeholder = "";
     export let fieldname = "color";
     export let icon = false;
     export let required = true;

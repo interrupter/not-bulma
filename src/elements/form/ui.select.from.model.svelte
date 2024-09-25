@@ -10,7 +10,7 @@
 
     export let inputStarted = false;
     export let value;
-    export let placeholder = "empty select item";
+    export let placeholder = "";
     export let emptyValueTitle = "";
     export let fieldname = "selectFromModel";
     export let modelName = "";

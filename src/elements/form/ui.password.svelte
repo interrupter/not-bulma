@@ -8,7 +8,7 @@
 
     export let inputStarted = false;
     export let value = "";
-    export let placeholder = "input some text here, please";
+    export let placeholder = "";
     export let fieldname = "password";
     export let icon = false;
     export let required = true;

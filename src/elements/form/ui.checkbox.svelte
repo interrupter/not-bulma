@@ -10,7 +10,7 @@
     export let inputStarted = false;
     export let value = false;
     export let label = "checkbox";
-    export let placeholder = "checkbox placeholder";
+    export let placeholder = "";
     export let fieldname = "checkbox";
     export let icon = false;
     export let required = true;

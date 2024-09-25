@@ -12,7 +12,7 @@
     export let variants = [];
     export let label = "";
     export let hideLabel = false;
-    export let placeholder = "input some text here, please";
+    export let placeholder = "";
     export let fieldname = "textfield";
     export let icon = false;
     export let required = true;

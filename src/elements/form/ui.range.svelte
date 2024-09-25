@@ -13,7 +13,7 @@
     export let max = 100;
     export let step = 1;
     export let tickmarks = false;
-    export let placeholder = "range placeholder";
+    export let placeholder = "";
     export let fieldname = "range";
     export let icon = false;
     export let required = true;

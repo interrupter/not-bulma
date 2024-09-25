@@ -9,7 +9,7 @@
     export let inputStarted = false;
 
     export let value = new Date();
-    export let placeholder = "Date and time of event";
+    export let placeholder = "";
     export let fieldname = "datetime";
     export let pattern = "d{4}-d{2}-d{2}";
     export let icon = false;
