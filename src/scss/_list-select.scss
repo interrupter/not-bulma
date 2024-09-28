@@ -1,16 +1,9 @@
-.list.selectable .list-item{
+.list.selectable .list-item {
     cursor: pointer;
-    &.is-active{
+    &.is-active {
         background-color: hsl(171, 100%, 41%);
     }
-    & .list-item-title h6{
+    & .list-item-title h6 {
         margin-bottom: 0rem !important;
     }
-}
-
-figure.image img.is-covered{
-        object-fit: cover !important;
-        width: 100% !important;
-        height: 100% !important;        
-    
 }

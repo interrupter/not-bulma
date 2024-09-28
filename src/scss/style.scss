@@ -8,6 +8,7 @@
 @import "./_forms.scss";
 @import "./_loader.scss";
 @import "./_padding.scss";
+@import "./_images.scss";
 @import "./_pagination.scss";
 @import "./_overlay.scss";
 @import "./_breadcrumbs.scss";
@@ -15,6 +16,7 @@
 @import "./_bulma-list.scss";
 
 @import "./_list-select.scss";
+
 .navbar-menu.is-active {
     display: flex;
 }
