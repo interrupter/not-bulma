@@ -152,11 +152,11 @@ class notController extends notBase {
     /**
      *  If zero or one argument provided this modelName instance will be returned
      *  If two provided and first is a string than instance of name will be returned initialized with second object param or empty object
-     *  @param {string|object}      name    modelName of instance to return or initial data for instance
-     *  @param {object}             data    model data
+     *  @param {string|object}      [name]    modelName of instance to return or initial data for instance
+     *  @param {object}             [data]    model data
      *  @return {import('./record.js')}
      */
-    getModel(name, data = undefined) {
+    getModel(name, data) {
         if (typeof name === "string") {
             const int = this.getInterface(name);
             return int && int(data || {});
