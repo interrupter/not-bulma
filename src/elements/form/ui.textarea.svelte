@@ -45,15 +45,15 @@
         return true;
     }
 
-    /*function onInput(ev){
-    let data = {
-      field: fieldname,
-      value: ev.currentTarget.value
-    };
-    inputStarted = true;
-    dispatch('change', data);
-    return true;
-  }*/
+    function onInput(ev) {
+        let data = {
+            field: fieldname,
+            value: ev.currentTarget.value,
+        };
+        inputStarted = true;
+        dispatch("change", data);
+        return true;
+    }
 </script>
 
 <div class="control {iconClasses}">

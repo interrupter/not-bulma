@@ -5,7 +5,7 @@
     import UICommon from "../common.js";
     import ErrorsList from "../various/ui.errors.list.svelte";
     import { createEventDispatcher } from "svelte";
-    let dispatch = createEventDispatcher();
+    const dispatch = createEventDispatcher();
 
     export let inputStarted = false;
     export let value = 10;
