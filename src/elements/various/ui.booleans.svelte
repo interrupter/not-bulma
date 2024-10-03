@@ -10,17 +10,25 @@
 
     onMount(() => {
         if (typeof values === "boolean") {
-            _values = [values];
+            _values = [{ value: values }];
         } else if (Array.isArray(values)) {
-            _values = [...values];
+            if (values.every((itm) => typeof itm === "boolean")) {
+                _values = values.map((itm) => {
+                    return { value: itm };
+                });
+            } else {
+                _values = [...values];
+            }
         }
     });
 </script>
 
-{#each _values as item}
-    <svelte:component
-        this={componentConstructor}
-        {...item}
-        inverted={inverted || item.inverted}
-    />
-{/each}
+{#if _values.length}
+    {#each _values as item}
+        <svelte:component
+            this={componentConstructor}
+            {...item}
+            inverted={inverted || item.inverted}
+        />
+    {/each}
+{/if}
