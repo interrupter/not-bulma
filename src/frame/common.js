@@ -65,7 +65,7 @@ function emptyTarget(val) {
 }
 
 function cloneUnlessOtherwiseSpecified(value, optionsArgument) {
-    var clone = !optionsArgument || optionsArgument.clone !== false;
+    const clone = !optionsArgument || optionsArgument.clone !== false;
 
     return clone && isMergeableObject(value)
         ? deepmerge(emptyTarget(value), value, optionsArgument)
@@ -79,7 +79,7 @@ function defaultArrayMerge(target, source, optionsArgument) {
 }
 
 function mergeObject(target, source, optionsArgument) {
-    var destination = {};
+    const destination = {};
     if (isMergeableObject(target)) {
         Object.keys(target).forEach(function (key) {
             destination[key] = cloneUnlessOtherwiseSpecified(
@@ -106,17 +106,17 @@ function mergeObject(target, source, optionsArgument) {
 }
 
 function deepmerge(target, source, optionsArgument) {
-    var sourceIsArray = Array.isArray(source);
-    var targetIsArray = Array.isArray(target);
-    var options = optionsArgument || {
+    const sourceIsArray = Array.isArray(source);
+    const targetIsArray = Array.isArray(target);
+    const options = optionsArgument || {
         arrayMerge: defaultArrayMerge,
     };
-    var sourceAndTargetTypesMatch = sourceIsArray === targetIsArray;
+    const sourceAndTargetTypesMatch = sourceIsArray === targetIsArray;
 
     if (!sourceAndTargetTypesMatch) {
         return cloneUnlessOtherwiseSpecified(source, optionsArgument);
     } else if (sourceIsArray) {
-        var arrayMerge = options.arrayMerge || defaultArrayMerge;
+        const arrayMerge = options.arrayMerge || defaultArrayMerge;
         return arrayMerge(target, source, optionsArgument);
     } else {
         return mergeObject(target, source, optionsArgument);
@@ -617,6 +617,14 @@ class notCommon {
             : null;
     }
 
+    /**
+     * Moves item inside array from old_index to new_index
+     * @static
+     * @param {Array<any>} array
+     * @param {number} old_index
+     * @param {number} new_index
+     * @memberof notCommon
+     */
     static moveItem(array, old_index, new_index) {
         const inRange = (num) => num < array.length && num > -1;
         if (inRange(new_index) && inRange(old_index)) {

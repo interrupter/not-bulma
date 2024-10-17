@@ -461,7 +461,14 @@ class notInterface extends notBase {
         const result = {};
         for (const fieldName of Object.keys(this.manifest.fields)) {
             if (Object.hasOwn(this.manifest.fields[fieldName], "default")) {
-                result[fieldName] = this.manifest.fields[fieldName].default;
+                const defaultValue = this.manifest.fields[fieldName].default;
+                if (Array.isArray(defaultValue)) {
+                    result[fieldName] = [...defaultValue];
+                } else if (typeof defaultValue === "object") {
+                    result[fieldName] = { ...defaultValue };
+                } else {
+                    result[fieldName] = defaultValue;
+                }
             }
         }
         return result;

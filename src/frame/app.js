@@ -61,8 +61,8 @@ class notApp extends notBase {
     initManifest() {
         notCommon
             .getJSON(this.getOptions("manifestURL"))
-            .then(this.setInterfaceManifest.bind(this))
-            .catch(notCommon.report.bind(this));
+            .then((manifest) => this.setInterfaceManifest(manifest))
+            .catch((e) => notCommon.report(e));
     }
 
     /**
@@ -103,6 +103,7 @@ class notApp extends notBase {
      * @param {object}  manifest    interface manifest
      */
     setInterfaceManifest(manifest) {
+        Object.freeze(manifest);
         this.setOptions("interfaceManifest", manifest);
         this.initRouter();
         this.update();
