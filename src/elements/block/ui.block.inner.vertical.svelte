@@ -1,11 +1,23 @@
 <script>
-    import UIBlock from "./ui.block.svelte";
-    export let id = "";
-    export let classes = "";
+    import { run } from 'svelte/legacy';
 
-    $: classesInner = `block-inner-vertical ${classes}`;
+    import UIBlock from "./ui.block.svelte";
+    /**
+     * @typedef {Object} Props
+     * @property {string} [id]
+     * @property {string} [classes]
+     * @property {import('svelte').Snippet} [children]
+     */
+
+    /** @type {Props} */
+    let { id = $bindable(""), classes = "", children } = $props();
+
+    let classesInner;
+    run(() => {
+        classesInner = `block-inner-vertical ${classes}`;
+    });
 </script>
 
 <UIBlock bind:id bind:classes={classesInner}>
-    <slot />
+    {@render children?.()}
 </UIBlock>

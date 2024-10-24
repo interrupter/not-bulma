@@ -1,3 +1,4 @@
+<!-- @migration-task Error while migrating Svelte code: Can't migrate code with beforeUpdate. Please migrate by hand. -->
 <script>
     import { createEventDispatcher } from "svelte";
     const dispatch = createEventDispatcher();
@@ -8,17 +9,31 @@
     import UINavbarItem from "./ui.item.svelte";
     import UINavbarSection from "./ui.section.svelte";
     import UINavbarBurger from "./ui.burger.svelte";
-    import { beforeUpdate } from "svelte";
+    
 
-    export let sections = [];
-    export let items = [];
-    export let root = "";
-    export let navigate = null;
-    export let brand = false;
-    export let showBurger = true;
-    export let burgerControlsSidemenu = true;
+    /**
+     * @typedef {Object} Props
+     * @property {any} [sections] - import { beforeUpdate } from "svelte";
+     * @property {any} [items]
+     * @property {string} [root]
+     * @property {any} [navigate]
+     * @property {boolean} [brand]
+     * @property {boolean} [showBurger]
+     * @property {boolean} [burgerControlsSidemenu]
+     */
 
-    let menuClosed = true;
+    /** @type {Props} */
+    let {
+        sections = [],
+        items = [],
+        root = "",
+        navigate = null,
+        brand = false,
+        showBurger = true,
+        burgerControlsSidemenu = true
+    } = $props();
+
+    let menuClosed = $state(true);
 
     function onClick({ detail }) {
         let { event, element } = detail;
@@ -37,7 +52,7 @@
 
     let sectionsItemsCount = {};
     let sectionsItems = {};
-
+    /*
     beforeUpdate(() => {
         for (let section of sections) {
             sectionsItems[section.id] = items.filter(
@@ -48,7 +63,7 @@
             ).length;
         }
     });
-
+*/
     function toggleBurger({ detail }) {
         if (burgerControlsSidemenu) {
             SideMenu.toggle();

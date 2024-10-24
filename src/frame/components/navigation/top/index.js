@@ -1,5 +1,7 @@
 import Menu from "../menu.js";
 import UINavbarTop from "./ui.top.svelte";
+import { mount } from "svelte";
+
 const TYPE = "top";
 
 class notTopMenu extends Menu {
@@ -44,16 +46,16 @@ class notTopMenu extends Menu {
             if (!target) {
                 return;
             }
-            this.menu = new UINavbarTop({
-                target,
-                props: {
-                    brand: this.getOptions().brand,
-                    items: this.items,
-                    sections: this.sections,
-                    root: this.getOptions().root,
-                    navigate: this.getOptions().navigate,
-                },
-            });
+            this.menu = mount(UINavbarTop, {
+                            target,
+                            props: {
+                                brand: this.getOptions().brand,
+                                items: this.items,
+                                sections: this.sections,
+                                root: this.getOptions().root,
+                                navigate: this.getOptions().navigate,
+                            },
+                        });
             this.interval = setInterval(
                 this.updateMenuActiveItem.bind(this),
                 200

@@ -1,9 +1,20 @@
 <script>
     import { LOCALE } from "../../locale";
-    export let errors = [];
-    export let show = false;
-    export let classes = "";
-    export let id = "errors-list";
+    /**
+     * @typedef {Object} Props
+     * @property {any} [errors]
+     * @property {boolean} [show]
+     * @property {string} [classes]
+     * @property {string} [id]
+     */
+
+    /** @type {Props} */
+    let {
+        errors = [],
+        show = false,
+        classes = "",
+        id = "errors-list"
+    } = $props();
 </script>
 
 {#if Array.isArray(errors) && errors.length}

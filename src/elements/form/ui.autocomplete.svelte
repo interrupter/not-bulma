@@ -1,4 +1,6 @@
 <script>
+    import { run } from 'svelte/legacy';
+
     import { LOCALE } from "../../locale/index";
 
     import { createEventDispatcher } from "svelte";
@@ -9,44 +11,80 @@
     import UITextfield from "./ui.textfield.svelte";
     import UICommon from "../common.js";
 
-    export let idField = "_id";
-    export let labelField = "title";
-    export let minCharactersToSearch = 3;
-    export let selectFirstIfEmpty = false;
-    export let maxItemsToShowInList = 20;
-    export let noResultsText = "Ничего не найдено";
-    export let showClear = true;
 
-    export let value;
 
-    export let placeholder = "";
-    export let fieldname = "checkbox-list";
-    export let disabled = false;
-    export let readonly = false;
-    export let icon = false;
 
-    export let inputStarted = false;
-    export let valid = true;
-    export let validated = false;
-    export let errors = false;
-    export let formErrors = false;
-    export let formLevelError = false;
 
-    export let searchFunction = (/*term*/) => {
+    /**
+     * @typedef {Object} Props
+     * @property {string} [idField]
+     * @property {string} [labelField]
+     * @property {number} [minCharactersToSearch]
+     * @property {boolean} [selectFirstIfEmpty]
+     * @property {number} [maxItemsToShowInList]
+     * @property {string} [noResultsText]
+     * @property {boolean} [showClear]
+     * @property {any} value
+     * @property {string} [placeholder]
+     * @property {string} [fieldname]
+     * @property {boolean} [disabled]
+     * @property {boolean} [readonly]
+     * @property {boolean} [icon]
+     * @property {boolean} [inputStarted]
+     * @property {boolean} [valid]
+     * @property {boolean} [validated]
+     * @property {boolean} [errors]
+     * @property {boolean} [formErrors]
+     * @property {boolean} [formLevelError]
+     * @property {any} [searchFunction]
+     */
+
+    /** @type {Props} */
+    let {
+        idField = "_id",
+        labelField = "title",
+        minCharactersToSearch = 3,
+        selectFirstIfEmpty = false,
+        maxItemsToShowInList = 20,
+        noResultsText = "Ничего не найдено",
+        showClear = true,
+        value = $bindable(),
+        placeholder = "",
+        fieldname = "checkbox-list",
+        disabled = false,
+        readonly = false,
+        icon = false,
+        inputStarted = $bindable(false),
+        valid = true,
+        validated = false,
+        errors = false,
+        formErrors = false,
+        formLevelError = false,
+        searchFunction = (/*term*/) => {
         return [];
-    };
+    }
+    } = $props();
 
-    $: iconClasses = (icon ? " has-icons-left " : "") + " has-icons-right ";
-    $: allErrors = [].concat(
-        errors ? errors : [],
-        formErrors ? formErrors : []
-    );
-    $: showErrors = !(validated && valid) && inputStarted;
-    $: invalid = valid === false || formLevelError;
-    $: validationClasses =
-        valid === true || !inputStarted
-            ? UICommon.CLASS_OK
-            : UICommon.CLASS_ERR;
+    let iconClasses = $derived((icon ? " has-icons-left " : "") + " has-icons-right ");
+    let allErrors;
+    run(() => {
+        allErrors = [].concat(
+            errors ? errors : [],
+            formErrors ? formErrors : []
+        );
+    });
+    let showErrors;
+    run(() => {
+        showErrors = !(validated && valid) && inputStarted;
+    });
+    let invalid = $derived(valid === false || formLevelError);
+    let validationClasses;
+    run(() => {
+        validationClasses =
+            valid === true || !inputStarted
+                ? UICommon.CLASS_OK
+                : UICommon.CLASS_ERR;
+    });
 
     function onChange() {
         let data = {

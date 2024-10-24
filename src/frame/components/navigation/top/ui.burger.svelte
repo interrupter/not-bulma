@@ -8,10 +8,7 @@
 
     import notCommon from "../../../common";
 
-    export let events = {};
-    export let register = notCommon.registerWidgetEvents.bind(notCommon);
 
-    export let closed = true;
 
     function toggle(e) {
         e.preventDefault();
@@ -26,9 +23,23 @@
         return COMPONENT_NAME + ":update";
     }
 
-    export let onUpdate = (data) => {
+    /**
+     * @typedef {Object} Props
+     * @property {any} [events]
+     * @property {any} [register]
+     * @property {boolean} [closed]
+     * @property {any} [onUpdate]
+     */
+
+    /** @type {Props} */
+    let {
+        events = $bindable({}),
+        register = notCommon.registerWidgetEvents.bind(notCommon),
+        closed = $bindable(true),
+        onUpdate = (data) => {
         closed = data.closed;
-    };
+    }
+    } = $props();
 
     onMount(() => {
         if (!notCommon.objHas(events, getStandartUpdateEventName())) {
@@ -45,14 +56,14 @@
 
 <a
     href
-    on:click={toggle}
+    onclick={toggle}
     role="button"
     class="navbar-burger {closed ? '' : 'is-active'}"
     aria-label="menu"
     aria-expanded="false"
     data-target="navbar"
 >
-    <span aria-hidden="true" />
-    <span aria-hidden="true" />
-    <span aria-hidden="true" />
+    <span aria-hidden="true"></span>
+    <span aria-hidden="true"></span>
+    <span aria-hidden="true"></span>
 </a>

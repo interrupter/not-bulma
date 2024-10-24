@@ -1,28 +1,48 @@
 <script>
     import "bulma-tooltip/dist/css/bulma-tooltip.min.css";
-    export let hidden = true;
-    export let showable = true;
-    export let copiable = true;
 
-    export let copyIcon = "copy";
-    export let showIcon = "eye";
-    export let hideIcon = "eye-slash";
-    export let maxLength = 20;
-    export let shadowClass = "has-background-primary-90";
-    export let tooltip = true;
-    export let tooltipTTL = 2000;
-    export let tooltipText = "Скопировано в буфер";
-    export let tooltipClass = "has-tooltip-info";
 
-    export let value = "";
+    /**
+     * @typedef {Object} Props
+     * @property {boolean} [hidden]
+     * @property {boolean} [showable]
+     * @property {boolean} [copiable]
+     * @property {string} [copyIcon]
+     * @property {string} [showIcon]
+     * @property {string} [hideIcon]
+     * @property {number} [maxLength]
+     * @property {string} [shadowClass]
+     * @property {boolean} [tooltip]
+     * @property {number} [tooltipTTL]
+     * @property {string} [tooltipText]
+     * @property {string} [tooltipClass]
+     * @property {string} [value]
+     */
+
+    /** @type {Props} */
+    let {
+        hidden = $bindable(true),
+        showable = true,
+        copiable = true,
+        copyIcon = "copy",
+        showIcon = "eye",
+        hideIcon = "eye-slash",
+        maxLength = 20,
+        shadowClass = "has-background-primary-90",
+        tooltip = true,
+        tooltipTTL = 2000,
+        tooltipText = "Скопировано в буфер",
+        tooltipClass = "has-tooltip-info",
+        value = ""
+    } = $props();
 
     function toggleView() {
         hidden = !hidden;
     }
 
-    let contentCopied = false,
-        tooltipActive,
-        tooltipTarget;
+    let contentCopied = $state(false),
+        tooltipActive = $derived(tooltip && contentCopied),
+        tooltipTarget = $state();
 
     async function copyContent() {
         try {
@@ -40,7 +60,7 @@
         }
     }
 
-    $: tooltipActive = tooltip && contentCopied;
+    
 </script>
 
 <span
@@ -52,16 +72,16 @@
 {#if copiable}
     <span
         bind:this={tooltipTarget}
-        on:click={copyContent}
+        onclick={copyContent}
         class={"icon is-small is-right is-clickable " +
             (tooltipActive ? ` ${tooltipClass} ` : "") +
-            " is-vertical-middle"}><i class="fas fa-{copyIcon}" /></span
+            " is-vertical-middle"}><i class="fas fa-{copyIcon}"></i></span
     >
 {/if}
 {#if showable}
     <span
         class="icon is-small is-right is-clickable is-vertical-middle"
-        on:click={toggleView}
-        ><i class="fas fa-{hidden ? showIcon : hideIcon}" /></span
+        onclick={toggleView}
+        ><i class="fas fa-{hidden ? showIcon : hideIcon}"></i></span
     >
 {/if}

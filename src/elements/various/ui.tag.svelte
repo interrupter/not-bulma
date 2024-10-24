@@ -1,39 +1,62 @@
 <script>
+  import { run } from 'svelte/legacy';
+
     import { onMount } from "svelte";
 
     import { LOCALE } from "../../locale";
     import notCommon from "../../frame/common";
-    //if we want to address this tag
-    export let id = "tagId";
-    export let title = "tag";
-    export let color = "info";
-    export let size = "normal";
+    
 
-    export let padding = "normal";
-    export let bold = false;
 
-    export let right = false;
-    export let left = false;
-    export let top = false;
-    export let bottom = false;
 
-    export let classes = "";
-    let sided = false;
-    $: sided = right || left || top || bottom;
+    let sided = $state(false);
 
-    export let events = {}; //events to react on
-    //register event handlers
-    export let register = notCommon.registerWidgetEvents.bind(notCommon);
-    //
-    export let onUpdate = (data) => {
+    
+    
+
+  /**
+   * @typedef {Object} Props
+   * @property {string} [id] - if we want to address this tag
+   * @property {string} [title]
+   * @property {string} [color]
+   * @property {string} [size]
+   * @property {string} [padding]
+   * @property {boolean} [bold]
+   * @property {boolean} [right]
+   * @property {boolean} [left]
+   * @property {boolean} [top]
+   * @property {boolean} [bottom]
+   * @property {string} [classes]
+   * @property {any} [events]
+   * @property {any} [register] - register event handlers
+   * @property {any} [onUpdate]
+   * @property {any} [action]
+   */
+
+  /** @type {Props} */
+  let {
+    id = "tagId",
+    title = $bindable("tag"),
+    color = "info",
+    size = "normal",
+    padding = "normal",
+    bold = false,
+    right = false,
+    left = false,
+    top = false,
+    bottom = false,
+    classes = "",
+    events = $bindable({}),
+    register = notCommon.registerWidgetEvents.bind(notCommon),
+    onUpdate = (data) => {
         if (Object.hasOwn(data, "title")) {
             title = data.title;
         }
-    };
-
-    export let action = () => {
+    },
+    action = () => {
         return true;
-    };
+    }
+  } = $props();
 
     function getStandartUpdateEventName() {
         return `tag-${id}:update`;
@@ -45,11 +68,14 @@
         }
         register(events);
     });
+    run(() => {
+    sided = right || left || top || bottom;
+  });
 </script>
 
 {#if title}
     <span
-        on:click={action ? action : undefined}
+        onclick={action ? action : undefined}
         id="tag-{id}"
         class="
   tag

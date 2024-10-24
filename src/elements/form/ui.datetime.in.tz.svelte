@@ -1,4 +1,6 @@
 <script>
+    import { run } from 'svelte/legacy';
+
     import UICommon from "../common";
     import ErrorsList from "../various/ui.errors.list.svelte";
     import { createEventDispatcher, onMount } from "svelte";
@@ -28,36 +30,65 @@
             : dateString;
     }
 
-    export let inputStarted = false;
-    //
-    export let fieldname = "datetime";
-    export let value = removeMsFromDate(new Date().toISOString()); //ISO 8601 time string
-    export let timezoneOffset = 0; //target timezone offset in minutes; target time + timezoneOffset = ZULU time
-    //presentation
-    export let icon = false;
-    export let required = false;
-    export let disabled = false;
-    export let readonly = false;
-    //validation
-    export let valid = true;
-    export let validated = false;
-    export let errors = false;
-    export let formErrors = false;
-    export let formLevelError = false;
+    
+    
+    
+    /**
+     * @typedef {Object} Props
+     * @property {boolean} [inputStarted]
+     * @property {string} [fieldname]
+     * @property {any} [value]
+     * @property {number} [timezoneOffset]
+     * @property {boolean} [icon] - presentation
+     * @property {boolean} [required]
+     * @property {boolean} [disabled]
+     * @property {boolean} [readonly]
+     * @property {boolean} [valid] - validation
+     * @property {boolean} [validated]
+     * @property {boolean} [errors]
+     * @property {boolean} [formErrors]
+     * @property {boolean} [formLevelError]
+     */
 
-    $: iconClasses = (icon ? " has-icons-left " : "") + " has-icons-right ";
-    $: allErrors = [].concat(
-        errors ? errors : [],
-        formErrors ? formErrors : []
-    );
-    $: showErrors = !(validated && valid) && inputStarted;
-    $: invalid = valid === false || formLevelError;
-    $: validationClasses =
-        valid === true || !inputStarted
-            ? UICommon.CLASS_OK
-            : UICommon.CLASS_ERR;
+    /** @type {Props} */
+    let {
+        inputStarted = $bindable(false),
+        fieldname = "datetime",
+        value = $bindable(removeMsFromDate(new Date().toISOString())),
+        timezoneOffset = 0,
+        icon = false,
+        required = false,
+        disabled = false,
+        readonly = false,
+        valid = true,
+        validated = false,
+        errors = false,
+        formErrors = false,
+        formLevelError = false
+    } = $props();
 
-    let shiftedValue, prevShiftedValue;
+    let iconClasses = $derived((icon ? " has-icons-left " : "") + " has-icons-right ");
+    let allErrors;
+    run(() => {
+        allErrors = [].concat(
+            errors ? errors : [],
+            formErrors ? formErrors : []
+        );
+    });
+    let showErrors;
+    run(() => {
+        showErrors = !(validated && valid) && inputStarted;
+    });
+    let invalid = $derived(valid === false || formLevelError);
+    let validationClasses;
+    run(() => {
+        validationClasses =
+            valid === true || !inputStarted
+                ? UICommon.CLASS_OK
+                : UICommon.CLASS_ERR;
+    });
+
+    let shiftedValue = $state(), prevShiftedValue;
 
     const setShifted = (val) => {
         if (dateIsValid(val)) {
@@ -82,13 +113,11 @@
             return false;
         }
     };
-    let GMTMark;
-    $: {
-        GMTMark = isNaN(timezoneOffset)
+    let GMTMark = $derived(isNaN(timezoneOffset)
             ? ""
             : (timezoneOffset > 0 ? "" : "+") +
-              (timezoneOffset / -60).toFixed(1);
-    }
+              (timezoneOffset / -60).toFixed(1));
+    
 
     const changed = () =>
         value !== shiftDatetime(shiftedValue, -timezoneOffset, true);
@@ -139,21 +168,21 @@
                 autocomplete={fieldname}
                 aria-controls="input-field-helper-{fieldname}"
                 aria-describedby="input-field-helper-{fieldname}"
-                on:change={onChange}
-                on:blur={onChange}
-                on:input={onChange}
+                onchange={onChange}
+                onblur={onChange}
+                oninput={onChange}
             />
             {#if icon}
                 <span class="icon is-small is-left" title={GMTMark}
-                    ><i class="fas fa-{icon}" /></span
+                    ><i class="fas fa-{icon}"></i></span
                 >
             {/if}
             {#if validated === true}
                 <span class="icon is-small is-right">
                     {#if valid === true}
-                        <i class="fas fa-check" />
+                        <i class="fas fa-check"></i>
                     {:else if valid === false}
-                        <i class="fas fa-exclamation-triangle" />
+                        <i class="fas fa-exclamation-triangle"></i>
                     {/if}
                 </span>
             {/if}

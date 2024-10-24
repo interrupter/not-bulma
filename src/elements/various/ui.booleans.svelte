@@ -2,11 +2,17 @@
     import { onMount } from "svelte";
     import UIBoolean from "./ui.boolean.svelte";
 
-    export let values = [];
-    export let inverted = false;
-    export let componentConstructor = UIBoolean;
+    /**
+     * @typedef {Object} Props
+     * @property {any} [values]
+     * @property {boolean} [inverted]
+     * @property {any} [componentConstructor]
+     */
 
-    let _values = [];
+    /** @type {Props} */
+    let { values = [], inverted = false, componentConstructor = UIBoolean } = $props();
+
+    let _values = $state([]);
 
     onMount(() => {
         if (typeof values === "boolean") {
@@ -25,8 +31,8 @@
 
 {#if _values.length}
     {#each _values as item}
-        <svelte:component
-            this={componentConstructor}
+        {@const SvelteComponent = componentConstructor}
+        <SvelteComponent
             {...item}
             inverted={inverted || item.inverted}
         />

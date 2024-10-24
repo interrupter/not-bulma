@@ -1,4 +1,5 @@
 <script>
+	import Ui_items from './ui.items.svelte';
 	import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
 
@@ -7,13 +8,19 @@
 	import UISideMenuTrigger from './ui.trigger.svelte';
 	import UISideMenuItemLabel from './ui.item.label.svelte';
 
-	let closedChildren = {
+	let closedChildren = $state({
 
-	};
+	});
 
-	export let root = '';
-	export let items = [];
-	export let closed = false;
+	/**
+	 * @typedef {Object} Props
+	 * @property {string} [root]
+	 * @property {any} [items]
+	 * @property {boolean} [closed]
+	 */
+
+	/** @type {Props} */
+	let { root = '', items = [], closed = false } = $props();
 
 
 function onClick(ev){
@@ -33,7 +40,7 @@ function onClick(ev){
 	{#if item.items && item.items.length }
 	<li class="is-no-follow-subtitle {item.classes}">
 		{#if (typeof item.url !== 'undefined' && item.url!==false) }
-		<a href="{root}{item.url}" data-href="{item.url}" on:click="{onClick}" class="has-subitems">
+		<a href="{root}{item.url}" data-href="{item.url}" onclick={onClick} class="has-subitems">
 			<UISideMenuItemLabel {item} >
 				<UISideMenuTrigger on:toggle={({detail})=>{ closedChildren[index] = detail.closed; }} />
 			</UISideMenuItemLabel>
@@ -43,7 +50,7 @@ function onClick(ev){
 				<UISideMenuTrigger on:toggle={({detail})=>{ closedChildren[index] = detail.closed; }} />
 			</UISideMenuItemLabel>
 		{/if}
-		<svelte:self {root} items="{item.items}" bind:closed={closedChildren[index]} on:navigate />
+		<Ui_items {root} items="{item.items}" bind:closed={closedChildren[index]} on:navigate />
 	</li>
 	{:else}
 	<UISideMenuItemWithoutChildren {root} {item} on:navigate />

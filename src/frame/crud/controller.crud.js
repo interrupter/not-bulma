@@ -11,6 +11,7 @@ import CRUDVariantsPreloader from "./variants.preloader.js";
 import CRUDRouter from "./router.js";
 import CRUDMessage from "./message.js";
 import CRUDActions from "./actions";
+import { mount } from "svelte";
 
 const BREADCRUMBS = [];
 const TITLE_FIELDS_PRIORITY = ["title", "label", "id", "name"];
@@ -222,9 +223,10 @@ class notCRUD extends notController {
 
     getTitleFromLib(propName, id) {
         const actionName = this.getCurrentAction();
-        this.debug(
-            "notCRUD.getTitleFromLib is obsolete, use notCRUD.getPreloadedVariantTitle(actionName, propName, id)"
-        );
+        this.debug &&
+            this.debug(
+                "notCRUD.getTitleFromLib is obsolete, use notCRUD.getPreloadedVariantTitle(actionName, propName, id)"
+            );
         return this.getPreloadedVariantTitle(actionName, propName, id);
     }
 
@@ -370,10 +372,12 @@ class notCRUD extends notController {
                 state = actionUI.processResult(e);
             } finally {
                 actionUI.resetLoading();
+                // eslint-disable-next-line no-unsafe-finally
                 return state;
             }
+        } else {
+            throw new Error("Action UI doesnt exist");
         }
-        throw new Error("Action UI doesnt exist");
     }
 
     $destroyUI() {
@@ -383,6 +387,7 @@ class notCRUD extends notController {
     }
 
     destroyUIByName(name) {
+        // @ts-ignore
         if (Object.hasOwn(this.ui, name)) {
             this.ui[name].$destroy && this.ui[name].$destroy();
             this.ui[name].destroy && this.ui[name].destroy();
@@ -433,13 +438,13 @@ class notCRUD extends notController {
     }
 
     createLoaderUI() {
-        return new UILoader({
-            target: this.getContainerInnerElement(),
-            props: {
-                loading: true,
-                title: "",
-            },
-        });
+        return mount(UILoader, {
+                    target: this.getContainerInnerElement(),
+                    props: {
+                        loading: true,
+                        title: "",
+                    },
+                });
     }
 }
 

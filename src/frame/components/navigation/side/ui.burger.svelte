@@ -4,19 +4,18 @@
   import SideMenu from '../index.js';
   import UIIcon from '../../../../elements/icon/ui.icon.svelte';
 
-  export let iconOpen = {
+
+  let { iconOpen = {
     src: '/img/icon/sidemenu/side_menu-i-32.png',
     width: 32,
     height: 32
-  };
-
-  export let iconClose = {
+  }, iconClose = {
     src: '/img/icon/sidemenu/side_menu-is-32.png',
     width: 32,
     height: 32
-  };
+  } } = $props();
 
-  let open = true;
+  let open = $state(true);
 
   function toggle(e){
     e && e.preventDefault();
@@ -36,7 +35,7 @@
 </script>
 
 
-<a href on:click={toggle} class="is-sidemenu-burger {open?'is-active':''}">
+<a href onclick={toggle} class="is-sidemenu-burger {open?'is-active':''}">
   {#if open }
   <UIIcon {...iconClose} />
   {:else}

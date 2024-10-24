@@ -4,12 +4,25 @@
   import { createEventDispatcher } from 'svelte';
   let dispatch = createEventDispatcher();
 
-  export let id = '';
-  export let value = false;
-  export let fieldname = 'switch';
-  export let disabled = false;
-  export let readonly = false;
-  export let styling = " is-rounded is-success ";
+  /**
+   * @typedef {Object} Props
+   * @property {string} [id]
+   * @property {boolean} [value]
+   * @property {string} [fieldname]
+   * @property {boolean} [disabled]
+   * @property {boolean} [readonly]
+   * @property {string} [styling]
+   */
+
+  /** @type {Props} */
+  let {
+    id = '',
+    value = $bindable(false),
+    fieldname = 'switch',
+    disabled = false,
+    readonly = false,
+    styling = " is-rounded is-success "
+  } = $props();
 
 function onInput(ev){
     let data = {
@@ -29,6 +42,6 @@ function onInput(ev){
   bind:checked={value}
   name="{fieldname}"
   {readonly} {disabled}
-  on:input={onInput}
+  oninput={onInput}
   />
 <label class="label" for="edit-table-row-cell-inline-switch-{fieldname}-{id}"></label>

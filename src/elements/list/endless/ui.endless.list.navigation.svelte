@@ -6,12 +6,23 @@
     const dispatch = createEventDispatcher();
 
    // export let skip = 0;
-    //export let count = 0;
-    export let page = 0;
-    export let pages = 0;
+    
 
-    export let buttonComponent = UIButton;
-    export let buttonComponentProps = {};
+   /**
+    * @typedef {Object} Props
+    * @property {number} [page] - export let count = 0;
+    * @property {number} [pages]
+    * @property {any} [buttonComponent]
+    * @property {any} [buttonComponentProps]
+    */
+
+   /** @type {Props} */
+   let {
+      page = 0,
+      pages = 0,
+      buttonComponent = UIButton,
+      buttonComponentProps = {}
+   } = $props();
 
 </script>
 
@@ -19,11 +30,11 @@
 <div class="columns">
     <div class="column">
         {#if page > 1 }
-        <svelte:component
-            this={buttonComponent}            
+        {@const SvelteComponent = buttonComponent}
+        <SvelteComponent            
             {...buttonComponentProps}
             action={() => dispatch('prev')}
-            >{$LOCALE['not-node:list_navigation_prev_button_label']}</svelte:component>
+            >{$LOCALE['not-node:list_navigation_prev_button_label']}</SvelteComponent>
         {/if}
     </div>
     {#if pages > 1 }
@@ -33,11 +44,11 @@
     {/if}
     <div class="column">
         {#if page < pages }
-        <svelte:component
-            this={buttonComponent}            
+        {@const SvelteComponent_1 = buttonComponent}
+        <SvelteComponent_1            
             {...buttonComponentProps}
             action={() => dispatch('next')}
-            >{$LOCALE['not-node:list_navigation_next_button_label']}</svelte:component>
+            >{$LOCALE['not-node:list_navigation_next_button_label']}</SvelteComponent_1>
         {/if}
     </div>
 </div>

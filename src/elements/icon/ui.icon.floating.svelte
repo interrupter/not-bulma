@@ -6,20 +6,26 @@
   //export let left = '2em';
   //export let right;
   //export let bottom;
-  //export let direction = 'left';  //left/right/top/bottom/around
+  
 
-  export let trigger = {
+  /**
+   * @typedef {Object} Props
+   * @property {any} [trigger] - export let direction = 'left';  //left/right/top/bottom/around
+   */
+
+  /** @type {Props} */
+  let { trigger = {
     title:  'Click me!',
     icon:   'plus',
     color:  'primary',
     size:   'medium'
-  };
+  } } = $props();
 
   function toggle(){
 
   }
 
-  let positionStyle = '';
+  let positionStyle = $state('');
 
   onMount(()=>{
     positionStyle = '';

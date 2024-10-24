@@ -4,19 +4,25 @@
   import UISideMenuItems from './ui.items.svelte';
   import {COMPONENTS} from '../../../LIB.js';
 
-  export let section;
-  export let items = [];
-  export let root = '';
+  /**
+   * @typedef {Object} Props
+   * @property {any} section
+   * @property {any} [items]
+   * @property {string} [root]
+   */
 
-  $: sectionItems = items.filter(item => section.id === item.section );
+  /** @type {Props} */
+  let { section, items = [], root = '' } = $props();
+
+  let sectionItems = $derived(items.filter(item => section.id === item.section ));
 </script>
 
 {#if section }
 {#if sectionItems.length || section.component || section.tag || section.indicator }
 <p class="menu-label {section.classes}">
   {#if (section.type==='component' && section.component && COMPONENTS.contains(section.component)) }
-  <svelte:component
-    this={COMPONENTS.get(section.component)}
+  {@const SvelteComponent = COMPONENTS.get(section.component)}
+  <SvelteComponent
     id={section.id}
     {...section.props}
      />

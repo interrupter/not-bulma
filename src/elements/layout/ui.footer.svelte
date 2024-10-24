@@ -1,8 +1,15 @@
 <script>
-  export let id='';
-  export let classes = '';
+  /**
+   * @typedef {Object} Props
+   * @property {string} [id]
+   * @property {string} [classes]
+   * @property {import('svelte').Snippet} [children]
+   */
+
+  /** @type {Props} */
+  let { id = '', classes = '', children } = $props();
 </script>
 
 <footer {id} class="footer  {classes} ">
-  <slot></slot>
+  {@render children?.()}
 </footer>

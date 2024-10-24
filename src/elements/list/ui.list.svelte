@@ -4,34 +4,62 @@
     import UIListBlock from "./ui.list.block.svelte";
     import UITitle from "../various/ui.title.svelte";
 
-    export let classes = "";
-    export let items = [];
 
-    export let actions = [];
-    export let links = [];
 
-    export let actionsVisible = false;
-    export let itemsHoverable = false;
-    export let overflowEllipsis = false;
-    export let hiddenImages = false;
 
-    export let itemClasses = "";
-    export let itemLength;
-    export let idFieldName = "id";
     //customization
-    //empty
-    export let emptyListPlaceholderComponent = UIListEmptyPlaceholder;
-    export let emptyListPlaceholderComponentProps = {};
-    //item
-    export let listItemComponent = UIListItem;
-    export let listItemComponentProps = {};
-    //item parts
-    export let titleComponent = UITitle;
-    export let titleComponentProps = { size: 6 };
-    export let descriptionComponent;
-    export let descriptionComponentProps = {};
-    export let imageComponent;
-    export let imageComponentProps = {};
+    
+    
+    
+    /**
+     * @typedef {Object} Props
+     * @property {string} [classes]
+     * @property {any} [items]
+     * @property {any} [actions]
+     * @property {any} [links]
+     * @property {boolean} [actionsVisible]
+     * @property {boolean} [itemsHoverable]
+     * @property {boolean} [overflowEllipsis]
+     * @property {boolean} [hiddenImages]
+     * @property {string} [itemClasses]
+     * @property {any} itemLength
+     * @property {string} [idFieldName]
+     * @property {any} [emptyListPlaceholderComponent] - empty
+     * @property {any} [emptyListPlaceholderComponentProps]
+     * @property {any} [listItemComponent] - item
+     * @property {any} [listItemComponentProps]
+     * @property {any} [titleComponent] - item parts
+     * @property {any} [titleComponentProps]
+     * @property {any} descriptionComponent
+     * @property {any} [descriptionComponentProps]
+     * @property {any} imageComponent
+     * @property {any} [imageComponentProps]
+     */
+
+    /** @type {Props} */
+    let {
+        classes = "",
+        items = $bindable([]),
+        actions = [],
+        links = [],
+        actionsVisible = false,
+        itemsHoverable = false,
+        overflowEllipsis = false,
+        hiddenImages = false,
+        itemClasses = "",
+        itemLength,
+        idFieldName = "id",
+        emptyListPlaceholderComponent = UIListEmptyPlaceholder,
+        emptyListPlaceholderComponentProps = {},
+        listItemComponent = UIListItem,
+        listItemComponentProps = {},
+        titleComponent = UITitle,
+        titleComponentProps = { size: 6 },
+        descriptionComponent,
+        descriptionComponentProps = {},
+        imageComponent,
+        imageComponentProps = {}
+    } = $props();
 </script>
 
 {#if items.length}
@@ -68,8 +96,8 @@
         />
     </div>
 {:else}
-    <svelte:component
-        this={emptyListPlaceholderComponent}
+    {@const SvelteComponent = emptyListPlaceholderComponent}
+    <SvelteComponent
         {...emptyListPlaceholderComponentProps}
     />
 {/if}

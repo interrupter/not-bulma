@@ -4,14 +4,28 @@
 
     import UIItemContent from "./ui.item.content.svelte";
     import UIItem from "./ui.item.svelte";
-    export let root = "";
-    export let section = {};
-    export let items = [];
 
-    export let hidden = "";
-    export let hoverable = true;
-    export let arrowless = false;
-    export let right = false;
+    /**
+     * @typedef {Object} Props
+     * @property {string} [root]
+     * @property {any} [section]
+     * @property {any} [items]
+     * @property {string} [hidden]
+     * @property {boolean} [hoverable]
+     * @property {boolean} [arrowless]
+     * @property {boolean} [right]
+     */
+
+    /** @type {Props} */
+    let {
+        root = "",
+        section = {},
+        items = [],
+        hidden = "",
+        hoverable = true,
+        arrowless = false,
+        right = false
+    } = $props();
 
     function onClick(event) {
         dispatch("click", { event, element: section });
@@ -26,7 +40,7 @@
     >
         <a
             href
-            on:click={onClick}
+            onclick={onClick}
             class="navbar-link {arrowless ? 'is-arrowless' : ''}"
         >
             <UIItemContent item={section} />
@@ -42,15 +56,15 @@
         class="navbar-item {hidden ? `is-hidden-${hidden}` : ''} "
         href="{root}{section.url}"
         data-href={section.url}
-        on:click={onClick}
+        onclick={onClick}
     >
         <UIItemContent item={section} />
     </a>
 {:else}
     <div
         class="navbar-item {hidden ? `is-hidden-${hidden}` : ''} "
-        on:click={onClick}
-        on:keyup={onClick}
+        onclick={onClick}
+        onkeyup={onClick}
     >
         <UIItemContent item={section} />
     </div>

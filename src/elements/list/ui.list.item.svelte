@@ -1,4 +1,6 @@
 <script>
+    import { run, preventDefault } from 'svelte/legacy';
+
     import { createEventDispatcher, onMount } from "svelte";
     const dispatch = createEventDispatcher();
 
@@ -6,44 +8,74 @@
     import UIButtons from "../button/ui.buttons.svelte";
     import UILinks from "../link/ui.links.svelte";
 
-    export let title;
-    export let description;
-    export let actions = [];
-    export let links = [];
-    export let listActions = [];
-    export let listLinks = [];
-    export let classes = "";
-    export let commonClasses = "";
-    export let image = "";
-    //value of item, will be passed to event handlers
-    export let value;
-    //index in array 0-length
-    export let index = -1;
-    //if first
-    export let first = false;
-    //if last
-    export let last = false;
-    //customization
-    export let titleComponent = UITitle;
-    export let titleComponentProps = { size: 6 };
-    //
-    export let descriptionComponent;
-    export let descriptionComponentProps = {};
-    //
-    export let imageComponent;
-    export let imageComponentProps = {};
+    
+    
+    
+    
+    
+    
+    
+    /**
+     * @typedef {Object} Props
+     * @property {any} title
+     * @property {any} description
+     * @property {any} [actions]
+     * @property {any} [links]
+     * @property {any} [listActions]
+     * @property {any} [listLinks]
+     * @property {string} [classes]
+     * @property {string} [commonClasses]
+     * @property {string} [image]
+     * @property {any} value - value of item, will be passed to event handlers
+     * @property {any} [index] - index in array 0-length
+     * @property {boolean} [first] - if first
+     * @property {boolean} [last] - if last
+     * @property {any} [titleComponent] - customization
+     * @property {any} [titleComponentProps]
+     * @property {any} descriptionComponent
+     * @property {any} [descriptionComponentProps]
+     * @property {any} imageComponent
+     * @property {any} [imageComponentProps]
+     */
+
+    /** @type {Props} */
+    let {
+        title,
+        description,
+        actions = [],
+        links = [],
+        listActions = [],
+        listLinks = [],
+        classes = "",
+        commonClasses = "",
+        image = "",
+        value,
+        index = -1,
+        first = false,
+        last = false,
+        titleComponent = UITitle,
+        titleComponentProps = { size: 6 },
+        descriptionComponent,
+        descriptionComponentProps = {},
+        imageComponent,
+        imageComponentProps = {}
+    } = $props();
 
     function onClick() {
         dispatch("click", value);
     }
 
-    let allActions = [];
-    $: allActions = [...actions, ...listActions].map((btn) => {
-        return { ...btn, action: () => btn.action(value) };
+    let allActions = $state([]);
+    run(() => {
+        allActions = [...actions, ...listActions].map((btn) => {
+            return { ...btn, action: () => btn.action(value) };
+        });
     });
 
-    let allLinks = [];
-    $: allLinks = [...links, ...listLinks];
+    let allLinks = $state([]);
+    run(() => {
+        allLinks = [...links, ...listLinks];
+    });
 </script>
 
 <div
@@ -55,8 +87,8 @@
         ? 'list-item-first'
         : ''}  {`list-item-at-${index}`} {`list-item-` +
         (index % 2 ? 'odd' : 'even')}"
-    on:click={onClick}
-    on:keyup={(e) => {
+    onclick={onClick}
+    onkeyup={(e) => {
         if (e && e.key == "Enter") {
             onClick();
         }
@@ -67,27 +99,27 @@
             role="button"
             tabindex="0"
             class="list-item-image"
-            on:keyup|preventDefault={(e) => {
+            onkeyup={preventDefault((e) => {
                 if (e && e.key == "Enter") {
                     onClick();
                     dispatch("clickImage", value);
                 }
-            }}
-            on:click|preventDefault={() => {
+            })}
+            onclick={preventDefault(() => {
                 onClick();
                 dispatch("clickImage", value);
-            }}
+            })}
         >
             {#if imageComponent}
                 {#if typeof image === "string"}
-                    <svelte:component
-                        this={imageComponent}
+                    {@const SvelteComponent = imageComponent}
+                    <SvelteComponent
                         value={image}
                         {...imageComponentProps}
                     />
                 {:else}
-                    <svelte:component
-                        this={imageComponent}
+                    {@const SvelteComponent_1 = imageComponent}
+                    <SvelteComponent_1
                         {...image}
                         {...imageComponentProps}
                     />
@@ -103,44 +135,44 @@
         role="button"
         tabindex="0"
         class="list-item-content"
-        on:click|preventDefault={() => {
+        onclick={preventDefault(() => {
             onClick();
             dispatch("clickContent", value);
-        }}
-        on:keyup|preventDefault={(e) => {
+        })}
+        onkeyup={preventDefault((e) => {
             if (e && e.key == "Enter") {
                 onClick();
                 dispatch("clickContent", value);
             }
-        }}
+        })}
     >
         {#if title}
             <div
                 class="list-item-title"
                 role="button"
                 tabindex="0"
-                on:keyup|preventDefault={(e) => {
+                onkeyup={preventDefault((e) => {
                     if (e && e.key == "Enter") {
                         onClick();
                         dispatch("clickTitle", value);
                     }
-                }}
-                on:click|preventDefault={() => {
+                })}
+                onclick={preventDefault(() => {
                     onClick();
                     dispatch("clickTitle", value);
-                }}
+                })}
             >
                 {#if titleComponent}
                     {#if typeof title === "string"}
-                        <svelte:component
-                            this={titleComponent}
+                        {@const SvelteComponent_2 = titleComponent}
+                        <SvelteComponent_2
                             {title}
                             {...titleComponentProps}
                             on:change
                         />
                     {:else}
-                        <svelte:component
-                            this={titleComponent}
+                        {@const SvelteComponent_3 = titleComponent}
+                        <SvelteComponent_3
                             {...title}
                             {...titleComponentProps}
                             on:change
@@ -155,30 +187,30 @@
             <div
                 role="button"
                 tabindex="0"
-                on:keyup|preventDefault={(e) => {
+                onkeyup={preventDefault((e) => {
                     if (e && e.key == "Enter") {
                         onClick();
                         dispatch("clickDescription", value);
                     }
-                }}
+                })}
                 class="list-item-description"
-                on:click|preventDefault={() => {
+                onclick={preventDefault(() => {
                     onClick();
                     dispatch("clickDescription", value);
-                }}
+                })}
             >
                 {#if descriptionComponent}
                     {#if typeof description === "string"}
-                        <svelte:component
-                            this={descriptionComponent}
+                        {@const SvelteComponent_4 = descriptionComponent}
+                        <SvelteComponent_4
                             value={description}
                             {...descriptionComponentProps}
                             on:change
                             on:click
                         />
                     {:else}
-                        <svelte:component
-                            this={descriptionComponent}
+                        {@const SvelteComponent_5 = descriptionComponent}
+                        <SvelteComponent_5
                             {...description}
                             {...descriptionComponentProps}
                             on:change

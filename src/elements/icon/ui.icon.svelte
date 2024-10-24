@@ -1,16 +1,30 @@
 <script>
   import UIIconFont from './ui.icon.font.svelte';
-  //some label
-  export let title = '';
-  //font icon
-  export let size = '';
-  export let font = '';
-  //svg icon
-  export let svg = '';
-  //image icon
-  export let src = '';
-  export let width;
-  export let height;
+  
+  
+  
+  
+  /**
+   * @typedef {Object} Props
+   * @property {string} [title] - some label
+   * @property {string} [size] - font icon
+   * @property {string} [font]
+   * @property {string} [svg] - svg icon
+   * @property {string} [src] - image icon
+   * @property {any} width
+   * @property {any} height
+   */
+
+  /** @type {Props} */
+  let {
+    title = '',
+    size = '',
+    font = '',
+    svg = '',
+    src = '',
+    width,
+    height
+  } = $props();
 </script>
 
 {#if font }

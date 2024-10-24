@@ -3,10 +3,21 @@
     const dispatch = createEventDispatcher();
 
     import UIItemContent from "./ui.item.content.svelte";
-    export let root = "";
-    export let item = {};
-    export let hidden = "";
-    export let classes = "";
+    /**
+     * @typedef {Object} Props
+     * @property {string} [root]
+     * @property {any} [item]
+     * @property {string} [hidden]
+     * @property {string} [classes]
+     */
+
+    /** @type {Props} */
+    let {
+        root = "",
+        item = {},
+        hidden = "",
+        classes = ""
+    } = $props();
 
     function onClick(event) {
         dispatch("click", { event, element: item });
@@ -19,7 +30,7 @@
 
 {#if item.url}
     <a
-        on:click={onClick}
+        onclick={onClick}
         class="navbar-item {hidden
             ? `is-hidden-${hidden}`
             : ''} {item.classes} {classes} "
@@ -30,8 +41,8 @@
     </a>
 {:else}
     <div
-        on:click={onClick}
-        on:keyup={onClick}
+        onclick={onClick}
+        onkeyup={onClick}
         class="navbar-item {hidden
             ? `is-hidden-${hidden}`
             : ''} {item.classes} {classes}"

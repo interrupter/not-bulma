@@ -1,4 +1,6 @@
 <script>
+  import { run } from 'svelte/legacy';
+
     import { LOCALE } from "../../locale";
     import ErrorsList from "../various/ui.errors.list.svelte";
     import UICommon from "../common.js";
@@ -6,46 +8,68 @@
     let dispatch = createEventDispatcher();
     const LC_ADD = "not-node:add_label";
     const LC_SELECT_FROM_LIST = "not-node:select_from_list_label";
-    //list of item ids
-    export let value = []; //raw ids of variants
-    export let inputStarted = false;
-    export let variants = [];
-    export let fieldname = "tag";
-    //export let required = true;
-    export let readonly = false;
-    export let valid = true;
-    export let validated = false;
-    export let errors = false;
-    export let formErrors = false;
-    export let formLevelError = false;
+    
+    
 
     onMount(() => {
         clearValueFromDeadVariants();
     });
 
-    export let beforeAdd = (/*variant, variants*/) => {
+
+
+
+
+  /**
+   * @typedef {Object} Props
+   * @property {any} [value] - list of item ids
+   * @property {boolean} [inputStarted]
+   * @property {any} [variants]
+   * @property {string} [fieldname]
+   * @property {boolean} [readonly] - export let required = true;
+   * @property {boolean} [valid]
+   * @property {boolean} [validated]
+   * @property {boolean} [errors]
+   * @property {boolean} [formErrors]
+   * @property {boolean} [formLevelError]
+   * @property {any} [beforeAdd]
+   * @property {any} [getItemId]
+   * @property {any} [getItemTitle]
+   * @property {any} [getItemType]
+   * @property {any} [buildItem]
+   */
+
+  /** @type {Props} */
+  let {
+    value = $bindable([]),
+    inputStarted = false,
+    variants = [],
+    fieldname = "tag",
+    readonly = false,
+    valid = true,
+    validated = false,
+    errors = false,
+    formErrors = false,
+    formLevelError = false,
+    beforeAdd = (/*variant, variants*/) => {
         return true;
-    };
-
-    export let getItemId = (variant) => {
+    },
+    getItemId = (variant) => {
         return variant.id;
-    };
-
-    export let getItemTitle = (variant) => {
+    },
+    getItemTitle = (variant) => {
         return variant.title;
-    };
-
-    export let getItemType = (variant) => {
+    },
+    getItemType = (variant) => {
         return "info";
-    };
-
-    export let buildItem = (variant) => {
+    },
+    buildItem = (variant) => {
         return {
             id: getItemId(variant),
             title: getItemTitle(variant),
             type: getItemType(variant),
         };
-    };
+    }
+  } = $props();
 
     function variantIdToVariant(id) {
         return variants.find((variant) => getItemId(variant) === id);
@@ -102,20 +126,29 @@ item = {
   type       //for coloring items, usual html template names danger, success, etc
 }
 */
-    $: items = value
+    let items = $derived(value
         .map(variantIdToVariant)
         .filter((variant) => variant)
-        .map(buildItem);
-    $: allErrors = [].concat(
-        errors ? errors : [],
-        formErrors ? formErrors : []
-    );
-    $: showErrors = !(validated && valid) && inputStarted;
-    $: invalid = valid === false || formLevelError;
-    $: validationClasses =
-        valid === true || !inputStarted
-            ? UICommon.CLASS_OK
-            : UICommon.CLASS_ERR;
+        .map(buildItem));
+    let allErrors;
+  run(() => {
+    allErrors = [].concat(
+          errors ? errors : [],
+          formErrors ? formErrors : []
+      );
+  });
+    let showErrors;
+  run(() => {
+    showErrors = !(validated && valid) && inputStarted;
+  });
+    let invalid = $derived(valid === false || formLevelError);
+    let validationClasses;
+  run(() => {
+    validationClasses =
+          valid === true || !inputStarted
+              ? UICommon.CLASS_OK
+              : UICommon.CLASS_ERR;
+  });
 </script>
 
 <div class="control columns">
@@ -127,8 +160,8 @@ item = {
                     <button
                         data-id={item.id}
                         class="delete is-small"
-                        on:click={remove}
-                    />
+                        onclick={remove}
+></button>
                 {/if}
             </span>
         {/each}
@@ -148,7 +181,7 @@ item = {
                         {/each}
                     </select>
                 </div>
-                <button class="button is-primary is-small" on:click={add}
+                <button class="button is-primary is-small" onclick={add}
                     >{$LOCALE[LC_ADD]}</button
                 >
             </div>

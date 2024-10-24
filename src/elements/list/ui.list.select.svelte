@@ -7,63 +7,88 @@
     import UIImage from "../image/ui.image.svelte";
     import UIButtons from "../button/ui.buttons.svelte";
 
-    export let fieldname = "list-select";
-    export let multiple = false;
-    export let atLeastOne = true;
 
-    /*
-    //array of values variants in group
-    [
-        {         
-            id:number,
-            title:string|object,
-            description:string|object,
-            image:string|object,
-            value:object
-        }
-    ]
-    */
-    export let variants = [];
-    //[...selectedItemsValues]
-    export let value;
-    //[...selectedItemsIds]
-    export let selectedVariantsIds = [];
-    //
-    export let titleComponent = UITitle;
-    export let titleComponentProps = { size: 5 };
-    //
-    export let imageComponent = UIImage;
-    export let imageComponentProps = { covered: true };
-    //
-    export let descriptionComponent = UIButtons;
-    export let descriptionComponentProps = {};
-    //
-    export let listComponent = UIList;
-    export let listComponentProps = {};
-    //
-    export let sublimeValue = (value) => value.id;
+    
+    
+    
+    
+    
+    
+    
+    
 
-    //
-    export let getItem = ({ valueId }) => {
+    
+
+
+    
+    /**
+     * @typedef {Object} Props
+     * @property {string} [fieldname]
+     * @property {boolean} [multiple]
+     * @property {boolean} [atLeastOne]
+     * @property {any} [variants] - array of values variants in group
+[
+{
+id:number,
+title:string|object,
+description:string|object,
+image:string|object,
+value:object
+}
+]
+     * @property {any} value - [...selectedItemsValues]
+     * @property {any} [selectedVariantsIds] - [...selectedItemsIds]
+     * @property {any} [titleComponent]
+     * @property {any} [titleComponentProps]
+     * @property {any} [imageComponent]
+     * @property {any} [imageComponentProps]
+     * @property {any} [descriptionComponent]
+     * @property {any} [descriptionComponentProps]
+     * @property {any} [listComponent]
+     * @property {any} [listComponentProps]
+     * @property {any} [sublimeValue]
+     * @property {any} [getItem]
+     * @property {any} [getItemValue]
+     * @property {any} [getDefaultItemSublime]
+     * @property {any} [uiOn]
+     * @property {any} [uiOff]
+     */
+
+    /** @type {Props} */
+    let {
+        fieldname = "list-select",
+        multiple = false,
+        atLeastOne = true,
+        variants = $bindable([]),
+        value = $bindable(),
+        selectedVariantsIds = $bindable([]),
+        titleComponent = UITitle,
+        titleComponentProps = { size: 5 },
+        imageComponent = UIImage,
+        imageComponentProps = { covered: true },
+        descriptionComponent = UIButtons,
+        descriptionComponentProps = {},
+        listComponent = UIList,
+        listComponentProps = {},
+        sublimeValue = (value) => value.id,
+        getItem = ({ valueId }) => {
         return variants.find((btnVal) => btnVal.value.id === valueId);
-    };
-
-    export let getItemValue = ({ valueId }) => {
+    },
+        getItemValue = ({ valueId }) => {
         return getItem({ valueId }).value;
-    };
-
-    export let getDefaultItemSublime = () => {
+    },
+        getDefaultItemSublime = () => {
         return variants[0].id;
-    };
-    //
-    export let uiOn = (item) => {
+    },
+        uiOn = (item) => {
         item.color = "success";
         item.outlined = false;
-    };
-    export let uiOff = (item) => {
+    },
+        uiOff = (item) => {
         item.color = false;
         item.outlined = true;
-    };
+    }
+    } = $props();
 
     onMount(() => {
         if (value && Array.isArray(value)) {
@@ -186,10 +211,11 @@
             toggle({ id: defValueId });
         }
     }
+
+    const SvelteComponent = $derived(listComponent);
 </script>
 
-<svelte:component
-    this={listComponent}
+<SvelteComponent
     {...listComponentProps}
     bind:items={variants}
     {titleComponent}

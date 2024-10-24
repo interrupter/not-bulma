@@ -257,6 +257,7 @@ class CRUDGenericAction {
      * @param {string[]} params     list of route params
      * @param {object} response     API response
      */
+    // eslint-disable-next-line no-unused-vars
     static bindUIEvents(controller, params, response) {
         if (notCommon.isFunc(controller.goBack)) {
             this.bindUIEvent(controller, "reject", () => controller.goBack());

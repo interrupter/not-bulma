@@ -8,81 +8,102 @@
     import UIImage from "../image/ui.image.svelte";
     import UIButtons from "../button/ui.buttons.svelte";
 
-    export let fieldname = "radio-buttons";
     //
 
-    /*
-    [
-        //array of groups
-        {
-            id:number,
-            title:string|object,
-            image:string|object,
-            variants = [
-                //array of values variants in group
-                {
-                id:number,
-                title:string|object,
-                description:string|object,
-                image:string|object,
-                value:object
-            }]
-        }
-    ]
-    */
-    export let variants = [];
-    /*
-    multiple && multiple in group
-    {
-        //array of arrays of selected values in group
-        //if no selection group should be empty array
-        [groupId]: [...variantsId]
-    }
-    multiple && one in group
-    {
-        [groupId]: variantId
-    }
-    only one (not multiple && one in group)
-    {
-        group: groupId
-        value: variantId
-    }
-    */
-    export let value;
-    export let title;
-    export let image;
+    
+    
 
-    export let buttonProps = {};
 
-    //
-    export let titleComponent = UITitle;
-    export let titleComponentProps = { size: 5 };
-    //
-    export let imageComponent = UIImage;
-    export let imageComponentProps = { covered: true };
-    //
-    export let descriptionComponent = UIButtons;
-    export let descriptionComponentProps = {};
-    //
-    export let listComponent = UIList;
-    export let listComponentProps = {};
-    //
-    export let getUIItem = (valueId) => {
+    
+    
+    
+    
+    
+
+    
+    /**
+     * @typedef {Object} Props
+     * @property {string} [fieldname]
+     * @property {any} [variants] - [
+array of groups
+{
+id:number,
+title:string|object,
+image:string|object,
+variants = [
+array of values variants in group
+{
+id:number,
+title:string|object,
+description:string|object,
+image:string|object,
+value:object
+}]
+}
+]
+     * @property {any} value - multiple && multiple in group
+{
+array of arrays of selected values in group
+if no selection group should be empty array
+[groupId]: [...variantsId]
+}
+multiple && one in group
+{
+[groupId]: variantId
+}
+only one (not multiple && one in group)
+{
+group: groupId
+value: variantId
+}
+     * @property {any} title
+     * @property {any} image
+     * @property {any} [buttonProps]
+     * @property {any} [titleComponent]
+     * @property {any} [titleComponentProps]
+     * @property {any} [imageComponent]
+     * @property {any} [imageComponentProps]
+     * @property {any} [descriptionComponent]
+     * @property {any} [descriptionComponentProps]
+     * @property {any} [listComponent]
+     * @property {any} [listComponentProps]
+     * @property {any} [getUIItem]
+     * @property {any} [getDefaultItemSublime]
+     * @property {any} [uiOn]
+     * @property {any} [uiOff]
+     */
+
+    /** @type {Props} */
+    let {
+        fieldname = "radio-buttons",
+        variants = [],
+        value = $bindable(),
+        title,
+        image,
+        buttonProps = {},
+        titleComponent = UITitle,
+        titleComponentProps = { size: 5 },
+        imageComponent = UIImage,
+        imageComponentProps = { covered: true },
+        descriptionComponent = UIButtons,
+        descriptionComponentProps = {},
+        listComponent = UIList,
+        listComponentProps = {},
+        getUIItem = (valueId) => {
         return variantsButtons.find((btnVal) => btnVal.value === valueId);
-    };
-
-    export let getDefaultItemSublime = () => {
+    },
+        getDefaultItemSublime = () => {
         return variants[0].value;
-    };
-    //
-    export let uiOn = (item) => {
+    },
+        uiOn = (item) => {
         item.color = "success";
         item.outlined = false;
-    };
-    export let uiOff = (item) => {
+    },
+        uiOff = (item) => {
         item.color = false;
         item.outlined = true;
-    };
+    }
+    } = $props();
 
     onMount(() => {
         initVariantsButton();
@@ -90,7 +111,7 @@
     });
 
     let variantsButtons = [],
-        listItems = [];
+        listItems = $state([]);
 
     function initVariantsButton() {
         variantsButtons = variants.map((variant) => {
@@ -147,10 +168,11 @@
             }
         }
     }
+
+    const SvelteComponent = $derived(listComponent);
 </script>
 
-<svelte:component
-    this={listComponent}
+<SvelteComponent
     {...listComponentProps}
     bind:items={listItems}
     {titleComponent}

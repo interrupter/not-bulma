@@ -1,7 +1,7 @@
 <script>
     import UITagValue from "not-bulma/src/elements/various/ui.tag.value.svelte";
 
-    export let value = [];
+    let { value = [] } = $props();
 </script>
 
 {#if value.length}

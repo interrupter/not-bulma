@@ -12,25 +12,48 @@
     import { onMount, createEventDispatcher } from "svelte";
     let dispatch = createEventDispatcher();
 
-    export let id;
 
-    export let filterUI;
 
-    export let helpers = {};
-    export let state = {};
-    export let filter = {};
-    export let sorter = {};
-    export let fields = [];
-    export let selected = {};
-    export let items = [];
-    export let actions = [];
-    export let links = [];
-    export let search = "";
-    export let showSearch = true;
-    export let showSelect = true;
-    export let selectAll = false;
 
-    export let getItemId = (item) => item._id;
+    /**
+     * @typedef {Object} Props
+     * @property {any} id
+     * @property {any} filterUI
+     * @property {any} [helpers]
+     * @property {any} [state]
+     * @property {any} [filter]
+     * @property {any} [sorter]
+     * @property {any} [fields]
+     * @property {any} [selected]
+     * @property {any} [items]
+     * @property {any} [actions]
+     * @property {any} [links]
+     * @property {string} [search]
+     * @property {boolean} [showSearch]
+     * @property {boolean} [showSelect]
+     * @property {boolean} [selectAll]
+     * @property {any} [getItemId]
+     */
+
+    /** @type {Props} */
+    let {
+        id,
+        filterUI,
+        helpers = {},
+        state = $bindable({}),
+        filter = $bindable({}),
+        sorter = $bindable({}),
+        fields = [],
+        selected = $bindable({}),
+        items = $bindable([]),
+        actions = [],
+        links = [],
+        search = $bindable(""),
+        showSearch = true,
+        showSelect = true,
+        selectAll = $bindable(false),
+        getItemId = (item) => item._id
+    } = $props();
 
     onMount(() => {
         if (showSelect) {
@@ -132,8 +155,8 @@
 {/if}
 {#if showSearch}
     {#if filterUI}
-        <svelte:component
-            this={filterUI}
+        {@const SvelteComponent = filterUI}
+        <SvelteComponent
             bind:filter
             on:change={onFilterChange}
             on:searchChange={onSearchChange}
@@ -146,7 +169,7 @@
                     type="text"
                     placeholder="Поиск"
                     bind:value={search}
-                    on:input={onSearchInput}
+                    oninput={onSearchInput}
                 />
             </div>
         </div>
@@ -162,7 +185,7 @@
                     bind:checked={selectAll}
                     placeholder=""
                     name="row_selected_all"
-                    on:change={onSelectAll}
+                    onchange={onSelectAll}
                 /></th
             >
         {/if}
@@ -171,7 +194,7 @@
             <th
                 class={(field.hideOnMobile ? " is-hidden-touch" : "") +
                     (field.sortable ? " is-clickable" : "")}
-                on:click={onFieldHeadClick(field)}
+                onclick={onFieldHeadClick(field)}
             >
                 {#if field.sortable && Object.hasOwn(sorter, propPath)}
                     <UIIcon
@@ -201,8 +224,8 @@
 </table>
 {#if state?.pagination?.pages?.list.length > 1}
     <nav class="pagination is-centered" aria-label="pagination">
-        <a href class="pagination-previous" on:click={goPrev}>Назад</a>
-        <a href class="pagination-next" on:click={goNext}>Вперед</a>
+        <a href class="pagination-previous" onclick={goPrev}>Назад</a>
+        <a href class="pagination-next" onclick={goNext}>Вперед</a>
         <ul class="pagination-list">
             {#if state.pagination && state.pagination.pages && state.pagination.pages.list}
                 {#each state.pagination.pages.list as page}
@@ -220,7 +243,7 @@
                                 class="pagination-link"
                                 aria-label="Страница {page.index}"
                                 data-page={page.index}
-                                on:click={goTo}>{page.index + 1}</a
+                                onclick={goTo}>{page.index + 1}</a
                             >
                         {/if}
                     </li>

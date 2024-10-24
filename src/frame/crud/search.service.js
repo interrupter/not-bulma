@@ -1,8 +1,5 @@
-import notCommon from "../common.js";
-import { Builder } from "not-validation";
-import Validator from "validator";
-
 import UIGenericSelector from "../../elements/modal/ui.generic.selector.svelte";
+import { mount, unmount } from "svelte";
 
 const emptyResult = () => {
     return {
@@ -73,7 +70,7 @@ export default class notServiceModelSearch {
     openSelector() {
         return new Promise((resolve, reject) => {
             try {
-                const el = new UIGenericSelector({
+                const el = mount(UIGenericSelector, {
                     target: document.body,
                     props: {},
                 });
@@ -91,11 +88,11 @@ export default class notServiceModelSearch {
                 });
 
                 el.$on("reject", () => {
-                    el.$destroy();
+                    unmount(el);
                     reject();
                 });
                 el.$on("resolve", ({ detail }) => {
-                    el.$destroy();
+                    unmount(el);
                     resolve(this.transformSelectedResult(detail));
                 });
             } catch (e) {

@@ -1,4 +1,6 @@
 <script>
+    import { run } from 'svelte/legacy';
+
     import UICommon from "../common";
     import notCommon from "../../frame/common";
     import ErrorsList from "../various/ui.errors.list.svelte";
@@ -11,35 +13,61 @@
     import UITextfield from "./ui.textfield.svelte";
     import { UITitle } from "../various";
 
-    export let fieldname = "numbers_list";
-    export let value = {};
-    export let label = "named numbers list";
 
-    export let inputStarted = false;
-    export let placeholder = "new item";
-    export let readonly = false;
-    export let valid = true;
-    export let validated = false;
-    export let errors = false;
-    export let formErrors = false;
+    /**
+     * @typedef {Object} Props
+     * @property {string} [fieldname]
+     * @property {any} [value]
+     * @property {string} [label]
+     * @property {boolean} [inputStarted]
+     * @property {string} [placeholder]
+     * @property {boolean} [readonly]
+     * @property {boolean} [valid]
+     * @property {boolean} [validated]
+     * @property {boolean} [errors]
+     * @property {boolean} [formErrors]
+     */
 
-    $: list = Object.keys(value).map((name) => {
+    /** @type {Props} */
+    let {
+        fieldname = "numbers_list",
+        value = $bindable({}),
+        label = "named numbers list",
+        inputStarted = false,
+        placeholder = $bindable("new item"),
+        readonly = false,
+        valid = true,
+        validated = false,
+        errors = false,
+        formErrors = false
+    } = $props();
+
+    let list = $derived(Object.keys(value).map((name) => {
         return {
             id: name,
             title: name,
             number: value[name],
         };
-    });
+    }));
 
-    $: allErrors = [].concat(
-        errors ? errors : [],
-        formErrors ? formErrors : []
-    );
-    $: showErrors = !(validated && valid) && inputStarted;
-    $: validationClasses =
-        valid === true || !inputStarted
-            ? UICommon.CLASS_OK
-            : UICommon.CLASS_ERR;
+    let allErrors;
+    run(() => {
+        allErrors = [].concat(
+            errors ? errors : [],
+            formErrors ? formErrors : []
+        );
+    });
+    let showErrors;
+    run(() => {
+        showErrors = !(validated && valid) && inputStarted;
+    });
+    let validationClasses;
+    run(() => {
+        validationClasses =
+            valid === true || !inputStarted
+                ? UICommon.CLASS_OK
+                : UICommon.CLASS_ERR;
+    });
 
     function remove(id) {
         if (notCommon.objHas(value, id)) {
@@ -65,7 +93,7 @@
         };
     };
 
-    let newVal = createNewVal();
+    let newVal = $state(createNewVal());
 </script>
 
 <UITitle title={label} size={5} />

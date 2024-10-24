@@ -6,39 +6,71 @@
     import { createEventDispatcher, onMount } from "svelte";
     const dispatch = createEventDispatcher();
     //field props
-    // svelte-ignore unused-export-let
-    export let inputStarted = false;
-    export let value = [];
-    export let placeholder = "";
-    export let fieldname = "selectFromModel";
-    export let required = true;
-    export let readonly = false;
-    export let multiple = false;
-    export let size = 8;
-    //validation
-    export let valid = true;
-    export let validated = false;
-    export let errors = false;
-    export let formErrors = false;
-    export let formLevelError = false;
-    //model bindings
-    export let modelName = "";
-    export let actionName = "";
-    export let actionFilter = {};
-    export let actionSorter = {};
-    export let actionPager = {};
-    export let actionSearch = undefined;
-    //presentation
-    export let optionId = ":_id";
-    export let optionTitle = ":title";
-    //selector UI to add new item to list
-    export let selectorUI = "UISelectFromModelOnDemandInline";
-    export let selectorUIProps = {};
-    //list item UI to present in readonly or editable variants
-    export let itemUI = "UIListItem";
-    export let itemUIProps = {};
+    
+    
+    
+    
+    
+    
 
-    export let transformValueItemToListItem = (item) => {
+    /**
+     * @typedef {Object} Props
+     * @property {boolean} [inputStarted] - svelte-ignore unused-export-let
+     * @property {any} [value]
+     * @property {string} [placeholder]
+     * @property {string} [fieldname]
+     * @property {boolean} [required]
+     * @property {boolean} [readonly]
+     * @property {boolean} [multiple]
+     * @property {number} [size]
+     * @property {boolean} [valid] - validation
+     * @property {boolean} [validated]
+     * @property {boolean} [errors]
+     * @property {boolean} [formErrors]
+     * @property {boolean} [formLevelError]
+     * @property {string} [modelName] - model bindings
+     * @property {string} [actionName]
+     * @property {any} [actionFilter]
+     * @property {any} [actionSorter]
+     * @property {any} [actionPager]
+     * @property {any} [actionSearch]
+     * @property {string} [optionId] - presentation
+     * @property {string} [optionTitle]
+     * @property {string} [selectorUI] - selector UI to add new item to list
+     * @property {any} [selectorUIProps]
+     * @property {string} [itemUI] - list item UI to present in readonly or editable variants
+     * @property {any} [itemUIProps]
+     * @property {any} [transformValueItemToListItem]
+     */
+
+    /** @type {Props} */
+    let {
+        inputStarted = false,
+        value = $bindable([]),
+        placeholder = $bindable(""),
+        fieldname = $bindable("selectFromModel"),
+        required = $bindable(true),
+        readonly = false,
+        multiple = $bindable(false),
+        size = $bindable(8),
+        valid = $bindable(true),
+        validated = $bindable(false),
+        errors = $bindable(false),
+        formErrors = $bindable(false),
+        formLevelError = $bindable(false),
+        modelName = "",
+        actionName = "",
+        actionFilter = {},
+        actionSorter = {},
+        actionPager = {},
+        actionSearch = undefined,
+        optionId = ":_id",
+        optionTitle = ":title",
+        selectorUI = "UISelectFromModelOnDemandInline",
+        selectorUIProps = {},
+        itemUI = "UIListItem",
+        itemUIProps = {},
+        transformValueItemToListItem = (item) => {
         return item
             ? {
                   id: item._id,
@@ -47,7 +79,8 @@
                   value: item,
               }
             : undefined;
-    };
+    }
+    } = $props();
 
     function addItem(item) {
         if (!Array.isArray(value)) {
@@ -57,7 +90,7 @@
         value = value;
     }
 
-    $: items = value.map ? value.map(transformValueItemToListItem) : [];
+    let items = $derived(value.map ? value.map(transformValueItemToListItem) : []);
 
     const ACTIONS = [
         {
@@ -117,8 +150,8 @@
     actions={ACTIONS}
 />
 {#if !readonly}
-    <svelte:component
-        this={COMPONENTS.get(selectorUI)}
+    {@const SvelteComponent = COMPONENTS.get(selectorUI)}
+    <SvelteComponent
         {...selectorUIProps}
         {modelName}
         {actionName}

@@ -1,3 +1,4 @@
+// @ts-ignore
 import notPath from "not-path";
 
 /*
@@ -158,6 +159,7 @@ class notCommon {
     static isError(e) {
         return (
             e instanceof Error ||
+            // @ts-ignore
             (Object.hasOwn(e, "status") && e.status === "error")
         );
     }
@@ -165,10 +167,7 @@ class notCommon {
     static TZ_OFFSET = (new Date().getTimezoneOffset() / 60) * -1;
     static DEV_ENV = "production";
     // @ts-ignore
-    static ENV_TYPE = window.NOT_ENV_TYPE
-        ? // @ts-ignore
-          window.NOT_ENV_TYPE
-        : notCommon.DEV_ENV;
+    static ENV_TYPE = window.NOT_ENV_TYPE ?? notCommon.DEV_ENV;
     static NOOP = () => {};
 
     static mute() {
@@ -194,6 +193,7 @@ class notCommon {
      *  @return {boolean}          if object contains field with name
      **/
     static objHas(obj, name) {
+        // @ts-ignore
         return Object.hasOwn(obj, name);
     }
 
@@ -255,6 +255,7 @@ class notCommon {
      **/
     static async executeObjectFunction(obj, name, params) {
         if (obj) {
+            // @ts-ignore
             const proc = notPath.get(":" + name, obj);
             if (notCommon.isFunc(proc)) {
                 if (notCommon.isAsync(proc)) {
@@ -574,6 +575,7 @@ class notCommon {
                 continue;
             }
             if (typeof notCommon.get(`absorb.${prop}`) === "function") {
+                // @ts-ignore
                 if (!Object.hasOwn(targets, prop)) {
                     targets[prop] = {};
                     notCommon.log(
@@ -582,12 +584,14 @@ class notCommon {
                 }
                 notCommon.get(`absorb.${prop}`)(targets[prop], mod[prop]);
             } else if (prop.indexOf("nc") === 0) {
+                // @ts-ignore
                 if (!Object.hasOwn(defaultConf, "controllers")) {
                     defaultConf.controllers = {};
                 }
                 defaultConf.controllers[prop] = mod[prop];
             } else {
                 //in case of some other stuff presented, isolating it in special var
+                // @ts-ignore
                 if (!Object.hasOwn(window, "notEnv")) {
                     // @ts-ignore
                     window.notEnv = {};
@@ -600,6 +604,7 @@ class notCommon {
     }
 
     static defineIfNotExists(obj, key, defaultValue) {
+        // @ts-ignore
         if (!Object.hasOwn(obj, key)) {
             obj[key] = defaultValue;
         }
@@ -612,6 +617,7 @@ class notCommon {
     }
 
     static get(key) {
+        // @ts-ignore
         return Object.hasOwn(notCommon.registry, key)
             ? notCommon.registry[key]
             : null;
@@ -641,6 +647,7 @@ class notCommon {
                     obj = Object.assign({}, obj);
                 }
                 for (let t in obj) {
+                    // @ts-ignore
                     if (Object.hasOwn(obj, t)) {
                         obj[t] = notCommon.stripProxy(obj[t]);
                     }
@@ -658,17 +665,29 @@ class notCommon {
         return result;
     }
 
+    /**
+     *
+     *
+     * @static
+     * @param {string} type
+     * @return {object}
+     * @memberof notCommon
+     */
     static getAPI(type) {
-        return notCommon.getManager()
-            ? // @ts-ignore
-              notCommon.getManager()?.getAPI(type)
-            : null;
+        return notCommon.getManager()?.getAPI(type) ?? null;
     }
 
     static setManager(v) {
         notCommon.MANAGER = v;
     }
 
+    /**
+     *
+     *
+     * @static
+     * @return {object}
+     * @memberof notCommon
+     */
     static getManager() {
         return notCommon.MANAGER;
     }
@@ -714,6 +733,7 @@ class notCommon {
 function absorbServices(target, src) {
     if (target) {
         for (let serv in src) {
+            // @ts-ignore
             if (Object.hasOwn(target, serv)) {
                 notCommon.logError(`services property duplication ${serv}`);
             }
@@ -723,6 +743,7 @@ function absorbServices(target, src) {
 }
 
 function extendWSClient(wcs, wscName, wscOptions) {
+    // @ts-ignore
     if (!Object.hasOwn(wcs, wscName)) {
         wcs[wscName] = {
             connection: {},
@@ -733,9 +754,12 @@ function extendWSClient(wcs, wscName, wscOptions) {
         };
     }
     let target = wcs[wscName];
+    // @ts-ignore
     if (Object.hasOwn(wscOptions, "router")) {
+        // @ts-ignore
         if (Object.hasOwn(wscOptions.router, "routes")) {
             for (let routeType in wscOptions.router.routes) {
+                // @ts-ignore
                 if (!Object.hasOwn(target.router.routes, routeType)) {
                     target.router.routes[routeType] = {};
                 }
@@ -745,13 +769,16 @@ function extendWSClient(wcs, wscName, wscOptions) {
             }
         }
     }
+    // @ts-ignore
     if (Object.hasOwn(wscOptions, "messenger")) {
         Object.assign(target.messenger, { ...wscOptions.messenger });
     }
+    // @ts-ignore
     if (Object.hasOwn(wscOptions, "connection")) {
         Object.assign(target.connection, { ...wscOptions.connection });
     }
     for (let t of ["name", "getToken", "logger", "identity", "credentials"]) {
+        // @ts-ignore
         if (Object.hasOwn(wscOptions, t)) {
             target[t] = wscOptions[t];
         }
@@ -769,6 +796,7 @@ function absorbWSC(target, src) {
 function absorbUIs(target, src) {
     if (target) {
         for (let ui in src) {
+            // @ts-ignore
             if (Object.hasOwn(target, ui)) {
                 notCommon.logError(`uis property duplication ${ui}`);
             }
@@ -780,6 +808,7 @@ function absorbUIs(target, src) {
 function absorbFields(target, src) {
     if (target) {
         for (let ui in src) {
+            // @ts-ignore
             if (Object.hasOwn(target, ui)) {
                 notCommon.logError(`fields property duplication ${ui}`);
             }

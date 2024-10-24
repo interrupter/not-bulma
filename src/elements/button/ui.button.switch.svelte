@@ -1,43 +1,72 @@
 <script>
+    import { run } from 'svelte/legacy';
+
     import UIButton from "./ui.button.svelte";
     import { createEventDispatcher } from "svelte";
 
     const dispatch = createEventDispatcher();
 
-    export let title = "";
-    export let light = false;
-    export let loading = false;
-    export let raised = false;
-    export let outlined = false;
-    export let inverted = false;
-    export let rounded = false;
-    export let disabled = false;
-    export let state = "";
-    export let type = "";
-    export let color = "";
-    export let size = "";
-    export let classes = "";
-    export let icon = false;
-    export let iconSide = "right";
 
-    export let uiOff = () => {
+
+
+
+    /**
+     * @typedef {Object} Props
+     * @property {string} [title]
+     * @property {boolean} [light]
+     * @property {boolean} [loading]
+     * @property {boolean} [raised]
+     * @property {boolean} [outlined]
+     * @property {boolean} [inverted]
+     * @property {boolean} [rounded]
+     * @property {boolean} [disabled]
+     * @property {string} [state]
+     * @property {string} [type]
+     * @property {string} [color]
+     * @property {string} [size]
+     * @property {string} [classes]
+     * @property {boolean} [icon]
+     * @property {string} [iconSide]
+     * @property {any} [uiOff]
+     * @property {any} [uiOn]
+     * @property {any} [action]
+     * @property {any} value
+     * @property {boolean} [selected]
+     */
+
+    /** @type {Props} */
+    let {
+        title = "",
+        light = false,
+        loading = false,
+        raised = false,
+        outlined = false,
+        inverted = false,
+        rounded = false,
+        disabled = false,
+        state = "",
+        type = "",
+        color = "",
+        size = "",
+        classes = "",
+        icon = false,
+        iconSide = "right",
+        uiOff = () => {
         return {
             color: "",
         };
-    };
-
-    export let uiOn = () => {
+    },
+        uiOn = () => {
         return {
             color: "success",
         };
-    };
-
-    export let action = () => {
+    },
+        action = () => {
         return !selected;
-    };
-
-    export let value;
-    export let selected = false;
+    },
+        value,
+        selected = $bindable(false)
+    } = $props();
 
     function onClick(event) {
         selected = action(event, value, selected);
@@ -52,13 +81,13 @@
         });
     }
 
-    let uiElement;
+    let uiElement = $state();
 
-    $: {
+    run(() => {
         if (uiElement) {
             selected ? uiElement.$set(uiOn()) : uiElement.$set(uiOff());
         }
-    }
+    });
 </script>
 
 <UIButton

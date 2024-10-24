@@ -31,6 +31,7 @@ class notCRUDRouterSwitch {
      * @param {string[]}    params  params passed to router
      * @returns {Promise<string>}    name of route variant
      */
+    // eslint-disable-next-line no-unused-vars
     static async determineRoute(controller, params = []) {
         return "";
     }

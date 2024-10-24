@@ -5,20 +5,33 @@
   import {onMount, createEventDispatcher} from 'svelte';
   let dispatch = createEventDispatcher();
 
-  let itemId, selectedList;
+  let itemId = $state(), selectedList;
 
   onMount(() => {
     itemId = getItemId(item);
     selectedList = Stores.get(id).selected;
   });
 
-  export let id;
 
-  export let item = {};
-  export let helpers = {};
-  export let fields = [];
-  export let showSelect = false;
-  export let getItemId = ()=>{};
+  /**
+   * @typedef {Object} Props
+   * @property {any} id
+   * @property {any} [item]
+   * @property {any} [helpers]
+   * @property {any} [fields]
+   * @property {boolean} [showSelect]
+   * @property {any} [getItemId]
+   */
+
+  /** @type {Props} */
+  let {
+    id,
+    item = {},
+    helpers = {},
+    fields = [],
+    showSelect = false,
+    getItemId = ()=>{}
+  } = $props();
 
   function onRowSelect(e){
     e.preventDefault();
@@ -35,7 +48,7 @@
 <tr>
   {#if showSelect && $selectedList }
   <td>
-    <input id="table-row-select-{getItemId(item)}" type="checkbox" data-id="{getItemId(item)}" bind:checked={$selectedList[itemId]} placeholder="" name="row_selected_{getItemId(item)}" on:change={onRowSelect} />
+    <input id="table-row-select-{getItemId(item)}" type="checkbox" data-id="{getItemId(item)}" bind:checked={$selectedList[itemId]} placeholder="" name="row_selected_{getItemId(item)}" onchange={onRowSelect} />
   </td>
   {/if}
   {#each fields as field }

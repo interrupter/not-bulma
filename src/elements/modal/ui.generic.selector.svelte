@@ -13,15 +13,30 @@
   
     let dispatch = createEventDispatcher();
       
-    export let show = true;
-    export let term = '';
-    export let size = 'narrow';
   
-    export let inputComponent = UISimpleSearchInput;
-    export let inputComponentProps = {};
-    export let outputComponent = UIEndlessList;
-    export let outputComponentProps = {};
-    export let results = {list:[], page:0, pages:0,skip:0,count:0};
+  /**
+   * @typedef {Object} Props
+   * @property {boolean} [show]
+   * @property {string} [term]
+   * @property {string} [size]
+   * @property {any} [inputComponent]
+   * @property {any} [inputComponentProps]
+   * @property {any} [outputComponent]
+   * @property {any} [outputComponentProps]
+   * @property {any} [results]
+   */
+
+  /** @type {Props} */
+  let {
+    show = true,
+    term = $bindable(''),
+    size = 'narrow',
+    inputComponent = UISimpleSearchInput,
+    inputComponentProps = {},
+    outputComponent = UIEndlessList,
+    outputComponentProps = {},
+    results = $bindable({list:[], page:0, pages:0,skip:0,count:0})
+  } = $props();
   
      
     onMount(() => {
@@ -55,16 +70,17 @@
   
   
   <UIOverlay on:reject="{overlayClosed}" {show} closeOnClick={true} closeButton={false}>
+    {@const SvelteComponent = inputComponent}
+    {@const SvelteComponent_1 = outputComponent}
     <div class="paper box block {size}">
-      <svelte:component this={inputComponent} on:termChange bind:term={term} {...inputComponentProps}></svelte:component>
-      <svelte:component 
-        this={outputComponent} 
+      <SvelteComponent on:termChange bind:term={term} {...inputComponentProps}></SvelteComponent>
+      <SvelteComponent_1 
         bind:data={results} 
           on:prev
           on:next
           on:select={select}
           {...outputComponentProps}
-        ></svelte:component>
+        ></SvelteComponent_1>
         <UIButtons values={buttons} centered={true} classes="mt-5"/>
     </div>
   </UIOverlay>

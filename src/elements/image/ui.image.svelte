@@ -1,20 +1,38 @@
 <script>
-    export let urlFull;
-    export let url;
-    export let title;
-    export let cors = "anonymous";
-    export let size = 64;
-    export let contained = true;
-    export let covered = true;
-    export let classes = "";
+    import { createBubbler } from 'svelte/legacy';
 
-    $: sizeStyle = isNaN(size) ? `is-${size}` : `is-${size}x${size}`;
-    $: containedStyle = contained ? "is-contained" : "";
-    $: coveredStyle = covered ? "is-covered" : "";
+    const bubble = createBubbler();
+    /**
+     * @typedef {Object} Props
+     * @property {any} urlFull
+     * @property {any} url
+     * @property {any} title
+     * @property {string} [cors]
+     * @property {number} [size]
+     * @property {boolean} [contained]
+     * @property {boolean} [covered]
+     * @property {string} [classes]
+     */
+
+    /** @type {Props} */
+    let {
+        urlFull,
+        url,
+        title,
+        cors = "anonymous",
+        size = 64,
+        contained = true,
+        covered = true,
+        classes = ""
+    } = $props();
+
+    let sizeStyle = $derived(isNaN(size) ? `is-${size}` : `is-${size}x${size}`);
+    let containedStyle = $derived(contained ? "is-contained" : "");
+    let coveredStyle = $derived(covered ? "is-covered" : "");
 </script>
 
 {#if urlFull}
-    <a href={urlFull} alt={title} on:click>
+    <a href={urlFull} alt={title} onclick={bubble('click')}>
         <figure
             class="image {sizeStyle} {containedStyle} {coveredStyle} {classes}"
         >
@@ -24,8 +42,8 @@
 {:else}
     <figure
         class="image {sizeStyle} {containedStyle} {coveredStyle} {classes}"
-        on:click
-        on:keyup
+        onclick={bubble('click')}
+        onkeyup={bubble('keyup')}
         role="button"
         tabindex="0"
     >

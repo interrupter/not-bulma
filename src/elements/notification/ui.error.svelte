@@ -1,8 +1,7 @@
 <script>
   import {LOCALE} from '../../locale';
 
-  export let message;
-  export let title;
+  let { message, title } = $props();
 
 </script>
 

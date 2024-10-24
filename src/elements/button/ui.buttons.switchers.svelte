@@ -3,11 +3,6 @@
     const dispatch = createEventDispatcher();
     import UIButtonSwitch from "./ui.button.switch.svelte";
 
-    export let values = [];
-    export let centered = false;
-    export let right = false;
-    export let classes = "";
-    export let buttonComponent = UIButtonSwitch;
 
     const selectHistory = [];
 
@@ -89,7 +84,27 @@
         }
     }
 
-    export let action = (ev, value, selected) => {
+
+    /**
+     * @typedef {Object} Props
+     * @property {any} [values]
+     * @property {boolean} [centered]
+     * @property {boolean} [right]
+     * @property {string} [classes]
+     * @property {any} [buttonComponent]
+     * @property {any} [action]
+     * @property {number} [min]
+     * @property {number} [max]
+     */
+
+    /** @type {Props} */
+    let {
+        values = $bindable([]),
+        centered = false,
+        right = false,
+        classes = "",
+        buttonComponent = UIButtonSwitch,
+        action = (ev, value, selected) => {
         let newSelected = !selected;
         const indexOfCurrent = values.indexOf((itm) => itm.value === value);
         const cnt = countSelected() + (newSelected ? 1 : -1);
@@ -110,10 +125,10 @@
             addToHistory(indexOfCurrent);
         }
         return newSelected;
-    };
-
-    export let min = 0;
-    export let max = 100;
+    },
+        min = 0,
+        max = 100
+    } = $props();
 </script>
 
 <div
@@ -122,8 +137,8 @@
         : ''} {classes}"
 >
     {#each values as item (item.id)}
-        <svelte:component
-            this={buttonComponent}
+        {@const SvelteComponent = buttonComponent}
+        <SvelteComponent
             {...item}
             bind:value={item.value}
             bind:selected={item.selected}

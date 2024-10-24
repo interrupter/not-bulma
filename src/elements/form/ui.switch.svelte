@@ -1,4 +1,6 @@
 <script>
+    import { run } from 'svelte/legacy';
+
     import { LOCALE } from "../../locale";
     import "bulma-switch";
     import UICommon from "../common.js";
@@ -7,34 +9,66 @@
     import { createEventDispatcher } from "svelte";
     let dispatch = createEventDispatcher();
 
-    export let inputStarted = false;
-    export let value = false;
-    export let label = "";
-    export let hideLabel = false;
-    export let placeholder = "";
-    export let fieldname = "textfield";
-    export let icon = false;
-    export let required = true;
-    export let readonly = false;
-    export let disabled = false;
-    export let valid = true;
-    export let styling = " is-rounded is-success ";
-    export let validated = false;
-    export let errors = false;
-    export let formErrors = false;
-    export let formLevelError = false;
+    /**
+     * @typedef {Object} Props
+     * @property {boolean} [inputStarted]
+     * @property {boolean} [value]
+     * @property {string} [label]
+     * @property {boolean} [hideLabel]
+     * @property {string} [placeholder]
+     * @property {string} [fieldname]
+     * @property {boolean} [icon]
+     * @property {boolean} [required]
+     * @property {boolean} [readonly]
+     * @property {boolean} [disabled]
+     * @property {boolean} [valid]
+     * @property {string} [styling]
+     * @property {boolean} [validated]
+     * @property {boolean} [errors]
+     * @property {boolean} [formErrors]
+     * @property {boolean} [formLevelError]
+     */
 
-    $: iconClasses = (icon ? " has-icons-left " : "") + " has-icons-right ";
-    $: allErrors = [].concat(
-        errors ? errors : [],
-        formErrors ? formErrors : []
-    );
-    $: showErrors = !(validated && valid) && inputStarted;
-    $: invalid = valid === false || formLevelError;
-    $: validationClasses =
-        valid === true || !inputStarted
-            ? UICommon.CLASS_OK
-            : UICommon.CLASS_ERR;
+    /** @type {Props} */
+    let {
+        inputStarted = $bindable(false),
+        value = $bindable(false),
+        label = "",
+        hideLabel = false,
+        placeholder = "",
+        fieldname = "textfield",
+        icon = false,
+        required = true,
+        readonly = false,
+        disabled = false,
+        valid = true,
+        styling = " is-rounded is-success ",
+        validated = false,
+        errors = false,
+        formErrors = false,
+        formLevelError = false
+    } = $props();
+
+    let iconClasses = $derived((icon ? " has-icons-left " : "") + " has-icons-right ");
+    let allErrors;
+    run(() => {
+        allErrors = [].concat(
+            errors ? errors : [],
+            formErrors ? formErrors : []
+        );
+    });
+    let showErrors;
+    run(() => {
+        showErrors = !(validated && valid) && inputStarted;
+    });
+    let invalid = $derived(valid === false || formLevelError);
+    let validationClasses;
+    run(() => {
+        validationClasses =
+            valid === true || !inputStarted
+                ? UICommon.CLASS_OK
+                : UICommon.CLASS_ERR;
+    });
 
     function onBlur(ev) {
         let data = {
@@ -85,8 +119,8 @@
             {required}
             {readonly}
             {invalid}
-            on:blur={onBlur}
-            on:input={onInput}
+            onblur={onBlur}
+            oninput={onInput}
             aria-controls="input-field-helper-{fieldname}"
             aria-describedby="input-field-helper-{fieldname}"
         />

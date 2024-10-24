@@ -5,7 +5,7 @@
   import UITag from '../../../../elements/various/ui.tag.svelte';
   import UIIndicator from '../../../../elements/various/ui.indicator.svelte';
   import {COMPONENTS} from '../../../LIB.js';
-  export let item;
+  let { item } = $props();
   /*
   string title
   object icon;
@@ -22,8 +22,8 @@
 {#if item.icon}
 <UIIcon {...item.icon} />
 {:else if (item.type==='component' && item.component && COMPONENTS.contains(item.component)) }
-<svelte:component
-  this={COMPONENTS.get(item.component)}
+{@const SvelteComponent = COMPONENTS.get(item.component)}
+<SvelteComponent
   id={item.id}
   {...item.props}
    />

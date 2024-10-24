@@ -1,7 +1,8 @@
 {
     "parser": "@babel/eslint-parser",
     "parserOptions": {
-        "ecmaVersion": 2021
+        "ecmaVersion": 2022,
+        "requireConfigFile": false
     },
     "env": {
         "browser": true,
@@ -25,7 +26,7 @@
         }
     ],
     "rules": {
-        "indent": ["error", 2],
+        "indent": ["error", 4, { "SwitchCase": 1 }],
         "linebreak-style": ["error", "unix"],
         "semi": ["error", "always"],
         "no-useless-escape": [0]

@@ -2,16 +2,29 @@
     import { onMount } from "svelte";
     import notCommon from "../../frame/common";
 
-    export let id = "userCard";
-    export let image = "https://bulma.io/images/placeholders/32x32.png";
-    export let username = "John Doe";
-    export let role = "admin";
 
-    export let events = {}; //events to react on
-    //register event handlers
-    export let register = notCommon.registerWidgetEvents;
-    //
-    export let onUpdate = (data) => {
+    
+    
+    /**
+     * @typedef {Object} Props
+     * @property {string} [id]
+     * @property {string} [image]
+     * @property {string} [username]
+     * @property {string} [role]
+     * @property {any} [events]
+     * @property {any} [register] - register event handlers
+     * @property {any} [onUpdate]
+     */
+
+    /** @type {Props} */
+    let {
+        id = "userCard",
+        image = "https://bulma.io/images/placeholders/32x32.png",
+        username = $bindable("John Doe"),
+        role = $bindable("admin"),
+        events = $bindable({}),
+        register = notCommon.registerWidgetEvents,
+        onUpdate = (data) => {
         if (Object.hasOwn(data, "username")) {
             username = data.username;
         }
@@ -19,7 +32,8 @@
         if (Object.hasOwn(data, "role")) {
             role = data.role;
         }
-    };
+    }
+    } = $props();
 
     function getCompId() {
         return `usercard-${id}`;

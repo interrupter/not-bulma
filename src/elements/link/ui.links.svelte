@@ -1,10 +1,22 @@
 <script>
     import UILink from "./ui.link.svelte";
-    export let values = [];
-    export let classes = "";
-    export let centered = false;
-    export let right = false;
-    export let joined = true;
+    /**
+     * @typedef {Object} Props
+     * @property {any} [values]
+     * @property {string} [classes]
+     * @property {boolean} [centered]
+     * @property {boolean} [right]
+     * @property {boolean} [joined]
+     */
+
+    /** @type {Props} */
+    let {
+        values = [],
+        classes = "",
+        centered = false,
+        right = false,
+        joined = true
+    } = $props();
 </script>
 
 {#if joined}

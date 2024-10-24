@@ -1,10 +1,10 @@
 <script>
+    import { preventDefault } from 'svelte/legacy';
+
     import { createEventDispatcher } from "svelte";
     const dispatch = createEventDispatcher();
 
-    export let title;
-    export let id;
-    export let _id;
+    let { title, id, _id } = $props();
 
     function click() {
         dispatch("click", {
@@ -16,9 +16,9 @@
 </script>
 
 <div
-    on:click|preventDefault={click}
+    onclick={preventDefault(click)}
     class="box list-item-selectable"
-    on:keyup={click}
+    onkeyup={click}
     role="button"
     tabindex="0"
 >

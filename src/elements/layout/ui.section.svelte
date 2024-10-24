@@ -1,17 +1,33 @@
 <script>
-    export let id = "";
-    export let size; //medium, large
-    export let classes = "";
-    export let tabindex = 0;
+    import { createBubbler } from 'svelte/legacy';
+
+    const bubble = createBubbler();
+    /**
+     * @typedef {Object} Props
+     * @property {string} [id]
+     * @property {any} size
+     * @property {string} [classes]
+     * @property {number} [tabindex]
+     * @property {import('svelte').Snippet} [children]
+     */
+
+    /** @type {Props} */
+    let {
+        id = "",
+        size,
+        classes = "",
+        tabindex = 0,
+        children
+    } = $props();
 </script>
 
 <section
     {id}
     class="section {size ? 'is-' + size : ''}  {classes}"
-    on:click
-    on:keyup
+    onclick={bubble('click')}
+    onkeyup={bubble('keyup')}
     role="button"
     {tabindex}
 >
-    <slot />
+    {@render children?.()}
 </section>

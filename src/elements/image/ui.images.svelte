@@ -1,6 +1,6 @@
 <script>
     import UIImage from "./ui.image.svelte";
-    export let values = [];
+    let { values = [] } = $props();
 </script>
 
 {#each values as item (item.url)}

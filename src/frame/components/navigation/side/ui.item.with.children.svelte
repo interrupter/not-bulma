@@ -6,9 +6,15 @@
   import UISideMenuItems from './ui.items.svelte';
   import UISideMenuItemLabel from './ui.item.label.svelte';
 
-  export let root = '';
-  export let item = {};
-  export let closed = false;
+  /**
+   * @typedef {Object} Props
+   * @property {string} [root]
+   * @property {any} [item]
+   * @property {boolean} [closed]
+   */
+
+  /** @type {Props} */
+  let { root = '', item = {}, closed = $bindable(false) } = $props();
 
   function toggle({detail}) {
     closed = detail.closed;
@@ -27,7 +33,7 @@
 
 <li class="{(typeof item.url === 'undefined' || item.url===false)?'':'is-no-follow-subtitle'} {item.classes}">
   {#if (typeof item.url !== 'undefined' && item.url!==false) }
-  <a href="{root}{item.url}" data-href="{item.url}" on:click="{onClick}">
+  <a href="{root}{item.url}" data-href="{item.url}" onclick={onClick}>
     <UISideMenuItemLabel {item} />
     <UISideMenuTrigger {closed} on:toggle={toggle} />
   </a>

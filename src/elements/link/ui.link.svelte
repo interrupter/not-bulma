@@ -1,45 +1,76 @@
 <script>
+    import { run } from 'svelte/legacy';
+
     import { LOCALE } from "../../locale";
-    //attributes
-    export let title = "";
-    export let url = "";
-    export let download;
-    export let target = "_blank";
-    export let rel;
-    //visual
-    export let light = false;
-    export let loading = false;
-    export let raised = false;
-    export let outlined = false;
-    export let inverted = false;
-    export let rounded = false;
-    export let button = true;
-    export let state = "";
-    export let type = "";
-    export let color = "";
-    export let size = "";
-    export let classes = "";
+    
+    
 
-    //icons
-    export let icon = false;
-    export let iconSide = "right";
+    
 
-    export let action = () => {
+    /**
+     * @typedef {Object} Props
+     * @property {string} [title] - attributes
+     * @property {string} [url]
+     * @property {any} download
+     * @property {string} [target]
+     * @property {any} rel
+     * @property {boolean} [light] - visual
+     * @property {boolean} [loading]
+     * @property {boolean} [raised]
+     * @property {boolean} [outlined]
+     * @property {boolean} [inverted]
+     * @property {boolean} [rounded]
+     * @property {boolean} [button]
+     * @property {string} [state]
+     * @property {string} [type]
+     * @property {string} [color]
+     * @property {string} [size]
+     * @property {string} [classes]
+     * @property {boolean} [icon] - icons
+     * @property {string} [iconSide]
+     * @property {any} [action]
+     * @property {import('svelte').Snippet} [children]
+     */
+
+    /** @type {Props} */
+    let {
+        title = "",
+        url = "",
+        download,
+        target = "_blank",
+        rel,
+        light = false,
+        loading = false,
+        raised = false,
+        outlined = false,
+        inverted = false,
+        rounded = false,
+        button = true,
+        state = "",
+        type = "",
+        color = "",
+        size = "",
+        classes = $bindable(""),
+        icon = false,
+        iconSide = "right",
+        action = () => {
         return true;
-    };
+    },
+        children
+    } = $props();
 
-    $: {
+    run(() => {
         classes =
             (button ? "button " : "") +
             (state && state.length > 0 ? ` is-${state} ` : "") +
             (light ? ` is-light ` : "") +
             (type && type.length > 0 ? ` is-${type} ` : "") +
             (size && size.length > 0 ? ` is-${size} ` : "");
-    }
+    });
 </script>
 
 <a
-    on:click={action}
+    onclick={action}
     {target}
     href={url}
     {download}
@@ -57,20 +88,20 @@
     {#if icon}
         {#if iconSide === "left"}
             <span class="icon"
-                ><i class="fas fa-{icon} {size ? `is-${size}` : ''}" /></span
+                ><i class="fas fa-{icon} {size ? `is-${size}` : ''}"></i></span
             >
         {/if}
         {#if title}
             <span>{$LOCALE[title]}</span>
         {/if}
-        <slot />
+        {@render children?.()}
         {#if iconSide === "right"}
             <span class="icon"
-                ><i class="fas fa-{icon} {size ? `is-${size}` : ''}" /></span
+                ><i class="fas fa-{icon} {size ? `is-${size}` : ''}"></i></span
             >
         {/if}
     {:else}
         {$LOCALE[title]}
-        <slot />
+        {@render children?.()}
     {/if}
 </a>

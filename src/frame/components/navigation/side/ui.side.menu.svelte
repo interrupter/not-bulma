@@ -1,9 +1,20 @@
 <script>
 	import UISideMenuSection from './ui.section.svelte';
-	export let root = '';
-	export let items = [];
-	export let sections = [];
-	export let navigate = null;
+	/**
+	 * @typedef {Object} Props
+	 * @property {string} [root]
+	 * @property {any} [items]
+	 * @property {any} [sections]
+	 * @property {any} [navigate]
+	 */
+
+	/** @type {Props} */
+	let {
+		root = '',
+		items = [],
+		sections = [],
+		navigate = null
+	} = $props();
 
 	function onClick(ev) {
 	  if (typeof navigate === 'function') {

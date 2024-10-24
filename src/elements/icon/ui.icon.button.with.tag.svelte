@@ -1,8 +1,7 @@
 <script>
   import UIButton from '../button/ui.button.svelte';
   import UITag from '../various/ui.tag.svelte';
-  export let button = {};
-  export let tag = {};
+  let { button = {}, tag = {} } = $props();
 
 </script>
 

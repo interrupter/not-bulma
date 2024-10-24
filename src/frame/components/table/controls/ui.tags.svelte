@@ -3,16 +3,20 @@
   import { createEventDispatcher } from 'svelte';
   let dispatch = createEventDispatcher();
 */
-    /*
-  item = {
-    id,        //unique
-    title,     //some text
-    value,      //for double tags
-    color       //coloring
-  }
-  */
+    
 
-    export let values = [];
+  /**
+   * @typedef {Object} Props
+   * @property {any} [values] - item = {
+id,        //unique
+title,     //some text
+value,      //for double tags
+color       //coloring
+}
+   */
+
+  /** @type {Props} */
+  let { values = [] } = $props();
 </script>
 
 {#each values as item (item.id)}

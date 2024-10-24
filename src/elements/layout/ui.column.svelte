@@ -1,16 +1,31 @@
 <script>
-    export let classes = "";
-    export let title = "";
-    export let narrow = false;
+    import { createBubbler } from 'svelte/legacy';
+
+    const bubble = createBubbler();
+    /**
+     * @typedef {Object} Props
+     * @property {string} [classes]
+     * @property {string} [title]
+     * @property {boolean} [narrow]
+     * @property {import('svelte').Snippet} [children]
+     */
+
+    /** @type {Props} */
+    let {
+        classes = "",
+        title = "",
+        narrow = false,
+        children
+    } = $props();
 </script>
 
 <div
     {title}
     class="column {classes} {narrow ? 'is-narrow' : ''}"
-    on:click
-    on:keyup
+    onclick={bubble('click')}
+    onkeyup={bubble('keyup')}
     role="button"
     tabindex="0"
 >
-    <slot />
+    {@render children?.()}
 </div>

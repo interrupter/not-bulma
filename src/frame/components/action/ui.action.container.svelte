@@ -9,23 +9,38 @@
   import UINotificationError from '../../../elements/notification/ui.error.svelte';
   import UINotificationSuccess from '../../../elements/notification/ui.success.svelte';
 
-  export let container = {};
 
-	export let loaderTitle = 'Отправка данных на сервер';
-  //state if form loading
-	export let loaderActive = false;
+  
 	//hidden - no loader
 	//container - parent container of form
-	//page - whole page
-	export let loaderSize = 'container';
+	
 
-	let success = false;
-  export let successTitle = 'OK';
-  export let successMessage = '';
+	let success = $state(false);
 
-  let error = false;
-  export let errorTitle = 'Error';
-  export let errorMessage = '';
+  let error = $state(false);
+  /**
+   * @typedef {Object} Props
+   * @property {any} [container]
+   * @property {string} [loaderTitle]
+   * @property {boolean} [loaderActive] - state if form loading
+   * @property {string} [loaderSize] - page - whole page
+   * @property {string} [successTitle]
+   * @property {string} [successMessage]
+   * @property {string} [errorTitle]
+   * @property {string} [errorMessage]
+   */
+
+  /** @type {Props} */
+  let {
+    container = {},
+    loaderTitle = $bindable('Отправка данных на сервер'),
+    loaderActive = $bindable(false),
+    loaderSize = $bindable('container'),
+    successTitle = $bindable('OK'),
+    successMessage = $bindable(''),
+    errorTitle = $bindable('Error'),
+    errorMessage = $bindable('')
+  } = $props();
 
   export function showSuccess(title, message) {
     error = false;

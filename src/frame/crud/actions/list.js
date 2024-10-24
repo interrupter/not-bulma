@@ -17,6 +17,20 @@ export default class CRUDActionList {
         return options;
     }
 
+    /**
+     *
+     *
+     * @static
+     * @param {import('../controller.crud').default} controller
+     * @param {string} value
+     * @param {number} [delay=0]
+     * @param {Array<string>} [actions=["details", "update", "delete"]]
+     * @param {Array<object>} [prepend=[]]
+     * @param {Array<object>} [append=[]]
+     * @param {boolean} [onlyIcons=true]
+     * @return {Array<object>}
+     * @memberof CRUDActionList
+     */
     static createActionsButtons(
         controller,
         value,

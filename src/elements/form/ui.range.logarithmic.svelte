@@ -1,4 +1,6 @@
 <script>
+    import { run } from 'svelte/legacy';
+
     import { LOCALE } from "../../locale/index";
     const MAX = Number.MAX_SAFE_INTEGER;
     //import "bulma-slider/src/sass/index.sass";
@@ -8,35 +10,67 @@
     import { createEventDispatcher, onMount } from "svelte";
     let dispatch = createEventDispatcher();
 
-    export let inputStarted = false;
-    export let value = 10;
-    export let min = 0;
-    export let max = 100;
-    //export let step = 1;
-    export let tickmarks = false;
-    export let placeholder = "";
-    export let fieldname = "range";
-    export let icon = false;
-    export let required = true;
-    export let disabled = false;
-    export let readonly = false;
-    export let valid = true;
-    export let validated = false;
-    export let errors = false;
-    export let formErrors = false;
-    export let formLevelError = false;
+    
+    /**
+     * @typedef {Object} Props
+     * @property {boolean} [inputStarted]
+     * @property {number} [value]
+     * @property {number} [min]
+     * @property {number} [max]
+     * @property {boolean} [tickmarks] - export let step = 1;
+     * @property {string} [placeholder]
+     * @property {string} [fieldname]
+     * @property {boolean} [icon]
+     * @property {boolean} [required]
+     * @property {boolean} [disabled]
+     * @property {boolean} [readonly]
+     * @property {boolean} [valid]
+     * @property {boolean} [validated]
+     * @property {boolean} [errors]
+     * @property {boolean} [formErrors]
+     * @property {boolean} [formLevelError]
+     */
 
-    $: iconClasses = (icon ? " has-icons-left " : "") + " has-icons-right ";
-    $: allErrors = [].concat(
-        errors ? errors : [],
-        formErrors ? formErrors : []
-    );
-    $: showErrors = !(validated && valid) && inputStarted;
-    $: invalid = valid === false || formLevelError;
-    $: validationClasses =
-        valid === true || !inputStarted
-            ? UICommon.CLASS_OK
-            : UICommon.CLASS_ERR;
+    /** @type {Props} */
+    let {
+        inputStarted = $bindable(false),
+        value = $bindable(10),
+        min = 0,
+        max = 100,
+        tickmarks = false,
+        placeholder = "",
+        fieldname = "range",
+        icon = false,
+        required = true,
+        disabled = false,
+        readonly = false,
+        valid = true,
+        validated = false,
+        errors = false,
+        formErrors = false,
+        formLevelError = false
+    } = $props();
+
+    let iconClasses = $derived((icon ? " has-icons-left " : "") + " has-icons-right ");
+    let allErrors;
+    run(() => {
+        allErrors = [].concat(
+            errors ? errors : [],
+            formErrors ? formErrors : []
+        );
+    });
+    let showErrors;
+    run(() => {
+        showErrors = !(validated && valid) && inputStarted;
+    });
+    let invalid = $derived(valid === false || formLevelError);
+    let validationClasses;
+    run(() => {
+        validationClasses =
+            valid === true || !inputStarted
+                ? UICommon.CLASS_OK
+                : UICommon.CLASS_ERR;
+    });
 
     function onBlur(ev) {
         const val = getLogarithmicValue(ev.currentTarget.value);
@@ -70,7 +104,7 @@
         lMax = 100,
         lScale = 10,
         lStep = 0.01,
-        posValue = 1;
+        posValue = $state(1);
 
     function updateRange() {
         lMin = Math.log(min || 1);
@@ -85,9 +119,9 @@
         }
     }
 
-    $: {
+    run(() => {
         min, max, updateRange();
-    }
+    });
 
     onMount(() => {
         updateRange();
@@ -125,8 +159,8 @@
             bind:value={posValue}
             autocomplete={fieldname}
             aria-controls="input-field-helper-{fieldname}"
-            on:change={onBlur}
-            on:input={onInput}
+            onchange={onBlur}
+            oninput={onInput}
             aria-describedby="input-field-helper-{fieldname}"
         />
         <output for="form-field-range-{fieldname}" editable="true"
@@ -135,14 +169,14 @@
         {#if Array.isArray(tickmarks) && tickmarks.length}
             <datalist id="form-field-range-{fieldname}-tickmarks">
                 {#each tickmarks as tickmark}
-                    <option value={tickmark.value} label={tickmark.label} />
+                    <option value={tickmark.value} label={tickmark.label}></option>
                 {/each}
             </datalist>
         {/if}
 
         {#if icon}
             <span class="icon is-small is-left"
-                ><i class="fas fa-{icon}" /></span
+                ><i class="fas fa-{icon}"></i></span
             >
         {/if}
     {/if}

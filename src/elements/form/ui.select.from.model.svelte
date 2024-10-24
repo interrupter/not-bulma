@@ -8,39 +8,70 @@
     import { onMount, createEventDispatcher } from "svelte";
     const dispatch = createEventDispatcher();
 
-    export let inputStarted = false;
-    export let value;
-    export let placeholder = "";
-    export let emptyValueTitle = "";
-    export let fieldname = "selectFromModel";
-    export let modelName = "";
-    export let actionName = "";
-    export let actionFilter = {};
-    export let actionSorter = {};
-    export let actionPager = {};
-    export let actionSearch = undefined;
-    export let optionId = ":_id";
-    export let optionTitle = ":title";
-    export let icon = false;
-    export let required = true;
-    export let readonly = false;
-    export let multiple = false;
-    export let size = 8;
-    export let valid = true;
-    export let validated = false;
-    export let errors = false;
-    export let formErrors = false;
-    export let formLevelError = false;
-    export let returnVariant = false;
+    /**
+     * @typedef {Object} Props
+     * @property {boolean} [inputStarted]
+     * @property {any} value
+     * @property {string} [placeholder]
+     * @property {string} [emptyValueTitle]
+     * @property {string} [fieldname]
+     * @property {string} [modelName]
+     * @property {string} [actionName]
+     * @property {any} [actionFilter]
+     * @property {any} [actionSorter]
+     * @property {any} [actionPager]
+     * @property {any} [actionSearch]
+     * @property {string} [optionId]
+     * @property {string} [optionTitle]
+     * @property {boolean} [icon]
+     * @property {boolean} [required]
+     * @property {boolean} [readonly]
+     * @property {boolean} [multiple]
+     * @property {number} [size]
+     * @property {boolean} [valid]
+     * @property {boolean} [validated]
+     * @property {boolean} [errors]
+     * @property {boolean} [formErrors]
+     * @property {boolean} [formLevelError]
+     * @property {boolean} [returnVariant]
+     */
+
+    /** @type {Props} */
+    let {
+        inputStarted = false,
+        value,
+        placeholder = "",
+        emptyValueTitle = "",
+        fieldname = "selectFromModel",
+        modelName = "",
+        actionName = "",
+        actionFilter = {},
+        actionSorter = {},
+        actionPager = {},
+        actionSearch = undefined,
+        optionId = ":_id",
+        optionTitle = ":title",
+        icon = false,
+        required = true,
+        readonly = false,
+        multiple = false,
+        size = 8,
+        valid = true,
+        validated = false,
+        errors = $bindable(false),
+        formErrors = false,
+        formLevelError = false,
+        returnVariant = false
+    } = $props();
 
     function argumentsSetProvided() {
         return modelName && actionName && actionFilter;
     }
 
     let loaded = false;
-    let variants = [];
+    let variants = $state([]);
 
-    $: disabled = !loaded;
+    let disabled = $derived(!loaded);
 
     onMount(async () => {
         if (argumentsSetProvided()) {

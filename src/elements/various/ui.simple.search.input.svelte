@@ -6,8 +6,14 @@
 
     import {LOCALE} from '../../locale';
 
-    export let placeholder = $LOCALE['not-node:field_search_placeholder'];
-    export let term = '';
+    /**
+     * @typedef {Object} Props
+     * @property {any} [placeholder]
+     * @property {string} [term]
+     */
+
+    /** @type {Props} */
+    let { placeholder = $LOCALE['not-node:field_search_placeholder'], term = $bindable('') } = $props();
 
     function onChange({detail}){
         dispatch('termChange', detail); 

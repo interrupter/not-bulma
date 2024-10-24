@@ -1,4 +1,6 @@
 <script>
+    import { run } from 'svelte/legacy';
+
     import { LOCALE } from "../../locale";
     import UICommon from "../common.js";
     import ErrorsList from "../various/ui.errors.list.svelte";
@@ -6,28 +8,54 @@
     import { createEventDispatcher } from "svelte";
     let dispatch = createEventDispatcher();
 
-    export let inputStarted = false;
-    export let value = [];
-    export let fieldname = "checkbox-list";
-    //  export let placeholder = '';
-    export let readonly = false;
-    export let disabled = false;
-    export let valid = true;
-    export let validated = false;
-    export let errors = false;
-    export let formErrors = false;
-    export let formLevelError = false;
+    
+    /**
+     * @typedef {Object} Props
+     * @property {boolean} [inputStarted]
+     * @property {any} [value]
+     * @property {string} [fieldname]
+     * @property {boolean} [readonly] - export let placeholder = '';
+     * @property {boolean} [disabled]
+     * @property {boolean} [valid]
+     * @property {boolean} [validated]
+     * @property {boolean} [errors]
+     * @property {boolean} [formErrors]
+     * @property {boolean} [formLevelError]
+     */
 
-    $: allErrors = [].concat(
-        errors ? errors : [],
-        formErrors ? formErrors : []
-    );
-    $: showErrors = !(validated && valid) && inputStarted;
-    $: invalid = valid === false || formLevelError;
-    $: validationClasses =
-        valid === true || !inputStarted
-            ? UICommon.CLASS_OK
-            : UICommon.CLASS_ERR;
+    /** @type {Props} */
+    let {
+        inputStarted = $bindable(false),
+        value = [],
+        fieldname = "checkbox-list",
+        readonly = false,
+        disabled = false,
+        valid = true,
+        validated = false,
+        errors = false,
+        formErrors = false,
+        formLevelError = false
+    } = $props();
+
+    let allErrors;
+    run(() => {
+        allErrors = [].concat(
+            errors ? errors : [],
+            formErrors ? formErrors : []
+        );
+    });
+    let showErrors;
+    run(() => {
+        showErrors = !(validated && valid) && inputStarted;
+    });
+    let invalid = $derived(valid === false || formLevelError);
+    let validationClasses;
+    run(() => {
+        validationClasses =
+            valid === true || !inputStarted
+                ? UICommon.CLASS_OK
+                : UICommon.CLASS_ERR;
+    });
 
     function onBlur(ev) {
         let id = parseInt(ev.currentTarget.dataset.id);
@@ -74,8 +102,8 @@
                 name={fieldname + "_" + item.id}
                 {readonly}
                 {invalid}
-                on:change={onBlur}
-                on:input={onInput}
+                onchange={onBlur}
+                oninput={onInput}
                 aria-controls="input-field-helper-{fieldname + '_' + item.id}"
                 aria-describedby="input-field-helper-{fieldname +
                     '_' +

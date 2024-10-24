@@ -11,60 +11,75 @@
     import FormHelpers from "./form.helpers.js";
 
     //validation status
-    let formErrors = [];
-    let formHasErrors = false;
-    let fieldsHasErrors = false;
-    let success = false;
+    let formErrors = $state([]);
+    let formHasErrors = $state(false);
+    let fieldsHasErrors = $state(false);
+    let success = $state(false);
 
     //input data
     //form structure object
-    /**
-     * {
-     * 	[fieldName: string] => description: object
-     * }
-     **/
-    export let form = {};
-    //state if form loading
-    export let loading = false;
+    
+    
     //hidden - no loader
     //container - parent container of form
-    //page - whole page
-    export let loader = "container";
+    
     //fields list structure
-    /**
-     * each item is a row
-     * if item is array, then there few fields in a row
-     * [
-     * [name, age],
-     * [email, telephone]
-     * bio,
-     * agreed
-     *	]
-     **/
-    export let fields = [];
-    //form result labels
-    export let SUCCESS_TEXT = "Операция завершена";
-    export let WAITING_TEXT = "Отправка данных на сервер";
+    
+    
 
-    //form labels
-    export let title = "";
-    export let description = "";
-    //if you want button on top
-    export let buttonsFirst = false;
-    //if form fields should have horizontal layout
-    export let horizontal = false;
-    //buttons labels and availability
-    export let submit = {
+    
+    
+    
+    
+
+    /**
+     * @typedef {Object} Props
+     * @property {any} [form] - {
+[fieldName: string] => description: object
+}
+     * @property {boolean} [loading] - state if form loading
+     * @property {string} [loader] - page - whole page
+     * @property {any} [fields] - each item is a row
+if item is array, then there few fields in a row
+[
+[name, age],
+[email, telephone]
+bio,
+agreed
+]
+     * @property {string} [SUCCESS_TEXT] - form result labels
+     * @property {string} [WAITING_TEXT]
+     * @property {string} [title] - form labels
+     * @property {string} [description]
+     * @property {boolean} [buttonsFirst] - if you want button on top
+     * @property {boolean} [horizontal] - if form fields should have horizontal layout
+     * @property {any} [submit] - buttons labels and availability
+     * @property {any} [cancel]
+     */
+
+    /** @type {Props} */
+    let {
+        form = $bindable({}),
+        loading = $bindable(false),
+        loader = "container",
+        fields = [],
+        SUCCESS_TEXT = "Операция завершена",
+        WAITING_TEXT = "Отправка данных на сервер",
+        title = "",
+        description = "",
+        buttonsFirst = false,
+        horizontal = false,
+        submit = {
         caption: "Отправить",
         enabled: true,
-    };
-
-    export let cancel = {
+    },
+        cancel = {
         caption: "Назад",
         enabled: true,
-    };
+    }
+    } = $props();
 
-    $: formInvalid = formHasErrors || fieldsHasErrors;
+    let formInvalid = $derived(formHasErrors || fieldsHasErrors);
 
     export function collectData() {
         return FormHelpers.collectData(fields, form);
@@ -224,12 +239,12 @@
                 {#if cancel.enabled}
                     <button
                         class="button is-outlined {cancel.classes}"
-                        on:click={rejectForm}>{$LOCALE[cancel.caption]}</button
+                        onclick={rejectForm}>{$LOCALE[cancel.caption]}</button
                     >
                 {/if}
                 {#if submit.enabled}
                     <button
-                        on:click={submitForm}
+                        onclick={submitForm}
                         disabled={formInvalid}
                         class="button is-primary is-hovered {submit.classes}"
                         >{$LOCALE[submit.caption]}</button
@@ -300,12 +315,12 @@
                 {#if cancel.enabled}
                     <button
                         class="button {cancel.classes ? cancel.classes : ''}"
-                        on:click={rejectForm}>{$LOCALE[cancel.caption]}</button
+                        onclick={rejectForm}>{$LOCALE[cancel.caption]}</button
                     >
                 {/if}
                 {#if submit.enabled}
                     <button
-                        on:click={submitForm}
+                        onclick={submitForm}
                         disabled={formInvalid}
                         class="button is-primary is-hovered {submit.classes
                             ? submit.classes

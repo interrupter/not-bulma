@@ -54,7 +54,6 @@ class CRUDGenericActionUpdate extends CRUDGenericAction {
      * @returns {object}    ui options object
      */
     static prepareUIOptions(controller, response) {
-        const actionName = this.getModelActionName(controller);
         return {
             options: {
                 target: controller.getContainerInnerElement(),
@@ -75,8 +74,9 @@ class CRUDGenericActionUpdate extends CRUDGenericAction {
      * Binds events to action UI
      * @param {object} controller   instance of controller
      * @param {string[]} params     list of route params
-     * @param {object} response     API response
+     * @param {object} [response]     API response
      */
+    // eslint-disable-next-line no-unused-vars
     static bindUIEvents(controller, params, response) {
         if (notCommon.isFunc(controller.goBack)) {
             this.bindUIEvent(controller, "reject", () =>

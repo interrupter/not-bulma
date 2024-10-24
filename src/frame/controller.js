@@ -33,8 +33,9 @@ const OPT_DEFAULT_MODULE_NAME = "main";
  */
 const OPT_DEFAULT_AUTO_NAME = true;
 
-/*
+/**
  *  Basic class for user controller
+ *  @extends notBase
  */
 class notController extends notBase {
     /**
@@ -114,6 +115,7 @@ class notController extends notBase {
         let interfaces = app.getInterfaces();
         this.make = {};
         for (let t in interfaces) {
+            // @ts-ignore
             if (Object.hasOwn(interfaces, t)) {
                 this.make[t] = interfaces[t];
             }
@@ -154,7 +156,7 @@ class notController extends notBase {
      *  If two provided and first is a string than instance of name will be returned initialized with second object param or empty object
      *  @param {string|object}      [name]    modelName of instance to return or initial data for instance
      *  @param {object}             [data]    model data
-     *  @return {import('./record.js')}
+     *  @return {import('./record.js').default}
      */
     getModel(name, data) {
         if (typeof name === "string") {
@@ -330,7 +332,7 @@ class notController extends notBase {
      *  Gets object name
      *  @return {string}
      */
-    getName(val) {
+    getName() {
         return this.getWorking("name");
     }
 
@@ -557,7 +559,7 @@ class notController extends notBase {
 
     /**
      * Returns Application router
-     * @returns {import('./router.js')}
+     * @returns {import('./router.js').default}
      */
     getRouter() {
         return this.app?.getWorking("router");
@@ -692,10 +694,14 @@ class notController extends notBase {
     static getCommonMenu(childConstructor) {
         return [
             {
+                // @ts-ignore
                 section: childConstructor.MODULE_NAME,
+                // @ts-ignore
                 title: childConstructor.LABELS.plural,
                 url: `/${notCommon.lowerFirstLetter(
+                    // @ts-ignore
                     childConstructor.MODULE_NAME
+                    // @ts-ignore
                 )}/${notCommon.lowerFirstLetter(childConstructor.MODEL_NAME)}`,
             },
         ];

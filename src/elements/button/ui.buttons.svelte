@@ -3,15 +3,28 @@
     const dispatch = createEventDispatcher();
     import UIButton from "./ui.button.svelte";
 
-    export let values = [];
-    export let centered = false;
-    export let right = false;
-    export let classes = "";
-    export let buttonComponent = UIButton;
 
-    export let action = (e) => {
+    /**
+     * @typedef {Object} Props
+     * @property {any} [values]
+     * @property {boolean} [centered]
+     * @property {boolean} [right]
+     * @property {string} [classes]
+     * @property {any} [buttonComponent]
+     * @property {any} [action]
+     */
+
+    /** @type {Props} */
+    let {
+        values = [],
+        centered = false,
+        right = false,
+        classes = "",
+        buttonComponent = UIButton,
+        action = (e) => {
         dispatch("click", e);
-    };
+    }
+    } = $props();
 </script>
 
 <div
@@ -20,8 +33,8 @@
         : ''} {classes}"
 >
     {#each values as item (item.id)}
-        <svelte:component
-            this={buttonComponent}
+        {@const SvelteComponent = buttonComponent}
+        <SvelteComponent
             {...item}
             bind:value={item.value}
             action={item.action ? item.action : action}

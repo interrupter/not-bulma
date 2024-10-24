@@ -1,12 +1,41 @@
 <script>
+  import { run } from 'svelte/legacy';
+
     import { onMount } from "svelte";
     import notCommon from "../../frame/common";
-    //if we want to address this indicator
-    export let id = "tagId";
+    
 
-    export let state = "light";
-    export let size = "normal";
-    export let labels = {
+
+
+
+    let sided = $state(false);
+
+    
+    
+  /**
+   * @typedef {Object} Props
+   * @property {string} [id] - if we want to address this indicator
+   * @property {string} [state]
+   * @property {string} [size]
+   * @property {any} [labels]
+   * @property {string} [classes]
+   * @property {string} [padding]
+   * @property {boolean} [bold]
+   * @property {boolean} [right]
+   * @property {boolean} [left]
+   * @property {boolean} [top]
+   * @property {boolean} [bottom]
+   * @property {any} [events]
+   * @property {any} [register] - register event handlers
+   * @property {any} [onUpdate]
+   */
+
+  /** @type {Props} */
+  let {
+    id = "tagId",
+    state = $bindable("light"),
+    size = "normal",
+    labels = {
         black: "black",
         dark: "dark",
         light: "light",
@@ -17,29 +46,22 @@
         success: "success",
         warning: "warning",
         danger: "danger",
-    };
-    export let classes = "mx-1";
-
-    export let padding = "normal";
-    export let bold = false;
-
-    export let right = false;
-    export let left = false;
-    export let top = false;
-    export let bottom = false;
-
-    let sided = false;
-    $: sided = right || left || top || bottom;
-
-    export let events = {}; //events to react on
-    //register event handlers
-    export let register = notCommon.registerWidgetEvents.bind(notCommon);
-    //
-    export let onUpdate = (data) => {
+    },
+    classes = "mx-1",
+    padding = "normal",
+    bold = false,
+    right = false,
+    left = false,
+    top = false,
+    bottom = false,
+    events = $bindable({}),
+    register = notCommon.registerWidgetEvents.bind(notCommon),
+    onUpdate = (data) => {
         if (Object.hasOwn(data, "state")) {
             state = data.state;
         }
-    };
+    }
+  } = $props();
 
     function getStandartUpdateEventName() {
         return `indicator-${id}:update`;
@@ -51,6 +73,9 @@
         }
         register(events);
     });
+    run(() => {
+    sided = right || left || top || bottom;
+  });
 </script>
 
 <span

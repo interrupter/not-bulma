@@ -4,7 +4,7 @@
   import UIIndicator from '../../../../elements/various/ui.indicator.svelte';
   import UITag from '../../../../elements/various/ui.tag.svelte';
   import {COMPONENTS} from '../../../LIB.js';
-  export let item = {};
+  let { item = {}, children } = $props();
 
 </script>
 
@@ -12,8 +12,8 @@
 {#if item.icon }
 <UIIcon {...item.icon} />
 {:else if (item.type==='component' && item.component && COMPONENTS.contains(item.component)) }
-<svelte:component
-  this={COMPONENTS.get(item.component)}
+{@const SvelteComponent = COMPONENTS.get(item.component)}
+<SvelteComponent
   id={item.id}
   {...item.props}
    />
@@ -26,4 +26,4 @@
 {#if item.indicator }
   <UIIndicator id={item.id} {...item.indicator } />
 {/if}
-<slot></slot>
+{@render children?.()}

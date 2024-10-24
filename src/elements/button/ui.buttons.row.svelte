@@ -1,10 +1,21 @@
 <script>
     import UIButtons from "./ui.buttons.svelte";
-    export let classes = "";
 
-    export let left = [];
-    export let center = [];
-    export let right = [];
+    /**
+     * @typedef {Object} Props
+     * @property {string} [classes]
+     * @property {any} [left]
+     * @property {any} [center]
+     * @property {any} [right]
+     */
+
+    /** @type {Props} */
+    let {
+        classes = "",
+        left = [],
+        center = [],
+        right = []
+    } = $props();
 </script>
 
 <div class="columns {classes}">

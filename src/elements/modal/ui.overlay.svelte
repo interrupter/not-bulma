@@ -1,5 +1,7 @@
 <script>
-    let overflowSave = "";
+    import { run } from 'svelte/legacy';
+
+    let overflowSave = $state("");
 
     import { fade } from "svelte/transition";
 
@@ -9,18 +11,35 @@
 
     const dispatch = createEventDispatcher();
 
-    export let closeButton = false;
-    export let show = true;
-    export let closeOnClick = true;
-    export let closeSize = "normal";
-    export let layer = 1;
-    export let classes = "";
+    /**
+     * @typedef {Object} Props
+     * @property {boolean} [closeButton]
+     * @property {boolean} [show]
+     * @property {boolean} [closeOnClick]
+     * @property {string} [closeSize]
+     * @property {number} [layer]
+     * @property {string} [classes]
+     * @property {import('svelte').Snippet} [children]
+     */
 
-    $: if (show) {
-        document.body.style.overflow = "hidden";
-    } else {
-        document.body.style.overflow = overflowSave;
-    }
+    /** @type {Props} */
+    let {
+        closeButton = false,
+        show = true,
+        closeOnClick = true,
+        closeSize = "normal",
+        layer = 1,
+        classes = "",
+        children
+    } = $props();
+
+    run(() => {
+        if (show) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = overflowSave;
+        }
+    });
 
     function overlayClick(e) {
         if (closeOnClick) {
@@ -67,15 +86,15 @@
     <div
         class="is-overlay not-overlay {classes}"
         transition:fade
-        on:click={overlayClick}
-        on:keyup={overlayClick}
+        onclick={overlayClick}
+        onkeyup={overlayClick}
         role="button"
         tabindex="0"
         style="z-index: {zIndexStep * layer};"
     >
         {#if closeButton}
-            <button on:click={closeButtonClick} class="delete is-{closeSize}" />
+            <button onclick={closeButtonClick} class="delete is-{closeSize}"></button>
         {/if}
-        <slot />
+        {@render children?.()}
     </div>
 {/if}

@@ -6,26 +6,46 @@
     import { createEventDispatcher, onMount } from "svelte";
     let dispatch = createEventDispatcher();
 
-    export let label = "";
-    export let name = "generic field";
-    export let readonly = false;
-    export let horizontal = false;
-    export let controls = [];
-    //field style modification
-    export let classes = "";
-    ////addons
-    export let addons = false;
-    export let addonsCentered = false;
-    export let addonsRight = false;
-    ////gorup
-    export let grouped = false;
-    export let groupedMultiline = false;
-    export let groupedRight = false;
-    export let groupedCentered = false;
+    
+    
+    
+    /**
+     * @typedef {Object} Props
+     * @property {string} [label]
+     * @property {string} [name]
+     * @property {boolean} [readonly]
+     * @property {boolean} [horizontal]
+     * @property {any} [controls]
+     * @property {string} [classes] - field style modification
+     * @property {boolean} [addons] - //addons
+     * @property {boolean} [addonsCentered]
+     * @property {boolean} [addonsRight]
+     * @property {boolean} [grouped] - //gorup
+     * @property {boolean} [groupedMultiline]
+     * @property {boolean} [groupedRight]
+     * @property {boolean} [groupedCentered]
+     */
 
-    let fieldClasses = "";
-    let hidden = false;
-    let fieldId;
+    /** @type {Props} */
+    let {
+        label = "",
+        name = "generic field",
+        readonly = false,
+        horizontal = false,
+        controls = [],
+        classes = "",
+        addons = false,
+        addonsCentered = false,
+        addonsRight = false,
+        grouped = false,
+        groupedMultiline = false,
+        groupedRight = false,
+        groupedCentered = false
+    } = $props();
+
+    let fieldClasses = $state("");
+    let hidden = $state(false);
+    let fieldId = $state();
 
     onMount(() => {
         fieldClasses += " " + classes;
@@ -58,8 +78,8 @@
 
 {#if hidden}
     {#each controls as control}
-        <svelte:component
-            this={COMPONENTS.get(control.component)}
+        {@const SvelteComponent = COMPONENTS.get(control.component)}
+        <SvelteComponent
             {...control}
             on:change={onControlChange}
             fieldname={name}
@@ -72,8 +92,8 @@
         </div>
         <div class="field-body" id={fieldId}>
             {#each controls as control}
-                <svelte:component
-                    this={COMPONENTS.get(control.component)}
+                {@const SvelteComponent_1 = COMPONENTS.get(control.component)}
+                <SvelteComponent_1
                     {...control}
                     on:change={onControlChange}
                     fieldname={name}
@@ -88,8 +108,8 @@
                 id="form-field-{control.component}-{name}"
                 label={control.label}
             />
-            <svelte:component
-                this={COMPONENTS.get(control.component)}
+            {@const SvelteComponent_2 = COMPONENTS.get(control.component)}
+            <SvelteComponent_2
                 {...control}
                 on:change={onControlChange}
                 fieldname={name}

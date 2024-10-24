@@ -8,69 +8,86 @@
     import UIButtons from "../button/ui.buttons.svelte";
     import UIButtonsSwitchers from "../button/ui.buttons.switchers.svelte";
 
-    export let fieldname = "list-select-tags";
 
-    /*
-    [
-        //array of groups
-        {
-            id:number,
-            title:string|object,
-            image:string|object,
-            variants = [
-                //array of values variants in group
-                {
-                id:number,
-                title:string|object,
-                description:string|object,
-                image:string|object,
-                value:object
-            }]
-        }
-    ]
-    */
-    export let variants = [];
-    /*
-    multiple && multiple in group
-    {
-        //array of arrays of selected values in group
-        //if no selection group should be empty array
-        [groupId]: [...variantsId]
-    }
-    multiple && one in group
-    {
-        [groupId]: variantId
-    }
-    only one (not multiple && one in group)
-    {
-        group: groupId
-        value: variantId
-    }
-    */
-    export let variantsSelected = {};
-    //{[groupId]: [...valuesOfSelectedItems]}
-    export let value;
-    //
-    export let titleComponent = UITitle;
-    export let titleComponentProps = { size: 5 };
-    //
-    export let imageComponent = UIImage;
-    export let imageComponentProps = { covered: true };
-    //
-    export let descriptionComponent = UIButtonsSwitchers;
-    export let descriptionComponentProps = {};
-    //
-    export let listComponent = UIList;
-    export let listComponentProps = {};
+    
+    
+    
+    
+    
+    
+    
 
-    export let actionsList = ["selectAll", "deselectAll"];
-    //
-    export let sublimeValue = (value) => {
+    
+    /**
+     * @typedef {Object} Props
+     * @property {string} [fieldname]
+     * @property {any} [variants] - [
+array of groups
+{
+id:number,
+title:string|object,
+image:string|object,
+variants = [
+array of values variants in group
+{
+id:number,
+title:string|object,
+description:string|object,
+image:string|object,
+value:object
+}]
+}
+]
+     * @property {any} [variantsSelected] - multiple && multiple in group
+{
+array of arrays of selected values in group
+if no selection group should be empty array
+[groupId]: [...variantsId]
+}
+multiple && one in group
+{
+[groupId]: variantId
+}
+only one (not multiple && one in group)
+{
+group: groupId
+value: variantId
+}
+     * @property {any} value - {[groupId]: [...valuesOfSelectedItems]}
+     * @property {any} [titleComponent]
+     * @property {any} [titleComponentProps]
+     * @property {any} [imageComponent]
+     * @property {any} [imageComponentProps]
+     * @property {any} [descriptionComponent]
+     * @property {any} [descriptionComponentProps]
+     * @property {any} [listComponent]
+     * @property {any} [listComponentProps]
+     * @property {any} [actionsList]
+     * @property {any} [sublimeValue]
+     */
+
+    /** @type {Props} */
+    let {
+        fieldname = "list-select-tags",
+        variants = $bindable([]),
+        variantsSelected = {},
+        value = $bindable(),
+        titleComponent = UITitle,
+        titleComponentProps = { size: 5 },
+        imageComponent = UIImage,
+        imageComponentProps = { covered: true },
+        descriptionComponent = UIButtonsSwitchers,
+        descriptionComponentProps = {},
+        listComponent = UIList,
+        listComponentProps = {},
+        actionsList = ["selectAll", "deselectAll"],
+        sublimeValue = (value) => {
         return {
             groupId: value.group,
             valueId: value.id,
         };
-    };
+    }
+    } = $props();
     //
 
     const AVAILABLE_ACTIONS = {
@@ -90,7 +107,7 @@
         },
     };
 
-    let ACTIONS = [];
+    let ACTIONS = $state([]);
 
     onMount(() => {
         actionsList.forEach((name) => {
@@ -175,12 +192,13 @@
             value,
         });
     }
+
+    const SvelteComponent = $derived(listComponent);
 </script>
 
 <UIButtons values={ACTIONS} centered={true} />
 
-<svelte:component
-    this={listComponent}
+<SvelteComponent
     {...listComponentProps}
     bind:items={variants}
     {titleComponent}

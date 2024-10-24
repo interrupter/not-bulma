@@ -1,11 +1,30 @@
 <script>
-    export let id = "";
-    export let classes = "";
-    export let widescreen = false;
-    export let fullhd = false;
-    export let maxDesktop = false;
-    export let maxWidescreen = false;
-    export let fluid = false;
+    import { createBubbler } from 'svelte/legacy';
+
+    const bubble = createBubbler();
+    /**
+     * @typedef {Object} Props
+     * @property {string} [id]
+     * @property {string} [classes]
+     * @property {boolean} [widescreen]
+     * @property {boolean} [fullhd]
+     * @property {boolean} [maxDesktop]
+     * @property {boolean} [maxWidescreen]
+     * @property {boolean} [fluid]
+     * @property {import('svelte').Snippet} [children]
+     */
+
+    /** @type {Props} */
+    let {
+        id = "",
+        classes = "",
+        widescreen = false,
+        fullhd = false,
+        maxDesktop = false,
+        maxWidescreen = false,
+        fluid = false,
+        children
+    } = $props();
 </script>
 
 <div
@@ -16,10 +35,10 @@
     class:is-max-desktop={maxDesktop}
     class:is-max-widescreen={maxWidescreen}
     class:is-fluid={fluid}
-    on:click
-    on:keyup
+    onclick={bubble('click')}
+    onkeyup={bubble('keyup')}
     role="button"
     tabindex="0"
 >
-    <slot />
+    {@render children?.()}
 </div>

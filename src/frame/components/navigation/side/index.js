@@ -2,6 +2,7 @@ import Menu from "../menu.js";
 import UISideMenu from "./ui.side.menu.svelte";
 
 import SideMenuState from "./store.js";
+import { mount } from "svelte";
 
 const TYPE = "side";
 
@@ -64,15 +65,15 @@ class notSideMenu extends Menu {
         if (!target) {
             return;
         }
-        this.menu = new UISideMenu({
-            target,
-            props: {
-                items: this.items,
-                sections: this.sections,
-                root: this.getOptions().root,
-                navigate: this.getOptions().navigate,
-            },
-        });
+        this.menu = mount(UISideMenu, {
+                    target,
+                    props: {
+                        items: this.items,
+                        sections: this.sections,
+                        root: this.getOptions().root,
+                        navigate: this.getOptions().navigate,
+                    },
+                });
         this.initSizeResponse();
 
         this.interval = setInterval(this.updateMenuActiveItem.bind(this), 200);

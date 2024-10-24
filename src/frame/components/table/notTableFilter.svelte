@@ -1,4 +1,4 @@
 <script>
-    export let filter = {};
+    let { filter = {} } = $props();
     //some filter UI and logic
 </script>

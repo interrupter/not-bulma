@@ -4,22 +4,43 @@
     import { createEventDispatcher, onMount } from "svelte";
     let dispatch = createEventDispatcher();
 
-    export let inputStarted = false;
-    export let value = {};
-    export let placeholder = "";
-    export let fieldname = "jsonarea";
-    export let icon = false;
-    export let rows = 10;
-    export let required = true;
-    export let readonly = false;
-    export let disabled = false;
-    export let valid = true;
-    export let validated = false;
-    export let errors = false;
-    export let formErrors = false;
-    export let formLevelError = false;
+    /**
+     * @typedef {Object} Props
+     * @property {boolean} [inputStarted]
+     * @property {any} [value]
+     * @property {string} [placeholder]
+     * @property {string} [fieldname]
+     * @property {boolean} [icon]
+     * @property {number} [rows]
+     * @property {boolean} [required]
+     * @property {boolean} [readonly]
+     * @property {boolean} [disabled]
+     * @property {boolean} [valid]
+     * @property {boolean} [validated]
+     * @property {boolean} [errors]
+     * @property {boolean} [formErrors]
+     * @property {boolean} [formLevelError]
+     */
 
-    let _value = "{}";
+    /** @type {Props} */
+    let {
+        inputStarted = $bindable(false),
+        value = $bindable({}),
+        placeholder = "",
+        fieldname = "jsonarea",
+        icon = false,
+        rows = 10,
+        required = true,
+        readonly = false,
+        disabled = false,
+        valid = $bindable(true),
+        validated = false,
+        errors = $bindable(false),
+        formErrors = false,
+        formLevelError = false
+    } = $props();
+
+    let _value = $state("{}");
 
     onMount(() => {
         _value = JSON.stringify(value, null, 4);

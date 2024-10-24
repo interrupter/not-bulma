@@ -1,11 +1,22 @@
 <script>
     import UITag from "./ui.tag.svelte";
 
-    export let LC_TRUE = "not-node:booleans_true";
-    export let LC_FALSE = "not-node:booleans_false";
 
-    export let value;
-    export let inverted = false;
+    /**
+     * @typedef {Object} Props
+     * @property {string} [LC_TRUE]
+     * @property {string} [LC_FALSE]
+     * @property {any} value
+     * @property {boolean} [inverted]
+     */
+
+    /** @type {Props} */
+    let {
+        LC_TRUE = "not-node:booleans_true",
+        LC_FALSE = "not-node:booleans_false",
+        value,
+        inverted = false
+    } = $props();
 
     const FALSE_VALUE = {
         title: LC_FALSE,
@@ -18,7 +29,7 @@
     };
 
     //if inverted === true, inverts value
-    $: tagValue = value ? TRUE_VALUE : FALSE_VALUE;
+    let tagValue = $derived(value ? TRUE_VALUE : FALSE_VALUE);
 </script>
 
 <UITag {...tagValue} />

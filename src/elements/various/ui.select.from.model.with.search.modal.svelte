@@ -1,4 +1,6 @@
 <script>
+    import { run } from 'svelte/legacy';
+
     import notCommon from "../../frame/common";
 
     import { UIButtons } from "../button";
@@ -6,40 +8,47 @@
     import { createEventDispatcher, onMount } from "svelte";
     let dispatch = createEventDispatcher();
 
-    export let value;
-    export let inputStarted = false;
 
-    export let icon = false;
-    /**
-     * @property {string}   fieldname
-     */
-    export let fieldname = "";
+    
+
+    
+    
+    
+    
 
     /**
-     * @property {boolean}   [readonly = false]
+     * @typedef {Object} Props
+     * @property {any} value
+     * @property {boolean} [inputStarted]
+     * @property {boolean} [icon]
+     * @property {string} [fieldname]
+     * @property {boolean} [readonly]
+     * @property {string} [serviceName] - Set this, as ns[ModelName], should be registered in notApp
+     * @property {string} [serviceOpenSelectorMethod] - Set this
+     * @property {string} [serviceLoadDataMethod] - Set this
+     * @property {any} [modelData]
+     * @property {boolean} [loading]
+     * @property {any} [selectedModelTitleFormatter]
+     * @property {string} [loadingLabel]
+     * @property {string} [isEmptyLabel]
      */
-    export let readonly = false;
-    /**
-     * Set this, as ns[ModelName], should be registered in notApp
-     * @property {string}   serviceName     name of app service that will be used to search data
-     */
-    export let serviceName = "";
-    /**
-     * Set this
-     * @property {string}   serviceOpenSelectorMethod    method of service to open modal with selector
-     */
-    export let serviceOpenSelectorMethod = "openSelector";
-    /**
-     * Set this
-     * @property {string}   serviceLoadDataMethod    method of service to load model data by _id
-     */
-    export let serviceLoadDataMethod = "loadData";
-    export let modelData = null;
-    export let loading = false;
-    export let selectedModelTitleFormatter = (data) => `${data._id}`;
 
-    export let loadingLabel = "not-node:loading_label";
-    export let isEmptyLabel = "not-node:field_value_is_empty_placeholder";
+    /** @type {Props} */
+    let {
+        value = $bindable(),
+        inputStarted = $bindable(false),
+        icon = false,
+        fieldname = "",
+        readonly = false,
+        serviceName = "",
+        serviceOpenSelectorMethod = "openSelector",
+        serviceLoadDataMethod = "loadData",
+        modelData = $bindable(null),
+        loading = $bindable(false),
+        selectedModelTitleFormatter = (data) => `${data._id}`,
+        loadingLabel = "not-node:loading_label",
+        isEmptyLabel = "not-node:field_value_is_empty_placeholder"
+    } = $props();
 
     function getService() {
         if (!serviceName) throw new Error("serviceName is not set");
@@ -133,8 +142,8 @@
         }
     }
 
-    let VISIBLE_BUTTONS = [];
-    $: {
+    let VISIBLE_BUTTONS = $state([]);
+    run(() => {
         if (value) {
             VISIBLE_BUTTONS = [
                 getModelButton(),
@@ -146,7 +155,7 @@
                 ...(readonly ? [] : [AVAILABLE_BUTTONS[0]]),
             ];
         }
-    }
+    });
 </script>
 
 <div class="control">

@@ -2,7 +2,7 @@
     import notPath from "not-path";
     import { onMount } from "svelte";
 
-    let title = "";
+    let title = $state("");
 
     onMount(() => {
         if (typeof field.type === "undefined") {
@@ -31,10 +31,12 @@
     import TableSwitch from "./controls/ui.switch.svelte";
     import TableTags from "./controls/ui.tags.svelte";
 
-    export let getItemId = (item) => item._id;
-    export let field = {};
-    export let item = {};
-    export let helpers = {};
+    let {
+        getItemId = (item) => item._id,
+        field = {},
+        item = {},
+        helpers = {}
+    } = $props();
 </script>
 
 <td
@@ -62,8 +64,7 @@
             readonly={field.readonly}
         />
     {:else if field.component}
-        <svelte:component
-            this={field.component}
+        <field.component
             id={getItemId(item)}
             on:change={field.onChange}
             fieldname={field.path}

@@ -2,13 +2,27 @@
     import { LOCALE } from "../../locale";
     import UICommon from "../common";
 
-    export let id = `title-${Math.random()}`;
-    export let title = "";
-    export let subtitle;
-    export let size = 1;
-    export let subsize;
-    export let spaced = false;
-    export let align = "left";
+    /**
+     * @typedef {Object} Props
+     * @property {any} [id]
+     * @property {string} [title]
+     * @property {any} subtitle
+     * @property {number} [size]
+     * @property {any} subsize
+     * @property {boolean} [spaced]
+     * @property {string} [align]
+     */
+
+    /** @type {Props} */
+    let {
+        id = `title-${Math.random()}`,
+        title = "",
+        subtitle,
+        size = 1,
+        subsize,
+        spaced = false,
+        align = "left"
+    } = $props();
 
     export const scrollToTop = (options = UICommon.SCROLL_OPTIONS) => {
         setTimeout(() => {
@@ -16,16 +30,16 @@
         }, 100);
     };
 
-    let size2;
-    $: size2 = subsize
+    let size2 = $derived(subsize
         ? subsize
         : parseInt(size) < 6
         ? parseInt(size) + 1
-        : size;
-    $: spacedStyle = spaced ? "is-spaced" : "";
+        : size);
+    
+    let spacedStyle = $derived(spaced ? "is-spaced" : "");
 
-    $: resultTitle = `<h${size} id="${id}" style="text-align: ${align};" class="title ${spacedStyle} is-${size}">${$LOCALE[title]}</h${size}>`;
-    $: resultSubtitle = `<h${size2} id="${id}" style="text-align: ${align};" class="subtitle is-${size2}">${$LOCALE[subtitle]}</h${size2}>`;
+    let resultTitle = $derived(`<h${size} id="${id}" style="text-align: ${align};" class="title ${spacedStyle} is-${size}">${$LOCALE[title]}</h${size}>`);
+    let resultSubtitle = $derived(`<h${size2} id="${id}" style="text-align: ${align};" class="subtitle is-${size2}">${$LOCALE[subtitle]}</h${size2}>`);
 </script>
 
 {#if title}

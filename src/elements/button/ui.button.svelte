@@ -3,27 +3,53 @@
     const dispatch = createEventDispatcher();
     import { LOCALE } from "../../locale";
 
-    export let title = "";
-    export let light = false;
-    export let loading = false;
-    export let raised = false;
-    export let outlined = false;
-    export let inverted = false;
-    export let rounded = false;
-    export let disabled = false;
-    export let state = "";
-    export let type = "";
-    export let color = "";
-    export let size = "";
-    export let classes = "";
-    export let icon = false;
-    export let iconSide = "right";
 
-    export let action = () => {
+
+  /**
+   * @typedef {Object} Props
+   * @property {string} [title]
+   * @property {boolean} [light]
+   * @property {boolean} [loading]
+   * @property {boolean} [raised]
+   * @property {boolean} [outlined]
+   * @property {boolean} [inverted]
+   * @property {boolean} [rounded]
+   * @property {boolean} [disabled]
+   * @property {string} [state]
+   * @property {string} [type]
+   * @property {string} [color]
+   * @property {string} [size]
+   * @property {string} [classes]
+   * @property {boolean} [icon]
+   * @property {string} [iconSide]
+   * @property {any} [action]
+   * @property {any} value
+   * @property {import('svelte').Snippet} [children]
+   */
+
+  /** @type {Props} */
+  let {
+    title = "",
+    light = false,
+    loading = false,
+    raised = false,
+    outlined = false,
+    inverted = false,
+    rounded = false,
+    disabled = false,
+    state = "",
+    type = "",
+    color = "",
+    size = "",
+    classes = "",
+    icon = false,
+    iconSide = "right",
+    action = () => {
         return true;
-    };
-
-    export let value;
+    },
+    value,
+    children
+  } = $props();
 
     function onClick(event) {
         event.stopPropagation();
@@ -33,7 +59,7 @@
 </script>
 
 <button
-    on:click={onClick}
+    onclick={onClick}
     {disabled}
     type={type ? type : ""}
     class="
@@ -50,13 +76,13 @@
   {size ? `is-${size}` : ''}
   "
 >
-    <slot>
+    {#if children}{@render children()}{:else}
         {#if icon}
             {#if iconSide === "left"}
                 <span class="icon"
                     ><i
                         class="fas fa-{icon} {size ? `is-${size}` : ''}"
-                    /></span
+></i></span
                 >
             {/if}
             {#if title}
@@ -66,11 +92,11 @@
                 <span class="icon"
                     ><i
                         class="fas fa-{icon} {size ? `is-${size}` : ''}"
-                    /></span
+></i></span
                 >
             {/if}
         {:else}
             {$LOCALE[title]}
         {/if}
-    </slot>
+    {/if}
 </button>

@@ -1,4 +1,6 @@
 <script>
+    import { run } from 'svelte/legacy';
+
     import { LOCALE } from "../../locale";
     import UISelectOption from "./ui.select.option.svelte";
     import ErrorsList from "../various/ui.errors.list.svelte";
@@ -8,43 +10,48 @@
     import { createEventDispatcher } from "svelte";
     let dispatch = createEventDispatcher();
 
-    export let inputStarted = false;
-    export let value = "";
-    export let variants = [];
-    export let placeholder = "";
-    export let emptyValueTitle = "";
-    export let fieldname = "select";
-    export let icon = false;
-    export let required = true;
-    export let readonly = false;
-    export let multiple = false;
-    export let size = 8;
-    export let valid = true;
-    export let validated = false;
-    export let errors = false;
-    export let formErrors = false;
-    export let formLevelError = false;
+    /**
+     * @typedef {Object} Props
+     * @property {boolean} [inputStarted]
+     * @property {string} [value]
+     * @property {any} [variants]
+     * @property {string} [placeholder]
+     * @property {string} [emptyValueTitle]
+     * @property {string} [fieldname]
+     * @property {boolean} [icon]
+     * @property {boolean} [required]
+     * @property {boolean} [readonly]
+     * @property {boolean} [multiple]
+     * @property {number} [size]
+     * @property {boolean} [valid]
+     * @property {boolean} [validated]
+     * @property {boolean} [errors]
+     * @property {boolean} [formErrors]
+     * @property {boolean} [formLevelError]
+     */
 
-    let selectedVariants = [];
+    /** @type {Props} */
+    let {
+        inputStarted = $bindable(false),
+        value = $bindable(""),
+        variants = [],
+        placeholder = "",
+        emptyValueTitle = "",
+        fieldname = "select",
+        icon = false,
+        required = true,
+        readonly = false,
+        multiple = false,
+        size = 8,
+        valid = true,
+        validated = false,
+        errors = false,
+        formErrors = false,
+        formLevelError = false
+    } = $props();
 
-    $: iconClasses = (icon ? " has-icons-left " : "") + " has-icons-right ";
-    $: allErrors = [].concat(
-        errors ? errors : [],
-        formErrors ? formErrors : []
-    );
-    $: showErrors = !(validated && valid) && inputStarted;
-    $: invalid = valid === false || formLevelError;
-    $: validationClasses =
-        valid === true || !inputStarted
-            ? UICommon.CLASS_OK
-            : UICommon.CLASS_ERR;
-    $: multipleClass = multiple ? " is-multiple " : "";
-    $: {
-        value;
-        selectedVariants = Array.isArray(variants)
-            ? variants.filter(filterSelectedVariants)
-            : [];
-    }
+    let selectedVariants = $state([]);
+
 
     function filterSelectedVariants(variant) {
         if (Array.isArray(value) && multiple) {
@@ -114,6 +121,33 @@
         dispatch("change", data);
         return true;
     }
+    let iconClasses = $derived((icon ? " has-icons-left " : "") + " has-icons-right ");
+    let allErrors;
+    run(() => {
+        allErrors = [].concat(
+            errors ? errors : [],
+            formErrors ? formErrors : []
+        );
+    });
+    let showErrors;
+    run(() => {
+        showErrors = !(validated && valid) && inputStarted;
+    });
+    let invalid = $derived(valid === false || formLevelError);
+    let validationClasses;
+    run(() => {
+        validationClasses =
+            valid === true || !inputStarted
+                ? UICommon.CLASS_OK
+                : UICommon.CLASS_ERR;
+    });
+    let multipleClass = $derived(multiple ? " is-multiple " : "");
+    run(() => {
+        value;
+        selectedVariants = Array.isArray(variants)
+            ? variants.filter(filterSelectedVariants)
+            : [];
+    });
 </script>
 
 <div class="control {iconClasses}">
@@ -130,8 +164,8 @@
             <select
                 id="form-field-select-{fieldname}"
                 name={fieldname}
-                on:blur={onBlur}
-                on:input={onInput}
+                onblur={onBlur}
+                oninput={onInput}
                 {readonly}
                 {required}
                 {multiple}
@@ -170,15 +204,15 @@
         </div>
         {#if icon}
             <span class="icon is-small is-left"
-                ><i class="fas fa-{icon}" /></span
+                ><i class="fas fa-{icon}"></i></span
             >
         {/if}
         {#if validated === true}
             <span class="icon is-small is-right">
                 {#if valid === true}
-                    <i class="fas fa-check" />
+                    <i class="fas fa-check"></i>
                 {:else if valid === false}
-                    <i class="fas fa-exclamation-triangle" />
+                    <i class="fas fa-exclamation-triangle"></i>
                 {/if}
             </span>
         {/if}

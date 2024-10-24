@@ -1,36 +1,68 @@
 <script>
+    import { run } from 'svelte/legacy';
+
     import { LOCALE } from "../../locale/index";
     import UICommon from "../common.js";
     import ErrorsList from "../various/ui.errors.list.svelte";
     import { createEventDispatcher } from "svelte";
     let dispatch = createEventDispatcher();
 
-    export let inputStarted = false;
-    export let value = "";
-    export let placeholder = "";
-    export let fieldname = "textarea";
-    export let icon = false;
-    export let rows = 10;
-    export let required = true;
-    export let readonly = false;
-    export let disabled = false;
-    export let valid = true;
-    export let validated = false;
-    export let errors = false;
-    export let formErrors = false;
-    export let formLevelError = false;
+    /**
+     * @typedef {Object} Props
+     * @property {boolean} [inputStarted]
+     * @property {string} [value]
+     * @property {string} [placeholder]
+     * @property {string} [fieldname]
+     * @property {boolean} [icon]
+     * @property {number} [rows]
+     * @property {boolean} [required]
+     * @property {boolean} [readonly]
+     * @property {boolean} [disabled]
+     * @property {boolean} [valid]
+     * @property {boolean} [validated]
+     * @property {boolean} [errors]
+     * @property {boolean} [formErrors]
+     * @property {boolean} [formLevelError]
+     */
 
-    $: iconClasses = (icon ? " has-icons-left " : "") + " has-icons-right ";
-    $: allErrors = [].concat(
-        errors ? errors : [],
-        formErrors ? formErrors : []
-    );
-    $: showErrors = !(validated && valid) && inputStarted;
-    $: invalid = valid === false || formLevelError;
-    $: validationClasses =
-        valid === true || !inputStarted
-            ? UICommon.CLASS_OK
-            : UICommon.CLASS_ERR;
+    /** @type {Props} */
+    let {
+        inputStarted = $bindable(false),
+        value = $bindable(""),
+        placeholder = "",
+        fieldname = "textarea",
+        icon = false,
+        rows = 10,
+        required = true,
+        readonly = false,
+        disabled = false,
+        valid = true,
+        validated = false,
+        errors = false,
+        formErrors = false,
+        formLevelError = false
+    } = $props();
+
+    let iconClasses = $derived((icon ? " has-icons-left " : "") + " has-icons-right ");
+    let allErrors;
+    run(() => {
+        allErrors = [].concat(
+            errors ? errors : [],
+            formErrors ? formErrors : []
+        );
+    });
+    let showErrors;
+    run(() => {
+        showErrors = !(validated && valid) && inputStarted;
+    });
+    let invalid = $derived(valid === false || formLevelError);
+    let validationClasses;
+    run(() => {
+        validationClasses =
+            valid === true || !inputStarted
+                ? UICommon.CLASS_OK
+                : UICommon.CLASS_ERR;
+    });
 
     function onBlur(ev) {
         let data = {
@@ -66,7 +98,7 @@
             {disabled}
             {required}
             {readonly}
-            on:blur={onBlur}
+            onblur={onBlur}
             class="textarea {validationClasses}"
             bind:value
             name={fieldname}
@@ -74,18 +106,18 @@
             {rows}
             aria-controls="input-field-helper-{fieldname}"
             aria-describedby="input-field-helper-{fieldname}"
-        />
+></textarea>
         {#if icon}
             <span class="icon is-small is-left"
-                ><i class="fas fa-{icon}" /></span
+                ><i class="fas fa-{icon}"></i></span
             >
         {/if}
         {#if validated === true}
             <span class="icon is-small is-right">
                 {#if valid === true}
-                    <i class="fas fa-check" />
+                    <i class="fas fa-check"></i>
                 {:else if valid === false}
-                    <i class="fas fa-exclamation-triangle" />
+                    <i class="fas fa-exclamation-triangle"></i>
                 {/if}
             </span>
         {/if}

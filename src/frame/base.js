@@ -23,14 +23,17 @@ export default class notBase extends EventEmitter {
             input = {};
         }
 
+        // @ts-ignore
         if (Object.hasOwn(input, "data")) {
             this.setData(input.data);
         }
 
+        // @ts-ignore
         if (Object.hasOwn(input, "working")) {
             this.setWorking(input.working);
         }
 
+        // @ts-ignore
         if (Object.hasOwn(input, "options")) {
             this.setOptions(input.options);
         }

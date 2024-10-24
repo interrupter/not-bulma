@@ -1,21 +1,24 @@
 <script>
     import { LOCALE } from "../../locale";
+    
+    
+    
+    
     /**
-     * @property {string} [title='']
-     **/
-    export let title = "";
-    /**
-     * @property {string} font
-     **/
-    export let font = "";
-    /**
-     * @property {string} [size=''] medium|large
-     **/
-    export let size = "";
-    /**
-     * @property {boolean} [pointable=false] medium|large
-     **/
-    export let pointable = false;
+     * @typedef {Object} Props
+     * @property {string} [title]
+     * @property {string} [font]
+     * @property {string} [size]
+     * @property {boolean} [pointable]
+     */
+
+    /** @type {Props} */
+    let {
+        title = "",
+        font = "",
+        size = "",
+        pointable = false
+    } = $props();
 </script>
 
 {#if title}

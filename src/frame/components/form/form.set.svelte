@@ -9,11 +9,22 @@
 
   let dispatch = createEventDispatcher();
 
-  export let name = 'default-form';
 
-  export let showModes = false;
-  export let mode = 'default';
-  export let forms = [];
+  /**
+   * @typedef {Object} Props
+   * @property {string} [name]
+   * @property {boolean} [showModes]
+   * @property {string} [mode]
+   * @property {any} [forms]
+   */
+
+  /** @type {Props} */
+  let {
+    name = 'default-form',
+    showModes = false,
+    mode = $bindable('default'),
+    forms = []
+  } = $props();
 
   function setMode(val) {
     mode = val;
@@ -21,7 +32,7 @@
     updateModesButtons();
   }
 
-  let FORMS_BUTTONS = [];
+  let FORMS_BUTTONS = $state([]);
 
   function updateModesButtons() {
     FORMS_BUTTONS = forms.filter(form => {

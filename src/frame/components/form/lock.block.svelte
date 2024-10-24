@@ -1,7 +1,13 @@
 <script>
-  export let enable = false;
-  export let backgroundColor = '#337ab7';
-  $: style = `background-color: ${backgroundColor};`;
+  /**
+   * @typedef {Object} Props
+   * @property {boolean} [enable]
+   * @property {string} [backgroundColor]
+   */
+
+  /** @type {Props} */
+  let { enable = false, backgroundColor = '#337ab7' } = $props();
+  let style = $derived(`background-color: ${backgroundColor};`);
 </script>
 
 <div id="block-shield" class:show="{enable}" style="{style}">

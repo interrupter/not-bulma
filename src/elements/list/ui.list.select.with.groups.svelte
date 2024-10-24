@@ -7,94 +7,118 @@
     import UIImage from "../image/ui.image.svelte";
     import UIButtons from "../button/ui.buttons.svelte";
 
-    export let fieldname = "list-select-tags";
-    export let multiple = false;
-    export let onlyOneInGroup = true;
-    export let atLeastOne = true;
 
-    /*
-    [
-        //array of groups
-        {
-            id:number,
-            title:string|object,
-            image:string|object,
-            variants = [
-                //array of values variants in group
-                {
-                id:number,
-                title:string|object,
-                description:string|object,
-                image:string|object,
-                value:object
-            }]
-        }
-    ]
-    */
-    export let variants = [];
-    /*
-    multiple && multiple in group
-    {
-        //array of arrays of selected values in group
-        //if no selection group should be empty array
-        [groupId]: [...variantsId]
-    }
-    multiple && one in group
-    {
-        [groupId]: variantId
-    }
-    only one (not multiple && one in group)
-    {
-        group: groupId
-        value: variantId
-    }
-    */
-    export let variantsSelected = {};
-    //{[groupId]: [...valuesOfSelectedItems]}
-    export let value;
-    //
-    export let titleComponent = UITitle;
-    export let titleComponentProps = { size: 5 };
-    //
-    export let imageComponent = UIImage;
-    export let imageComponentProps = { covered: true };
-    //
-    export let descriptionComponent = UIButtons;
-    export let descriptionComponentProps = {};
-    //
-    export let listComponent = UIList;
-    export let listComponentProps = {};
-    //
-    export let sublimeValue = (value) => {
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    /**
+     * @typedef {Object} Props
+     * @property {string} [fieldname]
+     * @property {boolean} [multiple]
+     * @property {boolean} [onlyOneInGroup]
+     * @property {boolean} [atLeastOne]
+     * @property {any} [variants] - [
+array of groups
+{
+id:number,
+title:string|object,
+image:string|object,
+variants = [
+array of values variants in group
+{
+id:number,
+title:string|object,
+description:string|object,
+image:string|object,
+value:object
+}]
+}
+]
+     * @property {any} [variantsSelected] - multiple && multiple in group
+{
+array of arrays of selected values in group
+if no selection group should be empty array
+[groupId]: [...variantsId]
+}
+multiple && one in group
+{
+[groupId]: variantId
+}
+only one (not multiple && one in group)
+{
+group: groupId
+value: variantId
+}
+     * @property {any} value - {[groupId]: [...valuesOfSelectedItems]}
+     * @property {any} [titleComponent]
+     * @property {any} [titleComponentProps]
+     * @property {any} [imageComponent]
+     * @property {any} [imageComponentProps]
+     * @property {any} [descriptionComponent]
+     * @property {any} [descriptionComponentProps]
+     * @property {any} [listComponent]
+     * @property {any} [listComponentProps]
+     * @property {any} [sublimeValue]
+     * @property {any} [getItem]
+     * @property {any} [getItemValue]
+     * @property {any} [getDefaultItemSublime]
+     * @property {any} [uiOn]
+     * @property {any} [uiOff]
+     */
+
+    /** @type {Props} */
+    let {
+        fieldname = "list-select-tags",
+        multiple = false,
+        onlyOneInGroup = true,
+        atLeastOne = true,
+        variants = $bindable([]),
+        variantsSelected = $bindable({}),
+        value = $bindable(),
+        titleComponent = UITitle,
+        titleComponentProps = { size: 5 },
+        imageComponent = UIImage,
+        imageComponentProps = { covered: true },
+        descriptionComponent = UIButtons,
+        descriptionComponentProps = {},
+        listComponent = UIList,
+        listComponentProps = {},
+        sublimeValue = (value) => {
         return {
             groupId: value.group,
             valueId: value.id,
         };
-    };
-    //
-    export let getItem = ({ groupId, valueId }) => {
+    },
+        getItem = ({ groupId, valueId }) => {
         return variants
             .find((group) => group.id === groupId)
             .description.values.find((btnVal) => btnVal.value.id === valueId);
-    };
-    export let getItemValue = ({ groupId, valueId }) => {
+    },
+        getItemValue = ({ groupId, valueId }) => {
         return getItem({ groupId, valueId }).value;
-    };
-    export let getDefaultItemSublime = () => {
+    },
+        getDefaultItemSublime = () => {
         return {
             groupId: variants[0].id,
             valueId: variants[0].description.values[0].value.id,
         };
-    };
-    //
-    export let uiOn = (item) => {
+    },
+        uiOn = (item) => {
         item.color = "success";
         item.outlined = false;
-    };
-    export let uiOff = (item) => {
+    },
+        uiOff = (item) => {
         item.color = false;
         item.outlined = false;
-    };
+    }
+    } = $props();
 
     onMount(() => {
         if (value) {
@@ -283,10 +307,11 @@
         } else {
         }
     }
+
+    const SvelteComponent = $derived(listComponent);
 </script>
 
-<svelte:component
-    this={listComponent}
+<SvelteComponent
     {...listComponentProps}
     bind:items={variants}
     {titleComponent}

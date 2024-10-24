@@ -6,47 +6,62 @@
     import UIEndlessListEmptyPlaceholder from "../ui.list.empty.placeholder.svelte";
     import UIEndlessListNavigation from "./ui.endless.list.navigation.svelte";
 
-    export let data = {
+    
+    
+    
+    /**
+     * @typedef {Object} Props
+     * @property {any} [data]
+     * @property {any} [itemComponent] - list element
+     * @property {any} [itemComponentProps]
+     * @property {any} [emptyListPlaceholderComponent] - if list is empty
+     * @property {any} [emptyListPlaceholderComponentProps]
+     * @property {any} [listNavigationComponent] - prev and next block
+     * @property {any} [listNavigationComponentProps]
+     */
+
+    /** @type {Props} */
+    let {
+        data = $bindable({
         list: [],
         skip: 0,
         count: 0,
         page: 0,
         pages: 0,
-    };
-    //list element
-    export let itemComponent = UIEndlessListSimpleItem;
-    export let itemComponentProps = {};
-    //if list is empty
-    export let emptyListPlaceholderComponent = UIEndlessListEmptyPlaceholder;
-    export let emptyListPlaceholderComponentProps = {};
-    //prev and next block
-    export let listNavigationComponent = UIEndlessListNavigation;
-    export let listNavigationComponentProps = {};
+    }),
+        itemComponent = UIEndlessListSimpleItem,
+        itemComponentProps = {},
+        emptyListPlaceholderComponent = UIEndlessListEmptyPlaceholder,
+        emptyListPlaceholderComponentProps = {},
+        listNavigationComponent = UIEndlessListNavigation,
+        listNavigationComponentProps = {}
+    } = $props();
 
     function select({ detail }) {
         dispatch("select", detail);
     }
+
+    const SvelteComponent_2 = $derived(listNavigationComponent);
 </script>
 
 <div>
     {#if data.list.length}
         {#each data.list as item (item.id)}
-            <svelte:component
-                this={itemComponent}
+            {@const SvelteComponent = itemComponent}
+            <SvelteComponent
                 on:click={select}
                 {...itemComponentProps}
                 {...item}
             />
         {/each}
     {:else}
-        <svelte:component
-            this={emptyListPlaceholderComponent}
+        {@const SvelteComponent_1 = emptyListPlaceholderComponent}
+        <SvelteComponent_1
             {...emptyListPlaceholderComponentProps}
         />
     {/if}
 </div>
-<svelte:component
-    this={listNavigationComponent}
+<SvelteComponent_2
     {...listNavigationComponentProps}
     bind:page={data.page}
     bind:pages={data.pages}

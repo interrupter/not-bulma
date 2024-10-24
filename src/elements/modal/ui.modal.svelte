@@ -9,20 +9,41 @@
     import UITitle from "../various/ui.title.svelte";
     import UIButtonsRow from "../button/ui.buttons.row.svelte";
 
-    export let buttonsPosition = "bottom";
-    export let closeButton = false;
-    export let applyButton = false;
 
-    export let titleSize = 2;
-    export let show = false;
-    export let loading = false;
-    export let title = "Modal window";
-    export let subtitle = "";
-    export let classes = "";
-    export let overlayClasses = "";
-    export let buttonsClasses = "";
 
-    export let WAITING_TEXT = "Обработка";
+    /**
+     * @typedef {Object} Props
+     * @property {string} [buttonsPosition]
+     * @property {boolean} [closeButton]
+     * @property {boolean} [applyButton]
+     * @property {number} [titleSize]
+     * @property {boolean} [show]
+     * @property {boolean} [loading]
+     * @property {string} [title]
+     * @property {string} [subtitle]
+     * @property {string} [classes]
+     * @property {string} [overlayClasses]
+     * @property {string} [buttonsClasses]
+     * @property {string} [WAITING_TEXT]
+     * @property {import('svelte').Snippet} [children]
+     */
+
+    /** @type {Props} */
+    let {
+        buttonsPosition = "bottom",
+        closeButton = false,
+        applyButton = false,
+        titleSize = 2,
+        show = false,
+        loading = false,
+        title = "Modal window",
+        subtitle = "",
+        classes = "",
+        overlayClasses = "",
+        buttonsClasses = "",
+        WAITING_TEXT = "Обработка",
+        children
+    } = $props();
 </script>
 
 <UIOverlay
@@ -50,7 +71,7 @@
                 ></UIButtonsRow>
             {/if}
 
-            <slot />
+            {@render children?.()}
 
             {#if buttonsPosition === "bottom"}
                 <UIButtonsRow

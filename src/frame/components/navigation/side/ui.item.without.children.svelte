@@ -5,8 +5,14 @@
   import {LOCALE} from '../../../../locale';
   import UIIndicator from '../../../../elements/various/ui.indicator.svelte';
 
-  export let root = '';
-  export let item = {};
+  /**
+   * @typedef {Object} Props
+   * @property {string} [root]
+   * @property {any} [item]
+   */
+
+  /** @type {Props} */
+  let { root = '', item = {} } = $props();
 
   function onClick(ev){
     ev.preventDefault();
@@ -21,7 +27,7 @@
 
 {#if (typeof item.url !== 'undefined' && item.url!==false) }
 <li class="{item.classes}">
-  <a href="{root}{item.url}" data-href="{item.url}" on:click="{onClick}">
+  <a href="{root}{item.url}" data-href="{item.url}" onclick={onClick}>
   {$LOCALE[item.title]}
   {#if item.tag }
     <UIIndicator id={item.id} {...item.tag} />
