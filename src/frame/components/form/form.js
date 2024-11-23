@@ -10,11 +10,10 @@ import FormHelpers from "./form.helpers.js";
 import UIFormComponent from "./form.svelte";
 import notFormRules from "./form.rules.js";
 
-import { DEFAULT_STATUS_SUCCESS, DEFAULT_STATUS_ERROR } from "../../const";
+import { DEFAULT_STATUS_SUCCESS } from "../../const";
 
 const DEFAULT_CONTAINER_SELECTOR = ".form";
 const DEFAULT_ACTION_NAME = "default";
-const DEFAULT_VARIANT_NAME = "noname";
 
 class notForm extends notBase {
     //UI renderer component class constructor

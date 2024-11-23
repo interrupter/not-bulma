@@ -13,13 +13,13 @@
   let { root = '', items = [], go = null } = $props();
 
   function onClick(ev){
-    if(typeof go === 'function'){
-      ev.preventDefault();
-      go(ev.currentTarget.dataset.href);
-      return false;
-    }else{
-      return true;
-    }
+      if(typeof go === 'function'){
+          ev.preventDefault();
+          go(ev.currentTarget.dataset.href);
+          return false;
+      }else{
+          return true;
+      }
   }
 
 </script>

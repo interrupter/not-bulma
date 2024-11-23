@@ -7,7 +7,6 @@
         CLOSED: "fa-angle-up",
     };
 
-
     /**
      * @typedef {Object} Props
      * @property {any} [icon_opened]
@@ -16,7 +15,11 @@
      */
 
     /** @type {Props} */
-    let { icon_opened = CLASS_ICON.OPENED, icon_closed = CLASS_ICON.CLOSED, closed = $bindable(false) } = $props();
+    let {
+        icon_opened = CLASS_ICON.OPENED,
+        icon_closed = CLASS_ICON.CLOSED,
+        closed = $bindable(false),
+    } = $props();
 
     function onClick(e) {
         e && e.preventDefault() && e.stopPropagation();
@@ -30,6 +33,8 @@
     class="icon is-small is-toggle-submenu is-pulled-right"
     onclick={onClick}
     onkeyup={onClick}
+    role="button"
+    tabindex="0"
 >
     <i class="fas {closed ? icon_closed : icon_opened}" aria-hidden="true"></i>
 </span>

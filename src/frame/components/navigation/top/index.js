@@ -47,15 +47,15 @@ class notTopMenu extends Menu {
                 return;
             }
             this.menu = mount(UINavbarTop, {
-                            target,
-                            props: {
-                                brand: this.getOptions().brand,
-                                items: this.items,
-                                sections: this.sections,
-                                root: this.getOptions().root,
-                                navigate: this.getOptions().navigate,
-                            },
-                        });
+                target,
+                props: {
+                    brand: this.getOptions().brand,
+                    items: this.items,
+                    sections: this.sections,
+                    root: this.getOptions().root,
+                    navigate: this.getOptions().navigate,
+                },
+            });
             this.interval = setInterval(
                 this.updateMenuActiveItem.bind(this),
                 200

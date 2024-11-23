@@ -32,7 +32,7 @@ class CRUDGenericActionCreate extends CRUDGenericAction {
     /**
      *
      * @param {import('../../controller.crud')} controller
-     * @param {any}                         params
+     * @param {any}                         [params]
      * @returns {import('not-node/src/types').notAppResponse}
      */
     static loadData(controller, params) {
@@ -70,7 +70,7 @@ class CRUDGenericActionCreate extends CRUDGenericAction {
      * Binds events to action UI
      * @param {object} controller   instance of controller
      * @param {string[]} params     list of route params
-     * @param {object} response     API response
+     * @param {object} [response]     API response
      */
     static bindUIEvents(controller, params, response) {
         if (notCommon.isFunc(controller.goBack)) {

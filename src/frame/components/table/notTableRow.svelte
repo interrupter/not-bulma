@@ -8,8 +8,8 @@
   let itemId = $state(), selectedList;
 
   onMount(() => {
-    itemId = getItemId(item);
-    selectedList = Stores.get(id).selected;
+      itemId = getItemId(item);
+      selectedList = Stores.get(id).selected;
   });
 
 
@@ -25,22 +25,22 @@
 
   /** @type {Props} */
   let {
-    id,
-    item = {},
-    helpers = {},
-    fields = [],
-    showSelect = false,
-    getItemId = ()=>{}
+      id,
+      item = {},
+      helpers = {},
+      fields = [],
+      showSelect = false,
+      getItemId = ()=>{}
   } = $props();
 
   function onRowSelect(e){
-    e.preventDefault();
-    dispatch('rowSelectChange', {
-      id:       itemId,
-      selected: $selectedList[itemId]
-    });
-    return false;
-}
+      e.preventDefault();
+      dispatch('rowSelectChange', {
+          id:       itemId,
+          selected: $selectedList[itemId]
+      });
+      return false;
+  }
 
 
 </script>

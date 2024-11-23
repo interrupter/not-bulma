@@ -12,7 +12,13 @@ class Menu {
         type: "link",
         open: false,
     };
-    static app = false;
+    /**
+     *
+     * @type {import('../../app.js').default | null}
+     * @static
+     * @memberof Menu
+     */
+    static app = null;
     static directNavigation = false;
     static menu;
     static options = {
@@ -28,6 +34,8 @@ class Menu {
             document.location.assign(urls.full);
         },
     };
+
+    static hide() {}
 
     static items = [];
     static sections = [];
@@ -53,9 +61,9 @@ class Menu {
     static isDirectNavigation() {
         return this.app
             ? this.app.getOptions(
-                  this.getOptionsPathTo("directNavigation"),
-                  this.options.directNavigation
-              )
+                this.getOptionsPathTo("directNavigation"),
+                this.options.directNavigation
+            )
             : this.options.directNavigation;
     }
 

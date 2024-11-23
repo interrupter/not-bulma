@@ -3,8 +3,6 @@
     import { createEventDispatcher } from "svelte";
     let dispatch = createEventDispatcher();
 
-    import Lib from "../../lib.js";
-
     import { LOCALE } from "../../../locale";
 
     import UIField from "./field.svelte";
@@ -18,19 +16,11 @@
 
     //input data
     //form structure object
-    
-    
+
     //hidden - no loader
     //container - parent container of form
-    
-    //fields list structure
-    
-    
 
-    
-    
-    
-    
+    //fields list structure
 
     /**
      * @typedef {Object} Props
@@ -70,13 +60,13 @@ agreed
         buttonsFirst = false,
         horizontal = false,
         submit = {
-        caption: "Отправить",
-        enabled: true,
-    },
+            caption: "Отправить",
+            enabled: true,
+        },
         cancel = {
-        caption: "Назад",
-        enabled: true,
-    }
+            caption: "Назад",
+            enabled: true,
+        },
     } = $props();
 
     let formInvalid = $derived(formHasErrors || fieldsHasErrors);
@@ -92,9 +82,6 @@ agreed
 
     export function setFieldValid(fieldName, value) {
         form = FormHelpers.setFieldValid(form, fieldName, value);
-        if (fieldsHasErrors !== some) {
-            fieldsHasErrors = some;
-        }
     }
 
     export function isFieldValid(fieldName) {

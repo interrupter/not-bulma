@@ -1,6 +1,4 @@
 <script>
-    import { run } from 'svelte/legacy';
-
     import UIBlock from "./ui.block.svelte";
     /**
      * @typedef {Object} Props
@@ -12,12 +10,15 @@
     /** @type {Props} */
     let { id = $bindable(""), classes = "", children } = $props();
 
-    let classesInner;
-    run(() => {
+    const DEFAULT_CLASSES_INNER = "block-inner-vertical";
+
+    let classesInner = $state(DEFAULT_CLASSES_INNER);
+
+    $effect(() => {
         classesInner = `block-inner-vertical ${classes}`;
     });
 </script>
 
-<UIBlock bind:id bind:classes={classesInner}>
+<UIBlock {id} classes={classesInner}>
     {@render children?.()}
 </UIBlock>

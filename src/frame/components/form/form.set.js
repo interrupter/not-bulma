@@ -1,5 +1,3 @@
-import Lib from "../../lib.js";
-import notCommon from "../../common";
 import notBase from "../../base";
 
 import UIFormSetComponent from "./form.set.svelte";
@@ -49,8 +47,8 @@ class notFormSet extends notBase {
                 ...options,
             },
         });
-        this.#formComponent = UIFormComponent;
-        this.#formSetComponent = UIFormSetComponent;
+        this.#formComponent = formComponent;
+        this.#formSetComponent = formSetComponent;
         this.setFormMode(this.getOptions("mode"));
         this.initUI();
     }
@@ -167,9 +165,9 @@ class notFormSet extends notBase {
         this.#formComponent = null;
         this.destroyForm();
         this.destroyFrame();
-        thi.setData(null);
-        thi.setOptions(null);
-        thi.setWorking(null);
+        this.setData(null);
+        this.setOptions(null);
+        this.setWorking(null);
     }
 
     getFrameTargetEl() {

@@ -18,10 +18,10 @@
 
    /** @type {Props} */
    let {
-      page = 0,
-      pages = 0,
-      buttonComponent = UIButton,
-      buttonComponentProps = {}
+       page = 0,
+       pages = 0,
+       buttonComponent = UIButton,
+       buttonComponentProps = {}
    } = $props();
 
 </script>

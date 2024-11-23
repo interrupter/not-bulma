@@ -12,9 +12,6 @@
     import { onMount, createEventDispatcher } from "svelte";
     let dispatch = createEventDispatcher();
 
-
-
-
     /**
      * @typedef {Object} Props
      * @property {any} id
@@ -52,7 +49,7 @@
         showSearch = true,
         showSelect = true,
         selectAll = $bindable(false),
-        getItemId = (item) => item._id
+        getItemId = (item) => item._id,
     } = $props();
 
     onMount(() => {
@@ -85,7 +82,7 @@
         try {
             let data = ev.currentTarget.value.trim();
             dispatch("searchChange", data);
-        } catch (e) {
+        } catch {
             return;
         }
     }
@@ -93,7 +90,7 @@
     function onSearchChange({ detail }) {
         try {
             dispatch("searchChange", detail);
-        } catch (e) {
+        } catch {
             return;
         }
     }
@@ -101,7 +98,7 @@
     function onFilterChange({ detail }) {
         try {
             dispatch("filterChange", detail);
-        } catch (e) {
+        } catch {
             return;
         }
     }
@@ -177,36 +174,40 @@
 {/if}
 <table class="table">
     <thead>
-        {#if showSelect}
-            <th
-                ><input
-                    type="checkbox"
-                    id="table-row-select-page"
-                    bind:checked={selectAll}
-                    placeholder=""
-                    name="row_selected_all"
-                    onchange={onSelectAll}
-                /></th
-            >
-        {/if}
-        {#each fields as field}
-            {@const propPath = field.path.substring(1)}
-            <th
-                class={(field.hideOnMobile ? " is-hidden-touch" : "") +
-                    (field.sortable ? " is-clickable" : "")}
-                onclick={onFieldHeadClick(field)}
-            >
-                {#if field.sortable && Object.hasOwn(sorter, propPath)}
-                    <UIIcon
-                        font={sorter[propPath] > 0 ? "sort-up" : "sort-down"}
-                        title={field.title}
-                        pointable={true}
-                    />
-                {:else}
-                    {$LOCALE[field.title]}
-                {/if}
-            </th>
-        {/each}
+        <tr>
+            {#if showSelect}
+                <th
+                    ><input
+                        type="checkbox"
+                        id="table-row-select-page"
+                        bind:checked={selectAll}
+                        placeholder=""
+                        name="row_selected_all"
+                        onchange={onSelectAll}
+                    /></th
+                >
+            {/if}
+            {#each fields as field}
+                {@const propPath = field.path.substring(1)}
+                <th
+                    class={(field.hideOnMobile ? " is-hidden-touch" : "") +
+                        (field.sortable ? " is-clickable" : "")}
+                    onclick={onFieldHeadClick(field)}
+                >
+                    {#if field.sortable && Object.hasOwn(sorter, propPath)}
+                        <UIIcon
+                            font={sorter[propPath] > 0
+                                ? "sort-up"
+                                : "sort-down"}
+                            title={field.title}
+                            pointable={true}
+                        />
+                    {:else}
+                        {$LOCALE[field.title]}
+                    {/if}
+                </th>
+            {/each}
+        </tr>
     </thead>
     <tbody>
         {#each items as item (item._id)}

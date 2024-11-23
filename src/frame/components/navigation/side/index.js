@@ -31,7 +31,8 @@ class notSideMenu extends Menu {
         navigate: (urls) => {
             if (this.isTouch()) {
                 this.hide();
-                this.app.emit("top-navbar-burger:update", { closed: true });
+                this.app &&
+                    this.app.emit("top-navbar-burger:update", { closed: true });
             }
             if (!this.isDirectNavigation() && this.app) {
                 let func = this.app.getWorking("router");
@@ -66,14 +67,14 @@ class notSideMenu extends Menu {
             return;
         }
         this.menu = mount(UISideMenu, {
-                    target,
-                    props: {
-                        items: this.items,
-                        sections: this.sections,
-                        root: this.getOptions().root,
-                        navigate: this.getOptions().navigate,
-                    },
-                });
+            target,
+            props: {
+                items: this.items,
+                sections: this.sections,
+                root: this.getOptions().root,
+                navigate: this.getOptions().navigate,
+            },
+        });
         this.initSizeResponse();
 
         this.interval = setInterval(this.updateMenuActiveItem.bind(this), 200);

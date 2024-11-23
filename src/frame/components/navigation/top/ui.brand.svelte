@@ -8,11 +8,15 @@
      */
 
     /** @type {Props} */
-    let { url = "/", title = "", icon = {
-        src: "https://via.placeholder.com/56x28",
-        width: 28,
-        height: 56,
-    } } = $props();
+    let {
+        url = "/",
+        title = "",
+        icon = {
+            src: "https://via.placeholder.com/56x28",
+            width: 28,
+            height: 56,
+        },
+    } = $props();
 </script>
 
 <a class="navbar-item" href={url}>

@@ -23,12 +23,12 @@
     /** @type {Props} */
     let {
         data = $bindable({
-        list: [],
-        skip: 0,
-        count: 0,
-        page: 0,
-        pages: 0,
-    }),
+            list: [],
+            skip: 0,
+            count: 0,
+            page: 0,
+            pages: 0,
+        }),
         itemComponent = UIEndlessListSimpleItem,
         itemComponentProps = {},
         emptyListPlaceholderComponent = UIEndlessListEmptyPlaceholder,
