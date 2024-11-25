@@ -32,35 +32,35 @@
 
   /** @type {Props} */
   let {
-    id = "tagId",
-    state = $bindable("light"),
-    size = "normal",
-    labels = {
-        black: "black",
-        dark: "dark",
-        light: "light",
-        white: "white",
-        primary: "primary",
-        link: "link",
-        info: "info",
-        success: "success",
-        warning: "warning",
-        danger: "danger",
-    },
-    classes = "mx-1",
-    padding = "normal",
-    bold = false,
-    right = false,
-    left = false,
-    top = false,
-    bottom = false,
-    events = $bindable({}),
-    register = notCommon.registerWidgetEvents.bind(notCommon),
-    onUpdate = (data) => {
-        if (Object.hasOwn(data, "state")) {
-            state = data.state;
-        }
-    }
+      id = "tagId",
+      state = $bindable("light"),
+      size = "normal",
+      labels = {
+          black: "black",
+          dark: "dark",
+          light: "light",
+          white: "white",
+          primary: "primary",
+          link: "link",
+          info: "info",
+          success: "success",
+          warning: "warning",
+          danger: "danger",
+      },
+      classes = "mx-1",
+      padding = "normal",
+      bold = false,
+      right = false,
+      left = false,
+      top = false,
+      bottom = false,
+      events = $bindable({}),
+      register = notCommon.registerWidgetEvents.bind(notCommon),
+      onUpdate = (data) => {
+          if (Object.hasOwn(data, "state")) {
+              state = data.state;
+          }
+      }
   } = $props();
 
     function getStandartUpdateEventName() {
@@ -74,8 +74,8 @@
         register(events);
     });
     run(() => {
-    sided = right || left || top || bottom;
-  });
+        sided = right || left || top || bottom;
+    });
 </script>
 
 <span

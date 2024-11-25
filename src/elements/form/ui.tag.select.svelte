@@ -40,35 +40,35 @@
 
   /** @type {Props} */
   let {
-    value = $bindable([]),
-    inputStarted = false,
-    variants = [],
-    fieldname = "tag",
-    readonly = false,
-    valid = true,
-    validated = false,
-    errors = false,
-    formErrors = false,
-    formLevelError = false,
-    beforeAdd = (/*variant, variants*/) => {
-        return true;
-    },
-    getItemId = (variant) => {
-        return variant.id;
-    },
-    getItemTitle = (variant) => {
-        return variant.title;
-    },
-    getItemType = (variant) => {
-        return "info";
-    },
-    buildItem = (variant) => {
-        return {
-            id: getItemId(variant),
-            title: getItemTitle(variant),
-            type: getItemType(variant),
-        };
-    }
+      value = $bindable([]),
+      inputStarted = false,
+      variants = [],
+      fieldname = "tag",
+      readonly = false,
+      valid = true,
+      validated = false,
+      errors = false,
+      formErrors = false,
+      formLevelError = false,
+      beforeAdd = (/*variant, variants*/) => {
+          return true;
+      },
+      getItemId = (variant) => {
+          return variant.id;
+      },
+      getItemTitle = (variant) => {
+          return variant.title;
+      },
+      getItemType = (variant) => {
+          return "info";
+      },
+      buildItem = (variant) => {
+          return {
+              id: getItemId(variant),
+              title: getItemTitle(variant),
+              type: getItemType(variant),
+          };
+      }
   } = $props();
 
     function variantIdToVariant(id) {
@@ -132,19 +132,19 @@ item = {
         .map(buildItem));
     let allErrors;
   run(() => {
-    allErrors = [].concat(
+      allErrors = [].concat(
           errors ? errors : [],
           formErrors ? formErrors : []
       );
   });
     let showErrors;
   run(() => {
-    showErrors = !(validated && valid) && inputStarted;
+      showErrors = !(validated && valid) && inputStarted;
   });
     let invalid = $derived(valid === false || formLevelError);
     let validationClasses;
   run(() => {
-    validationClasses =
+      validationClasses =
           valid === true || !inputStarted
               ? UICommon.CLASS_OK
               : UICommon.CLASS_ERR;

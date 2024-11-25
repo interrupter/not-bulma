@@ -4,8 +4,8 @@ import UIIconFont from './ui.icon.font.svelte';
 import UIIcon from './ui.icon.svelte';
 
 export {
-  UIIconButtonWithTag,
-  UIIconFloating,
-  UIIconFont,
-  UIIcon
+    UIIconButtonWithTag,
+    UIIconFloating,
+    UIIconFont,
+    UIIcon
 };

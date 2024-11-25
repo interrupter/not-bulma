@@ -71,15 +71,15 @@
         itemUI = "UIListItem",
         itemUIProps = {},
         transformValueItemToListItem = (item) => {
-        return item
-            ? {
-                  id: item._id,
-                  title: item.title,
-                  description: item.description,
-                  value: item,
-              }
-            : undefined;
-    }
+            return item
+                ? {
+                    id: item._id,
+                    title: item.title,
+                    description: item.description,
+                    value: item,
+                }
+                : undefined;
+        }
     } = $props();
 
     function addItem(item) {

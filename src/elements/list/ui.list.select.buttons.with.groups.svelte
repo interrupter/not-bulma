@@ -82,11 +82,11 @@ value: variantId
         listComponentProps = {},
         actionsList = ["selectAll", "deselectAll"],
         sublimeValue = (value) => {
-        return {
-            groupId: value.group,
-            valueId: value.id,
-        };
-    }
+            return {
+                groupId: value.group,
+                valueId: value.id,
+            };
+        }
     } = $props();
     //
 

@@ -68,10 +68,10 @@
         class="list {classes} {actionsVisible
             ? 'has-visible-pointer-controls'
             : ''} {itemsHoverable
-            ? 'has-hoverable-list-items'
-            : ''} {overflowEllipsis
-            ? 'has-overflow-ellipsis'
-            : ''} {hiddenImages ? 'has-hidden-images' : ''}"
+                ? 'has-hoverable-list-items'
+                : ''} {overflowEllipsis
+                    ? 'has-overflow-ellipsis'
+                    : ''} {hiddenImages ? 'has-hidden-images' : ''}"
     >
         <UIListBlock
             bind:items

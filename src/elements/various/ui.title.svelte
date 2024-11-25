@@ -33,8 +33,8 @@
     let size2 = $derived(subsize
         ? subsize
         : parseInt(size) < 6
-        ? parseInt(size) + 1
-        : size);
+            ? parseInt(size) + 1
+            : size);
     
     let spacedStyle = $derived(spaced ? "is-spaced" : "");
 

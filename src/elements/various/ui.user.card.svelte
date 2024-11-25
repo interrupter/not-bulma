@@ -25,14 +25,14 @@
         events = $bindable({}),
         register = notCommon.registerWidgetEvents,
         onUpdate = (data) => {
-        if (Object.hasOwn(data, "username")) {
-            username = data.username;
-        }
+            if (Object.hasOwn(data, "username")) {
+                username = data.username;
+            }
 
-        if (Object.hasOwn(data, "role")) {
-            role = data.role;
+            if (Object.hasOwn(data, "role")) {
+                role = data.role;
+            }
         }
-    }
     } = $props();
 
     function getCompId() {

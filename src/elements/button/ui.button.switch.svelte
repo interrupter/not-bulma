@@ -52,18 +52,18 @@
         icon = false,
         iconSide = "right",
         uiOff = () => {
-        return {
-            color: "",
-        };
-    },
+            return {
+                color: "",
+            };
+        },
         uiOn = () => {
-        return {
-            color: "success",
-        };
-    },
+            return {
+                color: "success",
+            };
+        },
         action = () => {
-        return !selected;
-    },
+            return !selected;
+        },
         value,
         selected = $bindable(false)
     } = $props();

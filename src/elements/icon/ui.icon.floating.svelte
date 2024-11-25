@@ -15,10 +15,10 @@
 
   /** @type {Props} */
   let { trigger = {
-    title:  'Click me!',
-    icon:   'plus',
-    color:  'primary',
-    size:   'medium'
+      title:  'Click me!',
+      icon:   'plus',
+      color:  'primary',
+      size:   'medium'
   } } = $props();
 
   function toggle(){
@@ -28,7 +28,7 @@
   let positionStyle = $state('');
 
   onMount(()=>{
-    positionStyle = '';
+      positionStyle = '';
   });
 
 </script>

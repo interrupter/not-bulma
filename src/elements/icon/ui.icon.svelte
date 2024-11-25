@@ -17,13 +17,13 @@
 
   /** @type {Props} */
   let {
-    title = '',
-    size = '',
-    font = '',
-    svg = '',
-    src = '',
-    width,
-    height
+      title = '',
+      size = '',
+      font = '',
+      svg = '',
+      src = '',
+      width,
+      height
   } = $props();
 </script>
 

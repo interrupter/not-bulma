@@ -8,7 +8,12 @@
      */
 
     /** @type {Props} */
-    let { id = $bindable(""), classes = "", children } = $props();
+    let {
+        id = $bindable(""),
+        classes = "",
+        onclick = () => true,
+        children,
+    } = $props();
 
     const DEFAULT_CLASSES_INNER = "block-inner-vertical";
 
@@ -19,6 +24,6 @@
     });
 </script>
 
-<UIBlock {id} classes={classesInner}>
+<UIBlock {id} classes={classesInner} {onclick}>
     {@render children?.()}
 </UIBlock>

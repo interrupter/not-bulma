@@ -22,8 +22,8 @@
         classes = "",
         buttonComponent = UIButton,
         action = (e) => {
-        dispatch("click", e);
-    }
+            dispatch("click", e);
+        }
     } = $props();
 </script>
 

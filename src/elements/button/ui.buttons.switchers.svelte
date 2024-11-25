@@ -105,27 +105,27 @@
         classes = "",
         buttonComponent = UIButtonSwitch,
         action = (ev, value, selected) => {
-        let newSelected = !selected;
-        const indexOfCurrent = values.indexOf((itm) => itm.value === value);
-        const cnt = countSelected() + (newSelected ? 1 : -1);
+            let newSelected = !selected;
+            const indexOfCurrent = values.indexOf((itm) => itm.value === value);
+            const cnt = countSelected() + (newSelected ? 1 : -1);
 
-        if (min) {
-            if (cnt < min) {
-                selectUpToMin(cnt, indexOfCurrent);
-                values = values;
+            if (min) {
+                if (cnt < min) {
+                    selectUpToMin(cnt, indexOfCurrent);
+                    values = values;
+                }
             }
-        }
-        if (max) {
-            if (max < cnt) {
-                deselectDownToMin(cnt, indexOfCurrent);
-                values = values;
+            if (max) {
+                if (max < cnt) {
+                    deselectDownToMin(cnt, indexOfCurrent);
+                    values = values;
+                }
             }
-        }
-        if (newSelected) {
-            addToHistory(indexOfCurrent);
-        }
-        return newSelected;
-    },
+            if (newSelected) {
+                addToHistory(indexOfCurrent);
+            }
+            return newSelected;
+        },
         min = 0,
         max = 100
     } = $props();

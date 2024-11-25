@@ -12,6 +12,27 @@ export default class UICommon {
         behavior: "smooth",
     };
 
+    /**
+     *
+     *
+     * @static
+     * @param {KeyboardEvent} e
+     * @memberof UICommon
+     */
+    static isEnterEvent(e) {
+        return e.key === "Enter" && !e.altKey && !e.ctrlKey && !e.shiftKey;
+    }
+
+    static onlyOnEnter(callback) {
+        return (e) => {
+            if (UICommon.isEnterEvent(e)) {
+                return callback(e);
+            } else {
+                return true;
+            }
+        };
+    }
+
     static MOBILE_WIDTH_BREAK_POINT = 760;
 
     static isMobile() {

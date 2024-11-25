@@ -61,8 +61,8 @@
         formErrors = false,
         formLevelError = false,
         searchFunction = (/*term*/) => {
-        return [];
-    }
+            return [];
+        }
     } = $props();
 
     let iconClasses = $derived((icon ? " has-icons-left " : "") + " has-icons-right ");

@@ -29,26 +29,26 @@
 
   /** @type {Props} */
   let {
-    title = "",
-    light = false,
-    loading = false,
-    raised = false,
-    outlined = false,
-    inverted = false,
-    rounded = false,
-    disabled = false,
-    state = "",
-    type = "",
-    color = "",
-    size = "",
-    classes = "",
-    icon = false,
-    iconSide = "right",
-    action = () => {
-        return true;
-    },
-    value,
-    children
+      title = "",
+      light = false,
+      loading = false,
+      raised = false,
+      outlined = false,
+      inverted = false,
+      rounded = false,
+      disabled = false,
+      state = "",
+      type = "",
+      color = "",
+      size = "",
+      classes = "",
+      icon = false,
+      iconSide = "right",
+      action = () => {
+          return true;
+      },
+      value,
+      children
   } = $props();
 
     function onClick(event) {

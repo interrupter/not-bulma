@@ -72,7 +72,7 @@ export default [
         },
     },
     {
-        files: ["**/*.svelte"],
+        files: ["**/*.svelte", "**/*.js"],
 
         languageOptions: {
             parser: parser,

@@ -10,11 +10,11 @@
 
   /** @type {Props} */
   let {
-    value,
-    max = 100,
-    color = "",
-    size = "",
-    classes = ""
+      value,
+      max = 100,
+      color = "",
+      size = "",
+      classes = ""
   } = $props();
 </script>
 

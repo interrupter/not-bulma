@@ -90,19 +90,19 @@ value: variantId
         listComponent = UIList,
         listComponentProps = {},
         getUIItem = (valueId) => {
-        return variantsButtons.find((btnVal) => btnVal.value === valueId);
-    },
+            return variantsButtons.find((btnVal) => btnVal.value === valueId);
+        },
         getDefaultItemSublime = () => {
-        return variants[0].value;
-    },
+            return variants[0].value;
+        },
         uiOn = (item) => {
-        item.color = "success";
-        item.outlined = false;
-    },
+            item.color = "success";
+            item.outlined = false;
+        },
         uiOff = (item) => {
-        item.color = false;
-        item.outlined = true;
-    }
+            item.color = false;
+            item.outlined = true;
+        }
     } = $props();
 
     onMount(() => {

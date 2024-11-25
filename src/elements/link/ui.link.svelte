@@ -54,8 +54,8 @@
         icon = false,
         iconSide = "right",
         action = () => {
-        return true;
-    },
+            return true;
+        },
         children
     } = $props();
 
@@ -78,12 +78,12 @@
     class="{classes} {state ? `is-${state}` : ''} {inverted
         ? `is-inverted`
         : ''} {outlined ? `is-outlined` : ''} {raised
-        ? `is-raised`
-        : ''} {rounded ? `is-rounded` : ''} {light ? `is-light` : ''} {loading
-        ? `is-loading`
-        : ''} {color ? `is-${color}` : ''} {type ? `is-${type}` : ''} {size
-        ? `is-${size}`
-        : ''}"
+            ? `is-raised`
+            : ''} {rounded ? `is-rounded` : ''} {light ? `is-light` : ''} {loading
+                ? `is-loading`
+                : ''} {color ? `is-${color}` : ''} {type ? `is-${type}` : ''} {size
+                    ? `is-${size}`
+                    : ''}"
 >
     {#if icon}
         {#if iconSide === "left"}

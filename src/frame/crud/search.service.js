@@ -62,7 +62,7 @@ export default class notServiceModelSearch {
             } else {
                 return emptyResult();
             }
-        } catch (e) {
+        } catch {
             return emptyResult();
         }
     }

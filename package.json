@@ -22,7 +22,7 @@
     "dev": "npm-run-all --parallel css-watch html-watch js-watch build:dev:watch serve",
     "buildtest": "ENV=test ./bin/build.sh && rm -rf ./test/browser/assets/bulma/* && mv dist/* ./test/browser/assets/bulma/",
     "prelint": "npm run build",
-    "lint": "./node_modules/.bin/eslint ./src/**/**/**/** --fix",
+    "lint": "./node_modules/.bin/eslint  ./src/**/**.js ./src/**/**/** ./src/**/**/**/** ./src/**/**/**/**/** ./src/**/**/**/**/**/** ./src/**/**/**/**/**/**/** ./src/**/**/**/**/**/**/**/** --fix",
     "cypress:run": "NODE_ENV=test ./node_modules/.bin/cypress run",
     "cypress:open": "NODE_ENV=test  ./node_modules/.bin/cypress open",
     "test:open": "_ENV_NODE_='liquid' ./node_modules/.bin/mocha --reporter spec ./test/server && npm run cypress:open",

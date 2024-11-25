@@ -3,6 +3,7 @@ import notCommon from "../../../common";
 import { notForm } from "../../../components";
 import { DEFAULT_TRASFORMER } from "../../const";
 import { NAVIGATION_DELAY_DEFAULT } from "../../../const";
+import { mount } from "svelte";
 
 const DEFAULT_BREADCRUMB_TAIL = "Просмотр";
 
@@ -300,6 +301,19 @@ class CRUDGenericAction {
         return options;
     }
 
+    static createUI(uiComponent, controller, reponse) {
+        if (notCommon.isFunc(uiComponent)) {
+            return mount(
+                uiComponent,
+                this.tweakUIOptions(this.prepareUIOptions(controller, response))
+            );
+        } else {
+            return new uiComponent(
+                this.tweakUIOptions(this.prepareUIOptions(controller, response))
+            );
+        }
+    }
+
     /**
      * Performing action preparation and renders UI
      * @param {object} controller   instance of controller
@@ -330,14 +344,8 @@ class CRUDGenericAction {
             this.setBreadcrumbs(controller, params, response);
             //creating action UI component
             const uiComponent = this.UIConstructor;
-            this.setUI(
-                controller,
-                new uiComponent(
-                    this.tweakUIOptions(
-                        this.prepareUIOptions(controller, response)
-                    )
-                )
-            );
+            const ui = this.createUI();
+            this.setUI(controller);
             //bind events to UI
             this.bindUIEvents(controller, params, response);
             //inform that we are ready

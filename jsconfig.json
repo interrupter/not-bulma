@@ -1,5 +1,5 @@
 {
-    "exclude": ["node_modules"],
+    "exclude": ["node_modules", "not-bulma/node_modules"],
     "compilerOptions": {
         "target": "es2022"
     }

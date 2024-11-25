@@ -7,8 +7,8 @@
     import UISimpleSearchInput from '../various/ui.simple.search.input.svelte';
        
     import {
-      onMount,
-      createEventDispatcher
+        onMount,
+        createEventDispatcher
     } from 'svelte';
   
     let dispatch = createEventDispatcher();
@@ -28,14 +28,14 @@
 
   /** @type {Props} */
   let {
-    show = true,
-    term = $bindable(''),
-    size = 'narrow',
-    inputComponent = UISimpleSearchInput,
-    inputComponentProps = {},
-    outputComponent = UIEndlessList,
-    outputComponentProps = {},
-    results = $bindable({list:[], page:0, pages:0,skip:0,count:0})
+      show = true,
+      term = $bindable(''),
+      size = 'narrow',
+      inputComponent = UISimpleSearchInput,
+      inputComponentProps = {},
+      outputComponent = UIEndlessList,
+      outputComponentProps = {},
+      results = $bindable({list:[], page:0, pages:0,skip:0,count:0})
   } = $props();
   
      
@@ -44,25 +44,25 @@
     });
   
     const buttons = [
-      {
-        title: $LOCALE['not-node:button_cancel_label'],
-        action: () => reject(),
-      }
+        {
+            title: $LOCALE['not-node:button_cancel_label'],
+            action: () => reject(),
+        }
     ];
   
     function overlayClosed() {
-      dispatch('reject');
+        dispatch('reject');
     }
   
     function select({
-      detail
+        detail
     }) {
-      console.log('selected user', detail);
-      dispatch('resolve', detail);
+        console.log('selected user', detail);
+        dispatch('resolve', detail);
     }
   
     function reject(){
-      dispatch('reject');
+        dispatch('reject');
     }
   
    

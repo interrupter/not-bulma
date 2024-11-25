@@ -84,8 +84,8 @@
     class="list-item {classes} {commonClasses} {last
         ? 'list-item-last'
         : ''} {first
-        ? 'list-item-first'
-        : ''}  {`list-item-at-${index}`} {`list-item-` +
+            ? 'list-item-first'
+            : ''}  {`list-item-at-${index}`} {`list-item-` +
         (index % 2 ? 'odd' : 'even')}"
     onclick={onClick}
     onkeyup={(e) => {

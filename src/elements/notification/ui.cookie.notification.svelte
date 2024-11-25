@@ -12,15 +12,15 @@
   let { show = $bindable(false), message = 'Для улучшения работы сайта и его взаимодействия с пользователями мы используем файлы cookie. Продолжая работу с сайтом, Вы разрешаете использование cookie-файлов. Вы всегда можете отключить файлы cookie в настройках Вашего браузера.', agree = 'Хорошо' } = $props();
 
   onMount(()=>{
-    let cookieDate = localStorage.getItem('cookie_date');
-    if( !cookieDate || (+cookieDate + 31536000000) < Date.now() ){
-      show = true;
-    }
+      let cookieDate = localStorage.getItem('cookie_date');
+      if( !cookieDate || (+cookieDate + 31536000000) < Date.now() ){
+          show = true;
+      }
   });
 
   function accept(){
-    localStorage.setItem('cookie_date', Date.now());
-    show = false;
+      localStorage.setItem('cookie_date', Date.now());
+      show = false;
   }
 </script>
 

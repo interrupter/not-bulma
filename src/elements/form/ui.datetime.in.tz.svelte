@@ -114,8 +114,8 @@
         }
     };
     let GMTMark = $derived(isNaN(timezoneOffset)
-            ? ""
-            : (timezoneOffset > 0 ? "" : "+") +
+        ? ""
+        : (timezoneOffset > 0 ? "" : "+") +
               (timezoneOffset / -60).toFixed(1));
     
 

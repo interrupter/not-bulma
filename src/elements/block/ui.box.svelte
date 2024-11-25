@@ -1,9 +1,5 @@
 <script>
-    import { createBubbler } from 'svelte/legacy';
-
-    const bubble = createBubbler();
-    import { createEventDispatcher } from "svelte";
-    const dispatch = createEventDispatcher();
+    import UICommon from "../common";
     /**
      * @typedef {Object} Props
      * @property {string} [id]
@@ -12,15 +8,16 @@
      */
 
     /** @type {Props} */
-    let { id = "", classes = "", children } = $props();
+    let { id = "", classes = "", onclick = () => true, children } = $props();
 </script>
 
 <div
     {id}
     class="box {classes} "
-    onclick={bubble('click')}
-    onkeyup={() => dispatch("click")}
+    {onclick}
+    onkeyup={UICommon.onlyOnEnter(onclick)}
     role="button"
+    tabindex="0"
 >
     {@render children?.()}
 </div>

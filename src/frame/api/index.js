@@ -3,7 +3,7 @@ import notAPIOptions from './options.js';
 import notAPIConnection from './connection.js';
 
 export {
-  notAPIQueue,
-  notAPIOptions,
-  notAPIConnection
+    notAPIQueue,
+    notAPIOptions,
+    notAPIConnection
 };

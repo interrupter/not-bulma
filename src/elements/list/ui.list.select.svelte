@@ -72,22 +72,22 @@ value:object
         listComponentProps = {},
         sublimeValue = (value) => value.id,
         getItem = ({ valueId }) => {
-        return variants.find((btnVal) => btnVal.value.id === valueId);
-    },
+            return variants.find((btnVal) => btnVal.value.id === valueId);
+        },
         getItemValue = ({ valueId }) => {
-        return getItem({ valueId }).value;
-    },
+            return getItem({ valueId }).value;
+        },
         getDefaultItemSublime = () => {
-        return variants[0].id;
-    },
+            return variants[0].id;
+        },
         uiOn = (item) => {
-        item.color = "success";
-        item.outlined = false;
-    },
+            item.color = "success";
+            item.outlined = false;
+        },
         uiOff = (item) => {
-        item.color = false;
-        item.outlined = true;
-    }
+            item.color = false;
+            item.outlined = true;
+        }
     } = $props();
 
     onMount(() => {

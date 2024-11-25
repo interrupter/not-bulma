@@ -35,27 +35,27 @@
 
   /** @type {Props} */
   let {
-    id = "tagId",
-    title = $bindable("tag"),
-    color = "info",
-    size = "normal",
-    padding = "normal",
-    bold = false,
-    right = false,
-    left = false,
-    top = false,
-    bottom = false,
-    classes = "",
-    events = $bindable({}),
-    register = notCommon.registerWidgetEvents.bind(notCommon),
-    onUpdate = (data) => {
-        if (Object.hasOwn(data, "title")) {
-            title = data.title;
-        }
-    },
-    action = () => {
-        return true;
-    }
+      id = "tagId",
+      title = $bindable("tag"),
+      color = "info",
+      size = "normal",
+      padding = "normal",
+      bold = false,
+      right = false,
+      left = false,
+      top = false,
+      bottom = false,
+      classes = "",
+      events = $bindable({}),
+      register = notCommon.registerWidgetEvents.bind(notCommon),
+      onUpdate = (data) => {
+          if (Object.hasOwn(data, "title")) {
+              title = data.title;
+          }
+      },
+      action = () => {
+          return true;
+      }
   } = $props();
 
     function getStandartUpdateEventName() {
@@ -69,8 +69,8 @@
         register(events);
     });
     run(() => {
-    sided = right || left || top || bottom;
-  });
+        sided = right || left || top || bottom;
+    });
 </script>
 
 {#if title}
