@@ -1,8 +1,5 @@
 <script>
-    import { createEventDispatcher } from "svelte";
-    const dispatch = createEventDispatcher();
     import UIButton from "./ui.button.svelte";
-
 
     /**
      * @typedef {Object} Props
@@ -21,9 +18,12 @@
         right = false,
         classes = "",
         buttonComponent = UIButton,
-        action = (e) => {
-            dispatch("click", e);
-        }
+        action = () => {
+            return true;
+        },
+        onclick = () => {
+            return true;
+        },
     } = $props();
 </script>
 
@@ -34,11 +34,6 @@
 >
     {#each values as item (item.id)}
         {@const SvelteComponent = buttonComponent}
-        <SvelteComponent
-            {...item}
-            bind:value={item.value}
-            action={item.action ? item.action : action}
-            on:click
-        />
+        <SvelteComponent {action} {onclick} {...item} bind:value={item.value} />
     {/each}
 </div>

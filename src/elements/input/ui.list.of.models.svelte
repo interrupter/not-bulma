@@ -3,15 +3,7 @@
     import notCommon from "../../frame/common.js";
     import UIList from "../list/ui.list.svelte";
 
-    import { createEventDispatcher, onMount } from "svelte";
-    const dispatch = createEventDispatcher();
     //field props
-    
-    
-    
-    
-    
-    
 
     /**
      * @typedef {Object} Props
@@ -45,7 +37,6 @@
 
     /** @type {Props} */
     let {
-        inputStarted = false,
         value = $bindable([]),
         placeholder = $bindable(""),
         fieldname = $bindable("selectFromModel"),
@@ -54,10 +45,6 @@
         multiple = $bindable(false),
         size = $bindable(8),
         valid = $bindable(true),
-        validated = $bindable(false),
-        errors = $bindable(false),
-        formErrors = $bindable(false),
-        formLevelError = $bindable(false),
         modelName = "",
         actionName = "",
         actionFilter = {},
@@ -73,13 +60,13 @@
         transformValueItemToListItem = (item) => {
             return item
                 ? {
-                    id: item._id,
-                    title: item.title,
-                    description: item.description,
-                    value: item,
-                }
+                      id: item._id,
+                      title: item.title,
+                      description: item.description,
+                      value: item,
+                  }
                 : undefined;
-        }
+        },
     } = $props();
 
     function addItem(item) {
@@ -90,7 +77,9 @@
         value = value;
     }
 
-    let items = $derived(value.map ? value.map(transformValueItemToListItem) : []);
+    let items = $derived(
+        value.map ? value.map(transformValueItemToListItem) : []
+    );
 
     const ACTIONS = [
         {
@@ -167,10 +156,6 @@
         bind:multiple
         bind:size
         bind:valid
-        bind:validated
-        bind:errors
-        bind:formErrors
-        bind:formLevelError
         on:resolve={(e) => addItem(e.detail)}
     />
 {/if}

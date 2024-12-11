@@ -2,9 +2,9 @@
     import { createEventDispatcher } from "svelte";
     const dispatch = createEventDispatcher();
 
-    import UITextfield from "../form/ui.textfield.svelte";
+    import UITextfield from "../input/ui.textfield.svelte";
 
-    import {LOCALE} from '../../locale';
+    import { LOCALE } from "../../locale";
 
     /**
      * @typedef {Object} Props
@@ -13,22 +13,24 @@
      */
 
     /** @type {Props} */
-    let { placeholder = $LOCALE['not-node:field_search_placeholder'], term = $bindable('') } = $props();
+    let {
+        placeholder = $LOCALE["not-node:field_search_placeholder"],
+        term = $bindable(""),
+    } = $props();
 
-    function onChange({detail}){
-        dispatch('termChange', detail); 
+    function onChange({ detail }) {
+        dispatch("termChange", detail);
     }
-
 </script>
 
 <div class="columns">
     <div class="column">
         <div class="field">
-            <UITextfield 
+            <UITextfield
                 bind:value={term}
                 {placeholder}
-                fieldname='searchTermInput'
-                icon='magnifying-glass'
+                fieldname="searchTermInput"
+                icon="magnifying-glass"
                 on:change={onChange}
             />
         </div>

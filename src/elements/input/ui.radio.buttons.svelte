@@ -1,8 +1,5 @@
 <script>
-    import { LOCALE } from "../../locale/index";
-    import { onMount, createEventDispatcher } from "svelte";
-    const dispatch = createEventDispatcher();
-    //
+    import { onMount } from "svelte";
     import UIList from "../list/ui.list.svelte";
     import UITitle from "../various/ui.title.svelte";
     import UIImage from "../image/ui.image.svelte";
@@ -10,17 +7,6 @@
 
     //
 
-    
-    
-
-
-    
-    
-    
-    
-    
-
-    
     /**
      * @typedef {Object} Props
      * @property {string} [fieldname]
@@ -102,7 +88,7 @@ value: variantId
         uiOff = (item) => {
             item.color = false;
             item.outlined = true;
-        }
+        },
     } = $props();
 
     onMount(() => {

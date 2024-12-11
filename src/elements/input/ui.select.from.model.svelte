@@ -1,12 +1,11 @@
 <script>
     import notPath from "not-path";
-    import { LOCALE } from "../../locale";
+
     import UISelect from "./ui.select.svelte";
     import notCommon from "../../frame/common";
     import { DEFAULT_STATUS_SUCCESS } from "../../frame/const";
 
-    import { onMount, createEventDispatcher } from "svelte";
-    const dispatch = createEventDispatcher();
+    import { onMount } from "svelte";
 
     /**
      * @typedef {Object} Props
@@ -38,7 +37,6 @@
 
     /** @type {Props} */
     let {
-        inputStarted = false,
         value,
         placeholder = "",
         emptyValueTitle = "",
@@ -51,17 +49,17 @@
         actionSearch = undefined,
         optionId = ":_id",
         optionTitle = ":title",
-        icon = false,
         required = true,
         readonly = false,
         multiple = false,
         size = 8,
         valid = true,
         validated = false,
-        errors = $bindable(false),
-        formErrors = false,
-        formLevelError = false,
-        returnVariant = false
+        returnVariant = false,
+        class: classes = "",
+        onchange = () => true,
+        onerror = () => {},
+        ...others
     } = $props();
 
     function argumentsSetProvided() {
@@ -70,7 +68,6 @@
 
     let loaded = false;
     let variants = $state([]);
-
     let disabled = $derived(!loaded);
 
     onMount(async () => {
@@ -92,40 +89,36 @@
                     };
                 });
             } else {
-                errors = result.errors || [result.message];
+                onerror(result.errors || result.message);
             }
         }
     });
 
-    function onChange(e) {
+    function onChange(data) {
         if (returnVariant) {
-            dispatch("change", {
-                ...e.detail,
-                value: variants.find((itm) => itm.id === e.detail.value),
+            onchange({
+                ...data,
+                value: variants.find((itm) => itm.id === data.value),
             });
         } else {
-            dispatch("change", e.detail);
+            onchange(data);
         }
     }
 </script>
 
 <UISelect
-    {inputStarted}
     {value}
     bind:variants
+    class={classes}
     {placeholder}
     {emptyValueTitle}
     {fieldname}
-    {icon}
     {required}
     {readonly}
     {disabled}
     {multiple}
     {size}
     {valid}
-    {validated}
-    {errors}
-    {formErrors}
-    {formLevelError}
-    on:change={onChange}
+    onchange={onChange}
+    {...others}
 />

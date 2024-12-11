@@ -1,10 +1,10 @@
 <script>
-    import { createBubbler } from 'svelte/legacy';
+    import { createBubbler } from "svelte/legacy";
 
     const bubble = createBubbler();
     /**
      * @typedef {Object} Props
-     * @property {string} [classes]
+     * @property {string} [class]
      * @property {string} [title]
      * @property {boolean} [narrow]
      * @property {import('svelte').Snippet} [children]
@@ -12,18 +12,18 @@
 
     /** @type {Props} */
     let {
-        classes = "",
+        class: classes = "",
         title = "",
         narrow = false,
-        children
+        children,
     } = $props();
 </script>
 
 <div
     {title}
     class="column {classes} {narrow ? 'is-narrow' : ''}"
-    onclick={bubble('click')}
-    onkeyup={bubble('keyup')}
+    onclick={bubble("click")}
+    onkeyup={bubble("keyup")}
     role="button"
     tabindex="0"
 >

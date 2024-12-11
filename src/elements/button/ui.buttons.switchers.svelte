@@ -1,8 +1,7 @@
 <script>
-    import { createEventDispatcher, onMount } from "svelte";
-    const dispatch = createEventDispatcher();
-    import UIButtonSwitch from "./ui.button.switch.svelte";
+    import { onMount } from "svelte";
 
+    import UIButtonSwitch from "./ui.button.switch.svelte";
 
     const selectHistory = [];
 
@@ -26,18 +25,18 @@
         }
     });
 
-    function addToHistory(id) {
+    export function addToHistory(id) {
         if (selectHistory.includes(id)) {
             selectHistory.splice(selectHistory.indexOf(id), 1);
         }
         selectHistory.push(id);
     }
 
-    function countSelected() {
+    export function countSelected() {
         return values.filter((btn) => btn.selected).length;
     }
 
-    function toggleFirstSuited(toValue) {
+    export function toggleFirstSuited(toValue) {
         const index = values.findIndex((itm) => (itm.selected = !toValue));
         if (index > -1) {
             values[index].selected = toValue;
@@ -45,7 +44,7 @@
         }
     }
 
-    function selectUpToMin(cnt, indexOfCurrent) {
+    export function selectUpToMin(cnt, indexOfCurrent) {
         let delta = min - cnt;
         if (!delta) {
             return;
@@ -65,7 +64,7 @@
         }
     }
 
-    function deselectDownToMin(cnt, indexOfCurrent) {
+    export function deselectDownToMin(cnt, indexOfCurrent) {
         let delta = cnt - max;
         if (!delta) {
             return;
@@ -84,7 +83,6 @@
         }
     }
 
-
     /**
      * @typedef {Object} Props
      * @property {any} [values]
@@ -92,7 +90,9 @@
      * @property {boolean} [right]
      * @property {string} [classes]
      * @property {any} [buttonComponent]
-     * @property {any} [action]
+     * @property {function} [action]
+     * @property {function} [onclick]
+     * @property {function} [onchange]
      * @property {number} [min]
      * @property {number} [max]
      */
@@ -127,7 +127,7 @@
             return newSelected;
         },
         min = 0,
-        max = 100
+        max = 100,
     } = $props();
 </script>
 
@@ -139,12 +139,12 @@
     {#each values as item (item.id)}
         {@const SvelteComponent = buttonComponent}
         <SvelteComponent
+            {action}
             {...item}
             bind:value={item.value}
             bind:selected={item.selected}
-            action={item.action ? item.action : action}
-            on:click
-            on:change
+            {onclick}
+            {onchange}
         />
     {/each}
 </div>

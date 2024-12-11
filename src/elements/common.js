@@ -1,4 +1,30 @@
-export default class UICommon {
+const inputValuesExtractors = Object.freeze({
+    checkbox: (inpEl, defaultValue = undefined) => {
+        if (
+            typeof defaultValue == "object" &&
+            Object.hasOwn(defaultValue, "checked") &&
+            Object.hasOwn(defaultValue, "unchecked")
+        ) {
+            return inpEl.checked
+                ? defaultValue.checked
+                : defaultValue.unchecked;
+        } else if (
+            Object.hasOwn(inpEl, "value") &&
+            typeof inpEl.value !== "undefined"
+        ) {
+            return inpEl.checked ? inpEl.value : false;
+        } else {
+            return inpEl.checked;
+        }
+    },
+});
+
+/**
+ * Collection of common to UI functions and properties
+ *
+ * @class UICommon
+ */
+class UICommon {
     static CLEAR_MACRO = "__CLEAR__";
     static ERROR_DEFAULT = "Что пошло не так.";
     static DEFAULT_REDIRECT_TIMEOUT = 3000;
@@ -11,6 +37,43 @@ export default class UICommon {
         top: 0,
         behavior: "smooth",
     };
+
+    static get inputValuesExtractors() {
+        return inputValuesExtractors;
+    }
+
+    static extractValueFromInput(inpEl, defaultValue = undefined) {
+        if (Object.hasOwn(inpTypes, inpEl.type)) {
+            return inpTypes(el, defaultValue);
+        }
+        return el.value;
+    }
+
+    /**
+     *
+     *
+     * @static
+     * @param {string}      field    field name
+     * @param {import('./events.types').UIEventInputChangeCallback}    onchange
+     * @param {any}         [defaultValue=undefined]
+     * @return {import('./events.types').UIEventCallback}
+     * @memberof UICommon
+     */
+    static onInput(field, onchange, defaultValue = undefined) {
+        return (event) => {
+            const value = extractValueFromInput(
+                event.currentTarget,
+                defaultValue
+            );
+            return onchange(
+                {
+                    field,
+                    value,
+                },
+                event
+            );
+        };
+    }
 
     /**
      *
@@ -191,3 +254,5 @@ export default class UICommon {
         }
     }
 }
+
+export default UICommon;

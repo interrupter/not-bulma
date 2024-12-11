@@ -6,7 +6,7 @@
      */
 
     /** @type {Props} */
-    let { classes = "", children } = $props();
+    let { class: classes = "", children } = $props();
 </script>
 
 <div class="control {classes}">{@render children?.()}</div>
