@@ -1,15 +1,11 @@
 <script>
-    import { run } from 'svelte/legacy';
-
     let overflowSave = $state("");
 
     import { fade } from "svelte/transition";
 
-    import { createEventDispatcher, onMount, onDestroy } from "svelte";
+    import { onMount, onDestroy } from "svelte";
 
     const zIndexStep = 1000;
-
-    const dispatch = createEventDispatcher();
 
     /**
      * @typedef {Object} Props
@@ -30,16 +26,9 @@
         closeSize = "normal",
         layer = 1,
         classes = "",
-        children
+        children,
+        onreject = () => false,
     } = $props();
-
-    run(() => {
-        if (show) {
-            document.body.style.overflow = "hidden";
-        } else {
-            document.body.style.overflow = overflowSave;
-        }
-    });
 
     function overlayClick(e) {
         if (closeOnClick) {
@@ -62,19 +51,21 @@
                     rejectOverlay();
                 }
             }
-        } catch (_) {}
+            //eslint-disable-next-line no-empty
+        } catch {}
     }
 
     function rejectOverlay(data = {}) {
-        dispatch("reject", data);
+        onreject(data);
     }
-    /*
-	function resolveOverlay(data = {}) {
-	  dispatch('resolve', data);
-	}
-*/
+
     onMount(() => {
         overflowSave = document.body.style.overflow;
+        if (show) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = overflowSave;
+        }
     });
 
     onDestroy(() => {
@@ -93,7 +84,11 @@
         style="z-index: {zIndexStep * layer};"
     >
         {#if closeButton}
-            <button onclick={closeButtonClick} class="delete is-{closeSize}"></button>
+            <button
+                aria-label="delete button"
+                onclick={closeButtonClick}
+                class="delete is-{closeSize}"
+            ></button>
         {/if}
         {@render children?.()}
     </div>

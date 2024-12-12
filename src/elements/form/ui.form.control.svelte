@@ -41,6 +41,7 @@
         validated = false,
         errors = false,
         onchange = () => true,
+        onerror = () => true,
         formErrors = false,
         ...others
     } = $props();
@@ -65,6 +66,7 @@
         {disabled}
         {valid}
         {onchange}
+        {onerror}
         {...others}
     />
 </UIControl>

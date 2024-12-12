@@ -41,6 +41,7 @@
         getItemTitle = (variant) => {
             return variant.title;
         },
+        //eslint-disable-next-line no-unused-vars
         getItemType = (variant) => {
             return "info";
         },

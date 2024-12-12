@@ -108,12 +108,14 @@
     }
 
     let multipleClass = $derived(multiple ? " is-multiple " : "");
-    run(() => {
+    $effect(() => {
         value;
         selectedVariants = Array.isArray(variants)
             ? variants.filter(filterSelectedVariants)
             : [];
     });
+
+    let invalid = $derived(!valid);
 </script>
 
 {#if readonly}
@@ -134,6 +136,7 @@
             {readonly}
             {required}
             {multiple}
+            {invalid}
             size={multiple ? size : false}
             {...others}
         >

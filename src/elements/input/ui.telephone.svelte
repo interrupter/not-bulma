@@ -8,6 +8,7 @@
         placeholder = "+7 (987) 654-32-10",
         fieldname = "telephone",
         required = true,
+        disabled = false,
         readonly = false,
         valid = true,
         class: classes = "",

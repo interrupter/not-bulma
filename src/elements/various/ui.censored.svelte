@@ -1,7 +1,6 @@
 <script>
     import "bulma-tooltip/dist/css/bulma-tooltip.min.css";
 
-
     /**
      * @typedef {Object} Props
      * @property {boolean} [hidden]
@@ -33,7 +32,7 @@
         tooltipTTL = 2000,
         tooltipText = "Скопировано в буфер",
         tooltipClass = "has-tooltip-info",
-        value = ""
+        value = "",
     } = $props();
 
     function toggleView() {
@@ -59,8 +58,6 @@
             console.error("Failed to copy: ", err);
         }
     }
-
-    
 </script>
 
 <span
@@ -73,6 +70,9 @@
     <span
         bind:this={tooltipTarget}
         onclick={copyContent}
+        onkeydown={copyContent}
+        role="button"
+        tabindex="0"
         class={"icon is-small is-right is-clickable " +
             (tooltipActive ? ` ${tooltipClass} ` : "") +
             " is-vertical-middle"}><i class="fas fa-{copyIcon}"></i></span
@@ -82,6 +82,8 @@
     <span
         class="icon is-small is-right is-clickable is-vertical-middle"
         onclick={toggleView}
-        ><i class="fas fa-{hidden ? showIcon : hideIcon}"></i></span
+        onkeydown={toggleView}
+        role="button"
+        tabindex="0"><i class="fas fa-{hidden ? showIcon : hideIcon}"></i></span
     >
 {/if}

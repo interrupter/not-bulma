@@ -301,7 +301,7 @@ class CRUDGenericAction {
         return options;
     }
 
-    static createUI(uiComponent, controller, reponse) {
+    static createUI(uiComponent, controller, response) {
         if (notCommon.isFunc(uiComponent)) {
             return mount(
                 uiComponent,
@@ -343,7 +343,9 @@ class CRUDGenericAction {
             //updating breadcrumbs tail with more details from response
             this.setBreadcrumbs(controller, params, response);
             //creating action UI component
+            //eslint-disable-next-line no-unused-vars
             const uiComponent = this.UIConstructor;
+            //eslint-disable-next-line no-unused-vars
             const ui = this.createUI();
             this.setUI(controller);
             //bind events to UI

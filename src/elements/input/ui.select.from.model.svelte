@@ -54,7 +54,7 @@
         multiple = false,
         size = 8,
         valid = true,
-        validated = false,
+
         returnVariant = false,
         class: classes = "",
         onchange = () => true,
@@ -89,7 +89,7 @@
                     };
                 });
             } else {
-                onerror(result.errors || result.message);
+                onerror(response.errors || response.message);
             }
         }
     });

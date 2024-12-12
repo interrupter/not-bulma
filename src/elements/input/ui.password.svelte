@@ -10,6 +10,7 @@
         fieldname = "password",
         required = true,
         readonly = false,
+        disabled = false,
         valid = true,
         class: classes = "",
         onchange = () => true,

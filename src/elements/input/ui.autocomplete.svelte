@@ -36,6 +36,7 @@
         fieldname = "checkbox-list",
         disabled = false,
         readonly = false,
+        required = false,
         valid = true,
         onchange = () => true,
         ...others
@@ -50,7 +51,7 @@
         value={value ? value.title : ""}
         {fieldname}
         {placeholder}
-        {icon}
+        {...others}
     />
 {:else if readonly}
     <p>{value ? value.title : ""}</p>

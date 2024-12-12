@@ -43,10 +43,13 @@ class UICommon {
     }
 
     static extractValueFromInput(inpEl, defaultValue = undefined) {
-        if (Object.hasOwn(inpTypes, inpEl.type)) {
-            return inpTypes(el, defaultValue);
+        if (Object.hasOwn(UICommon.inputValuesExtractors, inpEl.type)) {
+            return UICommon.inputValuesExtractors[inpEl.type](
+                inpEl,
+                defaultValue
+            );
         }
-        return el.value;
+        return inpEl.value;
     }
 
     /**
@@ -61,7 +64,7 @@ class UICommon {
      */
     static onInput(field, onchange, defaultValue = undefined) {
         return (event) => {
-            const value = extractValueFromInput(
+            const value = UICommon.extractValueFromInput(
                 event.currentTarget,
                 defaultValue
             );

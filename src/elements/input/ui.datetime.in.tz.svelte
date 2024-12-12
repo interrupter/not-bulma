@@ -1,6 +1,4 @@
 <script>
-    import UICommon from "../common";
-
     import { onMount } from "svelte";
 
     function removeMsFromDate(isoDate, markAsZULU = false) {
@@ -16,7 +14,7 @@
                 const newIsoDate = newDate.toISOString();
                 return removeMsFromDate(newIsoDate, true);
             }
-        } catch (e) {
+        } catch {
             return;
         }
     }
@@ -63,7 +61,7 @@
         try {
             new Date(date);
             return true;
-        } catch (e) {
+        } catch {
             return false;
         }
     };
@@ -95,6 +93,8 @@
         }
         return false;
     }
+
+    let invalid = $derived(!valid);
 </script>
 
 {#if shiftedValue}

@@ -1,6 +1,6 @@
 <script>
-    import { onMount, createEventDispatcher } from "svelte";
-    const dispatch = createEventDispatcher();
+    import { onMount } from "svelte";
+
     //
     import UIList from "./ui.list.svelte";
     import UITitle from "../various/ui.title.svelte";
@@ -8,16 +8,6 @@
     import UIButtons from "../button/ui.buttons.svelte";
     import UIButtonsSwitchers from "../button/ui.buttons.switchers.svelte";
 
-
-    
-    
-    
-    
-    
-    
-    
-
-    
     /**
      * @typedef {Object} Props
      * @property {string} [fieldname]
@@ -68,9 +58,10 @@ value: variantId
 
     /** @type {Props} */
     let {
+        onchange = () => true,
         fieldname = "list-select-tags",
         variants = $bindable([]),
-        variantsSelected = {},
+
         value = $bindable(),
         titleComponent = UITitle,
         titleComponentProps = { size: 5 },
@@ -86,7 +77,7 @@ value: variantId
                 groupId: value.group,
                 valueId: value.id,
             };
-        }
+        },
     } = $props();
     //
 
@@ -117,20 +108,6 @@ value: variantId
         });
         ACTIONS = ACTIONS;
     });
-
-    function changeItemSelection(groupId, valueId, selected) {
-        const group = variants.find((group) => group.id === groupId);
-        if (group) {
-            const item = group.description.values.find(
-                (groupItem) => groupItem.value.id === valueId
-            );
-            if (item) {
-                item.selected = selected;
-            }
-        }
-        variants = variants;
-        triggerChange();
-    }
 
     export const selectAll = () => {
         setSelectionOfAll(true);
@@ -187,7 +164,7 @@ value: variantId
 
     function triggerChange() {
         value = getSelectedItems();
-        dispatch("change", {
+        onchange({
             fieldname,
             value,
         });

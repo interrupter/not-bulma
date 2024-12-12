@@ -1,7 +1,4 @@
 <script>
-    import { createBubbler } from 'svelte/legacy';
-
-    const bubble = createBubbler();
     /**
      * @typedef {Object} Props
      * @property {any} urlFull
@@ -23,7 +20,9 @@
         size = 64,
         contained = true,
         covered = true,
-        classes = ""
+        classes = "",
+        onclick = () => true,
+        onkeyup = () => true,
     } = $props();
 
     let sizeStyle = $derived(isNaN(size) ? `is-${size}` : `is-${size}x${size}`);
@@ -31,8 +30,9 @@
     let coveredStyle = $derived(covered ? "is-covered" : "");
 </script>
 
+<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 {#if urlFull}
-    <a href={urlFull} alt={title} onclick={bubble('click')}>
+    <a href={urlFull} alt={title} {onclick}>
         <figure
             class="image {sizeStyle} {containedStyle} {coveredStyle} {classes}"
         >
@@ -40,13 +40,14 @@
         </figure>
     </a>
 {:else}
-    <figure
-        class="image {sizeStyle} {containedStyle} {coveredStyle} {classes}"
-        onclick={bubble('click')}
-        onkeyup={bubble('keyup')}
-        role="button"
-        tabindex="0"
-    >
-        <img class="" alt={title} src={url} crossOrigin={cors} />
+    <figure class="image {sizeStyle} {containedStyle} {coveredStyle} {classes}">
+        <img
+            {onclick}
+            {onkeyup}
+            class=""
+            alt={title}
+            src={url}
+            crossOrigin={cors}
+        />
     </figure>
 {/if}

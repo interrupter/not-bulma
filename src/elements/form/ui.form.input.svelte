@@ -22,18 +22,17 @@
     /** @type {Props} */
     let {
         value = $bindable(""),
+        disabled,
+        readonly,
         UIInput,
         label,
-        placeholder = "",
         fieldtype,
         fieldname,
         fieldnamePrefix = "form-field-",
         icon = false,
-        required = true,
-        readonly = false,
-        disabled = false,
         valid = true,
-        onchange = () => true,
+        validated = false,
+        ...others
     } = $props();
 </script>
 
@@ -44,11 +43,9 @@
         {fieldname}
         {valid}
         {disabled}
-        {required}
         {readonly}
-        {placeholder}
-        {onchange}
         bind:value
+        {...others}
     />
     <!-- edit UI renderer -->
     {#if icon}

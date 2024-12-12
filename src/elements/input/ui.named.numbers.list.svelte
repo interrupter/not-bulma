@@ -1,7 +1,5 @@
 <script>
-    import UICommon from "../common";
     import notCommon from "../../frame/common";
-    import ErrorsList from "../various/ui.errors.list.svelte";
 
     import { UIColumns, UIColumn } from "../layout";
     import { UIButton } from "../button";

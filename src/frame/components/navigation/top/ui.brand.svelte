@@ -1,4 +1,5 @@
 <script>
+    /* eslint svelte/no-at-html-tags: 0 */
     import UIIcon from "../../../../elements/icon/ui.icon.svelte";
     /**
      * @typedef {Object} Props

@@ -1,5 +1,6 @@
 <script>
     import "bulma-switch";
+    import { LOCALE } from "../../locale/index";
     import UICommon from "../common.js";
     import UIBoolean from "../various/ui.boolean.svelte";
 

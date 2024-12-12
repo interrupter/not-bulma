@@ -1,4 +1,5 @@
 <script>
+    import { onMount } from "svelte";
     import UITextarea from "./ui.textarea.svelte";
 
     /** @type {import('./type').UIInputProps} */
@@ -6,8 +7,6 @@
         value = $bindable({}),
         fieldname = "jsonarea",
         valid = $bindable(true),
-
-        class: classes = "",
         onchange = () => true,
         onerror = () => {},
         ...others

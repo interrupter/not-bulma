@@ -89,6 +89,7 @@ value: variantId
             item.color = false;
             item.outlined = true;
         },
+        onchange = () => true,
     } = $props();
 
     onMount(() => {
@@ -127,7 +128,7 @@ value: variantId
         value = selectedValue;
         updateUI(ui);
         //
-        dispatch("change", {
+        onchange({
             field: fieldname,
             value,
         });

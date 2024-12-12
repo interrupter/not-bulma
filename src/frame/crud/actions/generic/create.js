@@ -35,7 +35,8 @@ class CRUDGenericActionCreate extends CRUDGenericAction {
      * @param {any}                         [params]
      * @returns {import('not-node/src/types').notAppResponse}
      */
-    static loadData(controller, params) {
+    //eslint-disable-next-line no-unused-vars
+    static loadData(controller, params = {}) {
         let defData = controller.createDefault();
         if (defData.getData) {
             defData = defData.getData();
@@ -72,6 +73,7 @@ class CRUDGenericActionCreate extends CRUDGenericAction {
      * @param {string[]} params     list of route params
      * @param {object} [response]     API response
      */
+    //eslint-disable-next-line no-unused-vars
     static bindUIEvents(controller, params, response) {
         if (notCommon.isFunc(controller.goBack)) {
             this.bindUIEvent(controller, "reject", () =>

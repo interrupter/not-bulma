@@ -16,12 +16,12 @@ export default {
     plugins: [
         svelte({
             emitCss: true,
-            onwarn: (warning, handler) => {
+            /*onwarn: (warning, handler) => {
                 // e.g. don't warn on <marquee> elements, cos they're cool
                 if (warning.code.startsWith("a11y")) return;
                 // let Rollup handle all other warnings normally
                 handler(warning);
-            },
+            },*/
         }),
         resolve({
             browser: true,
@@ -39,6 +39,8 @@ export default {
                     "sass",
                     {
                         includePaths: ["./node_modules"],
+
+                        quietDeps: true,
                     },
                 ],
             ],

@@ -1,23 +1,12 @@
 <script>
-    import { onMount, createEventDispatcher } from "svelte";
-    const dispatch = createEventDispatcher();
+    import { onMount } from "svelte";
+
     //
     import UIList from "./ui.list.svelte";
     import UITitle from "../various/ui.title.svelte";
     import UIImage from "../image/ui.image.svelte";
     import UIButtons from "../button/ui.buttons.svelte";
 
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     /**
      * @typedef {Object} Props
      * @property {string} [fieldname]
@@ -75,6 +64,7 @@ value: variantId
 
     /** @type {Props} */
     let {
+        onchange = () => true,
         fieldname = "list-select-tags",
         multiple = false,
         onlyOneInGroup = true,
@@ -99,7 +89,9 @@ value: variantId
         getItem = ({ groupId, valueId }) => {
             return variants
                 .find((group) => group.id === groupId)
-                .description.values.find((btnVal) => btnVal.value.id === valueId);
+                .description.values.find(
+                    (btnVal) => btnVal.value.id === valueId
+                );
         },
         getItemValue = ({ groupId, valueId }) => {
             return getItem({ groupId, valueId }).value;
@@ -117,7 +109,7 @@ value: variantId
         uiOff = (item) => {
             item.color = false;
             item.outlined = false;
-        }
+        },
     } = $props();
 
     onMount(() => {
@@ -236,12 +228,11 @@ value: variantId
     //
     function toggle(detail) {
         let ui = updateSelected(detail);
-        console.log("image value", value, ui);
         updateUI(ui);
         //
         updateValue();
         //
-        dispatch("change", {
+        onchange({
             field: fieldname,
             value,
         });
@@ -304,7 +295,6 @@ value: variantId
         if (atLeastOne && variants.length > 0) {
             const defValue = getDefaultItemSublime();
             toggle({ id: defValue.valueId, group: defValue.groupId });
-        } else {
         }
     }
 

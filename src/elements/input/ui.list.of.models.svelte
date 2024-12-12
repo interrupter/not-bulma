@@ -60,11 +60,11 @@
         transformValueItemToListItem = (item) => {
             return item
                 ? {
-                      id: item._id,
-                      title: item.title,
-                      description: item.description,
-                      value: item,
-                  }
+                    id: item._id,
+                    title: item.title,
+                    description: item.description,
+                    value: item,
+                }
                 : undefined;
         },
     } = $props();

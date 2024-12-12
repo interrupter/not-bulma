@@ -1,5 +1,4 @@
 <script>
-    import { LOCALE } from "../../locale";
     import UILabel from "./ui.label.svelte";
     import "bulma-switch";
 
@@ -7,19 +6,13 @@
     let {
         value = $bindable([]),
         variants = [],
-        label = "",
-        hideLabel = false,
-        placeholder = "",
         fieldname = "textfield",
-        icon = false,
         required = true,
         readonly = false,
-        multiple = true,
         disabled = false,
         valid = true,
         class: classes = " is-rounded is-success ",
         onchange = () => true,
-        onerror = () => true,
         ...others
     } = $props();
 
@@ -47,6 +40,8 @@
         onchange(data);
         return true;
     }
+
+    let invalid = $derived(!valid);
 </script>
 
 {#if readonly}

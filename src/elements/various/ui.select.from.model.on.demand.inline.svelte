@@ -1,12 +1,11 @@
 <script>
     import notPath from "not-path";
-    import UISelect from "../form/ui.select.svelte";
+    import UISelect from "../input/ui.select.svelte";
     import { UIButtons, UIButton } from "../button";
     import notCommon from "../../frame/common";
     import { DEFAULT_STATUS_SUCCESS } from "../../frame/const";
 
-    import { onMount, createEventDispatcher } from "svelte";
-    const dispatch = createEventDispatcher();
+    import { onMount } from "svelte";
 
     /**
      * @typedef {Object} Props
@@ -37,7 +36,6 @@
 
     /** @type {Props} */
     let {
-        inputStarted = false,
         value,
         variants = $bindable([]),
         placeholder = "empty select item",
@@ -50,16 +48,14 @@
         actionSearch = undefined,
         optionId = ":_id",
         optionTitle = ":title",
-        icon = false,
         required = true,
         readonly = false,
         multiple = false,
         size = 8,
         valid = true,
-        validated = false,
-        errors = $bindable(false),
-        formErrors = false,
-        formLevelError = false
+        onreject = () => false,
+        onresolve = () => true,
+        onerror = () => true,
     } = $props();
 
     function argumentsSetProvided() {
@@ -91,16 +87,16 @@
                     };
                 });
             } else {
-                errors = result.errors || [result.message];
+                onerror(response.errors || [response.message]);
             }
         }
     });
 
     let resolvedValue;
 
-    function onModelChanged({ detail }) {
+    function onModelChanged({ value: selectedValue }) {
         resolvedValue = resultsList.find(
-            (item) => notPath.get(optionId, item) === detail.value
+            (item) => notPath.get(optionId, item) === selectedValue
         );
     }
 
@@ -117,7 +113,7 @@
             color: "primary",
             action() {
                 state = "hidden";
-                dispatch("resolve", resolvedValue);
+                onresolve(resolvedValue);
             },
         },
         reject: {
@@ -125,7 +121,7 @@
             color: "danger",
             action() {
                 state = "hidden";
-                dispatch("reject");
+                onreject();
             },
         },
     };
@@ -136,23 +132,17 @@
 {:else if state == "show"}
     <div class="field has-addons">
         <UISelect
-            {inputStarted}
             {value}
             {variants}
             {placeholder}
             {fieldname}
-            {icon}
             {required}
             {readonly}
             {disabled}
             {multiple}
             {size}
             {valid}
-            {validated}
-            {errors}
-            {formErrors}
-            {formLevelError}
-            on:change={onModelChanged}
+            onchange={onModelChanged}
         />
     </div>
     <div class="control">
