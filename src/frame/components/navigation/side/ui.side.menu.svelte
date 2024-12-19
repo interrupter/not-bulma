@@ -5,7 +5,7 @@
      * @property {string} [root]
      * @property {any} [items]
      * @property {any} [sections]
-     * @property {any} [navigate]
+     * @property {any} [navigate = ()=>undefined]
      */
 
     /** @type {Props} */
@@ -13,11 +13,11 @@
 
     function onClick(ev) {
         if (typeof navigate === "function") {
-            navigate(ev.detail);
+            navigate(ev);
         }
     }
 </script>
 
 {#each sections as section}
-    <UISideMenuSection {section} {items} {root} on:navigate={onClick} />
+    <UISideMenuSection {section} {items} {root} onnavigate={onClick} />
 {/each}

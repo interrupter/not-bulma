@@ -1,41 +1,44 @@
 //block elements
-import * as Blocks from './block';
-export {Blocks};
+import * as Blocks from "./block";
+export { Blocks };
 
 //general elements
-import * as Various from './various';
+import * as Various from "./various";
 export { Various };
 
 //
-import * as Buttons from './button';
+import * as Buttons from "./button";
 export { Buttons };
 
 //form elements
-import * as Forms from './form';
-export {Forms};
+import * as Forms from "./form";
+export { Forms };
 
 //icons variants
-import * as Icons from './icon';
-export {Icons};
+import * as Icons from "./icon";
+export { Icons };
 
 //images ui
-import * as Images from './image';
-export {Images};
+import * as Images from "./image";
+export { Images };
 
-import * as Layouts from './layout';
-export {Layouts};
+import * as Inputs from "./input";
+export { Inputs };
 
-import * as Links from './link';
-export {Links};
+import * as Layouts from "./layout";
+export { Layouts };
 
-import * as Lists from './list';
-export {Lists};
+import * as Links from "./link";
+export { Links };
 
-import * as Modals from './modal';
-export {Modals};
+import * as Lists from "./list";
+export { Lists };
 
-import * as Notifications from './notification';
-export {Notifications};
+import * as Modals from "./modal";
+export { Modals };
 
-import UICommon from './common';
-export {UICommon};
+import * as Notifications from "./notification";
+export { Notifications };
+
+import UICommon from "./common";
+export { UICommon };

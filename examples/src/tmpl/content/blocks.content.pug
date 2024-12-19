@@ -1,0 +1,19 @@
+section(id="examples" class="section")
+  h1(class="title") Контент
+  h2(class="title") Одиночный  
+  div( class="box")
+    h3( class="title") Constructor
+    h4(class="subtitle") как создать
+    div(class="block")
+      pre
+        | mount(notBulma.Elements.Block.UIContent, {target: HTMLElement, props: Object});
+    h3( class="title") Props
+    h4(class="subtitle") что можно задавать
+    div(class="block")
+      pre
+        | string:           id                    - unique identificator
+        | string            class = ""            - стили
+        | string            role = "button"       - роль элемента
+        | number            tabIndex = 0          - таб индекс
+        | function          onclick = () => true  - обработчик клика
+        | funciton          onkeyup               - обработчик подъема клавиши

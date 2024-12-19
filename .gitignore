@@ -7,3 +7,5 @@ log.*
 test/logs/*
 cypress/screenshots/
 cypress/videos/
+
+*storybook.log

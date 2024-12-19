@@ -6,13 +6,14 @@
 
     /**
      * @typedef {Object} Props
-     * @property {any} section
-     * @property {any} [items]
-     * @property {string} [root]
+     * @property {any}      section
+     * @property {any}      [items]
+     * @property {string}   [root]
+     * @property {function} [onnavigate]
      */
 
     /** @type {Props} */
-    let { section, items = [], root = "" } = $props();
+    let { section, items = [], root = "", onnavigate = () => {} } = $props();
 
     let sectionItems = $derived(
         items.filter((item) => section.id === item.section)
@@ -38,5 +39,5 @@
     {/if}
 {/if}
 {#if sectionItems.length}
-    <UISideMenuItems {root} items={sectionItems} on:navigate />
+    <UISideMenuItems {root} items={sectionItems} {onnavigate} />
 {/if}

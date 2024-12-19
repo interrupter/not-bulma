@@ -1,6 +1,7 @@
 @use "../../node_modules/bulma/sass/utilities/_index.scss";
 @use "../../node_modules/bulma/sass/utilities/mixins.scss";
 
+@use "_blocks.scss";
 @use "_buttons.scss";
 @use "_card.scss";
 @use "_helpers.scss";

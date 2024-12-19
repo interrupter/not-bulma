@@ -3,12 +3,13 @@
 
     /**
      * @typedef {Object} Props
-     * @property {any} [values]
-     * @property {boolean} [centered]
-     * @property {boolean} [right]
-     * @property {string} [classes]
-     * @property {any} [buttonComponent]
-     * @property {any} [action]
+     * @property {Array<object>} [values = []]
+     * @property {boolean} [centered = false]
+     * @property {boolean} [right = false]
+     * @property {string} [class = '']
+     * @property {import('svelte').Component} [buttonComponent = UIButton]
+     * @property {import('../events.types').UIEventInputChangeCallback} [action = ()=>true]
+     * @property {import('../events.types').UIEventCallback} [onclick = ()=>true]
      */
 
     /** @type {Props} */
@@ -16,8 +17,8 @@
         values = [],
         centered = false,
         right = false,
-        classes = "",
-        buttonComponent = UIButton,
+        class: classes = "",
+        buttonComponent: SvelteComponent = UIButton,
         action = () => {
             return true;
         },
@@ -25,6 +26,17 @@
             return true;
         },
     } = $props();
+
+    let _values = $state([]);
+
+    $effect(() => {
+        _values = values.map((itm) => {
+            if (isNaN(itm.id)) {
+                itm.id = Math.round(Math.random() * 100);
+            }
+            return itm;
+        });
+    });
 </script>
 
 <div
@@ -32,8 +44,7 @@
         ? 'is-right'
         : ''} {classes}"
 >
-    {#each values as item (item.id)}
-        {@const SvelteComponent = buttonComponent}
+    {#each _values as item (item.id)}
         <SvelteComponent {action} {onclick} {...item} bind:value={item.value} />
     {/each}
 </div>

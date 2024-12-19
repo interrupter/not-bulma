@@ -1,28 +1,33 @@
 <script>
     import Ui_items from "./ui.items.svelte";
-    import { createEventDispatcher } from "svelte";
-    const dispatch = createEventDispatcher();
 
     import UISideMenuItemWithoutChildren from "./ui.item.without.children.svelte";
 
     import UISideMenuTrigger from "./ui.trigger.svelte";
     import UISideMenuItemLabel from "./ui.item.label.svelte";
 
-    let closedChildren = $state({});
-
     /**
      * @typedef {Object} Props
      * @property {string} [root]
      * @property {any} [items]
      * @property {boolean} [closed]
+     * @property {function} [onnavigate]
      */
 
     /** @type {Props} */
-    let { root = "", items = [], closed = false } = $props();
+    let { root = "", items = [], closed, onnavigate = () => {} } = $props();
+
+    const createClosedItemsLib = (lst) => {
+        const lib = {};
+        lst.forEach((itm, index) => (lib[index] = itm.closed));
+        return lib;
+    };
+
+    let closedChildren = $state(createClosedItemsLib(items));
 
     function onClick(ev) {
         ev.preventDefault();
-        dispatch("navigate", {
+        onnavigate({
             full: ev.target.getAttribute("href"),
             short: ev.target.dataset.href,
         });
@@ -43,18 +48,14 @@
                     >
                         <UISideMenuItemLabel {item}>
                             <UISideMenuTrigger
-                                on:toggle={({ detail }) => {
-                                    closedChildren[index] = detail.closed;
-                                }}
+                                bind:closed={closedChildren[index]}
                             />
                         </UISideMenuItemLabel>
                     </a>
                 {:else}
                     <UISideMenuItemLabel {item}>
                         <UISideMenuTrigger
-                            on:toggle={({ detail }) => {
-                                closedChildren[index] = detail.closed;
-                            }}
+                            bind:closed={closedChildren[index]}
                         />
                     </UISideMenuItemLabel>
                 {/if}
@@ -62,11 +63,11 @@
                     {root}
                     items={item.items}
                     bind:closed={closedChildren[index]}
-                    on:navigate
+                    {onnavigate}
                 />
             </li>
         {:else}
-            <UISideMenuItemWithoutChildren {root} {item} on:navigate />
+            <UISideMenuItemWithoutChildren {root} {item} {onnavigate} />
         {/if}
     {/each}
 </ul>

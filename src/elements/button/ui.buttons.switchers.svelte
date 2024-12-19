@@ -88,7 +88,7 @@
      * @property {any} [values]
      * @property {boolean} [centered]
      * @property {boolean} [right]
-     * @property {string} [classes]
+     * @property {string} [class]
      * @property {any} [buttonComponent]
      * @property {function} [action]
      * @property {function} [onclick]
@@ -102,7 +102,7 @@
         values = $bindable([]),
         centered = false,
         right = false,
-        classes = "",
+        class: classes = "",
         buttonComponent = UIButtonSwitch,
         action = (ev, value, selected) => {
             let newSelected = !selected;

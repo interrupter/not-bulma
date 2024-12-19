@@ -1,0 +1,54 @@
+import { createExamplesSetForPropertyNameValues, addIndexField } from "./examples.helpers.js";
+
+if (!window.EXAMPLES) {
+    window.EXAMPLES = {};
+}
+
+const COLORS = addIndexField(createExamplesSetForPropertyNameValues({}, ["title", "color"], ["primary", "link", "info", "success", "warning", "danger"]));
+
+const ButtonSwitchExamples = [{
+    title: "Simple",
+    description: "Simple",
+    props: [{
+        title: "Button",
+        uiOff: () => {
+            return {
+                title: "Button - OFF",
+                color: ""
+            };
+        },
+        uiOn: () => {
+            return {
+                title: "Button - ON",
+                color: "success"
+            };
+        }
+    }]
+}, {
+    title: "Icons",
+    description: "Versions with icons",
+    props: [{
+        title: "",
+        size: "medium",
+        icon: "bold",
+        uiOff: () => {
+            return {
+                size: "medium",
+                color: "danger",
+                icon: "skull-crossbones"
+            };
+        },
+        uiOn: () => {
+            return {
+                size: "medium",
+                color: "success",
+                icon: "check"
+            };
+        }
+    }]
+}];
+
+window.EXAMPLES.UIButtonSwitch = {
+    constructor: "Elements.Buttons.UIButtonSwitch",
+    list: ButtonSwitchExamples
+};

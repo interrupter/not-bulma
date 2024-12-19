@@ -1,9 +1,10 @@
 import commonjs from "@rollup/plugin-commonjs";
 import svelte from "rollup-plugin-svelte";
-import babel from "rollup-plugin-babel";
+import babel from "@rollup/plugin-babel";
 import postcss from "rollup-plugin-postcss";
 import resolve from "@rollup/plugin-node-resolve";
 import filesize from "rollup-plugin-filesize";
+import sizes from "rollup-plugin-sizes";
 
 export default {
     input: "src/index.js",
@@ -11,17 +12,11 @@ export default {
         name: "notBulma",
         format: "iife",
         file: "dist/notBulma.js",
-        sourcemap: false,
+        sourcemap: process.env.NODE_ENV === "production" ? false : "inline",
     },
     plugins: [
         svelte({
             emitCss: true,
-            /*onwarn: (warning, handler) => {
-                // e.g. don't warn on <marquee> elements, cos they're cool
-                if (warning.code.startsWith("a11y")) return;
-                // let Rollup handle all other warnings normally
-                handler(warning);
-            },*/
         }),
         resolve({
             browser: true,
@@ -39,7 +34,6 @@ export default {
                     "sass",
                     {
                         includePaths: ["./node_modules"],
-
                         quietDeps: true,
                     },
                 ],
@@ -59,12 +53,12 @@ export default {
                         },
                     ],
                 ],
-                babelrc: false,
-                runtimeHelpers: true,
+                babelHelpers: "bundled",
                 plugins: [
                     "@babel/plugin-proposal-private-methods",
                     "@babel/plugin-proposal-class-properties",
                     "@babel/transform-arrow-functions",
+                    "@babel/plugin-transform-classes",
                     /*[
             "@babel/transform-runtime",{
               "regenerator": true,
@@ -89,6 +83,7 @@ export default {
       debug: true,
       exclude: ['rollup', 'cypress', 'node_modules/**', 'node_modules/@babel/runtime/helpers/**', 'node_modules/@babel/runtime/regenerator/**', 'node_modules/regenerator-runtime/**']
     }))*/,
+        sizes(),
         filesize(),
     ],
 };

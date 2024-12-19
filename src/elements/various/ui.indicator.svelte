@@ -65,7 +65,8 @@
         }
         register(events);
     });
-    run(() => {
+
+    $effect(() => {
         sided = right || left || top || bottom;
     });
 </script>

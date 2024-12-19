@@ -15,12 +15,12 @@
      * @property {string} [type]
      * @property {string} [color]
      * @property {string} [size]
-     * @property {string} [classes]
+     * @property {string} [class]
      * @property {boolean} [icon]
      * @property {string} [iconSide]
-     * @property {any} [uiOff]
-     * @property {any} [uiOn]
-     * @property {any} [action]
+     * @property {function} [uiOff]
+     * @property {function} [uiOn]
+     * @property {function} [action]
      * @property {any} value
      * @property {boolean} [selected]
      */
@@ -39,7 +39,7 @@
         type = "",
         color = "",
         size = "",
-        classes = "",
+        class: classes = "",
         icon = false,
         iconSide = "right",
         uiOff = () => {
@@ -58,8 +58,26 @@
         onclick = () => {},
         onchange = () => {},
         value,
-        selected = $bindable(false),
+        selected = false,
     } = $props();
+
+    let childProps = $state({
+        title,
+        light,
+        loading,
+        raised,
+        outlined,
+        inverted,
+        rounded,
+        disabled,
+        type,
+        color,
+        size,
+        class: classes,
+        icon,
+        iconSide,
+        value,
+    });
 
     function onClick(event) {
         selected = action(event, value, selected);
@@ -76,30 +94,21 @@
 
     let uiElement = $state();
 
-    $effect.pre(() => {
+    $effect(() => {
         if (uiElement) {
-            selected ? uiElement.$set(uiOn()) : uiElement.$set(uiOff());
+            const propsChanges = selected
+                ? uiOn(value, selected)
+                : uiOff(value, selected);
+            Object.keys(propsChanges).forEach((key) => {
+                childProps[key] = propsChanges[key];
+            });
         }
     });
 </script>
 
 <UIButton
     bind:this={uiElement}
-    {title}
-    {light}
-    {loading}
-    {raised}
-    {outlined}
-    {inverted}
-    {rounded}
-    {disabled}
+    {...childProps}
     state={activeState}
-    {type}
-    {color}
-    {size}
-    {classes}
-    {icon}
-    {iconSide}
-    {value}
     onclick={onClick}
 ></UIButton>

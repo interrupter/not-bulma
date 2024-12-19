@@ -1,0 +1,13 @@
+- var title = "not-bulma - Blocks - Box"
+script.
+  window.EXAMPLES_SELECTED = 'UIBox';
+include ../parts/header.pug
+include ../parts/menu.pug
+include ../parts/sidemenu.pug
+
+main
+  include ../content/blocks.box.pug
+  include ../parts/foot.pug
+  
+script(src="/js/blocks.box.js" type="module")
+include ../parts/footer.pug

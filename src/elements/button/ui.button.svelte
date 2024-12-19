@@ -15,7 +15,7 @@
      * @property {string} [type]
      * @property {string} [color]
      * @property {string} [size]
-     * @property {string} [classes]
+     * @property {string} [class]
      * @property {boolean} [icon]
      * @property {string} [iconSide]
      * @property {function} [action]
@@ -38,7 +38,7 @@
         type = "",
         color = "",
         size = "",
-        classes = "",
+        class: classes = "",
         icon = false,
         iconSide = "right",
         onclick = () => {

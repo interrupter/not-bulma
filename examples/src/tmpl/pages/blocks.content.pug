@@ -1,0 +1,13 @@
+- var title = "not-bulma - Blocks - Content"
+script.
+  window.EXAMPLES_SELECTED = 'UIContent';
+include ../parts/header.pug
+include ../parts/menu.pug
+include ../parts/sidemenu.pug
+
+main
+  include ../content/blocks.content.pug
+  include ../parts/foot.pug
+  
+script(src="/js/blocks.content.js" type="module")
+include ../parts/footer.pug

@@ -1,7 +1,4 @@
 <script>
-    import { createEventDispatcher } from "svelte";
-    const dispatch = createEventDispatcher();
-
     import { LOCALE } from "../../../../locale";
     import UIIndicator from "../../../../elements/various/ui.indicator.svelte";
 
@@ -12,11 +9,11 @@
      */
 
     /** @type {Props} */
-    let { root = "", item = {} } = $props();
+    let { root = "", item = {}, onnavigate = () => {} } = $props();
 
     function onClick(ev) {
         ev.preventDefault();
-        dispatch("navigate", {
+        onnavigate({
             full: ev.target.getAttribute("href"),
             short: ev.target.dataset.href,
         });
