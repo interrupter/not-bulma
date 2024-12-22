@@ -130,9 +130,19 @@ const menu = {
                         url: "./buttons.button.switch.html",
                     },
                     {
+                        id: "elements.buttons.buttons.row",
+                        title: "Строка кнопок",
+                        url: "./buttons.buttons.row.html",
+                    },
+                    {
                         id: "elements.buttons.buttons",
                         title: "Группы кнопок",
                         url: "./buttons.buttons.html",
+                    },
+                    {
+                        id: "elements.buttons.buttons.switcher",
+                        title: "Группа переключателей",
+                        url: "./buttons.buttons.switchers.html",
                     },
                 ],
             },

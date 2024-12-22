@@ -46,7 +46,7 @@ const ButtonsButtonsExamples = [
         ],
     },
 ];
-window.EXAMPLES.UIButtons = {
-    constructor: "Elements.Buttons.UIButtons",
+window.EXAMPLES.UIButtonsRow = {
+    constructor: "Elements.Buttons.UIButtonsRow",
     list: ButtonsButtonsExamples,
 };

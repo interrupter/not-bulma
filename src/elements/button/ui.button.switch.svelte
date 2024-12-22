@@ -1,4 +1,5 @@
 <script>
+    import { onMount } from "svelte";
     import UIButton from "./ui.button.svelte";
 
     /**
@@ -58,7 +59,7 @@
         onclick = () => {},
         onchange = () => {},
         value,
-        selected = false,
+        selected = $bindable(false),
     } = $props();
 
     let childProps = $state({
@@ -79,22 +80,23 @@
         value,
     });
 
+    let uiElement = $state();
+
+    onMount(() => {
+        updateUI();
+    });
+
     function onClick(event) {
         selected = action(event, value, selected);
+        updateUI();
         onclick({ value, selected });
-        onChange();
-    }
-
-    function onChange() {
         onchange({
             value,
             selected,
         });
     }
 
-    let uiElement = $state();
-
-    $effect(() => {
+    export function updateUI() {
         if (uiElement) {
             const propsChanges = selected
                 ? uiOn(value, selected)
@@ -102,7 +104,12 @@
             Object.keys(propsChanges).forEach((key) => {
                 childProps[key] = propsChanges[key];
             });
+            childProps = childProps;
         }
+    }
+
+    $effect(() => {
+        if (typeof selected !== "undefined") updateUI();
     });
 </script>
 
@@ -111,4 +118,4 @@
     {...childProps}
     state={activeState}
     onclick={onClick}
-></UIButton>
+/>
