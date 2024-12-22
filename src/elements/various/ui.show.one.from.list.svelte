@@ -1,5 +1,5 @@
 <script>
-    import { run } from 'svelte/legacy';
+    import { run } from "svelte/legacy";
 
     const defaultFilter = (value) => value[idFieldName] === id;
     /**
@@ -21,10 +21,10 @@
         UIPlaceholder,
         active = $bindable(),
         idFieldName = "_id",
-        filter = defaultFilter
+        filter = defaultFilter,
     } = $props();
 
-    run(() => {
+    $effect(() => {
         active =
             Array.isArray(values) && values.length && typeof id !== "undefined"
                 ? values.find(filter || defaultFilter)

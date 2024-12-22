@@ -146,23 +146,7 @@ const menu = {
                     },
                 ],
             },
-            {
-                id: "elements.images",
-                section: "elements",
-                title: "Изображения",
-                items: [
-                    {
-                        id: "elements.images.image",
-                        title: "Изображение",
-                        url: "./images.image.html",
-                    },
-                    {
-                        id: "elements.images.images",
-                        title: "Изображения",
-                        url: "./images.images.html",
-                    },
-                ],
-            },
+
             {
                 id: "elements.forms",
                 section: "elements",
@@ -218,6 +202,202 @@ const menu = {
                 ],
             },
             {
+                id: "elements.images",
+                section: "elements",
+                title: "Изображения",
+                items: [
+                    {
+                        id: "elements.images.image",
+                        title: "Изображение",
+                        url: "./images.image.html",
+                    },
+                    {
+                        id: "elements.images.images",
+                        title: "Изображения",
+                        url: "./images.images.html",
+                    },
+                ],
+            },
+            {
+                id: "elements.inputs",
+                section: "elements",
+                title: "Элементы ввода",
+                items: [
+                    {
+                        id: "elements.inputs.autocomplete",
+                        title: "Автодополнение",
+                        url: "./inputs.autocomplete.html",
+                    },
+                    {
+                        id: "elements.inputs.checkbox.list",
+                        title: "Список чекбоксов",
+                        url: "./inputs.checkbox.list.html",
+                    },
+                    {
+                        id: "elements.inputs.checkbox",
+                        title: "Чекбокс",
+                        url: "./inputs.checkbox.html",
+                    },
+                    {
+                        id: "elements.inputs.color",
+                        title: "Цвет",
+                        url: "./inputs.color.html",
+                    },
+                    {
+                        id: "elements.inputs.control",
+                        title: "Контрол",
+                        url: "./inputs.control.html",
+                    },
+                    {
+                        id: "elements.inputs.date",
+                        title: "Дата",
+                        url: "./inputs.date.html",
+                    },
+                    {
+                        id: "elements.inputs.datetime.in.tz",
+                        title: "Дата и время в таймзоне",
+                        url: "./inputs.datetime.in.tz.html",
+                    },
+                    {
+                        id: "elements.inputs.email",
+                        title: "Email",
+                        url: "./inputs.email.html",
+                    },
+                    {
+                        id: "elements.inputs.hidden",
+                        title: "Скрытое",
+                        url: "./inputs.hidden.html",
+                    },
+                    {
+                        id: "elements.inputs.json.area",
+                        title: "JSON",
+                        url: "./inputs.json.area.html",
+                    },
+                    {
+                        id: "elements.inputs.label",
+                        title: "Название поля",
+                        url: "./inputs.label.html",
+                    },
+                    {
+                        id: "elements.inputs.list.of.models",
+                        title: "Список моделей",
+                        url: "./inputs.list.of.models.html",
+                    },
+                    {
+                        id: "elements.inputs.named.numbers.list",
+                        title: "Список имнованных значений",
+                        url: "./inputs.named.numbers.list.html",
+                    },
+                    {
+                        id: "elements.inputs.number",
+                        title: "Число",
+                        url: "./inputs.number.html",
+                    },
+                    {
+                        id: "elements.inputs.password",
+                        title: "Пароль",
+                        url: "./inputs.password.html",
+                    },
+                    {
+                        id: "elements.inputs.radio.buttons",
+                        title: "Радио кнопки",
+                        url: "./inputs.radio.buttons.html",
+                    },
+                    {
+                        id: "elements.inputs.range",
+                        title: "Range",
+                        url: "./inputs.range.html",
+                    },
+                    {
+                        id: "elements.inputs.select.from.model",
+                        title: "Выбор из модели",
+                        url: "./inputs.select.from.model.html",
+                    },
+                    {
+                        id: "elements.inputs.select.option",
+                        title: "Опция выпадающего списка",
+                        url: "./inputs.select.option.html",
+                    },
+                    {
+                        id: "elements.inputs.select",
+                        title: "Выпадающий список",
+                        url: "./inputs.select.html",
+                    },
+                    {
+                        id: "elements.inputs.switch.list",
+                        title: "Список переключателей",
+                        url: "./inputs.switch.list.html",
+                    },
+                    {
+                        id: "elements.inputs.switch",
+                        title: "Переключатель",
+                        url: "./inputs.switch.html",
+                    },
+                    {
+                        id: "elements.inputs.tag.select",
+                        title: "Метки",
+                        url: "./inputs.tag.select.html",
+                    },
+                    {
+                        id: "elements.inputs.telephone",
+                        title: "Телефон",
+                        url: "./inputs.telephone.html",
+                    },
+                    {
+                        id: "elements.inputs.textarea",
+                        title: "Текст большой",
+                        url: "./inputs.textarea.html",
+                    },
+                    {
+                        id: "elements.inputs.textfield",
+                        title: "Текст",
+                        url: "./inputs.textfield.html",
+                    },
+                ],
+            },
+            {
+                id: "elements.layouts",
+                section: "elements",
+                title: "Раскладки",
+                items: [
+                    {
+                        id: "elements.layouts.column",
+                        title: "Колонка",
+                        url: "./layouts.column.html",
+                    },
+                    {
+                        id: "elements.layouts.columns",
+                        title: "Колонки",
+                        url: "./layouts.columns.html",
+                    },
+                    {
+                        id: "elements.layouts.container",
+                        title: "Контейнер",
+                        url: "./layouts.container.html",
+                    },
+                    {
+                        id: "elements.layouts.footer",
+                        title: "Футер",
+                        url: "./layouts.footer.html",
+                    },
+                    {
+                        id: "elements.layouts.level.item",
+                        title: "Элемент уровня",
+                        url: "./layouts.level.item.html",
+                    },
+                    {
+                        id: "elements.layouts.level",
+                        title: "Уровень",
+                        url: "./layouts.level.html",
+                    },
+                    {
+                        id: "elements.layouts.section",
+                        title: "Секция",
+                        url: "./layouts.section.html",
+                    },
+                ],
+            },
+            {
                 id: "elements.links",
                 section: "elements",
                 title: "Ссылки",
@@ -240,9 +420,39 @@ const menu = {
                 title: "Списки",
                 items: [
                     {
-                        id: "elements.lists",
+                        id: "elements.lists.list.block",
                         title: "Блок списка",
                         url: "./lists.list.block.html",
+                    },
+                    {
+                        id: "elements.lists.list.empty.placeholder",
+                        title: "Пустой список",
+                        url: "./lists.list.empty.placeholder.html",
+                    },
+                    {
+                        id: "elements.lists.list.item",
+                        title: "Элемент списка",
+                        url: "./lists.list.item.html",
+                    },
+                    {
+                        id: "elements.lists.list.select.buttons.with.groups",
+                        title: "Кнопки выбора с группировкой",
+                        url: "./lists.list.select.buttons.with.groups.html",
+                    },
+                    {
+                        id: "elements.lists.list.select",
+                        title: "Выбор из списка",
+                        url: "./lists.list.select.html",
+                    },
+                    {
+                        id: "elements.lists.list.select.with.groups",
+                        title: "Выбор из списка с группами",
+                        url: "./lists.list.select.with.groups.html",
+                    },
+                    {
+                        id: "elements.lists.list",
+                        title: "Список",
+                        url: "./lists.list.html",
                     },
                 ],
             },
@@ -275,17 +485,17 @@ const menu = {
                 items: [
                     {
                         id: "elements.notifications.cookie.notification",
-                        title: "Об использовании Cookies",
+                        title: "Использовании Cookies",
                         url: "./notifications.cookie.notification.html",
                     },
                     {
                         id: "elements.notifications.error",
-                        title: "Ошибке",
+                        title: "Ошибка",
                         url: "./notifications.error.html",
                     },
                     {
                         id: "elements.notifications.success",
-                        title: "Успехе",
+                        title: "Успех",
                         url: "./notifications.success.html",
                     },
                 ],
@@ -296,14 +506,84 @@ const menu = {
                 title: "Разное",
                 items: [
                     {
-                        id: "elements.various.tag",
-                        title: "Тэги",
-                        url: "./various.tag.html",
+                        id: "elements.various.boolean.labeled",
+                        title: "Булево с названием",
+                        url: "./various.boolean.labeled.html",
                     },
                     {
                         id: "elements.various.boolean",
-                        title: "Булевы",
+                        title: "Булево",
                         url: "./various.boolean.html",
+                    },
+                    {
+                        id: "elements.various.booleans",
+                        title: "Булевы",
+                        url: "./various.booleans.html",
+                    },
+                    {
+                        id: "elements.various.censored",
+                        title: "Скрытое значение",
+                        url: "./various.censored.html",
+                    },
+                    {
+                        id: "elements.various.errors.list",
+                        title: "Список ошибок",
+                        url: "./various.errors.list.html",
+                    },
+                    {
+                        id: "elements.various.indicator",
+                        title: "Индикатор",
+                        url: "./various.indicator.html",
+                    },
+                    {
+                        id: "elements.various.loader",
+                        title: "Загрузка...",
+                        url: "./various.loader.html",
+                    },
+                    {
+                        id: "elements.various.select.from.model.on.demand.inline",
+                        title: "Выбор из модели по запросу встроенный",
+                        url: "./various.select.from.model.on.demand.inline.html",
+                    },
+                    {
+                        id: "elements.various.select.from.model.with.search.modal",
+                        title: "Выбор из модели с модальным поиском",
+                        url: "./various.select.from.model.with.search.modal.html",
+                    },
+                    {
+                        id: "elements.various.show.one.from.list",
+                        title: "Один из списка",
+                        url: "./various.show.one.from.list.html",
+                    },
+                    {
+                        id: "elements.various.simple.search.input",
+                        title: "Поиск",
+                        url: "./various.simple.search.input.html",
+                    },
+                    {
+                        id: "elements.various.tag",
+                        title: "Метки",
+                        url: "./various.tag.html",
+                    },
+                    {
+                        id: "elements.various.tag.value.list",
+                        title: "Список меток и значений",
+                        url: "./various.tag.value.list.html",
+                    },
+                    {
+                        id: "elements.various.tag.value",
+                        title: "Метка и значение",
+                        url: "./various.tag.value.html",
+                    },
+                    {
+                        id: "elements.various.title",
+                        title: "Заголовок",
+                        url: "./various.title.html",
+                    },
+                    {
+                        id: "elements.various.user.card",
+                        title: "Карточка пользователя",
+                        url: "./various.user.card.html",
                     },
                 ],
             },
