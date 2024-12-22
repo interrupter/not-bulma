@@ -10,26 +10,15 @@ section(id="examples" class="section")
     h3( class="title") Props
     h4(class="subtitle") что можно задавать
     div(class="block")
-      pre
-        | Нотация тип: название = поумолчанию - описание
-        | string:           title = ''            - надпись
-        | boolean:          light = false         - стиль
-        | boolean:          loading = false       - класс заменяет содержимое на loader
-        | boolean:          raised = false        - стиль
-        | boolean:          outlined = false      - стиль
-        | boolean:          inverted = false      - стиль
-        | boolean:          rounded = false       - стиль
-        | boolean:          disabled = false      - атрибут
-        | string:           state = ''            - класс normal/hover/focus/active/static
-        | string:           type = '';            - атрибут submit/reset
-        | string:           color = '';           - класс цветовая схема
-        | string:           size = '';            - класс размер
+      pre 
+        | array:            values = []           - массив props для 
+        | boolean:          centered = false      - по центру
+        | boolean:          right = false         - справа
         | string:           class = '';           - дополнительные классы, строкой
-        | string|boolean:   icon = false;         - название иконки FA
-        | string:           iconSide = 'right';   - положение иконки left/right
         | function:         onclick = ({ event, value })=>{ return true; } - что делать по нажатию, svelte 5 bubbling
-        | function:         onchange = ({ selected, value })=>undefined - вызывается при изменении состояния
-        | function:         action = (event, value, selected)=>{ return !selected; } - возвращает новое состояние
-        | function          uiOff = (value, selected)=>{ return {color: ''}; } - возвращает объект с мутациями для props кнопки
-        | function          uiOn = (value, selected)=>{ return {color: 'success'}; } - возвращает объект с мутациями для props кнопки
-        | any:              value                 - привязанное значение, в onclick и action передаётся именно оно
+        | function:         onchange = ({ values: array of items, selected:array of items, selectedIds:array items ids, selectedCount: number })=>undefined - вызывается при изменении состояния
+        | function:         action = (event, value, selected)=>{ return !selected; } - возвращает новое состояние, поведение поумолчанию учитывает min/max и другие опции        
+        | number:           min = 0               - минимальное число "включенных" кнопок
+        | number:           max = 100             - максимальное число "включенных" кнопок
+        | svelte Component  buttonComponent = UIButtonSwitch -  что используем для отрисовки
+        | object:           buttonProps = {}      - общие props для кнопок

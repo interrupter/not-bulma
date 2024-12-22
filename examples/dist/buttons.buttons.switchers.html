@@ -1,22 +1,11 @@
-<script>window.EXAMPLES_SELECTED = 'UIButtonsSwitchers';</script><!DOCTYPE html><html class="no-js" lang="ru"><head><meta charset="utf-8"><meta http-equiv="x-ua-compatible" content="ie=edge"><title>not-bulma - кнопка переключатель</title><meta name="description" content=""><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="application-name" content=""><meta name="author" content=""><meta name="description"><link rel="shortcut icon" href="/img/icon/logo/icon-32.png"><link rel="apple-touch-icon" href="/img/icon/logo/icon-32.png"><link rel="stylesheet" href="/assets/font-awasome-5.13.1-all.min.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/1.0.2/css/bulma.min.css"><link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="/assets/not-bulma/notBulma.css"></head></html><nav class="navbar is-fixed-top is-success" id="top-menu" role="navigation" aria-label="main navigation"></nav><aside class="menu" id="side-menu"></aside><main><section class="section" id="examples"><h1 class="title">Кнопки переключатели</h1><h2 class="subtitle">субтитра</h2><div class="box"><h3 class="title">Constructor</h3><h4 class="subtitle">как создать</h4><div class="block"><pre>mount(notBulma.Elements.Buttons.UIButtonsSwitchers,{target: HTMLElement, props: Object});</pre></div><h3 class="title">Props</h3><h4 class="subtitle">что можно задавать</h4><div class="block"><pre>Нотация тип: название = поумолчанию - описание
-string:           title = ''            - надпись
-boolean:          light = false         - стиль
-boolean:          loading = false       - класс заменяет содержимое на loader
-boolean:          raised = false        - стиль
-boolean:          outlined = false      - стиль
-boolean:          inverted = false      - стиль
-boolean:          rounded = false       - стиль
-boolean:          disabled = false      - атрибут
-string:           state = ''            - класс normal/hover/focus/active/static
-string:           type = '';            - атрибут submit/reset
-string:           color = '';           - класс цветовая схема
-string:           size = '';            - класс размер
+<script>window.EXAMPLES_SELECTED = 'UIButtonsSwitchers';</script><!DOCTYPE html><html class="no-js" lang="ru"><head><meta charset="utf-8"><meta http-equiv="x-ua-compatible" content="ie=edge"><title>not-bulma - кнопка переключатель</title><meta name="description" content=""><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="application-name" content=""><meta name="author" content=""><meta name="description"><link rel="shortcut icon" href="/img/icon/logo/icon-32.png"><link rel="apple-touch-icon" href="/img/icon/logo/icon-32.png"><link rel="stylesheet" href="/assets/font-awasome-5.13.1-all.min.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/1.0.2/css/bulma.min.css"><link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="/assets/not-bulma/notBulma.css"></head></html><nav class="navbar is-fixed-top is-success" id="top-menu" role="navigation" aria-label="main navigation"></nav><aside class="menu" id="side-menu"></aside><main><section class="section" id="examples"><h1 class="title">Кнопки переключатели</h1><h2 class="subtitle">субтитра</h2><div class="box"><h3 class="title">Constructor</h3><h4 class="subtitle">как создать</h4><div class="block"><pre>mount(notBulma.Elements.Buttons.UIButtonsSwitchers,{target: HTMLElement, props: Object});</pre></div><h3 class="title">Props</h3><h4 class="subtitle">что можно задавать</h4><div class="block"><pre> array:            values = []           - массив props для 
+boolean:          centered = false      - по центру
+boolean:          right = false         - справа
 string:           class = '';           - дополнительные классы, строкой
-string|boolean:   icon = false;         - название иконки FA
-string:           iconSide = 'right';   - положение иконки left/right
 function:         onclick = ({ event, value })=>{ return true; } - что делать по нажатию, svelte 5 bubbling
-function:         onchange = ({ selected, value })=>undefined - вызывается при изменении состояния
-function:         action = (event, value, selected)=>{ return !selected; } - возвращает новое состояние
-function          uiOff = (value, selected)=>{ return {color: ''}; } - возвращает объект с мутациями для props кнопки
-function          uiOn = (value, selected)=>{ return {color: 'success'}; } - возвращает объект с мутациями для props кнопки
-any:              value                 - привязанное значение, в onclick и action передаётся именно оно</pre></div></div></section></main><script src="/js/buttons.buttons.switchers.js" type="module"></script><script src="/js/EventEmitter.js"></script><script src="/assets/not-error/bundle.min.js"></script><script src="/js/main.js" type="module"></script><script src="/assets/not-bulma/notBulma.js"></script>
+function:         onchange = ({ values: array of items, selected:array of items, selectedIds:array items ids, selectedCount: number })=>undefined - вызывается при изменении состояния
+function:         action = (event, value, selected)=>{ return !selected; } - возвращает новое состояние, поведение поумолчанию учитывает min/max и другие опции        
+number:           min = 0               - минимальное число "включенных" кнопок
+number:           max = 100             - максимальное число "включенных" кнопок
+svelte Component  buttonComponent = UIButtonSwitch -  что используем для отрисовки
+object:           buttonProps = {}      - общие props для кнопок</pre></div></div></section></main><script src="/js/buttons.buttons.switchers.js" type="module"></script><script src="/js/EventEmitter.js"></script><script src="/assets/not-error/bundle.min.js"></script><script src="/js/main.js" type="module"></script><script src="/assets/not-bulma/notBulma.js"></script>

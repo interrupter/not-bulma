@@ -47,6 +47,7 @@
      * @property {boolean} [right]
      * @property {string} [class]
      * @property {import('svelte').Component}      [buttonComponent = UIButtonSwitch]
+     * @property {object}   [buttonProps = {}]
      * @property {function} [action = (event, value, selected) => boolean]  fires on button switch click, returns new state of selected
      * @property {function} [onclick]
      * @property {function} [onchange]
@@ -90,8 +91,7 @@
             _values[index].selected = true;
             updateItemUI(itm);
         });
-        //_values = _values;
-        onchange && onchange({ values: _values });
+        onChange();
     }
 
     export function deselectAll() {
@@ -99,8 +99,7 @@
             _values[index].selected = false;
             updateItemUI(itm);
         });
-        //_values = _values;
-        onchange && onchange({ values: _values });
+        onChange();
     }
 
     onMount(() => {
@@ -118,11 +117,9 @@
     }
 
     export function countSelected() {
-        // console.log(JSON.stringify(values, null, 4));
         const countOfSelected = _values.filter((btn) => {
             return btn.selected;
         }).length;
-        //console.log(countOfSelected);
         return countOfSelected;
     }
 
@@ -154,8 +151,7 @@
                 }
             }
         }
-        //_values = _values;
-        onchange && onchange({ values: _values });
+        onChange();
     }
 
     export function deselectDownToMin(cnt, indexOfCurrent) {
@@ -176,7 +172,7 @@
                 }
             }
         }
-        onchange && onchange({ values: _values });
+        onChange();
     }
 
     export function updateUI() {
@@ -199,6 +195,7 @@
             bind:this={uis[item.id]}
             {action}
             {...item}
+            {...buttonProps}
             {onclick}
             bind:selected={_values[index].selected}
             onchange={onChange}
