@@ -8,7 +8,7 @@
      * @property {number} [size]
      * @property {boolean} [contained]
      * @property {boolean} [covered]
-     * @property {string} [classes]
+     * @property {string} [class]
      */
 
     /** @type {Props} */
@@ -20,7 +20,7 @@
         size = 64,
         contained = true,
         covered = true,
-        classes = "",
+        class: classes = "",
         onclick = () => true,
         onkeyup = () => true,
     } = $props();

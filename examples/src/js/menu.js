@@ -147,6 +147,50 @@ const menu = {
                 ],
             },
             {
+                id: "elements.images",
+                section: "elements",
+                title: "Изображения",
+                items: [
+                    {
+                        id: "elements.images.image",
+                        title: "Изображение",
+                        url: "./images.image.html",
+                    },
+                    {
+                        id: "elements.images.images",
+                        title: "Изображения",
+                        url: "./images.images.html",
+                    },
+                ],
+            },
+            {
+                id: "elements.forms",
+                section: "elements",
+                title: "Формы",
+                items: [
+                    {
+                        id: "elements.forms.form.control",
+                        title: "Контрол формы",
+                        url: "./forms.form.control.html",
+                    },
+                    {
+                        id: "elements.forms.form.input.errors",
+                        title: "Ошибки элемента ввода формы",
+                        url: "./forms.form.input.errors.html",
+                    },
+                    {
+                        id: "elements.forms.form.input",
+                        title: "Элемент ввода формы",
+                        url: "./forms.form.input.html",
+                    },
+                    {
+                        id: "elements.forms.validated.icon",
+                        title: "Иконка валидности поля ввода",
+                        url: "./forms.validated.icon.html",
+                    },
+                ],
+            },
+            {
                 id: "elements.icons",
                 section: "elements",
                 title: "Иконки",
@@ -170,6 +214,23 @@ const menu = {
                         id: "elements.icons.icon",
                         title: "Иконка",
                         url: "./icons.icon.html",
+                    },
+                ],
+            },
+            {
+                id: "elements.links",
+                section: "elements",
+                title: "Ссылки",
+                items: [
+                    {
+                        id: "elements.links.link",
+                        title: "Ссылка",
+                        url: "./links.link.html",
+                    },
+                    {
+                        id: "elements.links.links",
+                        title: "Ссылки",
+                        url: "./links.links.html",
                     },
                 ],
             },
@@ -221,18 +282,6 @@ const menu = {
                 url: "./frame.index.html",
             },
 
-            {
-                id: "images",
-                section: "elements",
-                title: "Изображения",
-                url: "./images.html",
-            },
-            {
-                id: "links",
-                section: "elements",
-                title: "Ссылки",
-                url: "./links.html",
-            },
             {
                 id: "menu.top",
                 section: "menus",
