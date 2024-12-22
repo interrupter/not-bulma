@@ -7,24 +7,30 @@ if (!window.EXAMPLES) {
 const COLORS = addIndexField(createExamplesSetForPropertyNameValues({}, ["title", "color"], ["primary", "link", "info", "success", "warning", "danger"]));
 
 const ButtonsButtonsExamples = [{
-    title: "Simple group",
-    description: "Buttons group",
+    title: "Левая колонка",
+    description: "Только левая колонка",
     props: [{
-        values: COLORS
+        left: COLORS
     }]
 }, {
-    title: "Right group",
-    description: "Buttons group",
+    title: "Правая колонка",
+    description: "Только правая колонка",
     props: [{
-        right: true,
-        values: COLORS
+        right: COLORS
     }]
 }, {
-    title: "Centered group",
-    description: "Buttons group",
+    title: "Центральная колонка",
+    description: "Только центральная колонка",
     props: [{
-        centered: true,
-        values: COLORS
+        center: COLORS
+    }]
+}, {
+    title: "Все колонки",
+    description: "Задействованы все колонки",
+    props: [{
+        left: [COLORS[0]],
+        center: [COLORS[1], COLORS[2]],
+        right: [COLORS[3]]
     }]
 }];
 window.EXAMPLES.UIButtonsRow = {
