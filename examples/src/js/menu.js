@@ -235,6 +235,62 @@ const menu = {
                 ],
             },
             {
+                id: "elements.lists",
+                section: "elements",
+                title: "Списки",
+                items: [
+                    {
+                        id: "elements.lists",
+                        title: "Блок списка",
+                        url: "./lists.list.block.html",
+                    },
+                ],
+            },
+            {
+                id: "elements.modals",
+                section: "elements",
+                title: "Модальные окна",
+                items: [
+                    {
+                        id: "elements.modals.generic.selector",
+                        title: "Селектор",
+                        url: "./modals.generic.selector.html",
+                    },
+                    {
+                        id: "elements.modals.modal",
+                        title: "Модальное окно",
+                        url: "./modals.modal.html",
+                    },
+                    {
+                        id: "elements.modals.overlay",
+                        title: "Оверлэй",
+                        url: "./modals.overlay.html",
+                    },
+                ],
+            },
+            {
+                id: "elements.notifications",
+                section: "elements",
+                title: "Уведомления",
+                items: [
+                    {
+                        id: "elements.notifications.cookie.notification",
+                        title: "Об использовании Cookies",
+                        url: "./notifications.cookie.notification.html",
+                    },
+                    {
+                        id: "elements.notifications.error",
+                        title: "Ошибке",
+                        url: "./notifications.error.html",
+                    },
+                    {
+                        id: "elements.notifications.success",
+                        title: "Успехе",
+                        url: "./notifications.success.html",
+                    },
+                ],
+            },
+            {
                 id: "elements.various",
                 section: "elements",
                 title: "Разное",

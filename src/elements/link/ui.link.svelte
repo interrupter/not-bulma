@@ -1,11 +1,7 @@
 <script>
-    import { run } from 'svelte/legacy';
+    import { run } from "svelte/legacy";
 
     import { LOCALE } from "../../locale";
-    
-    
-
-    
 
     /**
      * @typedef {Object} Props
@@ -25,7 +21,7 @@
      * @property {string} [type]
      * @property {string} [color]
      * @property {string} [size]
-     * @property {string} [classes]
+     * @property {string} [class]
      * @property {boolean} [icon] - icons
      * @property {string} [iconSide]
      * @property {any} [action]
@@ -50,13 +46,13 @@
         type = "",
         color = "",
         size = "",
-        classes = $bindable(""),
+        class: classes = $bindable(""),
         icon = false,
         iconSide = "right",
         action = () => {
             return true;
         },
-        children
+        children,
     } = $props();
 
     run(() => {
@@ -78,12 +74,12 @@
     class="{classes} {state ? `is-${state}` : ''} {inverted
         ? `is-inverted`
         : ''} {outlined ? `is-outlined` : ''} {raised
-            ? `is-raised`
-            : ''} {rounded ? `is-rounded` : ''} {light ? `is-light` : ''} {loading
-                ? `is-loading`
-                : ''} {color ? `is-${color}` : ''} {type ? `is-${type}` : ''} {size
-                    ? `is-${size}`
-                    : ''}"
+        ? `is-raised`
+        : ''} {rounded ? `is-rounded` : ''} {light ? `is-light` : ''} {loading
+        ? `is-loading`
+        : ''} {color ? `is-${color}` : ''} {type ? `is-${type}` : ''} {size
+        ? `is-${size}`
+        : ''}"
 >
     {#if icon}
         {#if iconSide === "left"}
