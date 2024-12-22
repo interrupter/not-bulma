@@ -10,7 +10,7 @@
      * @property {string} [state]
      * @property {string} [size]
      * @property {any} [labels]
-     * @property {string} [classes]
+     * @property {string} [class]
      * @property {string} [padding]
      * @property {boolean} [bold]
      * @property {boolean} [right]
@@ -39,7 +39,7 @@
             warning: "warning",
             danger: "danger",
         },
-        classes = "mx-1",
+        class: classes = "mx-1",
         padding = "normal",
         bold = false,
         right = false,

@@ -1,3 +1,5 @@
+/* global notBulma */
+
 const { notSideMenu, notTopMenu, COMPONENTS } = notBulma.Frame;
 const { mount } = notBulma.svelte;
 
@@ -44,7 +46,8 @@ function initExamplesSetHTML(id, val, constructorPath) {
     box.appendChild(title);
     let description = document.createElement("div");
     description.classList.add("content");
-    description.innerHTML = val.description;
+    description.innerHTML =
+        typeof val.description !== "undefined" ? val.description : "";
     box.appendChild(description);
     let cols = document.createElement("div");
     cols.classList.add("columns");
@@ -57,7 +60,7 @@ function initExamplesSetHTML(id, val, constructorPath) {
     if (val.functions) {
         pre.innerHTML = val.props.map((f) => f.toString()).join("<br/>");
     } else {
-        const propsStringified = val.props.map((currentProps, index) => {
+        const propsStringified = val.props.map((currentProps) => {
             const currentPropsStringified = {};
             Object.keys(currentProps).forEach((propName) => {
                 if (typeof currentProps[propName] === "function") {

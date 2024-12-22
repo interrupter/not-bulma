@@ -4,7 +4,7 @@
      * @typedef {Object} Props
      * @property {any} [errors]
      * @property {boolean} [show]
-     * @property {string} [classes]
+     * @property {string} [class]
      * @property {string} [id]
      */
 
@@ -12,8 +12,8 @@
     let {
         errors = [],
         show = false,
-        classes = "",
-        id = "errors-list"
+        class: classes = "",
+        id = "errors-list",
     } = $props();
 </script>
 

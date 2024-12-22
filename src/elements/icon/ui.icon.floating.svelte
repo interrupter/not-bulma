@@ -1,44 +1,47 @@
 <script>
-  import {onMount} from 'svelte';
-  import UIButton from '../button/ui.button.svelte';
+    import { onMount } from "svelte";
+    import UIButton from "../button/ui.button.svelte";
 
-  //export let top = '2em';
-  //export let left = '2em';
-  //export let right;
-  //export let bottom;
-  
+    /**
+     * @typedef {Object} Props
+     * @property {any} [trigger] - export let direction = 'left';  //left/right/top/bottom/around
+     */
 
-  /**
-   * @typedef {Object} Props
-   * @property {any} [trigger] - export let direction = 'left';  //left/right/top/bottom/around
-   */
+    /** @type {Props} */
+    let {
+        trigger = {
+            title: "Click me!",
+            icon: "plus",
+            color: "primary",
+            size: "medium",
+            onclick: () => true,
+        },
+        top = "2em",
+        left = "2em",
+        right,
+        bottom,
+        class: classes = "",
+    } = $props();
 
-  /** @type {Props} */
-  let { trigger = {
-      title:  'Click me!',
-      icon:   'plus',
-      color:  'primary',
-      size:   'medium'
-  } } = $props();
+    let positionStyle = $state("");
 
-  function toggle(){
-
-  }
-
-  let positionStyle = $state('');
-
-  onMount(()=>{
-      positionStyle = '';
-  });
-
+    onMount(() => {
+        positionStyle = "";
+        if (top) {
+            positionStyle += `top: ${top};`;
+        }
+        if (left) {
+            positionStyle += `left: ${left};`;
+        }
+        if (right) {
+            positionStyle += `right: ${right};`;
+        }
+        if (bottom) {
+            positionStyle += `bottom: ${bottom};`;
+        }
+    });
 </script>
 
-<div class="is-fab" style="{positionStyle}">
-  <UIButton action={toggle} {...trigger} />
+<div class="is-absolute {classes}" style={positionStyle}>
+    <UIButton {...trigger} />
 </div>
-
-<style>
-  .is-fab{
-    position: absolute;
-  }
-</style>

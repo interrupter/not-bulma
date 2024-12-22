@@ -3,11 +3,12 @@
 
     /**
      * @typedef {Object} Props
-     * @property {string} [title]
-     * @property {string} [font]
-     * @property {string} [size]
-     * @property {string} [side]
-     * @property {boolean} [pointable]
+     * @property {string} [title = ""]
+     * @property {string} [font = ""]
+     * @property {string} [size = ""]
+     * @property {string} [side = ""]
+     * @property {string} [class = ""]
+     * @property {boolean} [pointable = false]
      */
 
     /** @type {Props} */

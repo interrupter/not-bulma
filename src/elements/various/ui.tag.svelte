@@ -18,11 +18,12 @@
      * @property {boolean} [left]
      * @property {boolean} [top]
      * @property {boolean} [bottom]
-     * @property {string} [classes]
+     * @property {string} [class]
      * @property {any} [events]
      * @property {any} [register] - register event handlers
      * @property {any} [onUpdate]
      * @property {any} [action]
+     * @property {object} [vars]
      */
 
     /** @type {Props} */
@@ -37,7 +38,7 @@
         left = false,
         top = false,
         bottom = false,
-        classes = "",
+        class: classes = "",
         events = $bindable({}),
         register = notCommon.registerWidgetEvents.bind(notCommon),
         onUpdate = (data) => {
@@ -48,11 +49,14 @@
         action = () => {
             return true;
         },
+        vars = {},
     } = $props();
 
     function getStandartUpdateEventName() {
         return `tag-${id}:update`;
     }
+
+    let style = $state("");
 
     onMount(() => {
         if (!Object.hasOwn(events, getStandartUpdateEventName())) {
@@ -60,6 +64,14 @@
         }
         register(events);
         sided = right || left || top || bottom;
+    });
+
+    $effect(() => {
+        style = Object.keys($state.snapshot(vars))
+            .map((varName) => {
+                return `${varName}: ${vars[varName]};`;
+            })
+            .join("");
     });
 </script>
 
@@ -81,6 +93,7 @@
   {left ? 'is-sided-left' : ''}
   {top ? 'is-sided-top' : ''}
   {bottom ? 'is-sided-bottom' : ''}
-  {classes}">{$LOCALE[title]}</span
+  {classes}"
+        {style}>{$LOCALE[title]}</span
     >
 {/if}

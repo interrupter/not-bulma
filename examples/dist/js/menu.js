@@ -118,6 +118,27 @@ const menu = {
                 url: "./buttons.buttons.switchers.html"
             }]
         }, {
+            id: "elements.icons",
+            section: "elements",
+            title: "Иконки",
+            items: [{
+                id: "elements.icons.icon.button.with.tag",
+                title: "Иконка кнопка с меткой",
+                url: "./icons.icon.button.with.tag.html"
+            }, {
+                id: "elements.icons.icon.floating",
+                title: "Плавающая иконка",
+                url: "./icons.icon.floating.html"
+            }, {
+                id: "elements.icons.icon.font",
+                title: "Иконка шрифта",
+                url: "./icons.icon.font.html"
+            }, {
+                id: "elements.icons.icon",
+                title: "Иконка",
+                url: "./icons.icon.html"
+            }]
+        }, {
             id: "elements.various",
             section: "elements",
             title: "Разное",

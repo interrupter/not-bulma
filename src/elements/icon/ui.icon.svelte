@@ -5,13 +5,13 @@
 
     /**
      * @typedef {Object} Props
-     * @property {string} [title] - some label
-     * @property {string} [size] - font icon
-     * @property {string} [font]
-     * @property {string} [svg] - svg icon
-     * @property {string} [src] - image icon
-     * @property {any} width
-     * @property {any} height
+     * @property {string} [title = ""] - font icon title
+     * @property {string} [size = ""]  - font icon size
+     * @property {string} [font = ""] - font icon name
+     * @property {string} [svg = ""] - svg icon
+     * @property {string} [src = ""] - image icon
+     * @property {number|string} width
+     * @property {number|string} height
      */
 
     /** @type {Props} */
