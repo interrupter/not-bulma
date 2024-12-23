@@ -1,0 +1,20 @@
+section(id="examples" class="section")
+  h1(class="title") Картинка  
+  h2(class="subtitle") Elements.Images.UIImage
+  div( class="box")    
+    div(class="block")
+      pre
+        | string:           [urlFull]             - ссылка на полную версию, если есть
+        | string:           url                   - ссылка на картинку
+        | string:           [title]               - title 
+        | string:           [alt]                 - alt 
+        | string:           [cors='anonymous']    - CORS attribute
+        | number:           [size = 64]           - size one of 32, 63, 128, 256, 512
+        | string:           [height]              - height as CSS size value
+        | string:           [width]               - width as CSS size value
+        | boolean:          [contained=false]     - contained inside
+        | boolean:          [covered=false]       - covering outside
+        | boolean:          [pointable]           - pointer cursor
+        | string:           [class = '']          - additional classes to FIGURE containing IMG
+        | function:         [onclick]             - event callback
+        | function:         [onkeyup]             - event callback

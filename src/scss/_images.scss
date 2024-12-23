@@ -1,7 +1,21 @@
+figure.image {
+    overflow: hidden;
+}
+
 figure.image img.is-covered,
 figure.image.is-covered img {
     object-fit: cover !important;
     width: 100% !important;
     height: 100% !important;
     overflow: hidden;
+}
+
+.image.is-256x256 {
+    height: 256px;
+    width: 256px;
+}
+
+.image.is-512x512 {
+    height: 512px;
+    width: 512px;
 }
