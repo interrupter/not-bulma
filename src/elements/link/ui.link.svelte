@@ -45,7 +45,7 @@
         color = "",
         size = "",
         class: classes = "",
-        icon = false,
+        icon,
         iconSide = "right",
         action,
         onclick,

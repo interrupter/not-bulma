@@ -2,43 +2,47 @@
     import UILink from "./ui.link.svelte";
     /**
      * @typedef {Object} Props
-     * @property {any} [values]
-     * @property {string} [classes]
-     * @property {boolean} [centered]
-     * @property {boolean} [right]
-     * @property {boolean} [joined]
+     * @property {array}  [values=[]]
+     * @property {string} [classes='']
+     * @property {boolean} [centered=false]
+     * @property {boolean} [right=false]
+     * @property {boolean} [joined = false]
+     * @property {object}   [itemsProps = {}]
      */
 
     /** @type {Props} */
     let {
         values = [],
-        classes = "",
+        class: classes = "",
         centered = false,
         right = false,
-        joined = true
+        joined = true,
+        itemsProps = {},
     } = $props();
 </script>
 
+{#snippet listLinks()}
+    {#each values as item (item.id)}
+        <UILink {...item} {...itemsProps} />
+    {/each}
+{/snippet}
+
 {#if joined}
     <div
-        class="field has-addons {centered ? 'is-centered' : ''} {right
-            ? 'is-right'
-            : ''} {classes}"
+        class="field has-addons {classes}"
+        class:is-centered={centered}
+        class:is-right={right}
     >
         <p class="control">
-            {#each values as item (item.id)}
-                <UILink {...item} />
-            {/each}
+            {@render listLinks()}
         </p>
     </div>
 {:else}
     <div
-        class="buttons {centered ? 'is-centered' : ''} {right
-            ? 'is-right'
-            : ''} {classes}"
+        class="buttons {classes}"
+        class:is-centered={centered}
+        class:is-right={right}
     >
-        {#each values as item (item.id)}
-            <UILink {...item} />
-        {/each}
+        {@render listLinks()}
     </div>
 {/if}
