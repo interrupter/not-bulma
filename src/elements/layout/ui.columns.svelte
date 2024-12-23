@@ -1,17 +1,37 @@
 <script>
-    import { createBubbler } from 'svelte/legacy';
-
-    const bubble = createBubbler();
     /**
      * @typedef {Object} Props
-     * @property {string} [classes]
+     * @property {string} [id]
+     * @property {string} [class]
+     * @property {string} [title]
+     * @property {string}   [role="button"]
+     * @property {number}   [tabIndex=0]
+     * @property {function} [onclick]
+     * @property {function} [onkeyup]
      * @property {import('svelte').Snippet} [children]
      */
 
     /** @type {Props} */
-    let { classes = "", children } = $props();
+    let {
+        id = "",
+        title = "",
+        class: classes = "",
+        role = "button",
+        tabIndex = "0",
+        onclick,
+        onkeyup,
+        children,
+    } = $props();
 </script>
 
-<div class="columns {classes}" onclick={bubble('click')} onkeyup={bubble('keyup')} role="button" tabindex="0">
+<div
+    {id}
+    {title}
+    class="columns {classes}"
+    {onclick}
+    {onkeyup}
+    {role}
+    {tabIndex}
+>
     {@render children?.()}
 </div>

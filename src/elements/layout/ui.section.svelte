@@ -1,13 +1,11 @@
 <script>
-    import { createBubbler } from 'svelte/legacy';
-
-    const bubble = createBubbler();
     /**
      * @typedef {Object} Props
-     * @property {string} [id]
+     * @property {string} [id = '']
      * @property {any} size
-     * @property {string} [classes]
-     * @property {number} [tabindex]
+     * @property {string} [class]
+     * @property {string} [role="button"]
+     * @property {number} [tabIndex = 0]
      * @property {import('svelte').Snippet} [children]
      */
 
@@ -15,19 +13,22 @@
     let {
         id = "",
         size,
-        classes = "",
-        tabindex = 0,
-        children
+        class: classes = "",
+        role = "button",
+        tabIndex = "0",
+        onclick,
+        onkeyup,
+        children,
     } = $props();
 </script>
 
 <section
     {id}
     class="section {size ? 'is-' + size : ''}  {classes}"
-    onclick={bubble('click')}
-    onkeyup={bubble('keyup')}
-    role="button"
-    {tabindex}
+    {onclick}
+    {onkeyup}
+    {role}
+    {tabIndex}
 >
     {@render children?.()}
 </section>
