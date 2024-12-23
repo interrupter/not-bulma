@@ -1,6 +1,4 @@
 <script>
-    import { run } from "svelte/legacy";
-
     import { LOCALE } from "../../locale";
 
     /**
@@ -42,62 +40,46 @@
         inverted = false,
         rounded = false,
         button = true,
-        state = "",
+        state: activeState = "",
         type = "",
         color = "",
         size = "",
-        class: classes = $bindable(""),
+        class: classes = "",
         icon = false,
         iconSide = "right",
-        action = () => {
-            return true;
-        },
+        action,
+        onclick,
         children,
     } = $props();
-
-    run(() => {
-        classes =
-            (button ? "button " : "") +
-            (state && state.length > 0 ? ` is-${state} ` : "") +
-            (light ? ` is-light ` : "") +
-            (type && type.length > 0 ? ` is-${type} ` : "") +
-            (size && size.length > 0 ? ` is-${size} ` : "");
-    });
 </script>
 
+{#snippet sideIcon()}
+    <span class="icon"
+        ><i class="fas fa-{icon} {size ? `is-${size}` : ''}"></i></span
+    >
+{/snippet}
+
 <a
-    onclick={action}
-    {target}
+    onclick={action || onclick}
     href={url}
+    {target}
     {download}
     {rel}
-    class="{classes} {state ? `is-${state}` : ''} {inverted
-        ? `is-inverted`
-        : ''} {outlined ? `is-outlined` : ''} {raised
-        ? `is-raised`
-        : ''} {rounded ? `is-rounded` : ''} {light ? `is-light` : ''} {loading
-        ? `is-loading`
-        : ''} {color ? `is-${color}` : ''} {type ? `is-${type}` : ''} {size
-        ? `is-${size}`
-        : ''}"
+    class="{classes} {activeState ? `is-${activeState}` : ''} {color
+        ? `is-${color}`
+        : ''} {type ? `is-${type}` : ''} {size ? `is-${size}` : ''}"
+    class:button
+    class:is-light={light}
+    class:is-inverted={inverted}
+    class:is-outlined={outlined}
+    class:is-raised={raised}
+    class:is-rounded={rounded}
+    class:is-loading={loading}
 >
     {#if icon}
-        {#if iconSide === "left"}
-            <span class="icon"
-                ><i class="fas fa-{icon} {size ? `is-${size}` : ''}"></i></span
-            >
-        {/if}
-        {#if title}
-            <span>{$LOCALE[title]}</span>
-        {/if}
+        {#if iconSide === "left"}{@render sideIcon()}{/if}
+        {#if title}<span>{$LOCALE[title]}</span>{/if}
         {@render children?.()}
-        {#if iconSide === "right"}
-            <span class="icon"
-                ><i class="fas fa-{icon} {size ? `is-${size}` : ''}"></i></span
-            >
-        {/if}
-    {:else}
-        {$LOCALE[title]}
-        {@render children?.()}
-    {/if}
+        {#if iconSide === "right"}{@render sideIcon()}{/if}
+    {:else}{$LOCALE[title]}{@render children?.()}{/if}
 </a>
