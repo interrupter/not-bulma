@@ -79,13 +79,18 @@ function initExamplesSetHTML(id, val, constructorPath) {
         let example = document.createElement("div");
         example.classList.add("column");
         example.id = `example-${id}-${i}`;
+        if (val.wrapper) {
+            example.innerHTML = val.wrapper;
+        }
         elements.appendChild(example);
         if (typeof props === "function") {
             props(example);
         } else {
             const Constructor = getConstructor(constructorPath);
             mount(Constructor, {
-                target: example,
+                target: val.wrapperTargetSelector
+                    ? example.querySelector(val.wrapperTargetSelector)
+                    : example,
                 props,
             });
         }

@@ -1,3 +1,4 @@
+/* global  structuredClone */
 export function createExamplesSetForPropertyNameValues(
     obj,
     propertyName,
@@ -32,4 +33,17 @@ export function addIndexField(list, fieldName = "id", startFrom = 0) {
         itm[fieldName] = startFrom + index;
         return itm;
     });
+}
+
+function createChildrenSnippetTextNode(text) {
+    return (target) => {
+        target.before(document.createTextNode(text));
+        return target;
+    };
+}
+
+export function createInnerTextNodeSnippet(text) {
+    return {
+        children: createChildrenSnippetTextNode(text),
+    };
 }

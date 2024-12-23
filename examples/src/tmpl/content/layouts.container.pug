@@ -1,0 +1,18 @@
+section(id="examples" class="section")
+  h1(class="title") Контейнер
+  h2(class="title") Elements.Layouts.UIContainer
+  div( class="box")
+    div(class="block")
+      pre
+        | string:           id                    - unique identificator
+        | string            class = ""            - стили
+        | string            title = ""            - название
+        | string            role = "button"       - роль элемента
+        | number            tabIndex = 0          - таб индекс
+        | boolean:          widescreen = false    - добавляет is-widescreen в class
+        | boolean:          fullhd = false        - добавляет is-fullhd в class
+        | boolean:          maxDesktop = false    - добавляет is-maxDesktop в class
+        | boolean:          maxWidescreen = false - добавляет is-maxWidescreen в class
+        | boolean:          fluid = false         - добавляет is-fluid в class
+        | function          onclick               - обработчик клика
+        | funciton          onkeyup               - обработчик подъема клавиши

@@ -2,7 +2,6 @@
     /**
      * @typedef {Object} Props
      * @property {string} [id = '']
-     * @property {any} size
      * @property {string} [class]
      * @property {string} [role="button"]
      * @property {number} [tabIndex = 0]
@@ -12,7 +11,6 @@
     /** @type {Props} */
     let {
         id = "",
-        size,
         class: classes = "",
         role = "button",
         tabIndex = "0",
@@ -22,13 +20,6 @@
     } = $props();
 </script>
 
-<section
-    {id}
-    class="section {size ? 'is-' + size : ''}  {classes}"
-    {onclick}
-    {onkeyup}
-    {role}
-    {tabIndex}
->
+<section {id} class="section {classes}" {onclick} {onkeyup} {role} {tabIndex}>
     {@render children?.()}
 </section>

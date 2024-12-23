@@ -3,7 +3,7 @@
      * @typedef {Object} Props
      * @property {string} [id = '']
      * @property {string} [class = '']
-     * @property {string} [title]
+     * @property {string} [title = '']
      * @property {string}   [role="button"]
      * @property {number}   [tabIndex=0]
      * @property {boolean} [widescreen=false]
@@ -28,9 +28,9 @@
         maxDesktop = false,
         maxWidescreen = false,
         fluid = false,
-        children,
         onclick,
         onkeyup,
+        children,
     } = $props();
 </script>
 

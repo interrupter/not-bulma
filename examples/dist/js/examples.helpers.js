@@ -33,3 +33,16 @@ export function addIndexField(list, fieldName = "id", startFrom = 0) {
         return itm;
     });
 }
+
+function createChildrenSnippetTextNode(text) {
+    return (target) => {
+        target.before(document.createTextNode(text));
+        return target;
+    };
+}
+
+export function createInnerTextNodeSnippet(text) {
+    return {
+        children: createChildrenSnippetTextNode(text),
+    };
+}

@@ -1,12 +1,14 @@
 section(id="examples" class="section")
-  h1(class="title") Контент
-  h2(class="title") Elements.Blocks.UIContent
-  div( class="box")        
+  h1(class="title") Колонка
+  h2(class="title") Elements.Layouts.UIColumn
+  div( class="box")
     div(class="block")
       pre
         | string:           id                    - unique identificator
         | string            class = ""            - стили
+        | string            title = ""            - название
         | string            role = "button"       - роль элемента
         | number            tabIndex = 0          - таб индекс
-        | function          onclick = () => true  - обработчик клика
+        | boolean:          narrow = false        - добавляет is-narrow в class, максимально сжимает по ширине, но так чтобы вмещать содержимое
+        | function          onclick               - обработчик клика
         | funciton          onkeyup               - обработчик подъема клавиши

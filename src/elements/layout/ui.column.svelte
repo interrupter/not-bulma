@@ -4,7 +4,8 @@
      * @property {string} [id]
      * @property {string} [class]
      * @property {string} [title]
-     * @property {boolean} [narrow]
+     * @property {boolean} [narrow=false]
+     * @property {any} size
      * @property {string}   [role="button"]
      * @property {number}   [tabIndex=0]
      * @property {function} [onclick]
@@ -16,6 +17,7 @@
     let {
         id = "",
         class: classes = "",
+        size,
         title = "",
         narrow = false,
         role = "button",
@@ -29,7 +31,7 @@
 <div
     {id}
     {title}
-    class="column {classes}"
+    class="column {classes} {size ? `is-${size}` : ''}"
     class:is-narrow={narrow}
     {onclick}
     {onkeyup}
