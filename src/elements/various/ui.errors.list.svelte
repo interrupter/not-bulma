@@ -2,10 +2,10 @@
     import { LOCALE } from "../../locale";
     /**
      * @typedef {Object} Props
-     * @property {any} [errors]
-     * @property {boolean} [show]
-     * @property {string} [class]
-     * @property {string} [id]
+     * @property {array<string>}  [errors = []]
+     * @property {boolean} [show = false]
+     * @property {string} [class = '']
+     * @property {string} [id = 'errors-list']
      */
 
     /** @type {Props} */
