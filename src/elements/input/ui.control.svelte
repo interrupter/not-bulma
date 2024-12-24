@@ -1,12 +1,12 @@
 <script>
     /**
      * @typedef {Object} Props
-     * @property {string} [classes]
+     * @property {string} [class='']
      * @property {import('svelte').Snippet} [children]
      */
 
     /** @type {Props} */
-    let { class: classes = "", children } = $props();
+    let { id, class: classes = "", children } = $props();
 </script>
 
-<div class="control {classes}">{@render children?.()}</div>
+<div {id} class="control {classes}">{@render children?.()}</div>
