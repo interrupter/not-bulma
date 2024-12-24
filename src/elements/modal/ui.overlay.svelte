@@ -5,8 +5,6 @@
 
     import { onMount, onDestroy } from "svelte";
 
-    const zIndexStep = 1000;
-
     /**
      * @typedef {Object} Props
      * @property {boolean} [closeButton]
@@ -14,7 +12,8 @@
      * @property {boolean} [closeOnClick]
      * @property {string} [closeSize]
      * @property {number} [layer]
-     * @property {string} [classes]
+     * @property {string} [class]
+     * @property {number}   [zIndexStep=1000]
      * @property {import('svelte').Snippet} [children]
      */
 
@@ -25,9 +24,10 @@
         closeOnClick = true,
         closeSize = "normal",
         layer = 1,
-        classes = "",
+        class: classes = "",
         children,
         onreject = () => false,
+        zIndexStep = 1000,
     } = $props();
 
     function overlayClick(e) {
@@ -75,8 +75,8 @@
 
 {#if show}
     <div
-        class="is-overlay not-overlay {classes}"
         transition:fade
+        class="is-overlay not-overlay {classes}"
         onclick={overlayClick}
         onkeyup={overlayClick}
         role="button"

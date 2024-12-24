@@ -1,77 +1,40 @@
 <script>
-  import {onMount} from 'svelte';
-  import {LOCALE} from '../../locale';
-  /**
-   * @typedef {Object} Props
-   * @property {boolean} [show]
-   * @property {string} [message]
-   * @property {string} [agree]
-   */
+    import { onMount } from "svelte";
+    import { UIButton } from "../button";
+    import { LOCALE } from "../../locale";
+    /**
+     * @typedef {Object} Props
+     * @property {boolean} [show]
+     * @property {string} [message]
+     * @property {string} [agree]
+     */
 
-  /** @type {Props} */
-  let { show = $bindable(false), message = 'Для улучшения работы сайта и его взаимодействия с пользователями мы используем файлы cookie. Продолжая работу с сайтом, Вы разрешаете использование cookie-файлов. Вы всегда можете отключить файлы cookie в настройках Вашего браузера.', agree = 'Хорошо' } = $props();
+    /** @type {Props} */
+    let {
+        show = $bindable(false),
+        message = "Для улучшения работы сайта и его взаимодействия с пользователями мы используем файлы cookie. Продолжая работу с сайтом, Вы разрешаете использование cookie-файлов. Вы всегда можете отключить файлы cookie в настройках Вашего браузера.",
+        agree = "Хорошо",
+        cooldown = 31536000000,
+    } = $props();
 
-  onMount(()=>{
-      let cookieDate = localStorage.getItem('cookie_date');
-      if( !cookieDate || (+cookieDate + 31536000000) < Date.now() ){
-          show = true;
-      }
-  });
+    onMount(() => {
+        let cookieDate = localStorage.getItem("cookie_date");
+        if (!cookieDate || +cookieDate + cooldown < Date.now()) {
+            show = true;
+        }
+    });
 
-  function accept(){
-      localStorage.setItem('cookie_date', Date.now());
-      show = false;
-  }
+    function accept() {
+        localStorage.setItem("cookie_date", Date.now());
+        show = false;
+    }
 </script>
 
 {#if show}
-<div id="cookie_notification">
-  <p>{$LOCALE[message]}</p>
-  <button class="button is-success cookie_accept" onclick={accept}>{$LOCALE[agree]}</button>
-</div>
+    <div id="cookie_notification">
+        <p>{$LOCALE[message]}</p>
+        <UIButton onclick={accept} color="success" class="cookie_accept"
+            >{$LOCALE[agree]}</UIButton
+        >
+    </div>
 {/if}
-
-<style>
-  #cookie_notification{
-    display: block;
-    text-align: left;
-    justify-content: space-between;
-    align-items: flex-end;
-    position: fixed;
-    bottom: 15px;
-    left: 50%;
-    width: 900px;
-    max-width: 90%;
-    transform: translateX(-50%);
-    padding: 25px;
-    background-color: white;
-    border-radius: 4px;
-    box-shadow: 2px 3px 10px rgba(0, 0, 0, 0.4);
-  }
-
-  #cookie_notification p{
-    margin: 0;
-    font-size: 0.7rem;
-    text-align: left;
-    color: #3d3d3d;
-  }
-
-  @media (min-width: 576px){
-    #cookie_notification{
-      display: flex;
-    }
-    .cookie_accept{
-      margin: 0 0 0 25px;
-    }
-  }
-
-  @media (max-width: 575px){
-    #cookie_notification{
-      text-align: left;
-    }
-    .cookie_accept{
-      margin: 10px 0 0 0;
-    }
-  }
-
-</style>
