@@ -8,24 +8,19 @@
         valid,
         errors,
         formErrors,
+        class: classes = "",
     } = $props();
 
     let allErrors = $state([]);
     let showErrors = $state(true);
-    let validationClasses = $state("");
 
-    $effect.pre(() => {
-        allErrors = [].concat(
-            errors ? errors : [],
-            formErrors ? formErrors : []
-        );
-        showErrors = !(validated && valid) && inputStarted;
+    $effect(() => {
+        allErrors = [
+            ...(Array.isArray(errors) ? errors : []),
+            ...(Array.isArray(formErrors) ? formErrors : []),
+        ];
+        showErrors = inputStarted && validated && !valid;
     });
 </script>
 
-<ErrorsList
-    show={showErrors}
-    errors={allErrors}
-    classes={validationClasses}
-    {id}
-/>
+<ErrorsList show={showErrors} errors={allErrors} class={classes} {id} />

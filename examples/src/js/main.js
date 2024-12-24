@@ -5,6 +5,8 @@ const { mount } = notBulma.svelte;
 
 import menu from "./menu.js";
 
+window.EXAMPLES_COMPONENTS_INSTANCES = {};
+
 function initMenu() {
     COMPONENTS.add(notBulma.Elements.Various.UIProgress);
     notSideMenu.setOptions({
@@ -75,6 +77,7 @@ function initExamplesSetHTML(id, val, constructorPath) {
         pre.innerHTML = JSON.stringify(propsStringified, null, 4);
     }
     cols.appendChild(pre);
+    const instances = [];
     val.props.forEach((props, i) => {
         let example = document.createElement("div");
         example.classList.add("column");
@@ -87,14 +90,20 @@ function initExamplesSetHTML(id, val, constructorPath) {
             props(example);
         } else {
             const Constructor = getConstructor(constructorPath);
-            mount(Constructor, {
-                target: val.wrapperTargetSelector
-                    ? example.querySelector(val.wrapperTargetSelector)
-                    : example,
-                props,
-            });
+            instances.push(
+                mount(Constructor, {
+                    target: val.wrapperTargetSelector
+                        ? example.querySelector(val.wrapperTargetSelector)
+                        : example,
+                    props,
+                })
+            );
         }
     });
+    if (!Array.isArray(window.EXAMPLES_COMPONENTS_INSTANCES[constructorPath])) {
+        window.EXAMPLES_COMPONENTS_INSTANCES[constructorPath] = [];
+    }
+    window.EXAMPLES_COMPONENTS_INSTANCES[constructorPath].push(instances);
 }
 
 function initExamples() {

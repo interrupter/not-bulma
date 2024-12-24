@@ -1,0 +1,14 @@
+section(id="examples" class="section")
+  h1(class="title") Список ошибок для поля формы
+  h2(class="subtitle") Elements.Forms.UIFormInputErrors
+  div( class="box")    
+    div(class="block")
+      pre        
+        | string:     [id = "generic-field"]         - идентификатор        
+        | string:     [class]                        - стили
+        | boolean:    [inputStarted]                 - пользователь начал ввод данных
+        | boolean:    [validated]                    - проверено
+        | boolean:    [valid]                        - валидно
+        | array of strings:   [errors]               - список собственных ошибок поля ввода
+        | array of strings:   [formErrors]           - список ошибок формы связанных с полем
+        
