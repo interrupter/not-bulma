@@ -30,5 +30,5 @@ const IconExamples = [{
 
 window.EXAMPLES.UIValidatedIcon = {
     constructor: "Elements.Forms.UIValidatedIcon",
-    list: IconExamples
+    list: Examples
 };

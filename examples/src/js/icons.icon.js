@@ -59,5 +59,5 @@ const IconExamples = [
 
 window.EXAMPLES.UIIcon = {
     constructor: "Elements.Icons.UIIcon",
-    list: IconExamples,
+    list: Examples,
 };

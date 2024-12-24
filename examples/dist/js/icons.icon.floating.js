@@ -23,5 +23,5 @@ const IconExamples = [{
 
 window.EXAMPLES.UIIconFloating = {
     constructor: "Elements.Icons.UIIconFloating",
-    list: IconExamples
+    list: Examples
 };

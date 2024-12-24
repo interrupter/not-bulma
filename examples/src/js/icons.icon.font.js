@@ -48,5 +48,5 @@ const IconExamples = [
 
 window.EXAMPLES.UIIconFont = {
     constructor: "Elements.Icons.UIIconFont",
-    list: IconExamples,
+    list: Examples,
 };

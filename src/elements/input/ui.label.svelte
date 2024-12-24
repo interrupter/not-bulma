@@ -4,9 +4,8 @@
     /**
      * @typedef {Object} Props
      * @property {string} for
-     * @property {string} [label]
-     * @property {string} class
-     * @property {boolean}  [disabled = false]
+     * @property {string} [label='label']
+     * @property {string} [class = 'label']
      */
 
     /** @type {Props} */
@@ -14,15 +13,12 @@
         for: forId,
         label = "label",
         class: labelClass = "label",
-        disabled = false,
         children,
     } = $props();
 </script>
 
-<label {disabled} class={labelClass} for={forId}>
+<label class={labelClass} for={forId}>
     {#if children}
         {@render children()}
-    {:else}
-        {$LOCALE[label]}
-    {/if}
+    {:else}{label ? $LOCALE[label] : ""}{/if}
 </label>

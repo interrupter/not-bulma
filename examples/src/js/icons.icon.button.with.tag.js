@@ -122,5 +122,5 @@ const IconExamples = [
 
 window.EXAMPLES.UIIconButtonWithTag = {
     constructor: "Elements.Icons.UIIconButtonWithTag",
-    list: IconExamples,
+    list: Examples,
 };

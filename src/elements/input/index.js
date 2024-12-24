@@ -5,6 +5,7 @@ import UIDatetimeInTZ from "./ui.datetime.in.tz.svelte";
 import UIEmail from "./ui.email.svelte";
 import UIHidden from "./ui.hidden.svelte";
 import UIJSONArea from "./ui.json.area.svelte";
+import UILabel from "./ui.label.svelte";
 import UIListOfModels from "./ui.list.of.models.svelte";
 import UINamedNumbersList from "./ui.named.numbers.list.svelte";
 import UINumber from "./ui.number.svelte";
@@ -12,8 +13,8 @@ import UIPassword from "./ui.password.svelte";
 import UIRadioButtons from "./ui.radio.buttons.svelte";
 import UIRange from "./ui.range.svelte";
 import UISelect from "./ui.select.svelte";
-import UISelectOption from "./ui.select.option.svelte";
 import UISelectFromModel from "./ui.select.from.model.svelte";
+import UISelectOption from "./ui.select.option.svelte";
 import UISwitch from "./ui.switch.svelte";
 import UISwitchList from "./ui.switch.list.svelte";
 import UITagSelect from "./ui.tag.select.svelte";
@@ -29,6 +30,7 @@ export {
     UIEmail,
     UIHidden,
     UIJSONArea,
+    UILabel,
     UIListOfModels,
     UINamedNumbersList,
     UINumber,
@@ -36,8 +38,8 @@ export {
     UIRadioButtons,
     UIRange,
     UISelect,
-    UISelectOption,
     UISelectFromModel,
+    UISelectOption,
     UISwitch,
     UISwitchList,
     UITagSelect,
