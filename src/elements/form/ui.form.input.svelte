@@ -12,7 +12,7 @@
      * @property {string} fieldtype
      * @property {string} fieldname
      * @property {string} [fieldnamePrefix = "form-field-"]
-     * @property {boolean} [icon = false]
+     * @property {string} [icon]
      * @property {boolean} [valid = true]
      * @property {boolean} [validated = false]
      */
@@ -20,7 +20,6 @@
     /** @type {Props} */
     let {
         value = $bindable(""),
-        disabled,
         readonly,
         UIInput,
         label,
@@ -29,6 +28,7 @@
         fieldnamePrefix = "form-field-",
         icon = false,
         valid = true,
+        vertical = true,
         validated = false,
         ...others
     } = $props();
@@ -55,9 +55,21 @@
 {/snippet}
 
 {#if label}
-    <UILabel class={fieldtype} for="{fieldnamePrefix}{fieldtype}-{fieldname}">
-        {label}: {@render input()}
-    </UILabel>
+    {#if vertical}
+        <UILabel
+            class={fieldtype}
+            for="{fieldnamePrefix}{fieldtype}-{fieldname}"
+            {label}
+        />
+        {@render input()}
+    {:else}
+        <UILabel
+            class={fieldtype}
+            for="{fieldnamePrefix}{fieldtype}-{fieldname}"
+        >
+            {label}: {@render input()}
+        </UILabel>
+    {/if}
 {:else}
     {@render input()}
 {/if}
