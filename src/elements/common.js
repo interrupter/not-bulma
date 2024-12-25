@@ -63,6 +63,9 @@ class UICommon {
      * @memberof UICommon
      */
     static onInput(field, onchange, defaultValue = undefined) {
+        if (typeof onchange !== "function") {
+            return undefined;
+        }
         return (event) => {
             const value = UICommon.extractValueFromInput(
                 event.currentTarget,

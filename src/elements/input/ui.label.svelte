@@ -5,19 +5,19 @@
      * @typedef {Object} Props
      * @property {string} for
      * @property {string} [label='label']
-     * @property {string} [class = 'label']
+     * @property {string} [class = '']
      */
 
     /** @type {Props} */
     let {
         for: forId,
         label = "label",
-        class: labelClass = "label",
+        class: labelClass = "",
         children,
     } = $props();
 </script>
 
-<label class={labelClass} for={forId}>
+<label class="label {labelClass}" for={forId}>
     {#if children}
         {@render children()}
     {:else}{label ? $LOCALE[label] : ""}{/if}

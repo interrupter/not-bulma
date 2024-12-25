@@ -1,3 +1,5 @@
+@use "../../node_modules/bulma/sass/utilities/initial-variables.scss" as iv;
+
 .form-container {
     position: relative;
 }
@@ -9,4 +11,14 @@
 .switch-list-item {
     display: inline-block;
     margin-right: 4rem;
+}
+
+input:invalid {
+    border-color: iv.$red;
+    background-color: hsl(347, 90%, 96%);
+}
+
+input:focus:invalid {
+    border-color: iv.$red;
+    box-shadow: var(--bulma-input-focus-shadow-size) iv.$red;
 }

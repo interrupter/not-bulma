@@ -6,17 +6,15 @@
     /**
      * @typedef {Object} Props
      * @property {any} [value]
-     * @property {object}
-     * @property {string} [label]
-     * @property {string} [placeholder]
-     * @property {string} fieldname
-     * @property {string} fieldtype
-     * @property {boolean} [icon]
-     * @property {boolean} [required]
      * @property {boolean} [readonly]
-     * @property {boolean} [disabled]
-     * @property {import('../events.types').UIEventInputChangeCallback} [onchange]
-     * @property {boolean} [valid]
+     * @property {object}  UIInput
+     * @property {string} [label]
+     * @property {string} fieldtype
+     * @property {string} fieldname
+     * @property {string} [fieldnamePrefix = "form-field-"]
+     * @property {boolean} [icon = false]
+     * @property {boolean} [valid = true]
+     * @property {boolean} [validated = false]
      */
 
     /** @type {Props} */
@@ -42,7 +40,6 @@
         {fieldtype}
         {fieldname}
         {valid}
-        {disabled}
         {readonly}
         bind:value
         {...others}
@@ -58,12 +55,8 @@
 {/snippet}
 
 {#if label}
-    <UILabel
-        class={fieldtype}
-        {disabled}
-        for="{fieldnamePrefix}{fieldtype}-{fieldname}"
-    >
-        {@render input()}
+    <UILabel class={fieldtype} for="{fieldnamePrefix}{fieldtype}-{fieldname}">
+        {label}: {@render input()}
     </UILabel>
 {:else}
     {@render input()}
