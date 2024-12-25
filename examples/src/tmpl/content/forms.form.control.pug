@@ -1,0 +1,26 @@
+section(id="examples" class="section")
+  h1(class="title") Контрол формы
+  h2(class="subtitle") Elements.Forms.UIFormControl
+  div( class="box")    
+    div(class="block")
+      pre
+        | SvelteComponent     UIInput                       - input constructor
+        | boolean:            [value = ""]                  - value
+        | string:             [label]                       - input control label
+        | boolean:            [labelVertical = true]        - vertical label - input alignment or in one line
+        | string:             [placeholder = '']            - placeholder
+        | string:             fieldname                     - field name to generate input id attribute
+        | string:             [fieldnamePrefix = '']        - field name prefix to generate input id attribute
+        | string:             fieldtype                     - field type to generate input id attribute
+        | string:             [icon = '']                   - name of icon if any needed
+        | boolean:            [required = true]             - value required
+        | boolean:            [readonly = false]            - value readonly
+        | boolean:            [disabled = false]            - input disabled
+        | function:           [onchange = ()=> true]        - callback on value change
+        | function:           [onerror = ()=> true]         - callback on error
+        | boolean:            [inputStarted = false]        - if user started input
+        | boolean:            [valid = true]                - value is valid
+        | boolean:            [validated = false]           - value is validated
+        | array of string:    [errors = []]                 - list of errors of field validators
+        | array of string:    [formErrors = []]             - list of errors of form validators
+        | ...others                                         - any other will be passed to the UIFormInputControl

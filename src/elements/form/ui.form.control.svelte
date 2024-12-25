@@ -1,4 +1,5 @@
 <script>
+    import UILabel from "../input/ui.label.svelte";
     import InputErrors from "./ui.form.input.errors.svelte";
     import UIFormInput from "./ui.form.input.svelte";
     import UIControl from "../input/ui.control.svelte";
@@ -20,7 +21,6 @@
      * @property {boolean} [validated]
      * @property {boolean} [errors]
      * @property {boolean} [formErrors]
-     * @property {boolean} [formLevelError]
      */
 
     /** @type {Props} */
@@ -29,20 +29,21 @@
         UIInput,
         inputStarted = false,
         label,
+        labelVertical = true,
         placeholder = "",
         fieldtype,
         fieldname,
         fieldnamePrefix = "form-field-",
-        icon = false,
+        icon = "",
         required = true,
         readonly = false,
         disabled = false,
         valid = true,
         validated = false,
-        errors = false,
         onchange = () => true,
         onerror = () => true,
-        formErrors = false,
+        formErrors = [],
+        errors = [],
         ...others
     } = $props();
 
@@ -51,25 +52,48 @@
     );
 </script>
 
-<UIControl class={iconClasses}>
-    <UIFormInput
-        bind:value
-        {UIInput}
-        {label}
-        {placeholder}
-        {fieldtype}
-        {fieldname}
-        {fieldnamePrefix}
-        {icon}
-        {required}
-        {readonly}
-        {disabled}
-        {valid}
-        {onchange}
-        {onerror}
-        {...others}
-    />
-</UIControl>
+{#snippet control()}
+    <UIControl class={iconClasses}>
+        <UIFormInput
+            bind:value
+            {UIInput}
+            {placeholder}
+            {fieldtype}
+            {fieldname}
+            {fieldnamePrefix}
+            {icon}
+            {required}
+            {readonly}
+            {disabled}
+            {inputStarted}
+            {validated}
+            {valid}
+            {onchange}
+            {onerror}
+            {...others}
+        />
+    </UIControl>
+{/snippet}
+
+{#if label}
+    {#if labelVertical}
+        <UILabel
+            class={fieldtype}
+            for="{fieldnamePrefix}{fieldtype}-{fieldname}"
+            {label}
+        />
+        {@render control()}
+    {:else}
+        <UILabel
+            class={fieldtype}
+            for="{fieldnamePrefix}{fieldtype}-{fieldname}"
+        >
+            {label}: {@render control()}
+        </UILabel>
+    {/if}
+{:else}
+    {@render control()}
+{/if}
 
 <InputErrors
     {inputStarted}

@@ -20,8 +20,10 @@
 {#if Array.isArray(errors) && errors.length}
     <p class="help {classes}" {id}>
         {#if show}
-            {#each errors as error}
-                <span>{$LOCALE[error]}</span>
+            {#each errors as error, index}
+                <span>{$LOCALE[error]}</span>{index < errors.length - 1
+                    ? ", "
+                    : ""}
             {/each}
         {:else}&nbsp;{/if}
     </p>

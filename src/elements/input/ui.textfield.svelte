@@ -2,6 +2,8 @@
     import { LOCALE } from "../../locale/index";
     import UICommon from "../common.js";
 
+    let inp = $state();
+
     /** @type {import('./type').UIInputProps} */
     let {
         value = $bindable(""),
@@ -15,7 +17,6 @@
         onchange = () => true,
         ...others
     } = $props();
-
     let invalid = $derived(!valid);
     const oninput = UICommon.onInput(fieldname, onchange);
 </script>

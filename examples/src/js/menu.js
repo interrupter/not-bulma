@@ -168,9 +168,9 @@ const menu = {
                         url: "./forms.form.input.html",
                     },
                     {
-                        id: "elements.forms.validated.icon",
+                        id: "elements.forms.form.input.validated.icon",
                         title: "Иконка валидности поля ввода",
-                        url: "./forms.validated.icon.html",
+                        url: "./forms.form.input.validated.icon.html",
                     },
                 ],
             },
