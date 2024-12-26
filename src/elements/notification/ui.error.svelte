@@ -1,15 +1,8 @@
 <script>
-  import {LOCALE} from '../../locale';
+    import UIMessage from "./ui.message.svelte";
+    import UICommon from "../common";
 
-  let { message, title } = $props();
-
+    let { class: classes = UICommon.CLASS_ERR, ...props } = $props();
 </script>
 
-<article class="message is-danger">
-  <div class="message-header">
-    <p>{$LOCALE[title]}</p>
-  </div>
-  <div class="message-body">
-    {$LOCALE[message]}
-  </div>
-</article>
+<UIMessage {...props} class={classes} />

@@ -386,6 +386,10 @@ const menu = {
                 title: "Использовании Cookies",
                 url: "./notifications.cookie.notification.html"
             }, {
+                id: "elements.notifications.message",
+                title: "Сообщение",
+                url: "./notifications.message.html"
+            }, {
                 id: "elements.notifications.error",
                 title: "Ошибка",
                 url: "./notifications.error.html"

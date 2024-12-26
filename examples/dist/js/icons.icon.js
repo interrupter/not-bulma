@@ -2,7 +2,7 @@ if (!window.EXAMPLES) {
     window.EXAMPLES = {};
 }
 
-const IconExamples = [{
+const Examples = [{
     title: "Font Icon",
     props: [{
         title: "",

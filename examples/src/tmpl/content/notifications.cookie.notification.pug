@@ -1,0 +1,12 @@
+section(id="examples" class="section")
+  h1(class="title") Сообщения
+  h2(class="subtitle") Elements.Notifications.UICookieNotification
+  div( class="box")    
+    div(class="block")
+      pre
+        | string:   [id = 'cookie_notification']             - identificator of notification element
+        | boolean:  [show = false]                           - show notification
+        | string:   [message = some default text]            - informational message text
+        | string:   [agree = some default text]              - button caption
+        | number:   [cooldown = 31536000000]                 - ms to request again
+        | string:   [lsKey = "cookie_date"]                  - local storage key where cooldown mark stored

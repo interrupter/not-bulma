@@ -1,0 +1,12 @@
+section(id="examples" class="section")
+  h1(class="title") Сообщения
+  h2(class="subtitle") Elements.Notifications.UIMessage
+  div( class="box")    
+    div(class="block")
+      pre
+        | string: title                         - message text if titleSnip provided will be passed to it
+        | snippet function: titleSnip           - snippet to render custom title
+        | string: message                       - message text if messageSnip provided will be passed to it
+        | snippet function: messageSnip         - snippet to render custom message
+        | string: class = ""                    - styling classes
+        | string: color                         - bulma colors aka success, danger, info and so on
