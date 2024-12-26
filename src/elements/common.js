@@ -259,6 +259,16 @@ class UICommon {
             return `${hours} ${unit} назад`;
         }
     }
+
+    static stylesObjectToString(styles = {}) {
+        if (typeof styles === "object") {
+            Object.keys(styles)
+                .map((prop) => `${prop}: ${styles.prop};`)
+                .join("");
+        } else {
+            return "";
+        }
+    }
 }
 
 export default UICommon;

@@ -1,33 +1,44 @@
 <script>
+    import { fade } from "svelte/transition";
+    import { onMount, onDestroy } from "svelte";
+
+    import { UIButtonClose } from "../button";
+
     let overflowSave = $state("");
 
-    import { fade } from "svelte/transition";
-
-    import { onMount, onDestroy } from "svelte";
+    const defaultCloseButtonProps = {
+        class: "is-absolute is-sided-right is-sided-top",
+        style: "--siding-right-size: 2rem; --siding-top-size: 2rem",
+        size: "normal",
+    };
 
     /**
      * @typedef {Object} Props
-     * @property {boolean} [closeButton]
-     * @property {boolean} [show]
-     * @property {boolean} [closeOnClick]
-     * @property {string} [closeSize]
-     * @property {number} [layer]
-     * @property {string} [class]
-     * @property {number}   [zIndexStep=1000]
+     * @property {boolean}  [closeButton = false]
+     * @property {object}   [closeButtonProps = defaultCloseButtonProps]
+     * @property {boolean}  [show = true]
+     * @property {boolean}  [closeOnClick = true]
+     * @property {number}   [layer = 1]
+     * @property {string}   [class = ""]
+     * @property {number}   [zIndexStep = 1000]
+     * @property {string}   [role = 'button']
+     * @property {string}   [tabIndex = 'button']
      * @property {import('svelte').Snippet} [children]
      */
 
     /** @type {Props} */
     let {
         closeButton = false,
+        closeButtonProps = defaultCloseButtonProps,
         show = true,
         closeOnClick = true,
-        closeSize = "normal",
         layer = 1,
         class: classes = "",
         children,
         onreject = () => false,
         zIndexStep = 1000,
+        role = "button",
+        tabIndex = "0",
     } = $props();
 
     function overlayClick(e) {
@@ -56,6 +67,7 @@
     }
 
     function rejectOverlay(data = {}) {
+        show = false;
         onreject(data);
     }
 
@@ -79,16 +91,12 @@
         class="is-overlay not-overlay {classes}"
         onclick={overlayClick}
         onkeyup={overlayClick}
-        role="button"
-        tabindex="0"
+        {role}
+        {tabIndex}
         style="z-index: {zIndexStep * layer};"
     >
         {#if closeButton}
-            <button
-                aria-label="delete button"
-                onclick={closeButtonClick}
-                class="delete is-{closeSize}"
-            ></button>
+            <UIButtonClose {...closeButtonProps} onclick={closeButtonClick} />
         {/if}
         {@render children?.()}
     </div>

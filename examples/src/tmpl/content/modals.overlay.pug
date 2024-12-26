@@ -1,0 +1,15 @@
+section(id="examples" class="section")
+  h1(class="title") Шторка
+  h2(class="subtitle") Elements.Modals.UIOverlay
+  div( class="box")    
+    div(class="block")
+      pre
+        | boolean:    [closeButton = false]                           - show close button 
+        | object:     [closeButtonProps = defaultCloseButtonProps]    - show button (UIButtonClose) props
+        | boolean:    [show = true]                                   - show overlay
+        | boolean:    [closeOnClick = true]                           - close on click on any part of overlay
+        | number:     [layer = 1]                                     - level of overlay
+        | string:     [class = ""]                                    - additional classes
+        | number:     [zIndexStep = 1000]                             - z-index step between levels of overlay
+        | string:     [role = 'button']                               - aria role
+        | string:     [tabIndex = '0']                                - tab index

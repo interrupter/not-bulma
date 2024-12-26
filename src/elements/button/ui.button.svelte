@@ -15,6 +15,7 @@
      * @property {string} [type]
      * @property {string} [color]
      * @property {string} [size]
+     * @property {string} [style]
      * @property {string} [class]
      * @property {boolean} [icon]
      * @property {string} [iconSide]
@@ -38,6 +39,7 @@
         type = "",
         color = "",
         size = "",
+        style = "",
         class: classes = "",
         icon = false,
         iconSide = "right",
@@ -62,6 +64,7 @@
     onclick={onClick}
     {disabled}
     type={type ? type : ""}
+    {style}
     class="
   button
   {classes}

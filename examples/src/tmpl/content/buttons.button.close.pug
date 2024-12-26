@@ -1,0 +1,11 @@
+section(id="examples" class="section")
+  h1(class="title") Elements.Buttons.UIButtonClose
+  div( class="box")    
+    div(class="block")
+      pre
+        | string:           ariaLabel = 'delete button'            - подсказка A11y        
+        | string:           [size = '']            - класс размер
+        | string:           [style = '']           - дополнительные стили, строкой
+        | string:           [class = '']           - дополнительные классы, строкой
+        | function:         onclick = ({ event, value })=>{ return true; } - что делать по нажатию, svelte 5 bubbling
+        | any:              value                 - привязанное значение, в onclick и action передаётся именно оно

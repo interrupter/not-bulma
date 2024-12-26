@@ -34,6 +34,30 @@ function getConstructor(path) {
     return notBulma.Frame.notPath.get(path, notBulma);
 }
 
+function renderTrigger(target, title, callback) {
+    const btn = document.createElement("BUTTON");
+    btn.onclick = callback;
+    btn.innerText = title;
+    btn.classList.add("button");
+    target.appendChild(btn);
+}
+
+function buildExample(example, props, instances, constructorPath, val) {
+    if (typeof props === "function") {
+        props(example);
+    } else {
+        const Constructor = getConstructor(constructorPath);
+        instances.push(
+            mount(Constructor, {
+                target: val.wrapperTargetSelector
+                    ? example.querySelector(val.wrapperTargetSelector)
+                    : example,
+                props,
+            })
+        );
+    }
+}
+
 function initExamplesSetHTML(id, val, constructorPath) {
     let cont = document.querySelector("#examples");
     let box = document.createElement("div");
@@ -86,18 +110,18 @@ function initExamplesSetHTML(id, val, constructorPath) {
             example.innerHTML = val.wrapper;
         }
         elements.appendChild(example);
-        if (typeof props === "function") {
-            props(example);
+        if (Object.hasOwn(props, "$trigger") && props.$trigger) {
+            renderTrigger(example, props.$trigger, () => {
+                buildExample(
+                    example,
+                    props?.props ?? {},
+                    instances,
+                    constructorPath,
+                    val
+                );
+            });
         } else {
-            const Constructor = getConstructor(constructorPath);
-            instances.push(
-                mount(Constructor, {
-                    target: val.wrapperTargetSelector
-                        ? example.querySelector(val.wrapperTargetSelector)
-                        : example,
-                    props,
-                })
-            );
+            buildExample(example, props, instances, constructorPath, val);
         }
     });
     if (!Array.isArray(window.EXAMPLES_COMPONENTS_INSTANCES[constructorPath])) {

@@ -125,6 +125,11 @@ const menu = {
                         url: "./buttons.button.html",
                     },
                     {
+                        id: "elements.buttons.button.close",
+                        title: "Кнопка закрыть",
+                        url: "./buttons.button.close.html",
+                    },
+                    {
                         id: "elements.buttons.button.switch",
                         title: "Кнопка переключатель",
                         url: "./buttons.button.switch.html",

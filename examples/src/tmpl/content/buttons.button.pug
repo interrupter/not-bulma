@@ -1,14 +1,6 @@
 section(id="examples" class="section")
-  h1(class="title") Кнопки
-  h2( class="subtitle") субтитра
+  h1(class="title") Elements.Buttons.UIButton
   div( class="box")
-    h3( class="title") Constructor
-    h4(class="subtitle") как создать
-    div(class="block")
-      pre
-        | mount(notBulma.Elements.Buttons.UIButton,{target: HTMLElement, props: Object});
-    h3( class="title") Props
-    h4(class="subtitle") что можно задавать
     div(class="block")
       pre
         | string:           title = ''            - надпись
@@ -23,6 +15,7 @@ section(id="examples" class="section")
         | string:           type = '';            - атрибут submit/reset
         | string:           color = '';           - класс цветовая схема
         | string:           size = '';            - класс размер
+        | string:           style = '';           - дополнительные стили, строкой
         | string:           class = '';           - дополнительные классы, строкой
         | string|boolean:   icon = false;         - название иконки FA
         | string:           iconSide = 'right';   - положение иконки left/right

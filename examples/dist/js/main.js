@@ -11,7 +11,7 @@ function initMenu() {
     COMPONENTS.add(notBulma.Elements.Various.UIProgress);
     notSideMenu.setOptions({
         items: menu.side.items ? menu.side.items : [],
-        sections: menu.side.sections ? menu.side.sections : []
+        sections: menu.side.sections ? menu.side.sections : [],
     });
     notSideMenu.render();
     notTopMenu.setOptions({
@@ -21,17 +21,41 @@ function initMenu() {
             icon: {
                 src: "/img/icon/logo/icon-32.png",
                 width: 32,
-                height: 32
-            }
+                height: 32,
+            },
         },
         items: menu.top.items ? menu.top.items : [],
-        sections: menu.top.sections ? menu.top.sections : []
+        sections: menu.top.sections ? menu.top.sections : [],
     });
     notTopMenu.render();
 }
 
 function getConstructor(path) {
     return notBulma.Frame.notPath.get(path, notBulma);
+}
+
+function renderTrigger(target, title, callback) {
+    const btn = document.createElement("BUTTON");
+    btn.onclick = callback;
+    btn.innerText = title;
+    btn.classList.add("button");
+    target.appendChild(btn);
+}
+
+function buildExample(example, props, instances, constructorPath, val) {
+    if (typeof props === "function") {
+        props(example);
+    } else {
+        const Constructor = getConstructor(constructorPath);
+        instances.push(
+            mount(Constructor, {
+                target: val.wrapperTargetSelector
+                    ? example.querySelector(val.wrapperTargetSelector)
+                    : example,
+                props,
+            })
+        );
+    }
 }
 
 function initExamplesSetHTML(id, val, constructorPath) {
@@ -48,7 +72,8 @@ function initExamplesSetHTML(id, val, constructorPath) {
     box.appendChild(title);
     let description = document.createElement("div");
     description.classList.add("content");
-    description.innerHTML = typeof val.description !== "undefined" ? val.description : "";
+    description.innerHTML =
+        typeof val.description !== "undefined" ? val.description : "";
     box.appendChild(description);
     let cols = document.createElement("div");
     cols.classList.add("columns");
@@ -59,13 +84,14 @@ function initExamplesSetHTML(id, val, constructorPath) {
     let pre = document.createElement("pre");
     pre.classList.add("column");
     if (val.functions) {
-        pre.innerHTML = val.props.map(f => f.toString()).join("<br/>");
+        pre.innerHTML = val.props.map((f) => f.toString()).join("<br/>");
     } else {
-        const propsStringified = val.props.map(currentProps => {
+        const propsStringified = val.props.map((currentProps) => {
             const currentPropsStringified = {};
-            Object.keys(currentProps).forEach(propName => {
+            Object.keys(currentProps).forEach((propName) => {
                 if (typeof currentProps[propName] === "function") {
-                    currentPropsStringified[propName] = currentProps[propName].toString();
+                    currentPropsStringified[propName] =
+                        currentProps[propName].toString();
                 } else {
                     currentPropsStringified[propName] = currentProps[propName];
                 }
@@ -84,14 +110,18 @@ function initExamplesSetHTML(id, val, constructorPath) {
             example.innerHTML = val.wrapper;
         }
         elements.appendChild(example);
-        if (typeof props === "function") {
-            props(example);
+        if (Object.hasOwn(props, "$trigger") && props.$trigger) {
+            renderTrigger(example, props.$trigger, () => {
+                buildExample(
+                    example,
+                    props?.props ?? {},
+                    instances,
+                    constructorPath,
+                    val
+                );
+            });
         } else {
-            const Constructor = getConstructor(constructorPath);
-            instances.push(mount(Constructor, {
-                target: val.wrapperTargetSelector ? example.querySelector(val.wrapperTargetSelector) : example,
-                props
-            }));
+            buildExample(example, props, instances, constructorPath, val);
         }
     });
     if (!Array.isArray(window.EXAMPLES_COMPONENTS_INSTANCES[constructorPath])) {
@@ -101,10 +131,20 @@ function initExamplesSetHTML(id, val, constructorPath) {
 }
 
 function initExamples() {
-    if (window.EXAMPLES_SELECTED && Object.prototype.hasOwnProperty.call(window.EXAMPLES, window.EXAMPLES_SELECTED)) {
+    if (
+        window.EXAMPLES_SELECTED &&
+        Object.prototype.hasOwnProperty.call(
+            window.EXAMPLES,
+            window.EXAMPLES_SELECTED
+        )
+    ) {
         const examplesSet = window.EXAMPLES[window.EXAMPLES_SELECTED];
         for (let exampleDataID in examplesSet.list) {
-            initExamplesSetHTML(exampleDataID, examplesSet.list[exampleDataID], examplesSet.constructor);
+            initExamplesSetHTML(
+                exampleDataID,
+                examplesSet.list[exampleDataID],
+                examplesSet.constructor
+            );
         }
     }
 }
