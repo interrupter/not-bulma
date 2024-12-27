@@ -1,6 +1,4 @@
 <script>
-    import { LOCALE } from "../../locale";
-
     import UIOverlay from "./ui.overlay.svelte";
 
     import UIBox from "../block/ui.box.svelte";
@@ -8,27 +6,30 @@
 
     import UITitle from "../various/ui.title.svelte";
     import UIButtonsRow from "../button/ui.buttons.row.svelte";
+    import { UILoader } from "../various";
 
     /**
      * @typedef {Object} Props
-     * @property {string} [buttonsPosition]
-     * @property {boolean} [closeButton]
-     * @property {boolean} [applyButton]
-     * @property {number} [titleSize]
-     * @property {boolean} [show]
-     * @property {boolean} [loading]
-     * @property {string} [title]
-     * @property {string} [subtitle]
-     * @property {string} [classes]
-     * @property {string} [overlayClasses]
-     * @property {string} [buttonsClasses]
-     * @property {string} [WAITING_TEXT]
+     * @property {string} [buttonsPosition = "bottom"]           top, topOfContent, bottom
+     * @property {boolean} [fullscreen = false]
+     * @property {boolean} [closeButton = false]
+     * @property {boolean} [applyButton = false]
+     * @property {number} [titleSize = 2]
+     * @property {boolean} [show = false]
+     * @property {boolean} [loading = false]
+     * @property {string} [title= "Modal window"]
+     * @property {string} [subtitle = ""]
+     * @property {string} [class = ""]
+     * @property {string} [overlayClass = ""]
+     * @property {string} [buttonsClass = ""]
+     * @property {string} [WAITING_TEXT = "Обработка"]
      * @property {import('svelte').Snippet} [children]
      */
 
     /** @type {Props} */
     let {
         buttonsPosition = "bottom",
+        fullscreen = false,
         closeButton = false,
         applyButton = false,
         titleSize = 2,
@@ -36,47 +37,39 @@
         loading = false,
         title = "Modal window",
         subtitle = "",
-        classes: classes = "",
-        overlayClasses = "",
-        buttonsClasses = "",
+        class: classes = "",
+        overlayClass: overlayClass = "",
+        buttonsClass: buttonsClass = "",
         WAITING_TEXT = "Обработка",
         children,
     } = $props();
 </script>
 
-<UIOverlay
-    {show}
-    closeOnClick={false}
-    closeButton={false}
-    class={overlayClasses}
->
-    <UIBox class={classes}>
-        <UITitle
-            size={titleSize}
-            title={$LOCALE[title]}
-            subtitle={$LOCALE[subtitle]}
-        />
-        <UIContent>
-            <div class="pageloader" class:is-active={loading}>
-                <span class="title">{$LOCALE[WAITING_TEXT]}</span>
-            </div>
+{#snippet buttons(moreClassess = "")}
+    <UIButtonsRow
+        class={buttonsClass || moreClassess}
+        left={closeButton ? [closeButton] : []}
+        right={applyButton ? [applyButton] : []}
+    />
+{/snippet}
 
-            {#if buttonsPosition === "top"}
-                <UIButtonsRow
-                    class={buttonsClasses}
-                    left={closeButton ? [closeButton] : []}
-                    right={applyButton ? [applyButton] : []}
-                ></UIButtonsRow>
+<UIOverlay {show} closeOnClick={false} closeButton={false} class={overlayClass}>
+    <UIBox class={`${classes} ${fullscreen ? "is-fullscreen" : ""}`}>
+        {#if buttonsPosition === "top"}
+            {@render buttons("")}
+        {/if}
+        <UITitle size={titleSize} {title} {subtitle} />
+        <UIContent>
+            <UILoader size="page" {loading} title={WAITING_TEXT} />
+
+            {#if buttonsPosition === "topOfContent"}
+                {@render buttons("")}
             {/if}
 
             {@render children?.()}
 
             {#if buttonsPosition === "bottom"}
-                <UIButtonsRow
-                    class={buttonsClasses || "is-footer is-mobile"}
-                    left={closeButton ? [closeButton] : []}
-                    right={applyButton ? [applyButton] : []}
-                ></UIButtonsRow>
+                {@render buttons(`is-mobile ${fullscreen ? "is-footer" : ""}`)}
             {/if}
         </UIContent>
     </UIBox>
