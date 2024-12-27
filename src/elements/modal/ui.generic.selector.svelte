@@ -23,9 +23,9 @@
         show = true,
         term = $bindable(""),
         size = "narrow",
-        inputComponent = UISimpleSearchInput,
+        inputComponent: UIInputComponent = UISimpleSearchInput,
         inputComponentProps = {},
-        outputComponent = UIEndlessList,
+        outputComponent: UIOutputComponent = UIEndlessList,
         outputComponentProps = {},
         results = $bindable({ list: [], page: 0, pages: 0, skip: 0, count: 0 }),
         ontermChange,
@@ -48,48 +48,18 @@
     closeOnClick={true}
     closeButton={false}
 >
-    {@const SvelteComponent = inputComponent}
-    {@const SvelteComponent_1 = outputComponent}
     <div class="paper box block {size}">
-        <SvelteComponent {ontermChange} bind:term {...inputComponentProps}
-        ></SvelteComponent>
-        <SvelteComponent_1
+        <UIInputComponent {ontermChange} bind:term {...inputComponentProps} />
+        <UIOutputComponent
             bind:data={results}
             {onprev}
             {onnext}
             {onresolve}
             {...outputComponentProps}
-        ></SvelteComponent_1>
-        <UIButtons values={buttons} centered={true} classes="mt-5" />
+        />
+        <UIButtons values={buttons} centered={true} class="mt-5" />
     </div>
 </UIOverlay>
 
 <style>
-    .paper.box {
-        margin: 10vh auto auto auto;
-    }
-
-    .paper.box.fullscreen {
-        width: 100vw;
-    }
-
-    .paper.box.wide {
-        width: 75vw;
-    }
-
-    .paper.box.normal {
-        width: 50vw;
-    }
-
-    .paper.box.narrow {
-        width: 25vw;
-    }
-
-    @media (max-width: 700px) {
-        .paper.box {
-            width: 100vw;
-            height: 100vh;
-            margin: 0vh auto auto auto;
-        }
-    }
 </style>

@@ -336,6 +336,22 @@ const menu = {
             section: "elements",
             title: "Списки",
             items: [{
+                id: "elements.lists.endless.list",
+                title: "Бесконечный список",
+                items: [{
+                    id: "elements.lists.endless.list.navigation",
+                    title: "Навигация",
+                    url: "./lists.endless.list.navigation.html"
+                }, {
+                    id: "elements.lists.endless.list.simple.item",
+                    title: "Элемент списка",
+                    url: "./lists.endless.list.simple.item.html"
+                }, {
+                    id: "elements.lists.endless.list",
+                    title: "Список",
+                    url: "./lists.endless.list.html"
+                }]
+            }, {
                 id: "elements.lists.list.block",
                 title: "Блок списка",
                 url: "./lists.list.block.html"

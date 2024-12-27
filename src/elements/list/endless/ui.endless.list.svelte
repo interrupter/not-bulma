@@ -6,11 +6,11 @@
     /**
      * @typedef {Object} Props
      * @property {any} [data]
-     * @property {any} [itemComponent] - list element
+     * @property {any} [itemComponent = UIEndlessListSimpleItem] - list element
      * @property {any} [itemComponentProps]
-     * @property {any} [emptyListPlaceholderComponent] - if list is empty
+     * @property {any} [emptyListPlaceholderComponent = UIEndlessListEmptyPlaceholder] - if list is empty
      * @property {any} [emptyListPlaceholderComponentProps]
-     * @property {any} [listNavigationComponent] - prev and next block
+     * @property {any} [listNavigationComponent = UIEndlessListNavigation] - prev and next block
      * @property {any} [listNavigationComponentProps]
      */
 
@@ -23,36 +23,34 @@
             page: 0,
             pages: 0,
         }),
-        itemComponent = UIEndlessListSimpleItem,
+        itemComponent: UIItemComponent = UIEndlessListSimpleItem,
         itemComponentProps = {},
-        emptyListPlaceholderComponent = UIEndlessListEmptyPlaceholder,
+        emptyListPlaceholderComponent:
+            UIEmptyListPlaceholder = UIEndlessListEmptyPlaceholder,
         emptyListPlaceholderComponentProps = {},
-        listNavigationComponent = UIEndlessListNavigation,
+        listNavigationComponent:
+            UINavigationComponent = UIEndlessListNavigation,
         listNavigationComponentProps = {},
         onselect,
         onprev,
         onnext,
     } = $props();
-
-    const SvelteComponent_2 = $derived(listNavigationComponent);
 </script>
 
 <div>
-    {#if data.list.length}
+    {#if data?.list?.length}
         {#each data.list as item (item.id)}
-            {@const SvelteComponent = itemComponent}
-            <SvelteComponent
+            <UIItemComponent
                 onclick={onselect}
                 {...itemComponentProps}
                 {...item}
             />
         {/each}
     {:else}
-        {@const SvelteComponent_1 = emptyListPlaceholderComponent}
-        <SvelteComponent_1 {...emptyListPlaceholderComponentProps} />
+        <UIEmptyListPlaceholder {...emptyListPlaceholderComponentProps} />
     {/if}
 </div>
-<SvelteComponent_2
+<UINavigationComponent
     {...listNavigationComponentProps}
     bind:page={data.page}
     bind:pages={data.pages}

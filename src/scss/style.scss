@@ -6,6 +6,7 @@
 @use "_card.scss";
 @use "_helpers.scss";
 @use "_menu.scss";
+@use "_modals.scss";
 @use "_position.scss";
 @use "_forms.scss";
 @use "_loader.scss";
@@ -19,6 +20,7 @@
 @use "_bulma-list.scss";
 
 @use "_list-select.scss";
+@use "_list-endless.scss";
 
 .navbar-menu.is-active {
     display: flex;

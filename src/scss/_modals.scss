@@ -1,0 +1,27 @@
+.paper.box {
+    margin: 10vh auto auto auto;
+}
+
+.paper.box.fullscreen {
+    width: 100vw;
+}
+
+.paper.box.wide {
+    width: 75vw;
+}
+
+.paper.box.normal {
+    width: 50vw;
+}
+
+.paper.box.narrow {
+    width: 25vw;
+}
+
+@media (max-width: 700px) {
+    .paper.box {
+        width: 100vw;
+        height: 100vh;
+        margin: 0vh auto auto auto;
+    }
+}

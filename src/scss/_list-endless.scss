@@ -1,0 +1,9 @@
+.list-item-selectable {
+    cursor: pointer;
+    padding: 1em;
+}
+
+.list-item-selectable:hover {
+    background-color: #48c78e;
+    color: white;
+}
