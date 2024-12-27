@@ -36,7 +36,7 @@
         loading = false,
         title = "Modal window",
         subtitle = "",
-        classes = "",
+        classes: classes = "",
         overlayClasses = "",
         buttonsClasses = "",
         WAITING_TEXT = "Обработка",
@@ -48,22 +48,22 @@
     {show}
     closeOnClick={false}
     closeButton={false}
-    classes={overlayClasses}
+    class={overlayClasses}
 >
-    <UIBox {classes}>
+    <UIBox class={classes}>
         <UITitle
             size={titleSize}
             title={$LOCALE[title]}
             subtitle={$LOCALE[subtitle]}
         />
         <UIContent>
-            <div class="pageloader {loading ? 'is-active' : ''}">
+            <div class="pageloader" class:is-active={loading}>
                 <span class="title">{$LOCALE[WAITING_TEXT]}</span>
             </div>
 
             {#if buttonsPosition === "top"}
                 <UIButtonsRow
-                    classes={buttonsClasses}
+                    class={buttonsClasses}
                     left={closeButton ? [closeButton] : []}
                     right={applyButton ? [applyButton] : []}
                 ></UIButtonsRow>
@@ -73,7 +73,7 @@
 
             {#if buttonsPosition === "bottom"}
                 <UIButtonsRow
-                    classes={buttonsClasses || "is-footer is-mobile"}
+                    class={buttonsClasses || "is-footer is-mobile"}
                     left={closeButton ? [closeButton] : []}
                     right={applyButton ? [applyButton] : []}
                 ></UIButtonsRow>

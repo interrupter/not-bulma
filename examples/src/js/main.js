@@ -1,7 +1,7 @@
 /* global notBulma */
 
 const { notSideMenu, notTopMenu, COMPONENTS } = notBulma.Frame;
-const { mount } = notBulma.svelte;
+const { mount, unmount } = notBulma.svelte;
 
 import menu from "./menu.js";
 
@@ -44,17 +44,17 @@ function renderTrigger(target, title, callback) {
 
 function buildExample(example, props, instances, constructorPath, val) {
     if (typeof props === "function") {
-        props(example);
+        return props(example);
     } else {
         const Constructor = getConstructor(constructorPath);
-        instances.push(
-            mount(Constructor, {
-                target: val.wrapperTargetSelector
-                    ? example.querySelector(val.wrapperTargetSelector)
-                    : example,
-                props,
-            })
-        );
+        const compInstance = mount(Constructor, {
+            target: val.wrapperTargetSelector
+                ? example.querySelector(val.wrapperTargetSelector)
+                : example,
+            props,
+        });
+        instances.push(compInstance);
+        return compInstance;
     }
 }
 
@@ -111,15 +111,25 @@ function initExamplesSetHTML(id, val, constructorPath) {
         }
         elements.appendChild(example);
         if (Object.hasOwn(props, "$trigger") && props.$trigger) {
-            renderTrigger(example, props.$trigger, () => {
-                buildExample(
-                    example,
-                    props?.props ?? {},
-                    instances,
-                    constructorPath,
-                    val
-                );
-            });
+            renderTrigger(
+                example,
+                props.$trigger?.title ?? props.$trigger,
+                () => {
+                    const compInst = buildExample(
+                        example,
+                        props?.props ?? {},
+                        instances,
+                        constructorPath,
+                        val
+                    );
+                    if (props.$trigger?.ttl) {
+                        setTimeout(
+                            () => unmount(compInst),
+                            props.$trigger?.ttl
+                        );
+                    }
+                }
+            );
         } else {
             buildExample(example, props, instances, constructorPath, val);
         }
