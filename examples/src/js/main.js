@@ -162,6 +162,16 @@ function initExamples() {
 document.addEventListener("DOMContentLoaded", () => {
     console.log(menu);
     console.log(Object.keys(notBulma));
+    fetch("/assets/ru.json")
+        .then((resp) => resp.json())
+        .then((locale) => {
+            let prefixed = {};
+            Object.keys(locale).forEach((phrase) => {
+                prefixed[`not-node:${phrase}`] = locale[phrase];
+            });
+            return prefixed;
+        })
+        .then(notBulma.notLocale.set);
     initMenu();
     if (window.EXAMPLES) {
         console.log(window.EXAMPLES_SELECTED);

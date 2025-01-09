@@ -40,9 +40,9 @@
 </script>
 
 <div
-    class="buttons has-addons {centered ? 'is-centered' : ''} {right
-        ? 'is-right'
-        : ''} {classes}"
+    class="buttons has-addons {classes}"
+    class:is-right={right}
+    class:is-centered={centered}
 >
     {#each _values as item (item.id)}
         <SvelteComponent {action} {onclick} {...item} bind:value={item.value} />
