@@ -2,6 +2,7 @@
     import UIEndlessListSimpleItem from "./ui.endless.list.simple.item.svelte";
     import UIEndlessListEmptyPlaceholder from "../ui.list.empty.placeholder.svelte";
     import UIEndlessListNavigation from "./ui.endless.list.navigation.svelte";
+    import { UIBlock } from "../../block";
 
     /**
      * @typedef {Object} Props
@@ -37,7 +38,7 @@
     } = $props();
 </script>
 
-<div>
+<UIBlock>
     {#if data?.list?.length}
         {#each data.list as item (item.id)}
             <UIItemComponent
@@ -49,7 +50,7 @@
     {:else}
         <UIEmptyListPlaceholder {...emptyListPlaceholderComponentProps} />
     {/if}
-</div>
+</UIBlock>
 <UINavigationComponent
     {...listNavigationComponentProps}
     bind:page={data.page}
