@@ -172,7 +172,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
             return prefixed;
         })
-        .then(notBulma.notLocale.set);
+        .then((dict) => notBulma.notLocale.set(dict));
     if (window.EXAMPLES) {
         console.log(window.EXAMPLES_SELECTED);
         console.log(Object.keys(window.EXAMPLES));

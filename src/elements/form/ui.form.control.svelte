@@ -12,8 +12,10 @@
      * @property {string} [placeholder]
      * @property {string} fieldname
      * @property {string} fieldtype
-     * @property {boolean} [icon]
-     * @property {boolean} [required]
+     * @property {string} [icon]
+     * @property {string} [iconSide]
+     * @property {string} [iconSize]
+     * @property {boolean} [required = false]
      * @property {boolean} [readonly]
      * @property {boolean} [disabled]
      * @property {import('../events.types').UIEventInputChangeCallback} [onchange]
@@ -35,7 +37,9 @@
         fieldname,
         fieldnamePrefix = "form-field-",
         icon = "",
-        required = true,
+        iconSide = "left",
+        iconSize = "small",
+        required = false,
         readonly = false,
         disabled = false,
         valid = true,
@@ -62,6 +66,8 @@
             {fieldname}
             {fieldnamePrefix}
             {icon}
+            {iconSide}
+            {iconSize}
             {required}
             {readonly}
             {disabled}

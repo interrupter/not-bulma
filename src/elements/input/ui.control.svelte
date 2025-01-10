@@ -2,11 +2,26 @@
     /**
      * @typedef {Object} Props
      * @property {string} [class='']
+     * @property {boolean} [hasIconsLeft=false]
+     * @property {boolean} [hasIconsRight=false]
      * @property {import('svelte').Snippet} [children]
      */
 
     /** @type {Props} */
-    let { id, class: classes = "", children } = $props();
+    let {
+        class: classes = "",
+        hasIconsLeft = false,
+        hasIconsRight = false,
+        children,
+        ...others
+    } = $props();
 </script>
 
-<div {id} class="control {classes}">{@render children?.()}</div>
+<p
+    class="control {classes}"
+    class:has-icons-left={hasIconsLeft}
+    class:has-icons-right={hasIconsRight}
+    {...others}
+>
+    {@render children?.()}
+</p>

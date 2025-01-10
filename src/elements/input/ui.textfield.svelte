@@ -2,8 +2,6 @@
     import { LOCALE } from "../../locale/index";
     import UICommon from "../common.js";
 
-    let inp = $state();
-
     /** @type {import('./type').UIInputProps} */
     let {
         value = $bindable(""),
@@ -11,14 +9,22 @@
         fieldname = "textfield",
         required = true,
         disabled = false,
+        size = "normal",
         readonly = false,
         valid = true,
         class: classes = "",
-        onchange = () => true,
         ...others
     } = $props();
+
     let invalid = $derived(!valid);
-    const oninput = UICommon.onInput(fieldname, onchange);
+
+    const optionalProps = {};
+
+    if (typeof others.onchange === "function") {
+        const oninput = UICommon.onInput(fieldname, others.onchange);
+        optionalProps.onchange = oninput;
+        optionalProps.oninput = oninput;
+    }
 </script>
 
 {#if readonly}
@@ -26,7 +32,7 @@
 {:else}
     <input
         id="form-field-textfield-{fieldname}"
-        class="input {classes}"
+        class="input {classes} is-{size}"
         type="text"
         name={fieldname}
         bind:value
@@ -36,10 +42,9 @@
         {readonly}
         placeholder={$LOCALE[placeholder]}
         autocomplete={fieldname}
-        onchange={oninput}
-        {oninput}
         aria-controls="input-field-helper-{fieldname}"
         aria-describedby="input-field-helper-{fieldname}"
+        {...optionalProps}
         {...others}
     />
 {/if}

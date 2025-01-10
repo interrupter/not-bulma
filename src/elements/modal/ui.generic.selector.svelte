@@ -12,10 +12,15 @@
      * @property {string} [term]
      * @property {string} [size]
      * @property {any} [inputComponent]
-     * @property {any} [inputComponentProps]
+     * @property {object} [inputComponentProps]
      * @property {any} [outputComponent]
-     * @property {any} [outputComponentProps]
-     * @property {any} [results]
+     * @property {object} [outputComponentProps]
+     * @property {object} [results]
+     * @property    {function}  onprev
+     * @property    {function}  onnext
+     * @property    {function}  ontermChange
+     * @property    {function}  onreject
+     * @property    {function}  onresolve
      */
 
     /** @type {Props} */
@@ -32,12 +37,13 @@
         onprev,
         onnext,
         onresolve,
+        onreject,
     } = $props();
 
     const buttons = [
         {
             title: $LOCALE["not-node:button_cancel_label"],
-            action: () => onreject(),
+            action: onreject,
         },
     ];
 </script>
@@ -54,7 +60,7 @@
             bind:data={results}
             {onprev}
             {onnext}
-            {onresolve}
+            onselect={onresolve}
             {...outputComponentProps}
         />
         <UIButtons values={buttons} centered={true} class="mt-5" />

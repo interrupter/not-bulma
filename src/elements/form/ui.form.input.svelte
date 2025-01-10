@@ -11,6 +11,8 @@
      * @property {string} fieldname
      * @property {string} [fieldnamePrefix = "form-field-"]
      * @property {string} [icon]
+     * @property {string} [iconSide = 'left']
+     * @property {string} [iconSize= 'small']
      * @property {boolean} [valid = true]
      * @property {boolean} [validated = false]
      */
@@ -34,7 +36,7 @@
 <UIInput {fieldtype} {fieldname} {valid} {readonly} bind:value {...others} />
 <!-- edit UI renderer -->
 {#if icon}
-    <UIIconFont font={icon} side={"left"} size={"small"} />
+    <UIIconFont font={icon} side={iconSide} size={iconSize} />
 {/if}
 {#if !readonly}
     <!-- validated and valid should be created by $state() -->
