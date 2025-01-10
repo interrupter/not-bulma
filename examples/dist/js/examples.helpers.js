@@ -46,3 +46,10 @@ export function createInnerTextNodeSnippet(text) {
         children: createChildrenSnippetTextNode(text),
     };
 }
+export function createList(itemGenerator, count = 10) {
+    let result = [];
+    for (let i = 0; i < count; i++) {
+        result.push(itemGenerator(i));
+    }
+    return result;
+}

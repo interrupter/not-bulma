@@ -17,6 +17,7 @@
 
     /** @type {Props} */
     let {
+        class: classes = "",
         data = $bindable({
             list: [],
             skip: 0,
@@ -38,7 +39,7 @@
     } = $props();
 </script>
 
-<UIBlock>
+<UIBlock class={classes}>
     {#if data?.list?.length}
         {#each data.list as item (item.id)}
             <UIItemComponent

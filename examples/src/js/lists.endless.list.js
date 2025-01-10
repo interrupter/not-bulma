@@ -2,13 +2,7 @@ if (!window.EXAMPLES) {
     window.EXAMPLES = {};
 }
 
-function createList(itemGenerator, count = 10) {
-    let result = [];
-    for (let i = 0; i < count; i++) {
-        result.push(itemGenerator(i));
-    }
-    return result;
-}
+import { createList } from "./examples.helpers";
 
 const Examples = [
     {

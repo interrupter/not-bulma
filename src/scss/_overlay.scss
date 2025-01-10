@@ -42,3 +42,25 @@ html:has(body.remove-scroll) {
 .remove-scroll ::-webkit-scrollbar {
     display: none; /* for Chrome, Safari, and Opera */
 }
+
+.overflow-hidden {
+    overflow: hidden;
+}
+
+.overflow-scroll {
+    overflow: scroll;
+}
+
+.has-height-up-to-60 {
+    max-height: 60vh;
+}
+
+.has-height-up-to-80 {
+    max-height: 80vh;
+}
+.has-height-up-to-50 {
+    max-height: 50vh;
+}
+.has-height-up-to-40 {
+    max-height: 40vh;
+}
