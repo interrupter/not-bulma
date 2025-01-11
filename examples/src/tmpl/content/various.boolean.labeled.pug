@@ -1,17 +1,7 @@
 section(id="examples" class="section")
-  h1(class="title") Булевы
-  h2(class="title") Одиночный  
-  div( class="box")
-    h3( class="title") Constructor
-    h4(class="subtitle") как создать
-    div(class="block")
-      pre
-        | mount(notBulma.Elements.Various.UIBoolean, {target: HTMLElement, props: Object});
-    h3( class="title") Props
-    h4(class="subtitle") что можно задавать
-    div(class="block")
-      pre
-        |  string   [LC_TRUE = "not-node:booleans_true"]      надпись для TRUE
-        |  string   [LC_FALSE = "not-node:booleans_false"]    надпись для FALSE
-        |  any      value                                     значение
-        |  boolean  [inverted = false]                        инвертирование цвета danger для true, success для false
+  h1(class="title") Булевы с названием
+  div( class="box block")
+    pre
+      |  string   label                                     текст подписи
+      |  boolean  value                                     значение
+      |  boolean  [inverted = false]                        инвертирование цвета danger для true, success для false
