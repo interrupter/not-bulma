@@ -1,8 +1,9 @@
-/* global notBulma */
 if (!window.EXAMPLES) {
     window.EXAMPLES = {};
 }
-const { unmount } = notBulma.svelte;
+import { demandUnmount } from "./examples.helpers.js";
+
+const constructorName = "Elements.Modals.UIModal";
 
 const Examples = [
     {
@@ -16,22 +17,14 @@ const Examples = [
                         outlined: true,
                         color: "danger",
                         onclick() {
-                            const thisComp =
-                                window.EXAMPLES_COMPONENTS_INSTANCES[
-                                    "Elements.Modals.UIModal"
-                                ][0][0];
-                            unmount(thisComp);
+                            demandUnmount(constructorName, 0, 0);
                         },
                     },
                     applyButton: {
                         title: "Apply",
                         color: "success",
                         onclick() {
-                            const thisComp =
-                                window.EXAMPLES_COMPONENTS_INSTANCES[
-                                    "Elements.Modals.UIModal"
-                                ][0][0];
-                            unmount(thisComp);
+                            demandUnmount(constructorName, 0, 0);
                         },
                     },
                     show: true,
@@ -54,22 +47,14 @@ const Examples = [
                         outlined: true,
                         color: "danger",
                         onclick() {
-                            const thisComp =
-                                window.EXAMPLES_COMPONENTS_INSTANCES[
-                                    "Elements.Modals.UIModal"
-                                ][0][0];
-                            unmount(thisComp);
+                            demandUnmount(constructorName, 0, 1);
                         },
                     },
                     applyButton: {
                         title: "Apply",
                         color: "success",
                         onclick() {
-                            const thisComp =
-                                window.EXAMPLES_COMPONENTS_INSTANCES[
-                                    "Elements.Modals.UIModal"
-                                ][0][0];
-                            unmount(thisComp);
+                            demandUnmount(constructorName, 0, 1);
                         },
                     },
                     buttonsPosition: "top",
@@ -94,11 +79,7 @@ const Examples = [
                         color: "info",
                         outlined: true,
                         onclick() {
-                            const thisComp =
-                                window.EXAMPLES_COMPONENTS_INSTANCES[
-                                    "Elements.Modals.UIModal"
-                                ][0][0];
-                            unmount(thisComp);
+                            demandUnmount(constructorName, 0, 2);
                         },
                     },
                     buttonsPosition: "topOfContent",
@@ -119,6 +100,6 @@ const Examples = [
 ];
 
 window.EXAMPLES.UIModal = {
-    constructor: "Elements.Modals.UIModal",
+    constructor: constructorName,
     list: Examples,
 };

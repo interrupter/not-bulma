@@ -1,9 +1,9 @@
-/* global notBulma */
 if (!window.EXAMPLES) {
     window.EXAMPLES = {};
 }
-import { createList } from "./examples.helpers.js";
-const { unmount } = notBulma.svelte;
+import { createList, demandUnmount } from "./examples.helpers.js";
+const constructorName = "Elements.Modals.UIGenericSelector";
+
 const Examples = [{
     title: "Default",
     props: [{
@@ -14,15 +14,51 @@ const Examples = [{
                 console.log(field, value, ev);
             },
             onreject() {
-                const thisComp = window.EXAMPLES_COMPONENTS_INSTANCES["Elements.Modals.UIGenericSelector"][0][0];
-                unmount(thisComp);
-                window.EXAMPLES_COMPONENTS_INSTANCES["Elements.Modals.UIGenericSelector"][0].splice(0, 1);
+                demandUnmount(constructorName, 0, 0);
             },
             onresolve({ id, _id, title }) {
                 console.log("resolve", id, _id, title);
-                const thisComp = window.EXAMPLES_COMPONENTS_INSTANCES["Elements.Modals.UIGenericSelector"][0][0];
-                unmount(thisComp);
-                window.EXAMPLES_COMPONENTS_INSTANCES["Elements.Modals.UIGenericSelector"][0].splice(0, 1);
+                demandUnmount(constructorName, 0, 0);
+            },
+            results: {
+                list: createList(i => {
+                    return {
+                        id: i,
+                        _id: i,
+                        title: `Item number - ${i + 1}`
+                    };
+                }, 10),
+                count: 20,
+                page: 0,
+                pages: 2
+            },
+            rejectButtonProps: {
+                color: "warning"
+            }
+        }
+    }, {
+        $trigger: "with custom itemRenderer, see actual sources",
+        props: {
+            itemRenderer(target, item, id) {
+                const el = document.createElement("DIV");
+                el.innerText = `${id()} - ${item().title}`;
+                el.style.cursor = "pointer";
+                el.onclick = () => {
+                    console.log("selected variant", item());
+                    demandUnmount(constructorName, 0, 1);
+                };
+                target.before(el);
+            },
+            showSearch: false,
+            onchange({ field, value }, ev) {
+                console.log(field, value, ev);
+            },
+            onreject() {
+                demandUnmount(constructorName, 0, 1);
+            },
+            onresolve({ id, _id, title }) {
+                console.log("resolve", id, _id, title);
+                demandUnmount(constructorName, 0, 1);
             },
             results: {
                 list: createList(i => {
@@ -44,6 +80,6 @@ const Examples = [{
 }];
 
 window.EXAMPLES.UIGenericSelector = {
-    constructor: "Elements.Modals.UIGenericSelector",
+    constructor: constructorName,
     list: Examples
 };

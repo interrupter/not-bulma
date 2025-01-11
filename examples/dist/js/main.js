@@ -53,7 +53,7 @@ function buildExample(example, props, instances, constructorPath, val) {
                 : example,
             props,
         });
-        instances.push(compInstance);
+        instances[example.id] = compInstance;
         return compInstance;
     }
 }
@@ -101,7 +101,7 @@ function initExamplesSetHTML(id, val, constructorPath) {
         pre.innerHTML = JSON.stringify(propsStringified, null, 4);
     }
     cols.appendChild(pre);
-    const instances = [];
+    const instances = {};
     val.props.forEach((props, i) => {
         let example = document.createElement("div");
         example.classList.add("column");
@@ -128,6 +128,9 @@ function initExamplesSetHTML(id, val, constructorPath) {
                             props.$trigger?.ttl
                         );
                     }
+                    window.EXAMPLES_COMPONENTS_INSTANCES[constructorPath][
+                        example.id
+                    ] = compInst;
                 }
             );
         } else {
@@ -135,9 +138,12 @@ function initExamplesSetHTML(id, val, constructorPath) {
         }
     });
     if (!Array.isArray(window.EXAMPLES_COMPONENTS_INSTANCES[constructorPath])) {
-        window.EXAMPLES_COMPONENTS_INSTANCES[constructorPath] = [];
+        window.EXAMPLES_COMPONENTS_INSTANCES[constructorPath] = {};
     }
-    window.EXAMPLES_COMPONENTS_INSTANCES[constructorPath].push(instances);
+    window.EXAMPLES_COMPONENTS_INSTANCES[constructorPath] = {
+        ...window.EXAMPLES_COMPONENTS_INSTANCES[constructorPath],
+        ...instances,
+    };
 }
 
 function initExamples() {

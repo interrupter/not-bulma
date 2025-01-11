@@ -36,17 +36,22 @@
         onselect,
         onprev,
         onnext,
+        itemRenderer,
     } = $props();
 </script>
 
 <UIBlock class={classes}>
     {#if data?.list?.length}
-        {#each data.list as item (item.id)}
-            <UIItemComponent
-                onclick={onselect}
-                {...itemComponentProps}
-                {...item}
-            />
+        {#each data.list as item, index (item.id)}
+            {#if itemRenderer}
+                {@render itemRenderer(item, index)}
+            {:else}
+                <UIItemComponent
+                    onclick={onselect}
+                    {...itemComponentProps}
+                    {...item}
+                />
+            {/if}
         {/each}
     {:else}
         <UIEmptyListPlaceholder {...emptyListPlaceholderComponentProps} />
