@@ -6,13 +6,13 @@
 
     /**
      * @typedef {Object} Props
-     * @property {any} [id]
-     * @property {string} [title]
-     * @property {any} subtitle
-     * @property {number} [size]
-     * @property {any} subsize
-     * @property {boolean} [spaced]
-     * @property {string} [align]
+     * @property {string}   [id = `title-${Math.random()}`]
+     * @property {string}   [title = '']
+     * @property {string}   [subtitle]
+     * @property {number}   [size = 1]
+     * @property {number}   [subsize]
+     * @property {boolean}  [spaced = false]
+     * @property {string}   [align = 'left']
      */
 
     /** @type {Props} */
@@ -36,7 +36,7 @@
         subsize ? subsize : parseInt(size) < 6 ? parseInt(size) + 1 : size
     );
 
-    let spacedStyle = $derived(spaced ? "is-spaced" : "");
+    let spacedStyle = $derived(spaced ? "has-text-justified" : "");
 
     let resultTitle = $derived(
         `<h${size} id="${id}" style="text-align: ${align};" class="title ${spacedStyle} is-${size}">${$LOCALE[title]}</h${size}>`

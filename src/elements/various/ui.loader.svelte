@@ -3,7 +3,6 @@
     import { LOCALE } from "../../locale";
 
     import { onDestroy, onMount } from "svelte";
-    import { clear } from "not-node/src/task.runner";
 
     //hidden - no loader
     //container - parent container of form
