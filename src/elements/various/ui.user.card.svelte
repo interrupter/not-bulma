@@ -1,29 +1,27 @@
 <script>
     import { onMount } from "svelte";
     import notCommon from "../../frame/common";
+    import { UIContent } from "../block";
 
-
-    
-    
     /**
      * @typedef {Object} Props
-     * @property {string} [id]
-     * @property {string} [image]
-     * @property {string} [username]
-     * @property {string} [role]
-     * @property {any} [events]
-     * @property {any} [register] - register event handlers
-     * @property {any} [onUpdate]
+     * @property {string}       [id = "userCard"]
+     * @property {string}       [image = "https://bulma.io/images/placeholders/32x32.png"]
+     * @property {string}       [username = "John Doe"]
+     * @property {string}       [role = "admin"]
+     * @property {object}       [events = {}]
+     * @property {function}     [register = notCommon.registerWidgetEvents] - register event handlers
+     * @property {function}     [onUpdate = (data)=> {username=data.username; role = data.role;}]
      */
 
     /** @type {Props} */
     let {
         id = "userCard",
         image = "https://bulma.io/images/placeholders/32x32.png",
-        username = $bindable("John Doe"),
-        role = $bindable("admin"),
-        events = $bindable({}),
-        register = notCommon.registerWidgetEvents,
+        username = "John Doe",
+        role = "admin",
+        events = {},
+        register = notCommon.registerWidgetEvents.bind(notCommon),
         onUpdate = (data) => {
             if (Object.hasOwn(data, "username")) {
                 username = data.username;
@@ -32,16 +30,15 @@
             if (Object.hasOwn(data, "role")) {
                 role = data.role;
             }
-        }
+        },
     } = $props();
 
-    function getCompId() {
+    export function getCompId() {
         return `usercard-${id}`;
     }
 
-    function getStandartUpdateEventName() {
-        let compId = getCompId();
-        return `${compId}:update`;
+    export function getStandartUpdateEventName() {
+        return `${getCompId()}:update`;
     }
 
     onMount(() => {
@@ -59,12 +56,12 @@
         </p>
     </figure>
     <div class="media-content">
-        <div class="content">
+        <UIContent>
             <p>
                 <strong>{username}</strong>
                 <small>@</small>
                 <strong>{role}</strong>
             </p>
-        </div>
+        </UIContent>
     </div>
 </article>

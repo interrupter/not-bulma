@@ -6,7 +6,7 @@
   "svelte": "src/index.js",
   "type": "module",
   "scripts": {
-    "html-build": "pug ./examples/src/tmpl/pages/* --out ./examples/dist",
+    "html-build": "pug ./examples/src/tmpl/pages --out ./examples/dist",
     "html-watch": "npm run html-build -- --watch",
     "css-build": "node-sass ./examples/src/_sass/main.scss ./examples/dist/css/main.css",
     "css-deploy": "npm run css-build && npm run css-postcss",

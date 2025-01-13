@@ -1,0 +1,12 @@
+section(id="examples" class="section")
+  h1(class="title") Elements.Various.UIUserCard
+  div( class="box block")
+    p Updatable via app events system. Event name is `usercard-${id}:update`, data format {username:string, role:string}
+    pre
+     | string       [id = "userCard"]
+     | string       [image = "https://bulma.io/images/placeholders/32x32.png"]
+     | string       [username = "John Doe"]
+     | string       [role = "admin"]
+     | object       [events = {}]
+     | function     [register = notCommon.registerWidgetEvents] - register event handlers
+     | function     [onUpdate = (data)=> {username=data.username; role = data.role;}]

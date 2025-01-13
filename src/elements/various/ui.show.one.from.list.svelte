@@ -1,6 +1,4 @@
 <script>
-    import { run } from "svelte/legacy";
-
     const defaultFilter = (value) => value[idFieldName] === id;
     /**
      * @typedef {Object} Props
