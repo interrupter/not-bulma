@@ -4,14 +4,14 @@
 
     /**
      * @typedef {Object} Props
-     * @property {string} [id] - if we want to address this tag
-     * @property {any} title
-     * @property {any} value
-     * @property {any} [actions]
-     * @property {string} [class]
-     * @property {any} [actionsGroupContructor]
-     * @property {any} [actionsGroupProps]
-     * @property {boolean} [readonly]
+     * @property {string}   [id = "taggedValueId"] - if we want to address this tag
+     * @property {object}   title
+     * @property {object}   value
+     * @property {array}    [actions = []]
+     * @property {string}   [class = '']
+     * @property {any}      [actionsGroupContructor = UIButtons]
+     * @property {any}      [actionsGroupProps = {}]
+     * @property {boolean}  [readonly = false]
      */
 
     /** @type {Props} */
@@ -21,7 +21,7 @@
         value,
         actions = [],
         class: classes = "",
-        actionsGroupContructor = UIButtons,
+        actionsGroupContructor: ActionsGroupContructor = UIButtons,
         actionsGroupProps = {},
         readonly = false,
     } = $props();
@@ -30,8 +30,7 @@
 <div class="tags has-addons {classes}" {id}>
     {#if title}<UITag {...title} />{/if}
     {#if value}<UITag {...value} />{/if}
-    {#if !readonly && actions && actions.length}
-        {@const SvelteComponent = actionsGroupContructor}
-        <SvelteComponent values={actions} {...actionsGroupProps} />
-    {/if}
 </div>
+{#if !readonly && actions && actions.length}
+    <ActionsGroupContructor values={actions} {...actionsGroupProps} />
+{/if}

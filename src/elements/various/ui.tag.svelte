@@ -1,6 +1,5 @@
 <script>
     import { onMount } from "svelte";
-
     import { LOCALE } from "../../locale";
     import notCommon from "../../frame/common";
 
@@ -12,10 +11,10 @@
      * @property {string}   [size = "normal"]                               bulma size
      * @property {string}   [padding = "normal"]                            size of left/right paddings (small = 0.5em, normal = 1em, big = 1.5em, large = 2em), class names is is-padded-{padding}
      * @property {boolean}  [bold = false]                                  title styling
-     * @property {boolean}  [right = false]                                 tag positioning on the right
-     * @property {boolean}  [left = false]                                  tag positioning on the left
-     * @property {boolean}  [top = false]                                   tag positioning on the top
-     * @property {boolean}  [bottom = false]                                tag positioning on the bottom
+     * @property {boolean}  [right = false]                                 tag positioning on the right, to see at work look examples of Elements.Icons.UIIconButtonWithTag
+     * @property {boolean}  [left = false]                                  tag positioning on the left, to see at work look examples of Elements.Icons.UIIconButtonWithTag
+     * @property {boolean}  [top = false]                                   tag positioning on the top, to see at work look examples of Elements.Icons.UIIconButtonWithTag
+     * @property {boolean}  [bottom = false]                                tag positioning on the bottom, to see at work look examples of Elements.Icons.UIIconButtonWithTag
      * @property {string}   [class  = ""]                                   additional css classes list
      * @property {object}   [events = {}]                                   list of events {name:callback}
      * @property {function} [register = notCommon.registerWidgetEvents]     register event handlers
@@ -50,6 +49,11 @@
         tabIndex = "0",
     } = $props();
 
+    let sided = $derived(right || left || top || bottom);
+
+    let hCentered = $derived(!right && !left && sided);
+    let vCentered = $derived(!bottom && !top && sided);
+
     function getStandartUpdateEventName() {
         return `tag-${id}:update`;
     }
@@ -62,8 +66,6 @@
         }
         register(events);
     });
-
-    let sided = $derived(right || left || top || bottom);
 
     $effect(() => {
         style = Object.keys($state.snapshot(vars))
@@ -89,6 +91,8 @@
   {classes}"
         class:is-clickable={action}
         class:has-text-weight-bold={bold}
+        class:is-vertical-centered={vCentered}
+        class:is-horizontal-centered={hCentered}
         class:is-sided={sided}
         class:is-sided-right={right}
         class:is-sided-left={left}

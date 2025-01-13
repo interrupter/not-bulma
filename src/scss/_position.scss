@@ -49,3 +49,10 @@
 .is-float-left {
     float: left;
 }
+
+.is-tag-container {
+    position: relative;
+    display: inline-block;
+    width: fit-content;
+    height: fit-content;
+}
