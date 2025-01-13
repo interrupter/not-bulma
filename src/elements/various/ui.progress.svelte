@@ -1,12 +1,12 @@
 <script>
     /**
      * @typedef {Object} Props
-     * @property {any} value
-     * @property {number} [max]
-     * @property {string} [color]
-     * @property {string} [size]
-     * @property {string} [class]
-     */
+     * @property {any}      value
+     * @property {number}   [max = 100]
+     * @property {string}   [color = ""]
+     * @property {string}   [size = ""]
+     * @property {string}   [class = ""]
+     **/
 
     /** @type {Props} */
     let {

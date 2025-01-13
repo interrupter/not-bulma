@@ -6,7 +6,11 @@ const Examples = [
     {
         title: "Simple",
         description: "Simple",
-        props: [{}],
+        props: [
+            {},
+            { value: 10 },
+            { value: 10, max: 10, color: "danger", size: "small" },
+        ],
     },
 ];
 

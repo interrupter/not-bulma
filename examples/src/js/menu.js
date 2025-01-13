@@ -572,6 +572,11 @@ const menu = {
                         url: "./various.loader.html",
                     },
                     {
+                        id: "elements.various.progress",
+                        title: "Прогресс",
+                        url: "./various.progress.html",
+                    },
+                    {
                         id: "elements.various.select.from.model.on.demand.inline",
                         title: "Выбор из модели по запросу встроенный",
                         url: "./various.select.from.model.on.demand.inline.html",
