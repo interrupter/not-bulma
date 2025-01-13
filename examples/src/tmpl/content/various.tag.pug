@@ -2,7 +2,19 @@ section(id="examples" class="section")
   h1(class="title") Elements.Various.UITag
   div( class="box block")
     pre
-      |  string   [LC_TRUE = "not-node:booleans_true"]      надпись для TRUE
-      |  string   [LC_FALSE = "not-node:booleans_false"]    надпись для FALSE
-      |  any      value                                     значение
-      |  boolean  [inverted = false]                        инвертирование цвета danger для true, success для false
+      | string   [id = "tagId"]                                  if we want to address this tag, as tag-{id}:{eventName}, ex. tag-tagId:update
+      | string   [title = "tag"]                                 tag title
+      | string   [color = "info"]                                bulma color
+      | string   [size = "normal"]                               bulma size
+      | string   [padding = "normal"]                            size of left/right paddings (small = 0.5em, normal = 1em, big = 1.5em, large = 2em), class names is is-padded-{padding}
+      | boolean  [bold = false]                                  title styling
+      | boolean  [right = false]                                 tag positioning on the right
+      | boolean  [left = false]                                  tag positioning on the left
+      | boolean  [top = false]                                   tag positioning on the top
+      | boolean  [bottom = false]                                tag positioning on the bottom
+      | string   [class  = ""]                                   additional css classes list
+      | object   [events = {}]                                   list of events {name:callback}
+      | function [register = notCommon.registerWidgetEvents]     register event handlers
+      | function [onUpdate = (data) => title = data.title;]
+      | function [action]                                        onclick/onkeydown callback
+      | object   [vars = {}]                                     css vars list
