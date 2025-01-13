@@ -3,19 +3,20 @@
 
     /**
      * @typedef {Object} Props
-     * @property {boolean} [hidden]
-     * @property {boolean} [showable]
-     * @property {boolean} [copiable]
-     * @property {string} [copyIcon]
-     * @property {string} [showIcon]
-     * @property {string} [hideIcon]
-     * @property {number} [maxLength]
-     * @property {string} [shadowClass]
-     * @property {boolean} [tooltip]
-     * @property {number} [tooltipTTL]
-     * @property {string} [tooltipText]
-     * @property {string} [tooltipClass]
-     * @property {string} [value]
+     * @property {boolean}  [hidden = true]
+     * @property {boolean}  [showable = true]
+     * @property {boolean}  [copiable = true]
+     * @property {string}   [copyIcon = 'copy']
+     * @property {string}   [showIcon = 'eye']
+     * @property {string}   [hideIcon = 'eye-slash']
+     * @property {number}   [maxLength = 20]
+     * @property {string}   [shadowClass = "has-background-primary-90"]
+     * @property {boolean}  [tooltip = true]
+     * @property {number}   [tooltipTTL = 2000]
+     * @property {string}   [tooltipText = "Скопировано в буфер"]
+     * @property {string}   [tooltipClass = "has-tooltip-info"]
+     * @property {string}   [value = ""]
+     * @property {function} [onerror]
      */
 
     /** @type {Props} */
@@ -33,6 +34,7 @@
         tooltipText = "Скопировано в буфер",
         tooltipClass = "has-tooltip-info",
         value = "",
+        onerror,
     } = $props();
 
     function toggleView() {
@@ -55,7 +57,7 @@
                 }, tooltipTTL);
             }
         } catch (err) {
-            console.error("Failed to copy: ", err);
+            onerror && onerror(err);
         }
     }
 </script>

@@ -1,0 +1,20 @@
+section(id="examples" class="section")
+  h1(class="title") Индикатор
+  div( class="box block")    
+    div(class="block")
+      pre
+        string   [id = "tagId"]         - if we want to address this indicator
+        string   [state = "light"]
+        string   [size = "normal"]
+        object   [labels = {black, dark, light, white, primary, link, info, success, warning, danger}]
+        string   [class = "max-1"]
+        string   [padding = "normal"]
+        boolean  [bold = false]
+        boolean  [right = false]
+        boolean  [left = left]
+        boolean  [top = false]
+        boolean  [bottom = false]
+        object   [events = {}]
+        function [register = notCommon.registerWidgetEvents] - register event handlers
+        function [onUpdate = (data) => currentState = data.state]
+

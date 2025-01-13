@@ -2,24 +2,22 @@
     import { onMount } from "svelte";
     import notCommon from "../../frame/common";
 
-    let sided = $state(false);
-
     /**
      * @typedef {Object} Props
-     * @property {string} [id] - if we want to address this indicator
-     * @property {string} [state]
-     * @property {string} [size]
-     * @property {any} [labels]
-     * @property {string} [class]
-     * @property {string} [padding]
-     * @property {boolean} [bold]
-     * @property {boolean} [right]
-     * @property {boolean} [left]
-     * @property {boolean} [top]
-     * @property {boolean} [bottom]
-     * @property {any} [events]
-     * @property {any} [register] - register event handlers
-     * @property {any} [onUpdate]
+     * @property {string}   [id = "tagId"] - if we want to address this indicator
+     * @property {string}   [state = "light"]
+     * @property {string}   [size = "normal"]
+     * @property {any}      [labels = {black, dark, light, white, primary, link, info, success, warning, danger}]
+     * @property {string}   [class = "max-1"]
+     * @property {string}   [padding = "normal"]
+     * @property {boolean}  [bold = false]
+     * @property {boolean}  [right = false]
+     * @property {boolean}  [left = left]
+     * @property {boolean}  [top = false]
+     * @property {boolean}  [bottom = false]
+     * @property {any}      [events = {}]
+     * @property {any}      [register = notCommon.registerWidgetEvents] - register event handlers
+     * @property {any}      [onUpdate = (data) => currentState = data.state]
      */
 
     /** @type {Props} */
@@ -66,21 +64,17 @@
         register(events);
     });
 
-    $effect(() => {
-        sided = right || left || top || bottom;
-    });
+    let sided = $derived(right || left || top || bottom);
 </script>
 
 <span
-    class="tag
-is-{size}
-{bold ? 'has-text-weight-bold' : ''}
-{padding !== 'normal' ? `is-padded-${padding}` : ''}
-{sided ? 'is-sided' : ''}
-{right ? 'is-sided-right' : ''}
-{left ? 'is-sided-left' : ''}
-{top ? 'is-sided-top' : ''}
-{bottom ? 'is-sided-bottom' : ''}
-  is-{currentState} {classes}
-  ">{labels[currentState]}</span
+    class="tag is-{size} {padding !== 'normal'
+        ? `is-padded-${padding}`
+        : ''} is-{currentState} {classes}"
+    class:has-text-weight-bold={bold}
+    class:is-sided={sided}
+    class:is-sided-right={right}
+    class:is-sided-left={left}
+    class:is-sided-top={top}
+    class:is-sided-bottom={bottom}>{labels[currentState]}</span
 >
