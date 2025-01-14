@@ -37,7 +37,8 @@
     "cover:run": "nyc --silent npm run cypress:run",
     "cover:node": "nyc --silent npm run test:node",
     "cover:report": "npm run test:server:off && npm run test:node:clear && npm run cover:report:slim",
-    "cover:report:slim": "nyc report"
+    "cover:report:slim": "nyc report",
+    "update:examples:assets": "cp ./node_modules/bulma/css/bulma.min.css ./examples/dist/css/bulma.min.css"
   },
   "repository": {
     "type": "git",

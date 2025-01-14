@@ -14,7 +14,6 @@
      * @property {string} [fieldname]
      * @property {boolean} [required]
      * @property {boolean} [readonly]
-     * @property {boolean} [multiple]
      * @property {number} [size]
      * @property {boolean} [valid]
      */
@@ -28,8 +27,7 @@
         fieldname = "select",
         required = true,
         readonly = false,
-        multiple = false,
-        size = 8,
+        size,
         valid = true,
         class: classes = "",
         onchange = () => true,
@@ -39,77 +37,47 @@
     let selectedVariants = $state([]);
 
     function filterSelectedVariants(variant) {
-        if (Array.isArray(value) && multiple) {
-            return value.indexOf(variant.id) > -1;
-        } else if (value) {
+        if (value) {
             return value == variant.id;
         } else {
             return false;
         }
     }
 
-    let lastChange;
-
-    function onBlur(ev) {
-        let data = {
-            field: fieldname,
-            value: ev.currentTarget.value,
-        };
-        if (lastChange === data.value) {
-            return true;
+    function checkOnClearMacro(newValue) {
+        if (newValue === UICommon.CLEAR_MACRO) {
+            value = "";
         } else {
-            if (
-                Array.isArray(data.value) &&
-                notCommon.compareTwoArrays(lastChange, data.value)
-            ) {
+            value = newValue;
+        }
+    }
+
+    function alreadyProcessed(newValue) {
+        if (Array.isArray(newValue) && Array.isArray(value)) {
+            if (notCommon.compareTwoArrays(value, newValue)) {
+                return true;
+            }
+        } else {
+            if (newValue === value) {
                 return true;
             }
         }
-        if (multiple) {
-            value = Array.from(ev.target.selectedOptions).map((el) => el.value);
-            if (value.indexOf(UICommon.CLEAR_MACRO) > -1) {
-                value = [];
-            }
-            data.value = value;
-        } else {
-            if (data.value === UICommon.CLEAR_MACRO) {
-                value = "";
-            } else {
-                value = data.value;
-            }
-        }
-
-        onchange(data);
-        return true;
+        return false;
     }
 
     function onInput(ev) {
-        let data = {
+        const data = {
             field: fieldname,
             value: ev.currentTarget.value,
         };
-        if (multiple) {
-            value = Array.from(ev.target.selectedOptions).map((el) => el.value);
-            if (value.indexOf(UICommon.CLEAR_MACRO) > -1) {
-                value = [];
-            }
-            data.value = value;
-        } else {
-            if (data.value === UICommon.CLEAR_MACRO) {
-                value = "";
-            } else {
-                value = data.value;
-            }
+        if (alreadyProcessed(data.value)) {
+            return;
         }
-
-        lastChange = data.value;
+        checkOnClearMacro(data.value);
         onchange(data);
-        return true;
     }
 
-    let multipleClass = $derived(multiple ? " is-multiple " : "");
     $effect(() => {
-        value;
         selectedVariants = Array.isArray(variants)
             ? variants.filter(filterSelectedVariants)
             : [];
@@ -127,47 +95,31 @@
         <span class="mr-2">{$LOCALE[emptyValueTitle]}</span>
     {/if}
 {:else}
-    <div class="select {classes} {multipleClass}">
+    <div class="select {classes}">
         <select
             id="form-field-select-{fieldname}"
             name={fieldname}
-            onblur={onBlur}
             oninput={onInput}
+            onblur={onInput}
             {readonly}
             {required}
-            {multiple}
             {invalid}
-            size={multiple ? size : false}
+            {size}
             {...others}
         >
             {#if placeholder.length > 0}
-                {#if value}
-                    <UISelectOption
-                        value={UICommon.CLEAR_MACRO}
-                        title={placeholder}
-                    />
-                {:else}
-                    <UISelectOption
-                        value={UICommon.CLEAR_MACRO}
-                        selected="selected"
-                        title={placeholder}
-                    />
-                {/if}
+                <UISelectOption
+                    value={UICommon.CLEAR_MACRO}
+                    selected={!value}
+                    title={placeholder}
+                />
             {/if}
-            {#each variants as variant}
-                {#if multiple}
-                    <UISelectOption
-                        value={variant.id}
-                        selected={value && value.indexOf(variant.id) > -1}
-                        title={variant.title}
-                    />
-                {:else}
-                    <UISelectOption
-                        value={variant.id}
-                        selected={value == variant.id}
-                        title={variant.title}
-                    />
-                {/if}
+            {#each variants as variant (variant.id)}
+                <UISelectOption
+                    value={variant.id}
+                    selected={value == variant.id}
+                    title={variant.title}
+                />
             {/each}
         </select>
     </div>
