@@ -3,6 +3,7 @@ import UIControl from "./ui.control.svelte";
 import UIDate from "./ui.date.svelte";
 import UIDatetimeInTZ from "./ui.datetime.in.tz.svelte";
 import UIEmail from "./ui.email.svelte";
+import UIField from "./ui.field.svelte";
 import UIHidden from "./ui.hidden.svelte";
 import UIJSONArea from "./ui.json.area.svelte";
 import UILabel from "./ui.label.svelte";
@@ -28,6 +29,7 @@ export {
     UIDate,
     UIDatetimeInTZ,
     UIEmail,
+    UIField,
     UIHidden,
     UIJSONArea,
     UILabel,

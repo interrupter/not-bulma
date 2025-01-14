@@ -3,7 +3,7 @@
     import { UIColumn, UIColumns } from "../layout";
     import UIIconFont from "../icon/ui.icon.font.svelte";
     import UIControl from "../input/ui.control.svelte";
-    import { UIFormField } from "../form";
+    import UIField from "../input/ui.field.svelte";
 
     /**
      * @typedef {Object} Props
@@ -32,7 +32,7 @@
 
 <UIColumns role="none">
     <UIColumn role="none">
-        <UIFormField>
+        <UIField>
             <UIControl {hasIconsLeft} {hasIconsRight}>
                 <UITextfield
                     bind:value={term}
@@ -47,6 +47,6 @@
                     <UIIconFont font={icon} side={iconSide} />
                 {/if}
             </UIControl>
-        </UIFormField>
+        </UIField>
     </UIColumn>
 </UIColumns>
