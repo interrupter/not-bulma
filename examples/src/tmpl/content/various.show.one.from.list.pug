@@ -1,0 +1,14 @@
+section(id="examples" class="section")
+  h1(class="title") Elements.Various.UIShowOneFromList
+  div( class="box block")
+    pre
+      | string | number  id                          id of active item
+      | array            [values = []]               list of items
+      | function         UIComponent                 component to show active item
+      | function         component                   snippet to show active item
+      | function         UIPlaceholder               placeholder if active is unset
+      | function         placeholder                 snippet to show placeholder
+      | object           [placeholderProps = {}]     placeholder props
+      | object           [active = {}]               current active element
+      | string           [idFieldName = "_id"]       name of item property used as identificator
+      | function         [filter = (value) => value[idFieldName] === id] filtering function to select active item. default is to search for item with selected id
