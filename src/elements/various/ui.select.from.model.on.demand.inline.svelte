@@ -157,20 +157,22 @@
     <UIButton {...ACTIONS.add}></UIButton>
 {:else if componentState == "show"}
     <UIField addons={true}>
-        <UISelect
-            {value}
-            {variants}
-            {placeholder}
-            {fieldname}
-            {required}
-            {readonly}
-            {disabled}
-            {size}
-            {valid}
-            onchange={onModelChanged}
-        />
+        <UIControl>
+            <UISelect
+                {value}
+                {variants}
+                {placeholder}
+                {fieldname}
+                {required}
+                {readonly}
+                {disabled}
+                {size}
+                {valid}
+                onchange={onModelChanged}
+            />
+        </UIControl>
+        <UIControl>
+            <UIButtons values={[ACTIONS.resolve, ACTIONS.reject]}></UIButtons>
+        </UIControl>
     </UIField>
-    <UIControl>
-        <UIButtons values={[ACTIONS.resolve, ACTIONS.reject]}></UIButtons>
-    </UIControl>
 {/if}

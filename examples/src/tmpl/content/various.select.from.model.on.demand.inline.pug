@@ -2,24 +2,23 @@ section(id="examples" class="section")
   h1(class="title") Elements.Various.UISelectFromModelOnDemandInline
   div( class="box block")
     pre
-      string   value                                       id of selected variant
-      array    [variants = []]                             list of variants
-      boolean  [loaded = false]                            true if we already loaded variants from server via API
-      string   [placeholder = "empty select item"]         placeholder title
-      string   [fieldname = "selectFromModel"]             this input fieldname
-      string   [modelName = ""]                            API modelName
-      string   [actionName = ""]                           API actionName
-      object   [actionFilter = {}]                         API filtering rules
-      object   [actionSorter = {}]                         API sorting rules
-      object   [actionPager = {}]                          API pager state
-      object   [actionSearch = undefined]                  API search string
-      string   [optionId = ":_id"]                         variant object id field name
-      string   [optionTitle = ":title"]                    variant object title field name
-      boolean  [required = false]                          field is required
-      boolean  [readonly = false]                          field is reaonly
-      boolean  [multiple = false]                          field is multiple
-      number   [size = 8]                                  size for multiple select
-      boolean  [valid = true]                              field is valid
-      function [onreject = () => false]                    callback on reject of selection process
-      function [onresolve = () => true]                    callback on resolve of selection process
-      function [onerror = () => true]                      callback on error
+      | string   value                                       id of selected variant
+      | array    [variants = []]                             list of variants
+      | boolean  [loaded = false]                            true if we already loaded variants from server via API
+      | string   [placeholder = "empty select item"]         placeholder title
+      | string   [fieldname = "selectFromModel"]             this input fieldname
+      | string   [modelName = ""]                            API modelName
+      | string   [actionName = ""]                           API actionName
+      | object   [actionFilter = {}]                         API filtering rules
+      | object   [actionSorter = {}]                         API sorting rules
+      | object   [actionPager = {}]                          API pager state
+      | object   [actionSearch = undefined]                  API search string
+      | string   [optionId = ":_id"]                         variant object id field name
+      | string   [optionTitle = ":title"]                    variant object title field name
+      | boolean  [required = false]                          field is required
+      | boolean  [readonly = false]                          field is reaonly      
+      | number   [size]                                      size of select
+      | boolean  [valid = true]                              field is valid
+      | function [onreject = () => false]                    callback on reject of selection process
+      | function [onresolve = () => true]                    callback on resolve of selection process
+      | function [onerror = () => true]                      callback on error

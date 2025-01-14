@@ -1,0 +1,29 @@
+section(id="examples" class="section")
+  h1(class="title") Elements.Various.UISelectFromModelWithSearchModal
+  div( class="box block")
+    p Component utilizes external Application service registered in notApp services via notCommon.getApp().getService(serviceName). 
+      | Service should provide two methods. 
+      | First for data retrieval (name should be provided to component in `serviceLoadDataMethod`), 
+      | `value` is provided to this method to retrieve async full object from server if `modelData` is not provided to component. 
+      | Second deals with the modal search window (name should be provided to component in `serviceOpenSelectorMethod`) 
+      | no input to this method, returns async new `modelData` content.
+      | 
+    pre
+      | string || number   value                                  identificator value of interest
+      | string   [icon = '']                                      icon for search button
+      | string   [fieldname = '']                                 this comp field name
+      | boolean  [readonly = false]                               no editing
+      | string   [serviceName = '']                               ns[ModelName], should be registered in notApp
+      | string   [serviceOpenSelectorMethod = "openSelector"]     service method returning new `modelData`
+      | string   [serviceLoadDataMethod = "loadData"]             service method returning `modelData` by provided `value`
+      | object   [modelData = null]                               data of object with identificator == `value`
+      | boolean  [loading = false]                                if we in process of loading something
+      | function [selectedModelTitleFormatter = (data) => data._id]     format title for current item
+      | function [serviceGetter = (serviceName)=>notCommon.getApp().getService(serviceName)]    return service by its name, sync
+      | string   [loadingLabel = "not-node:loading_label"]        label when loading
+      | string   [isEmptyLabel = "not-node:field_value_is_empty_placeholder"]     label if `value` or `modelData` is empty
+      | function [onchange = ({field, value, data}) => true]      callback on change
+      | object   [openSelectorButtonProps = {}]                   additional props to button
+      | object   [resetButtonProps = {}]                          additional props to button
+      | object   [emptyButtonProps = {}]                          additional props to button
+      | object   [valueButtonProps = {}]                          additional props to button
