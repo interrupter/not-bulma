@@ -1,26 +1,12 @@
 <script>
-    import { onMount, createEventDispatcher } from "svelte";
-    const dispatch = createEventDispatcher();
+    import { onMount } from "svelte";
+
     //
-    import UIList from "./ui.list.svelte";
-    import UITitle from "../various/ui.title.svelte";
-    import UIImage from "../image/ui.image.svelte";
-    import UIButtons from "../button/ui.buttons.svelte";
+    import UIList from "../ui.list.svelte";
+    import UITitle from "../../various/ui.title.svelte";
+    import UIImage from "../../image/ui.image.svelte";
+    import UIButtons from "../../button/ui.buttons.svelte";
 
-
-    
-    
-    
-    
-    
-    
-    
-    
-
-    
-
-
-    
     /**
      * @typedef {Object} Props
      * @property {string} [fieldname]
@@ -68,7 +54,7 @@ value:object
         imageComponentProps = { covered: true },
         descriptionComponent = UIButtons,
         descriptionComponentProps = {},
-        listComponent = UIList,
+        listComponent: UIListComponent = UIList,
         listComponentProps = {},
         sublimeValue = (value) => value.id,
         getItem = ({ valueId }) => {
@@ -87,7 +73,7 @@ value:object
         uiOff = (item) => {
             item.color = false;
             item.outlined = true;
-        }
+        },
     } = $props();
 
     onMount(() => {
@@ -172,7 +158,7 @@ value:object
         //
         updateValue();
         //
-        dispatch("change", {
+        onchange({
             field: fieldname,
             value,
         });
@@ -211,11 +197,9 @@ value:object
             toggle({ id: defValueId });
         }
     }
-
-    const SvelteComponent = $derived(listComponent);
 </script>
 
-<SvelteComponent
+<UIListComponent
     {...listComponentProps}
     bind:items={variants}
     {titleComponent}

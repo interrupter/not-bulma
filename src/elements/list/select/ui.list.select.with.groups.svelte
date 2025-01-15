@@ -2,10 +2,10 @@
     import { onMount } from "svelte";
 
     //
-    import UIList from "./ui.list.svelte";
-    import UITitle from "../various/ui.title.svelte";
-    import UIImage from "../image/ui.image.svelte";
-    import UIButtons from "../button/ui.buttons.svelte";
+    import UIList from "../ui.list.svelte";
+    import UITitle from "../../various/ui.title.svelte";
+    import UIImage from "../../image/ui.image.svelte";
+    import UIButtons from "../../button/ui.buttons.svelte";
 
     /**
      * @typedef {Object} Props
@@ -78,7 +78,7 @@ value: variantId
         imageComponentProps = { covered: true },
         descriptionComponent = UIButtons,
         descriptionComponentProps = {},
-        listComponent = UIList,
+        listComponent: UIListComponent = UIList,
         listComponentProps = {},
         sublimeValue = (value) => {
             return {
@@ -297,11 +297,9 @@ value: variantId
             toggle({ id: defValue.valueId, group: defValue.groupId });
         }
     }
-
-    const SvelteComponent = $derived(listComponent);
 </script>
 
-<SvelteComponent
+<UIListComponent
     {...listComponentProps}
     bind:items={variants}
     {titleComponent}

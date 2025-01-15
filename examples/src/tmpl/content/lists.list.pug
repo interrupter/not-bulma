@@ -1,0 +1,31 @@
+section(id="examples" class="section")
+  h1(class="title") Elements.Lists.UIList  
+  div( class="box block")    
+    pre
+      | string      [class = ""]
+      | array       [items = []]
+      | array       [actions = []]
+      | array       [links = []]
+      | boolean     [actionsVisible = false]
+      | boolean     [itemsHoverable = false]
+      | boolean     [overflowEllipsis = false]
+      | boolean     [hiddenImages = false]
+      | string      [itemClass = '']
+      | number      itemLength
+      | string      [idFieldName = 'id']
+      | function    [emptyListPlaceholderComponent = UIListEmptyPlaceholder] - empty
+      | object      [emptyListPlaceholderComponentProps = {}]
+      | function    [listItemComponent = UIListItem] - item
+      | object      [listItemComponentProps = {}]
+      | function    [titleComponent = UITitle] - item parts
+      | object      [titleComponentProps = {size: 6}]
+      | function    [descriptionComponent]
+      | object      [descriptionComponentProps = {}]
+      | function    [imageComponent]
+      | object      [imageComponentProps = {}]
+      | function    [onchange]                  callback
+      | function    [onclick]                   callback
+      | function    [onclickContent]            callback
+      | function    [onclickDescription]        callback
+      | function    [onclickImage]              callback
+      | function    [onclickTitle]              callback

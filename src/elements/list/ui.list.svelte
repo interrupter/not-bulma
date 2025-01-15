@@ -4,41 +4,42 @@
     import UIListBlock from "./ui.list.block.svelte";
     import UITitle from "../various/ui.title.svelte";
 
-
-
-
     //customization
-    
-    
-    
+
     /**
      * @typedef {Object} Props
-     * @property {string} [classes]
-     * @property {any} [items]
-     * @property {any} [actions]
-     * @property {any} [links]
-     * @property {boolean} [actionsVisible]
-     * @property {boolean} [itemsHoverable]
-     * @property {boolean} [overflowEllipsis]
-     * @property {boolean} [hiddenImages]
-     * @property {string} [itemClasses]
-     * @property {any} itemLength
-     * @property {string} [idFieldName]
-     * @property {any} [emptyListPlaceholderComponent] - empty
-     * @property {any} [emptyListPlaceholderComponentProps]
-     * @property {any} [listItemComponent] - item
-     * @property {any} [listItemComponentProps]
-     * @property {any} [titleComponent] - item parts
-     * @property {any} [titleComponentProps]
-     * @property {any} descriptionComponent
-     * @property {any} [descriptionComponentProps]
-     * @property {any} imageComponent
-     * @property {any} [imageComponentProps]
+     * @property {string} [class = ""]
+     * @property {array} [items = []]
+     * @property {array} [actions = []]
+     * @property {array} [links = []]
+     * @property {boolean} [actionsVisible = false]
+     * @property {boolean} [itemsHoverable = false]
+     * @property {boolean} [overflowEllipsis = false]
+     * @property {boolean} [hiddenImages = false]
+     * @property {string} [itemClass = '']
+     * @property {number} itemLength
+     * @property {string} [idFieldName = 'id']
+     * @property {function} [emptyListPlaceholderComponent = UIListEmptyPlaceholder] - empty
+     * @property {object} [emptyListPlaceholderComponentProps = {}]
+     * @property {function} [listItemComponent = UIListItem] - item
+     * @property {object} [listItemComponentProps = {}]
+     * @property {function} [titleComponent = UITitle] - item parts
+     * @property {object} [titleComponentProps = {size: 6}]
+     * @property {function} [descriptionComponent]
+     * @property {object} [descriptionComponentProps = {}]
+     * @property {function} [imageComponent]
+     * @property {object} [imageComponentProps = {}]
+     * @property {function} [onchange]                  callback
+     * @property {function} [onclick]                   callback
+     * @property {function} [onclickContent]            callback
+     * @property {function} [onclickDescription]        callback
+     * @property {function} [onclickImage]              callback
+     * @property {function} [onclickTitle]              callback
      */
 
     /** @type {Props} */
     let {
-        classes = "",
+        class: classes = "",
         items = $bindable([]),
         actions = [],
         links = [],
@@ -46,10 +47,11 @@
         itemsHoverable = false,
         overflowEllipsis = false,
         hiddenImages = false,
-        itemClasses = "",
+        itemClass = "",
         itemLength,
         idFieldName = "id",
-        emptyListPlaceholderComponent = UIListEmptyPlaceholder,
+        emptyListPlaceholderComponent:
+            UIEmptyListPlaceholderComponent = UIListEmptyPlaceholder,
         emptyListPlaceholderComponentProps = {},
         listItemComponent = UIListItem,
         listItemComponentProps = {},
@@ -58,24 +60,28 @@
         descriptionComponent,
         descriptionComponentProps = {},
         imageComponent,
-        imageComponentProps = {}
+        imageComponentProps = {},
+        onchange,
+        onclick,
+        onclickContent,
+        onclickDescription,
+        onclickImage,
+        onclickTitle,
     } = $props();
 </script>
 
 {#if items.length}
     <div
         style={itemLength ? `--length: ${itemLength};` : ""}
-        class="list {classes} {actionsVisible
-            ? 'has-visible-pointer-controls'
-            : ''} {itemsHoverable
-                ? 'has-hoverable-list-items'
-                : ''} {overflowEllipsis
-                    ? 'has-overflow-ellipsis'
-                    : ''} {hiddenImages ? 'has-hidden-images' : ''}"
+        class="list {classes}"
+        class:has-visible-pointer-controls={actionsVisible}
+        class:has-hoverable-list-items={itemsHoverable}
+        class:has-overflow-ellipsis={overflowEllipsis}
+        class:has-hidden-images={hiddenImages}
     >
         <UIListBlock
             bind:items
-            {itemClasses}
+            {itemClass}
             {listItemComponent}
             {listItemComponentProps}
             {idFieldName}
@@ -87,17 +93,14 @@
             {imageComponentProps}
             {actions}
             {links}
-            on:change
-            on:click
-            on:clickContent
-            on:clickDescription
-            on:clickImage
-            on:clickTitle
+            {onchange}
+            {onclick}
+            {onclickContent}
+            {onclickDescription}
+            {onclickImage}
+            {onclickTitle}
         />
     </div>
 {:else}
-    {@const SvelteComponent = emptyListPlaceholderComponent}
-    <SvelteComponent
-        {...emptyListPlaceholderComponentProps}
-    />
+    <UIEmptyListPlaceholderComponent {...emptyListPlaceholderComponentProps} />
 {/if}

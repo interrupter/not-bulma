@@ -2,11 +2,11 @@
     import { onMount } from "svelte";
 
     //
-    import UIList from "./ui.list.svelte";
-    import UITitle from "../various/ui.title.svelte";
-    import UIImage from "../image/ui.image.svelte";
-    import UIButtons from "../button/ui.buttons.svelte";
-    import UIButtonsSwitchers from "../button/ui.buttons.switchers.svelte";
+    import UIList from "../ui.list.svelte";
+    import UITitle from "../../various/ui.title.svelte";
+    import UIImage from "../../image/ui.image.svelte";
+    import UIButtons from "../../button/ui.buttons.svelte";
+    import UIButtonsSwitchers from "../../button/ui.buttons.switchers.svelte";
 
     /**
      * @typedef {Object} Props
@@ -69,7 +69,7 @@ value: variantId
         imageComponentProps = { covered: true },
         descriptionComponent = UIButtonsSwitchers,
         descriptionComponentProps = {},
-        listComponent = UIList,
+        listComponent: UIListComponent = UIList,
         listComponentProps = {},
         actionsList = ["selectAll", "deselectAll"],
         sublimeValue = (value) => {
@@ -169,13 +169,11 @@ value: variantId
             value,
         });
     }
-
-    const SvelteComponent = $derived(listComponent);
 </script>
 
 <UIButtons values={ACTIONS} centered={true} />
 
-<SvelteComponent
+<UIListComponent
     {...listComponentProps}
     bind:items={variants}
     {titleComponent}

@@ -4,28 +4,33 @@
     import UITitle from "../various/ui.title.svelte";
     import UIButtons from "../button/ui.buttons.svelte";
     import UILinks from "../link/ui.links.svelte";
+    import UIClickableDiv from "../block/ui.clickable.div.svelte";
 
     /**
      * @typedef {Object} Props
-     * @property {any} title
-     * @property {any} description
-     * @property {any} [actions]
-     * @property {any} [links]
-     * @property {any} [listActions]
-     * @property {any} [listLinks]
-     * @property {string} [classes]
-     * @property {string} [commonClasses]
-     * @property {string} [image]
+     * @property {string|object} title
+     * @property {string|object} description
+     * @property {array} [actions = []]
+     * @property {array} [links = []]
+     * @property {array} [listActions = []]
+     * @property {array} [listLinks = []]
+     * @property {string} [class = '']
+     * @property {string} [commonClass = '']
+     * @property {string|object} [image = '']
      * @property {any} value - value of item, will be passed to event handlers
-     * @property {any} [index] - index in array 0-length
-     * @property {boolean} [first] - if first
-     * @property {boolean} [last] - if last
-     * @property {any} [titleComponent] - customization
-     * @property {any} [titleComponentProps]
-     * @property {any} descriptionComponent
-     * @property {any} [descriptionComponentProps]
-     * @property {any} imageComponent
-     * @property {any} [imageComponentProps]
+     * @property {string|number} [index = -1] - index in array 0-length
+     * @property {boolean} [first = false] - if first
+     * @property {boolean} [last = false] - if last
+     * @property {function} [titleComponent = UITitle] - customization
+     * @property {object} [titleComponentProps]
+     * @property {function} [descriptionComponent]
+     * @property {object} [descriptionComponentProps = {}]
+     * @property {function} [imageComponent]
+     * @property {object} [imageComponentProps = {}]
+     * @property {function} [onclickImage]
+     * @property {function} [onclickContent]
+     * @property {function} [onclickTitle]
+     * @property {function} [onclickDescription]
      */
 
     /** @type {Props} */
@@ -36,18 +41,18 @@
         links = [],
         listActions = [],
         listLinks = [],
-        classes = "",
-        commonClasses = "",
+        class: classes = "",
+        commonClass = "",
         image = "",
         value,
         index = -1,
         first = false,
         last = false,
-        titleComponent = UITitle,
+        titleComponent: UITitleComponent = UITitle,
         titleComponentProps = { size: 6 },
-        descriptionComponent,
+        descriptionComponent: UIDescriptionComponent,
         descriptionComponentProps = {},
-        imageComponent,
+        imageComponent: UIImageComponet,
         imageComponentProps = {},
         onclickImage = () => false,
         onclickContent = () => false,
@@ -62,23 +67,58 @@
     let allActions = $state([]);
     let allLinks = $state([]);
 
+    let _title = $state(title);
+    let _description = $state(description);
+    let _image = $state(image);
+
+    const callbackTemplate = (callback) => {
+        return () => {
+            onClick();
+            callback && callback(value);
+        };
+    };
+
     onMount(() => {
-        allActions = [...actions, ...listActions].map((btn) => {
-            return { ...btn, action: () => btn.action(value) };
+        allActions = [...actions, ...listActions].map((btn, index) => {
+            return {
+                ...btn,
+                id: index,
+                action: btn.action ? () => btn.action(value) : undefined,
+            };
         });
-        allLinks = [...links, ...listLinks];
+        console.log(
+            actions.length,
+            "+",
+            listActions.length,
+            " = ",
+            allActions.length,
+            allActions
+        );
+        allLinks = [...links, ...listLinks].map((link, index) => {
+            link.id = index;
+            return link;
+        });
+
+        if (typeof title !== "object") {
+            _title = { title: title };
+        }
+        if (typeof description !== "object") {
+            _description = { value: description };
+        }
+        if (typeof image !== "object") {
+            _image = { url: image };
+        }
     });
 </script>
 
 <div
     role="button"
     tabindex="0"
-    class="list-item {classes} {commonClasses} {last
-        ? 'list-item-last'
-        : ''} {first
-            ? 'list-item-first'
-            : ''}  {`list-item-at-${index}`} {`list-item-` +
-        (index % 2 ? 'odd' : 'even')}"
+    class:list-item-last={last}
+    class:list-item-first={first}
+    class:list-item-odd={index % 2 === 1}
+    class:list-item-even={index % 2 === 0}
+    class="list-item {classes} {commonClass} {`list-item-at-${index}`}"
     onclick={onClick}
     onkeyup={(e) => {
         if (e && e.key == "Enter") {
@@ -87,140 +127,62 @@
     }}
 >
     {#if image}
-        <div
-            role="button"
-            tabindex="0"
+        <UIClickableDiv
             class="list-item-image"
-            onkeyup={(e) => {
-                e.preventDefault();
-                if (e && e.key == "Enter") {
-                    onClick();
-                    onclickImage(value);
-                }
-            }}
-            onclick={(e) => {
-                e.preventDefault();
-                onClick();
-                onclickImage(value);
-            }}
+            callback={callbackTemplate(onclickImage)}
         >
-            {#if imageComponent}
-                {#if typeof image === "string"}
-                    {@const SvelteComponent = imageComponent}
-                    <SvelteComponent value={image} {...imageComponentProps} />
-                {:else}
-                    {@const SvelteComponent_1 = imageComponent}
-                    <SvelteComponent_1 {...image} {...imageComponentProps} />
-                {/if}
+            {#if UIImageComponet}
+                <UIImageComponet {..._image} {...imageComponentProps} />
             {:else}
                 <figure class="image is-64x64">
                     <img class="is-rounded" src={image} alt={title} />
                 </figure>
             {/if}
-        </div>
+        </UIClickableDiv>
     {/if}
-    <div
-        role="button"
-        tabindex="0"
+    <UIClickableDiv
         class="list-item-content"
-        onclick={(e) => {
-            e.preventDefault();
-            onClick();
-            onclickContent(value);
-        }}
-        onkeyup={(e) => {
-            e.preventDefault();
-            if (e && e.key == "Enter") {
-                onClick();
-                onclickContent(value);
-            }
-        }}
+        callback={callbackTemplate(onclickContent)}
     >
         {#if title}
-            <div
+            <UIClickableDiv
                 class="list-item-title"
-                role="button"
-                tabindex="0"
-                onkeyup={(e) => {
-                    e.preventDefault();
-                    if (e && e.key == "Enter") {
-                        onClick();
-                        onclickTitle(value);
-                    }
-                }}
-                onclick={(e) => {
-                    e.preventDefault();
-                    onClick();
-                    onclickTitle(value);
-                }}
+                callback={callbackTemplate(onclickTitle)}
             >
-                {#if titleComponent}
-                    {#if typeof title === "string"}
-                        {@const SvelteComponent_2 = titleComponent}
-                        <SvelteComponent_2
-                            {title}
-                            {...titleComponentProps}
-                            {onchange}
-                        />
-                    {:else}
-                        {@const SvelteComponent_3 = titleComponent}
-                        <SvelteComponent_3
-                            {...title}
-                            {...titleComponentProps}
-                            {onchange}
-                        />
-                    {/if}
+                {#if UITitleComponent}
+                    <UITitleComponent
+                        {..._title}
+                        {...titleComponentProps}
+                        {onchange}
+                    />
                 {:else}
                     {title}
                 {/if}
-            </div>
+            </UIClickableDiv>
         {/if}
         {#if description}
-            <div
-                role="button"
-                tabindex="0"
-                onkeyup={(e) => {
-                    e.preventDefault();
-                    if (e && e.key == "Enter") {
-                        onClick();
-                        onclickDescription(value);
-                    }
-                }}
+            <UIClickableDiv
                 class="list-item-description"
-                onclick={(e) => {
-                    e.preventDefault();
-                    onClick();
-                    onclickDescription(value);
-                }}
+                callback={callbackTemplate(onclickDescription)}
             >
-                {#if descriptionComponent}
-                    {#if typeof description === "string"}
-                        {@const SvelteComponent_4 = descriptionComponent}
-                        <SvelteComponent_4
-                            value={description}
-                            {...descriptionComponentProps}
-                            {onchange}
-                            {onclick}
-                        />
-                    {:else}
-                        {@const SvelteComponent_5 = descriptionComponent}
-                        <SvelteComponent_5
-                            {...description}
-                            {...descriptionComponentProps}
-                            {onchange}
-                            {onclick}
-                        />
-                    {/if}
+                {#if UIDescriptionComponent}
+                    <UIDescriptionComponent
+                        {..._description}
+                        {...descriptionComponentProps}
+                        {onchange}
+                        {onclick}
+                    />
                 {:else}
                     {description}
                 {/if}
-            </div>
+            </UIClickableDiv>
         {/if}
-    </div>
+    </UIClickableDiv>
 
     {#if (allActions && allActions.length) || (allLinks && allLinks.length)}
         <div class="list-item-controls">
             {#if allActions && allActions.length}
+                {@debug allActions}
                 <UIButtons values={allActions} right={true} />
             {/if}
             {#if allLinks && allLinks.length}

@@ -8,7 +8,7 @@
      * @property {any} [items]
      * @property {any} [actions]
      * @property {any} [links]
-     * @property {string} [itemClasses]
+     * @property {string} [itemClass]
      * @property {any} [listItemComponent]
      * @property {any} [listItemComponentProps]
      * @property {any} [titleComponent]
@@ -25,8 +25,8 @@
         items = [],
         actions = [],
         links = [],
-        itemClasses = "",
-        listItemComponent = UIListItem,
+        itemClass = "",
+        listItemComponent: UIListItemComponent = UIListItem,
         listItemComponentProps = {},
         titleComponent = UITitle,
         titleComponentProps = { size: 6 },
@@ -34,13 +34,17 @@
         descriptionComponentProps = {},
         imageComponent,
         imageComponentProps = {},
+        onclick,
+        onclickContent,
+        onclickDescription,
+        onclickImage,
+        onclickTitle,
     } = $props();
 </script>
 
 {#if items}
-    {@const SvelteComponent = listItemComponent}
     {#each items as item, index (item[idFieldName])}
-        <SvelteComponent
+        <UIListItemComponent
             {...listItemComponentProps}
             {titleComponent}
             {titleComponentProps}
@@ -51,16 +55,16 @@
             {...item}
             listActions={actions}
             listLinks={links}
-            commonClasses={itemClasses}
             bind:value={items[index]}
+            commonClass={itemClass}
             {index}
             first={index === 0}
             last={index === items.length - 1}
-            on:click
-            on:clickContent
-            on:clickDescription
-            on:clickImage
-            on:clickTitle
+            {onclick}
+            {onclickContent}
+            {onclickDescription}
+            {onclickImage}
+            {onclickTitle}
         />
     {/each}
 {/if}
