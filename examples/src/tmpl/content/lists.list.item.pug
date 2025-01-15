@@ -1,0 +1,27 @@
+section(id="examples" class="section")
+  h1(class="title") Elements.Lists.UIListItem
+  div( class="box block")    
+    pre
+      | string|object       title
+      | string|object       description
+      | array               [actions = []]
+      | array               [links = []]
+      | array               [listActions = []]
+      | array               [listLinks = []]
+      | string              [class = '']
+      | string              [commonClass = '']
+      | string|object       [image = '']
+      | object              value - value of item, will be passed to event handlers
+      | string|number       [index = -1] - index in array 0-length
+      | boolean             [first = false] - if first
+      | boolean             [last = false] - if last
+      | function            [titleComponent = UITitle] - customization
+      | object              [titleComponentProps]
+      | function            [descriptionComponent]
+      | object              [descriptionComponentProps = {}]
+      | function            [imageComponent]
+      | object              [imageComponentProps = {}]
+      | function            [onclickImage]
+      | function            [onclickContent]
+      | function            [onclickTitle]
+      | function            [onclickDescription]

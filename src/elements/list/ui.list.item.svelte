@@ -17,7 +17,7 @@
      * @property {string} [class = '']
      * @property {string} [commonClass = '']
      * @property {string|object} [image = '']
-     * @property {any} value - value of item, will be passed to event handlers
+     * @property {object} value - value of item, will be passed to event handlers
      * @property {string|number} [index = -1] - index in array 0-length
      * @property {boolean} [first = false] - if first
      * @property {boolean} [last = false] - if last

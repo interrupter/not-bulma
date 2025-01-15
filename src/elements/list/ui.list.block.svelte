@@ -4,19 +4,24 @@
 
     /**
      * @typedef {Object} Props
-     * @property {string} [idFieldName]
-     * @property {any} [items]
-     * @property {any} [actions]
-     * @property {any} [links]
-     * @property {string} [itemClass]
-     * @property {any} [listItemComponent]
-     * @property {any} [listItemComponentProps]
-     * @property {any} [titleComponent]
-     * @property {any} [titleComponentProps]
-     * @property {any} descriptionComponent
-     * @property {any} [descriptionComponentProps]
-     * @property {any} imageComponent
-     * @property {any} [imageComponentProps]
+     * @property {string}   [idFieldName = "id"]
+     * @property {array}    [items = []]
+     * @property {array}    [actions = []]
+     * @property {array}    [links = []]
+     * @property {string}   [itemClass = ""]
+     * @property {function} [listItemComponent = UIListItem]
+     * @property {object}   [listItemComponentProps = {}]
+     * @property {function} [titleComponent = UITitle]
+     * @property {object}   [titleComponentProps = { size: 6 }]
+     * @property {function} descriptionComponent
+     * @property {object}   [descriptionComponentProps = {}]
+     * @property {function} imageComponent
+     * @property {object}   [imageComponentProps = {}]
+     * @property {function} [onclick]
+     * @property {function} [onclickContent]
+     * @property {function} [onclickDescription]
+     * @property {function} [onclickImage]
+     * @property {function} [onclickTitle]
      */
 
     /** @type {Props} */
