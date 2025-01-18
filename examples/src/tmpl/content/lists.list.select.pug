@@ -1,0 +1,24 @@
+section(id="examples" class="section")
+  h1(class="title") Elements.Lists.UIListSelect  
+  div( class="box block")    
+    pre
+      | string       [fieldname = "list-select"]                              field name
+      | boolean      [multiple = false]                                       if want not one variant selected
+      | boolean      [atLeastOne = true]                                      no empty result
+      | Variants     [variants = []]           variants to select from
+      | objects      value                                                    array of selected variants values
+      | strings      [selectedVariantsIds = []]                               array of ids of selected values      
+      | object       [titleComponentProps= { size: 5 }]                       title component properties
+      | function     [imageComponent = UIImage]                               image component
+      | object       [imageComponentProps= { covered: true }]                 image component properties
+      | function     [listComponent = UIList]                                 list component
+      | object       [listComponentProps = {actionsVisible: true}]            list component properties
+      | function     [sublimeValue = (value:object) => value.id]                     function to get `id` from variant's value
+      | function     [updateVariant = (items:array, valueId:string, itemProps:object, buttonProps:object) => void]    finds target item in items and updates item and item.actions[0] props
+      | function     [getItemIndex = (items:array, valueId:string) => number] returns index of item with value.id == valueId
+      | function     [getItem = (items, { valueId }) => object]               returns item
+      | function     [getItemValue = (items, { valueId }) => object]          returns item.value
+      | function     [getDefaultItemSublime = (items) => string]              returns identificator of default item      
+      | function     [uiOn = (items, { valueId }) => void]                    changes target item UI properties to show that it's selected
+      | function     [uiOff = (items, { valueId }) => void]                   changes target item UI properties to show that it's not selected
+      | function     [extendVariantToItemList = (item) => object]             converts variants to list items, adds actions property to show select/deselect button

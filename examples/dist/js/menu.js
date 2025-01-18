@@ -352,6 +352,22 @@ const menu = {
                     url: "./lists.endless.list.html"
                 }]
             }, {
+                id: "elements.lists.list.select",
+                title: "Выбор из списка",
+                items: [{
+                    id: "elements.lists.list.select.buttons.with.groups",
+                    title: "Кнопки выбора с группировкой",
+                    url: "./lists.list.select.buttons.with.groups.html"
+                }, {
+                    id: "elements.lists.list.select",
+                    title: "Выбор из списка",
+                    url: "./lists.list.select.html"
+                }, {
+                    id: "elements.lists.list.select.with.groups",
+                    title: "Выбор из списка с группами",
+                    url: "./lists.list.select.with.groups.html"
+                }]
+            }, {
                 id: "elements.lists.list.block",
                 title: "Блок списка",
                 url: "./lists.list.block.html"
@@ -363,18 +379,6 @@ const menu = {
                 id: "elements.lists.list.item",
                 title: "Элемент списка",
                 url: "./lists.list.item.html"
-            }, {
-                id: "elements.lists.list.select.buttons.with.groups",
-                title: "Кнопки выбора с группировкой",
-                url: "./lists.list.select.buttons.with.groups.html"
-            }, {
-                id: "elements.lists.list.select",
-                title: "Выбор из списка",
-                url: "./lists.list.select.html"
-            }, {
-                id: "elements.lists.list.select.with.groups",
-                title: "Выбор из списка с группами",
-                url: "./lists.list.select.with.groups.html"
             }, {
                 id: "elements.lists.list",
                 title: "Список",

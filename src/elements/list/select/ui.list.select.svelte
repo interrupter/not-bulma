@@ -9,74 +9,112 @@
 
     /**
      * @typedef {Object} Props
-     * @property {string} [fieldname]
-     * @property {boolean} [multiple]
-     * @property {boolean} [atLeastOne]
-     * @property {any} [variants] - array of values variants in group
-[
-{
-id:number,
-title:string|object,
-description:string|object,
-image:string|object,
-value:object
-}
-]
-     * @property {any} value - [...selectedItemsValues]
-     * @property {any} [selectedVariantsIds] - [...selectedItemsIds]
-     * @property {any} [titleComponent]
-     * @property {any} [titleComponentProps]
-     * @property {any} [imageComponent]
-     * @property {any} [imageComponentProps]
-     * @property {any} [descriptionComponent]
-     * @property {any} [descriptionComponentProps]
-     * @property {any} [listComponent]
-     * @property {any} [listComponentProps]
-     * @property {any} [sublimeValue]
-     * @property {any} [getItem]
-     * @property {any} [getItemValue]
-     * @property {any} [getDefaultItemSublime]
-     * @property {any} [uiOn]
-     * @property {any} [uiOff]
+     * @property {string}       [fieldname = "list-select"]                             field name
+     * @property {boolean}      [multiple = false]                                      if want not one variant selected
+     * @property {boolean}      [atLeastOne = true]                                     no empty result
+     * @property {array<import('./types.js').VariantInGroup>} [variants = []]           variants to select from
+     * @property {array<object>} value                                                  [...selectedItemsValues]
+     * @property {array<string|number>} [selectedVariantsIds = []]                      [...selectedItemsIds]
+     * @property {function}     [titleComponent = UITitle]
+     * @property {object}       [titleComponentProps= { size: 5 }]
+     * @property {function}     [imageComponent = UIImage]
+     * @property {object}       [imageComponentProps= { covered: true }]
+     * @property {function}     [listComponent = UIList]
+     * @property {object}       [listComponentProps = {actionsVisible: true}]
+     * @property {function}     [sublimeValue = (value) => value.id]
+     * @property {function}     [updateVariant = (valueId, props, toggleTitle) => void]
+     * @property {function}     [getItemIndex = (items, valueId) => number]
+     * @property {function}     [getItem = (items, { valueId }) => object]
+     * @property {function}     [getItemValue = (items, { valueId }) => object]
+     * @property {function}     [getDefaultItemSublime = (items) => string]
+     * @property {function}     [updateVariant = (items, valueId, props, toggleTitle) => void]
+     * @property {function}     [uiOn = (items, { valueId }) => void]
+     * @property {function}     [uiOff = (items, { valueId }) => void]
+     * @property {function}     [extendVariantToItemList = (item) => object]
      */
-
+    let items = $state([]);
     /** @type {Props} */
     let {
         fieldname = "list-select",
         multiple = false,
         atLeastOne = true,
-        variants = $bindable([]),
-        value = $bindable(),
-        selectedVariantsIds = $bindable([]),
-        titleComponent = UITitle,
+        variants = [], //variants to select from
+        value = [], //selected objects
+        selectedVariantsIds = [], //only ids of selected variants
         titleComponentProps = { size: 5 },
         imageComponent = UIImage,
         imageComponentProps = { covered: true },
-        descriptionComponent = UIButtons,
-        descriptionComponentProps = {},
         listComponent: UIListComponent = UIList,
-        listComponentProps = {},
-        sublimeValue = (value) => value.id,
-        getItem = ({ valueId }) => {
-            return variants.find((btnVal) => btnVal.value.id === valueId);
+        listComponentProps = { actionsVisible: true },
+        sublimeValue = (value) => value.id, //object -> id
+        getItemIndex = (items, valueId) =>
+            items.findIndex((val) => val.value.id === valueId),
+        getItem = (items, { valueId }) => {
+            //returns variants by its id
+            return items.find((btnVal) => btnVal.value.id === valueId);
         },
-        getItemValue = ({ valueId }) => {
-            return getItem({ valueId }).value;
+        getItemValue = (items, { valueId }) => {
+            // returns variant's value by id of variant
+            return getItem(items, { valueId }).value;
         },
-        getDefaultItemSublime = () => {
-            return variants[0].id;
+        getDefaultItemSublime = (items) => {
+            return items && items.length ? items[0].id : undefined;
         },
-        uiOn = (item) => {
-            item.color = "success";
-            item.outlined = false;
+        updateVariant = (items, valueId, itemProps, buttonProps) => {
+            const index = getItemIndex(items, valueId);
+            if (index === -1) {
+                return;
+            }
+            Object.keys(itemProps).forEach((key) => {
+                items[index][key] = itemProps[key];
+            });
+            if (
+                Array.isArray(items[index].actions) &&
+                items[index].actions.length
+            ) {
+                Object.keys(buttonProps).forEach((key) => {
+                    items[index].actions[0][key] = buttonProps[key];
+                });
+            }
         },
-        uiOff = (item) => {
-            item.color = false;
-            item.outlined = true;
+        uiOn = (items, { valueId }) => {
+            updateVariant(
+                items,
+                valueId,
+                {
+                    class: "has-background-success",
+                },
+                { title: "not-node:booleans_true", color: "success" }
+            );
         },
+        uiOff = (items, { valueId }) => {
+            updateVariant(
+                items,
+                valueId,
+                {
+                    class: "",
+                },
+                { title: "not-node:booleans_false", color: "danger" }
+            );
+        },
+        extendVariantToItemList = (itm) => {
+            const res = { ...itm };
+            res.actions = [
+                {
+                    title: "not-node:booleans_false",
+                    color: "danger",
+                    light: true,
+                    action: toggle,
+                },
+            ];
+            return res;
+        },
+        onchange,
+        ...others
     } = $props();
 
     onMount(() => {
+        items = variants.map(extendVariantToItemList);
         if (value && Array.isArray(value)) {
             if (atLeastOne && value.length) {
                 value.forEach((itemValue) => {
@@ -148,7 +186,7 @@ value:object
                 }
             }
         }
-        selectedVariantsIds = selectedVariantsIds;
+
         return ui;
     }
     //
@@ -160,18 +198,18 @@ value:object
         //
         onchange({
             field: fieldname,
-            value,
+            value: $state.snapshot(value),
+            ids: $state.snapshot(selectedVariantsIds),
         });
     }
     //
     function updateUI(changes) {
         if (changes.off) {
-            uiOff(getItem(changes.off));
+            uiOff(items, changes.off);
         }
         if (changes.on) {
-            uiOn(getItem(changes.on));
+            uiOn(items, changes.on);
         }
-        variants = variants;
     }
     //
     function updateValue() {
@@ -183,7 +221,7 @@ value:object
             newVal = selectedVariantsIds
                 .filter((val) => typeof val !== "undefined")
                 .map((valueId) =>
-                    getItemValue({
+                    getItemValue(items, {
                         valueId,
                     })
                 );
@@ -192,25 +230,20 @@ value:object
     }
     //
     function selectDefault() {
-        if (atLeastOne && variants.length > 0) {
-            const defValueId = getDefaultItemSublime();
-            toggle({ id: defValueId });
+        if (atLeastOne && items.length > 0) {
+            const defValueId = getDefaultItemSublime(items);
+            if (defValueId) {
+                toggle({ id: defValueId });
+            }
         }
     }
 </script>
 
 <UIListComponent
-    {...listComponentProps}
-    bind:items={variants}
-    {titleComponent}
     {titleComponentProps}
-    {descriptionComponent}
-    descriptionComponentProps={{
-        ...descriptionComponentProps,
-        action(event, value) {
-            toggle(value);
-        },
-    }}
     {imageComponent}
     {imageComponentProps}
+    {...others}
+    {...listComponentProps}
+    {items}
 />

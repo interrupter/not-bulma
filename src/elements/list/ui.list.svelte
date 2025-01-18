@@ -40,7 +40,7 @@
     /** @type {Props} */
     let {
         class: classes = "",
-        items = $bindable([]),
+        items = [],
         actions = [],
         links = [],
         actionsVisible = false,
@@ -50,15 +50,22 @@
         itemClass = "",
         itemLength,
         idFieldName = "id",
+        emptyListRenderer,
         emptyListPlaceholderComponent:
             UIEmptyListPlaceholderComponent = UIListEmptyPlaceholder,
         emptyListPlaceholderComponentProps = {},
+        listItemContentComponent,
+        listItemContentComponentProps = {},
+        listItemRenderer,
         listItemComponent = UIListItem,
         listItemComponentProps = {},
+        titleRenderer,
         titleComponent = UITitle,
         titleComponentProps = { size: 6 },
+        descriptionRenderer,
         descriptionComponent,
         descriptionComponentProps = {},
+        imageRenderer,
         imageComponent,
         imageComponentProps = {},
         onchange,
@@ -80,15 +87,21 @@
         class:has-hidden-images={hiddenImages}
     >
         <UIListBlock
-            bind:items
+            {items}
             {itemClass}
+            {listItemContentComponent}
+            {listItemContentComponentProps}
+            {listItemRenderer}
             {listItemComponent}
             {listItemComponentProps}
             {idFieldName}
+            {titleRenderer}
             {titleComponent}
             {titleComponentProps}
+            {descriptionRenderer}
             {descriptionComponent}
             {descriptionComponentProps}
+            {imageRenderer}
             {imageComponent}
             {imageComponentProps}
             {actions}
@@ -101,6 +114,8 @@
             {onclickTitle}
         />
     </div>
+{:else if emptyListRenderer}
+    {@render emptyListRenderer(emptyListPlaceholderComponentProps)}
 {:else}
     <UIEmptyListPlaceholderComponent {...emptyListPlaceholderComponentProps} />
 {/if}

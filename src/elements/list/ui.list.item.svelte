@@ -8,6 +8,7 @@
 
     /**
      * @typedef {Object} Props
+     * @property {number}   index
      * @property {string|object} title
      * @property {string|object} description
      * @property {array} [actions = []]
@@ -27,10 +28,11 @@
      * @property {object} [descriptionComponentProps = {}]
      * @property {function} [imageComponent]
      * @property {object} [imageComponentProps = {}]
-     * @property {function} [onclickImage]
-     * @property {function} [onclickContent]
+     * @property {function} [onclick]
      * @property {function} [onclickTitle]
      * @property {function} [onclickDescription]
+     * @property {function} [onclickImage]
+     * @property {function} [onclickContent]
      */
 
     /** @type {Props} */
@@ -48,37 +50,41 @@
         index = -1,
         first = false,
         last = false,
+        listItemContentComponent: UIListItemContentComponent,
+        listItemContentComponentProps = {},
+        titleRenderer,
         titleComponent: UITitleComponent = UITitle,
         titleComponentProps = { size: 6 },
+        descriptionRenderer,
         descriptionComponent: UIDescriptionComponent,
         descriptionComponentProps = {},
-        imageComponent: UIImageComponet,
+        imageRenderer,
+        imageComponent: UIImageComponent,
         imageComponentProps = {},
-        onclickImage = () => false,
-        onclickContent = () => false,
-        onclickTitle = () => false,
-        onclickDescription = () => false,
+        onclick,
+        onclickImage,
+        onclickContent,
+        onclickTitle,
+        onclickDescription,
     } = $props();
 
     function onClick() {
-        onclick(value);
+        onclick && onclick(value);
     }
 
     let allActions = $state([]);
     let allLinks = $state([]);
 
-    let _title = $state(title);
-    let _description = $state(description);
-    let _image = $state(image);
-
     const callbackTemplate = (callback) => {
         return () => {
-            onClick();
-            callback && callback(value);
+            if (callback) {
+                onClick();
+                callback && callback(value);
+            }
         };
     };
 
-    onMount(() => {
+    $effect(() => {
         allActions = [...actions, ...listActions].map((btn, index) => {
             return {
                 ...btn,
@@ -86,103 +92,144 @@
                 action: btn.action ? () => btn.action(value) : undefined,
             };
         });
-        console.log(
-            actions.length,
-            "+",
-            listActions.length,
-            " = ",
-            allActions.length,
-            allActions
-        );
+
         allLinks = [...links, ...listLinks].map((link, index) => {
             link.id = index;
             return link;
         });
+    });
 
-        if (typeof title !== "object") {
-            _title = { title: title };
+    const paramsSet = { title, description, image, value, index };
+
+    const clickableItemElementAttributes = {
+        role: "button",
+        tabindex: "0",
+        onclick: onClick,
+        onkeyup: (e) => {
+            if (e && e.key == "Enter") {
+                onClick();
+            }
+        },
+    };
+
+    const additionalElementAttributes = onclick
+        ? clickableItemElementAttributes
+        : {};
+
+    let imageProps = $state({});
+    let titleProps = $state({});
+    let descriptionProps = $state({});
+
+    $effect(() => {
+        if (typeof image === "object") {
+            imageProps = { ...image };
+        } else {
+            imageProps = { image };
         }
-        if (typeof description !== "object") {
-            _description = { value: description };
+    });
+
+    $effect(() => {
+        if (typeof title === "object") {
+            titleProps = { ...title };
+        } else {
+            titleProps = { title };
         }
-        if (typeof image !== "object") {
-            _image = { url: image };
+    });
+
+    $effect(() => {
+        if (typeof description === "object") {
+            descriptionProps = { ...description };
+        } else {
+            descriptionProps = { description };
         }
     });
 </script>
 
+{#snippet itemContent()}
+    {#if titleRenderer}
+        {@render titleRenderer(paramsSet)}
+    {:else if title}
+        <UIClickableDiv
+            class="list-item-title"
+            callback={callbackTemplate(onclickTitle)}
+        >
+            {#if UITitleComponent}
+                <UITitleComponent
+                    {...titleProps}
+                    {...titleComponentProps}
+                    {onchange}
+                />
+            {:else}{title}{/if}
+        </UIClickableDiv>
+    {/if}
+
+    {#if descriptionRenderer}
+        {@render descriptionRenderer(paramsSet)}
+    {:else if description}
+        <UIClickableDiv
+            class="list-item-description"
+            callback={callbackTemplate(onclickDescription)}
+        >
+            {#if UIDescriptionComponent}
+                <UIDescriptionComponent
+                    {...descriptionProps}
+                    {...descriptionComponentProps}
+                    {onchange}
+                    {onclick}
+                />
+            {:else}{description}{/if}
+        </UIClickableDiv>
+    {/if}
+{/snippet}
+
 <div
-    role="button"
-    tabindex="0"
+    {...additionalElementAttributes}
+    class:is-clickable={onclick}
     class:list-item-last={last}
     class:list-item-first={first}
     class:list-item-odd={index % 2 === 1}
     class:list-item-even={index % 2 === 0}
     class="list-item {classes} {commonClass} {`list-item-at-${index}`}"
-    onclick={onClick}
-    onkeyup={(e) => {
-        if (e && e.key == "Enter") {
-            onClick();
-        }
-    }}
 >
     {#if image}
-        <UIClickableDiv
-            class="list-item-image"
-            callback={callbackTemplate(onclickImage)}
-        >
-            {#if UIImageComponet}
-                <UIImageComponet {..._image} {...imageComponentProps} />
-            {:else}
-                <figure class="image is-64x64">
-                    <img class="is-rounded" src={image} alt={title} />
-                </figure>
-            {/if}
-        </UIClickableDiv>
+        {#if imageRenderer}
+            {@render imageRenderer(paramsSet)}
+        {:else}
+            <UIClickableDiv
+                class="list-item-image"
+                callback={callbackTemplate(onclickImage)}
+            >
+                {#if UIImageComponent}
+                    <UIImageComponent {...imageProps} />
+                {:else}
+                    <figure class="image is-64x64">
+                        <img
+                            class="is-rounded"
+                            src={image}
+                            alt={title ? title?.title || title : image}
+                        />
+                    </figure>
+                {/if}
+            </UIClickableDiv>
+        {/if}
     {/if}
-    <UIClickableDiv
-        class="list-item-content"
-        callback={callbackTemplate(onclickContent)}
-    >
-        {#if title}
-            <UIClickableDiv
-                class="list-item-title"
-                callback={callbackTemplate(onclickTitle)}
-            >
-                {#if UITitleComponent}
-                    <UITitleComponent
-                        {..._title}
-                        {...titleComponentProps}
-                        {onchange}
-                    />
-                {:else}
-                    {title}
-                {/if}
-            </UIClickableDiv>
-        {/if}
-        {#if description}
-            <UIClickableDiv
-                class="list-item-description"
-                callback={callbackTemplate(onclickDescription)}
-            >
-                {#if UIDescriptionComponent}
-                    <UIDescriptionComponent
-                        {..._description}
-                        {...descriptionComponentProps}
-                        {onchange}
-                        {onclick}
-                    />
-                {:else}
-                    {description}
-                {/if}
-            </UIClickableDiv>
-        {/if}
-    </UIClickableDiv>
+
+    {#if UIListItemContentComponent}
+        <UIListItemContentComponent {...listItemContentComponentProps}>
+            {@render itemContent()}
+        </UIListItemContentComponent>
+    {:else}
+        <UIClickableDiv
+            class="list-item-content"
+            callback={callbackTemplate(onclickContent)}
+        >
+            {@render itemContent()}</UIClickableDiv
+        >
+    {/if}
 
     {#if (allActions && allActions.length) || (allLinks && allLinks.length)}
         <div class="list-item-controls">
             {#if allActions && allActions.length}
-                {@debug allActions}
                 <UIButtons values={allActions} right={true} />
             {/if}
             {#if allLinks && allLinks.length}

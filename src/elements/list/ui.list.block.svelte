@@ -31,12 +31,18 @@
         actions = [],
         links = [],
         itemClass = "",
+        listItemContentComponent,
+        listItemContentComponentProps = {},
+        listItemRenderer,
         listItemComponent: UIListItemComponent = UIListItem,
         listItemComponentProps = {},
+        titleRenderer,
         titleComponent = UITitle,
         titleComponentProps = { size: 6 },
+        descriptionRenderer,
         descriptionComponent,
         descriptionComponentProps = {},
+        imageRenderer,
         imageComponent,
         imageComponentProps = {},
         onclick,
@@ -49,27 +55,36 @@
 
 {#if items}
     {#each items as item, index (item[idFieldName])}
-        <UIListItemComponent
-            {...listItemComponentProps}
-            {titleComponent}
-            {titleComponentProps}
-            {descriptionComponent}
-            {descriptionComponentProps}
-            {imageComponent}
-            {imageComponentProps}
-            {...item}
-            listActions={actions}
-            listLinks={links}
-            bind:value={items[index]}
-            commonClass={itemClass}
-            {index}
-            first={index === 0}
-            last={index === items.length - 1}
-            {onclick}
-            {onclickContent}
-            {onclickDescription}
-            {onclickImage}
-            {onclickTitle}
-        />
+        {#if listItemRenderer}
+            {@render listItemRenderer(item, index)}
+        {:else}
+            <UIListItemComponent
+                {...listItemComponentProps}
+                {listItemContentComponent}
+                {listItemContentComponentProps}
+                {titleRenderer}
+                {titleComponent}
+                {titleComponentProps}
+                {descriptionRenderer}
+                {descriptionComponent}
+                {descriptionComponentProps}
+                {imageRenderer}
+                {imageComponent}
+                {imageComponentProps}
+                {...items[index]}
+                listActions={actions}
+                listLinks={links}
+                value={items[index].value}
+                commonClass={itemClass}
+                {index}
+                first={index === 0}
+                last={index === items.length - 1}
+                {onclick}
+                {onclickContent}
+                {onclickDescription}
+                {onclickImage}
+                {onclickTitle}
+            />
+        {/if}
     {/each}
 {/if}

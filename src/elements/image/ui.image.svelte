@@ -3,6 +3,7 @@
      * @typedef {Object} Props
      * @property {string} [urlFull]
      * @property {string} url
+     * @property {string} image
      * @property {string} [title]
      * @property {string} [alt]
      * @property {string} [cors='anonymous']
@@ -21,6 +22,7 @@
     let {
         urlFull,
         url,
+        image,
         title,
         alt,
         cors = "anonymous",
@@ -56,7 +58,7 @@
             class=""
             alt={alt || title}
             {title}
-            src={url}
+            src={url || image}
             crossOrigin={cors}
         />
     </figure>
