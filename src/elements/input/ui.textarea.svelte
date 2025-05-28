@@ -8,17 +8,23 @@
         placeholder = "",
         fieldname = "textarea",
         rows = 10,
+        size,
+        color,
         required = true,
         readonly = false,
         disabled = false,
         valid = true,
         class: classes = "",
-        onchange = () => true,
         ...others
     } = $props();
 
+    const optionalProps = {};
     let invalid = $derived(!valid);
-    const oninput = UICommon.onInput(fieldname, onchange);
+    if (typeof others.onchange === "function") {
+        const oninput = UICommon.onInput(fieldname, others.onchange);
+        optionalProps.onchange = oninput;
+        optionalProps.oninput = oninput;
+    }
 </script>
 
 {#if readonly}
@@ -26,7 +32,9 @@
 {:else}
     <textarea
         id="form-field-textarea-{fieldname}"
-        class="textarea {classes}"
+        class="textarea {size ? `is-${size}` : ''} {color
+            ? `is-${color}`
+            : ''} {classes}"
         name={fieldname}
         bind:value
         {invalid}
@@ -38,6 +46,7 @@
         {rows}
         aria-controls="input-field-helper-{fieldname}"
         aria-describedby="input-field-helper-{fieldname}"
+        {...optionalProps}
         {...others}
     ></textarea>
 {/if}
