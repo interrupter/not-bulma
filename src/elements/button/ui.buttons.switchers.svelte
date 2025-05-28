@@ -62,6 +62,7 @@
         right = false,
         class: classes = "",
         buttonComponent = UIButtonSwitch,
+        buttonProps = {},
         action = defaultAction,
         onclick = () => true,
         onchange = () => true,

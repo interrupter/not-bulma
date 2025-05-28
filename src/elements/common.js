@@ -269,6 +269,14 @@ class UICommon {
             return "";
         }
     }
+
+    static stringOrNumber(val) {
+        return ["string", "number"].indexOf(typeof val) > -1;
+    }
+
+    static stringsOfNumbers(list) {
+        return list.every(this.stringOrNumber);
+    }
 }
 
 export default UICommon;

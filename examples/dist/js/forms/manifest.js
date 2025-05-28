@@ -13,43 +13,52 @@ export default {
       component: 'UIPassword',
       label: 'password again'
     },
-    telephone: {
+    telephone:{
       component: 'UITelephone',
       placeholder: 'not-node:field_telephone_placeholder',
       label: 'not-node:field_telephone_label'
     },
-    email: {
+    email:{
       component: 'UIEmail',
       placeholder: 'not-node:field_email_placeholder',
       label: 'not-node:field_email_label'
     },
-    country: {
+    country:{
       component: 'UISelect',
       placeholder: 'not-node:field_country_placeholder',
       label: 'not-node:field_country_label',
       variants: [{
-        id: 1,
-        title: 'UI'
-      }, {
-        id: 2,
-        title: 'DU'
-      }, {
-        id: 3,
-        title: 'KU'
-      }, {
-        id: 4,
-        title: 'UL'
-      }]
+          id: 1,
+          title: 'UI'
+        },
+        {
+          id: 2,
+          title: 'DU'
+        },
+        {
+          id: 3,
+          title: 'KU'
+        },
+        {
+          id: 4,
+          title: 'UL'
+        }
+      ]
     }
   },
   actions: {
-    login: {
-      fields: ['login', 'password']
+    login:{
+      fields: ['login','password']
     },
-    register: {
-      fields: ['login', ['email', 'telephone'], ['password', 'password2'], 'country']
+    register:{
+      fields: [
+        'login',
+        ['email', 'telephone'],
+        ['password','password2'],
+        'country'
+      ]
     },
-    restore: {
+    restore:{
       fields: ['email']
     }
   }

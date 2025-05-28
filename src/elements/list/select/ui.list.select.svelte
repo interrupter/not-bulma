@@ -3,16 +3,14 @@
 
     //
     import UIList from "../ui.list.svelte";
-    import UITitle from "../../various/ui.title.svelte";
     import UIImage from "../../image/ui.image.svelte";
-    import UIButtons from "../../button/ui.buttons.svelte";
 
     /**
      * @typedef {Object} Props
      * @property {string}       [fieldname = "list-select"]                             field name
      * @property {boolean}      [multiple = false]                                      if want not one variant selected
      * @property {boolean}      [atLeastOne = true]                                     no empty result
-     * @property {array<import('./types.js').VariantInGroup>} [variants = []]           variants to select from
+     * @property {array<import('./types.js').Variants>} [variants = []]           variants to select from
      * @property {array<object>} value                                                  [...selectedItemsValues]
      * @property {array<string|number>} [selectedVariantsIds = []]                      [...selectedItemsIds]
      * @property {function}     [titleComponent = UITitle]
@@ -50,12 +48,16 @@
         getItemIndex = (items, valueId) =>
             items.findIndex((val) => val.value.id === valueId),
         getItem = (items, { valueId }) => {
+            const index = getItemIndex(items, valueId);
             //returns variants by its id
-            return items.find((btnVal) => btnVal.value.id === valueId);
+            return index > -1
+                ? items.find((btnVal) => btnVal.value.id === valueId)
+                : undefined;
         },
         getItemValue = (items, { valueId }) => {
             // returns variant's value by id of variant
-            return getItem(items, { valueId }).value;
+            const item = getItem(items, { valueId });
+            return item ? item.value : undefined;
         },
         getDefaultItemSublime = (items) => {
             return items && items.length ? items[0].id : undefined;

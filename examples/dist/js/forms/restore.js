@@ -1,13 +1,13 @@
 /* global notBulma */
 
 import waiter from './waiter.js';
-const { notForm, notCommon } = notBulma.Frame;
+const {notForm, notCommon} = notBulma.Frame;
 
 import Manifest from './manifest.js';
 import ValidatorsLib from './simple.validators.js';
 
-export default class RestoreForm extends notForm {
-  constructor({ data = {}, options = {} }) {
+export default class RestoreForm extends notForm{
+  constructor({data = {}, options = {}}){
     options.action = 'restore';
     options.manifest = Manifest;
     super({
@@ -19,21 +19,21 @@ export default class RestoreForm extends notForm {
     this.on('submit', e => this.onSubmit(e));
   }
 
-  getFormValidators() {
+  getFormValidators(){
     return ValidatorsLib;
   }
 
-  async onSubmit(data) {
-    try {
+  async onSubmit(data){
+    try{
       this.setLoading();
       //do some stuff with data
       await waiter(1000);
       //maybe error or success
       this.processResult(results);
-    } catch (e) {
+    }catch(e){
       //if exactly error
       this.processResult(e);
-    } finally {
+    }finally{
       //should unlock UI anyway
       this.resetLoading();
     }

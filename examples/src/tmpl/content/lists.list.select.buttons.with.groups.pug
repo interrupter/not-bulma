@@ -1,0 +1,23 @@
+section(id="examples" class="section")
+  h1(class="title") Elements.Lists.UIListSelectButtonsWithGroups
+  div( class="box block")    
+    pre
+      | function                              [onchange]  callback on value change event
+      | string                                [fieldname="list-select-tags"]
+      | import('../types').VariantsGroups     [variants = []]
+      | import('../types').SelectedValues     [variantsSelected = {}]
+      | import('../types').SelectedVariants   [value = []]
+      | object                                [behaviourUI = ListGroupsUITreeDTO]
+      | object                                [behaviourValue = ListGroupsValueDTO]
+      | boolean                               [multiple = true]
+      | boolean                               [onlyOnePerGroup = true]
+      | boolean                               [atLeastOne = true]
+      | function                              [titleComponent = UITitle]
+      | object                                [titleComponentProps = { size: 5}]
+      | function                              [imageComponent = UIImage]
+      | object                                [imageComponentProps = { covered: true }]
+      | function                              [descriptionComponent = UIButtonsSwitchers]
+      | object                                [descriptionComponentProps = {}]
+      | function                              [listComponent = UIList]
+      | object                                [listComponentProps = {}]
+      | Array of string                       [actionsList=["selectAll", "selectNone"]]

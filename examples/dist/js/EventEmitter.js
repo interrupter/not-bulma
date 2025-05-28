@@ -14,7 +14,6 @@
      *
      * @class EventEmitter Manages event registering and emitting.
      */
-
     function EventEmitter() {}
 
     // Shortcuts to improve speed and size
@@ -76,7 +75,8 @@
                     response[key] = events[key];
                 }
             }
-        } else {
+        }
+        else {
             response = events[evt] || (events[evt] = []);
         }
 
@@ -118,13 +118,13 @@
         return response || listeners;
     };
 
-    function isValidListener(listener) {
+    function isValidListener (listener) {
         if (typeof listener === 'function' || listener instanceof RegExp) {
-            return true;
+            return true
         } else if (listener && typeof listener === 'object') {
-            return isValidListener(listener.listener);
+            return isValidListener(listener.listener)
         } else {
-            return false;
+            return false
         }
     }
 
@@ -295,13 +295,15 @@
                     // Pass the single listener straight through to the singular method
                     if (typeof value === 'function') {
                         single.call(this, i, value);
-                    } else {
+                    }
+                    else {
                         // Otherwise pass back to the multiple function
                         multiple.call(this, i, value);
                     }
                 }
             }
-        } else {
+        }
+        else {
             // So evt must be a string
             // And listeners must be an array of listeners
             // Loop over it and pass each one to the multiple method
@@ -332,14 +334,16 @@
         if (type === 'string') {
             // Remove all listeners for the specified event
             delete events[evt];
-        } else if (evt instanceof RegExp) {
+        }
+        else if (evt instanceof RegExp) {
             // Remove all events matching the regex.
             for (key in events) {
                 if (events.hasOwnProperty(key) && evt.test(key)) {
                     delete events[key];
                 }
             }
-        } else {
+        }
+        else {
             // Remove all listeners in all events
             delete this._events;
         }
@@ -441,7 +445,8 @@
     proto._getOnceReturnValue = function _getOnceReturnValue() {
         if (this.hasOwnProperty('_onceReturnValue')) {
             return this._onceReturnValue;
-        } else {
+        }
+        else {
             return true;
         }
     };
@@ -471,9 +476,11 @@
         define(function () {
             return EventEmitter;
         });
-    } else if (typeof module === 'object' && module.exports) {
+    }
+    else if (typeof module === 'object' && module.exports){
         module.exports = EventEmitter;
-    } else {
+    }
+    else {
         exports.EventEmitter = EventEmitter;
     }
-})(typeof window !== 'undefined' ? window : this || {});
+}(typeof window !== 'undefined' ? window : this || {}));

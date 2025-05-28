@@ -8,61 +8,47 @@
     import UIButtons from "../../button/ui.buttons.svelte";
     import UIButtonsSwitchers from "../../button/ui.buttons.switchers.svelte";
 
+    import ListGroupsUITreeDTO from "./dto/list.groups.ui.tree.dto.js";
+    import ListGroupsValueDTO from "./dto/list.groups.value.dto.js";
+
     /**
      * @typedef {Object} Props
-     * @property {string} [fieldname]
-     * @property {any} [variants] - [
-array of groups
-{
-id:number,
-title:string|object,
-image:string|object,
-variants = [
-array of values variants in group
-{
-id:number,
-title:string|object,
-description:string|object,
-image:string|object,
-value:object
-}]
-}
-]
-     * @property {any} [variantsSelected] - multiple && multiple in group
-{
-array of arrays of selected values in group
-if no selection group should be empty array
-[groupId]: [...variantsId]
-}
-multiple && one in group
-{
-[groupId]: variantId
-}
-only one (not multiple && one in group)
-{
-group: groupId
-value: variantId
-}
-     * @property {any} value - {[groupId]: [...valuesOfSelectedItems]}
-     * @property {any} [titleComponent]
-     * @property {any} [titleComponentProps]
-     * @property {any} [imageComponent]
-     * @property {any} [imageComponentProps]
-     * @property {any} [descriptionComponent]
-     * @property {any} [descriptionComponentProps]
-     * @property {any} [listComponent]
-     * @property {any} [listComponentProps]
-     * @property {any} [actionsList]
-     * @property {any} [sublimeValue]
+     * @property {function} [onchange]  callback on value change event
+     * @property {string} [fieldname="list-select-tags"]
+     * @property {import('../types').VariantsGroups} [variants = []] -
+     * @property {import('../types').SelectedValues} [variantsSelected = {}] - multiple && multiple in group
+     * @property {import('../types').SelectedVariants} [value = []]
+     * @property {object} [behaviourUI = ListGroupsUITreeDTO]
+     * @property {object} [behaviourValue = ListGroupsValueDTO]
+     * @property {boolean} [multiple = true]
+     * @property {boolean} [onlyOnePerGroup = true]
+     * @property {boolean} [atLeastOne = true]
+     * @property {function} [titleComponent = UITitle]
+     * @property {object} [titleComponentProps = { size: 5}]
+     * @property {function} [imageComponent = UIImage]
+     * @property {object} [imageComponentProps = { covered: true }]
+     * @property {function} [descriptionComponent = UIButtonsSwitchers]
+     * @property {object} [descriptionComponentProps = {}]
+     * @property {function} [listComponent = UIList]
+     * @property {object} [listComponentProps = {}]
+     * @property {Array<string>} [actionsList=["selectAll", "selectNone"]]
      */
 
     /** @type {Props} */
     let {
         onchange = () => true,
         fieldname = "list-select-tags",
-        variants = $bindable([]),
-
-        value = $bindable(),
+        variants = [],
+        variantsSelected = {},
+        value,
+        //behaviour managers
+        behaviourUI = ListGroupsUITreeDTO,
+        behaviourValue = ListGroupsValueDTO,
+        //behaviour options
+        multiple = true,
+        onlyOnePerGroup = true,
+        atLeastOne = true,
+        //comopnents, renderers and props for them
         titleComponent = UITitle,
         titleComponentProps = { size: 5 },
         imageComponent = UIImage,
@@ -71,14 +57,9 @@ value: variantId
         descriptionComponentProps = {},
         listComponent: UIListComponent = UIList,
         listComponentProps = {},
-        actionsList = ["selectAll", "deselectAll"],
-        sublimeValue = (value) => {
-            return {
-                groupId: value.group,
-                valueId: value.id,
-            };
-        },
+        actionsList = ["selectAll", "selectNone"],
     } = $props();
+
     //
 
     const AVAILABLE_ACTIONS = {
@@ -89,16 +70,41 @@ value: variantId
                 selectAll();
             },
         },
-        deselectAll: {
+        selectNone: {
             title: "Снять выделение со всех",
             color: "",
             action() {
-                deselectAll();
+                selectNone();
             },
         },
     };
 
     let ACTIONS = $state([]);
+    let selectorGroups = $state([]);
+
+    function updateUI() {
+        selectorGroups = behaviourUI.syncUIWithValue(
+            selectorGroups,
+            (itemIds) =>
+                behaviourValue.itemInValue(value, itemIds, {
+                    multiple,
+                    onlyOnePerGroup,
+                    atLeastOne,
+                })
+        );
+        console.log("selectorGroups", selectorGroups);
+    }
+
+    export const valueAsVariants = () =>
+        behaviourValue.valueAsVariants(value, variants);
+
+    function triggerChange() {
+        variantsSelected = valueAsVariants();
+        onchange({
+            field: fieldname,
+            value,
+        });
+    }
 
     onMount(() => {
         actionsList.forEach((name) => {
@@ -107,85 +113,77 @@ value: variantId
                 : false;
         });
         ACTIONS = ACTIONS;
+        selectorGroups = behaviourUI.buildSelectorItemsFromVariants(variants);
+        value = behaviourValue.initValue(value, { multiple });
+        updateUI();
     });
 
     export const selectAll = () => {
-        setSelectionOfAll(true);
-    };
-
-    export const deselectAll = () => {
-        setSelectionOfAll(false);
-    };
-
-    export const selectGroup = (groupId) => {
-        setSelectionOfGroup(groupId, true);
-    };
-
-    export const deselectGroup = (groupId) => {
-        setSelectionOfGroup(groupId, false);
-    };
-
-    export const setSelectionOfGroup = (groupId, selection) => {
-        variants.forEach((group) => {
-            if (groupId === group.id) {
-                group.description.values.forEach((itm) => {
-                    itm.selected = selection;
-                });
-            }
+        behaviourValue.selectAll(variants, value, {
+            multiple,
+            onlyOnePerGroup,
+            atLeastOne,
         });
-        variants = variants;
+        updateUI();
         triggerChange();
     };
 
-    export const setSelectionOfAll = (selection) => {
-        variants.forEach((group) => {
-            group.description.values.forEach((itm) => {
-                itm.selected = selection;
-            });
+    export const selectNone = () => {
+        behaviourValue.selectNone(variants, value, {
+            multiple,
+            onlyOnePerGroup,
+            atLeastOne,
         });
-        variants = variants;
+        updateUI();
         triggerChange();
     };
 
-    export function getSelectedItems() {
-        let result = {};
-        variants.forEach((group) => {
-            if (!Object.hasOwn(result, group.id)) {
-                result[group.id] = [];
-            }
-            group.description.values.forEach((itm) => {
-                if (itm.selected) {
-                    result[group.id].push(sublimeValue(itm.value));
-                }
-            });
+    export const selectAllInGroup = (groupId) => {
+        behaviourValue.selectAllInGroup(variants, value, groupId, {
+            multiple,
+            onlyOnePerGroup,
+            atLeastOne,
         });
-        return result;
-    }
+        updateUI();
+        triggerChange();
+    };
 
-    function triggerChange() {
-        value = getSelectedItems();
-        onchange({
-            fieldname,
-            value,
+    export const selectNoneInGroup = (groupId) => {
+        behaviour.selectNoneInGroup(variants, value, groupId, {
+            multiple,
+            onlyOnePerGroup,
+            atLeastOne,
         });
-    }
+        updateUI();
+        triggerChange();
+    };
+
+    export const toggleItem = (itemValue) => {
+        behaviourValue.toggle(value, itemValue, {
+            multiple,
+            onlyOnePerGroup,
+            atLeastOne,
+        });
+        console.log("value", value);
+        updateUI();
+        triggerChange();
+    };
 </script>
 
 <UIButtons values={ACTIONS} centered={true} />
 
 <UIListComponent
     {...listComponentProps}
-    bind:items={variants}
     {titleComponent}
     {titleComponentProps}
     {descriptionComponent}
     descriptionComponentProps={{
-        action(event, value, selected) {
-            setTimeout(triggerChange, 0);
-            return !selected;
+        action(event, itemValue) {
+            toggleItem(itemValue);
         },
         ...descriptionComponentProps,
     }}
     {imageComponent}
     {imageComponentProps}
+    items={selectorGroups}
 />

@@ -1,5 +1,6 @@
 /* global  structuredClone, notBulma */
 const { unmount } = notBulma.svelte;
+
 export function createExamplesSetForPropertyNameValues(
     obj,
     propertyName,
