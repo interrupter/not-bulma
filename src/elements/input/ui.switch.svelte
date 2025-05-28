@@ -10,18 +10,23 @@
         label = "",
         hideLabel = false,
         placeholder = "",
-        fieldname = "textfield",
+        fieldname = "switch",
         required = true,
         readonly = false,
         disabled = false,
+        reactOn = ["onblur", "oninput"],
         valid = true,
         class: classes = "",
-        onchange = () => true,
         ...others
     } = $props();
 
     let invalid = $derived(!valid);
-    const oninput = UICommon.onInput(fieldname, onchange);
+
+    const optionalProps = {};
+    if (typeof others.onchange === "function") {
+        const oninput = UICommon.onInput(fieldname, others.onchange);
+        reactOn.forEach((eventName) => (optionalProps[eventName] = oninput));
+    }
 </script>
 
 {#if readonly}
@@ -41,10 +46,9 @@
         {required}
         {readonly}
         {invalid}
-        onblur={oninput}
-        {oninput}
         aria-controls="input-field-helper-{fieldname}"
         aria-describedby="input-field-helper-{fieldname}"
+        {...optionalProps}
         {...others}
     />
     <label class="label" for="form-field-switch-{fieldname}">
