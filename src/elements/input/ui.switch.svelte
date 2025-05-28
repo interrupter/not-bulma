@@ -11,6 +11,8 @@
         hideLabel = false,
         placeholder = "",
         fieldname = "switch",
+        size,
+        color,
         required = true,
         readonly = false,
         disabled = false,
@@ -37,7 +39,9 @@
     {/if}
     <input
         id="form-field-switch-{fieldname}"
-        class="switch {classes}"
+        class="switch {size ? `is-${size}` : ''} {color
+            ? `is-${color}`
+            : ''} {classes}"
         type="checkbox"
         name={fieldname}
         bind:checked={value}
