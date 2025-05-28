@@ -11,27 +11,29 @@
 
     /**
      * @typedef {Object} Props
-     * @property {any} [value] - list of item ids
-     * @property {any} [variants]
-     * @property {string} [fieldname]
-     * @property {boolean} [readonly] - export let required = true;
-     * @property {boolean} [valid]
-     * @property {any} [beforeAdd]
-     * @property {any} [getItemId]
-     * @property {any} [getItemTitle]
-     * @property {any} [getItemType]
-     * @property {any} [buildItem]
+     * @property {string} [LC_ADD = "not-node:add_label"]
+     * @property {string} [LC_SELECT_FROM_LIST = "not-node:select_from_list_label"]
+     * @property {array<string|number>} [value] - list of item ids
+     * @property {array<object>} [variants]
+     * @property {string} [fieldname = 'tag']
+     * @property {boolean} [readonly = false] - export let required = true;
+     * @property {boolean} [valid = true]
+     * @property {function} [beforeAdd]
+     * @property {function} [getItemId]
+     * @property {function} [getItemTitle]
+     * @property {function} [getItemType]
+     * @property {function} [buildItem]
      */
 
     /** @type {Props} */
     let {
-        value = $bindable([]),
         LC_ADD = "not-node:add_label",
         LC_SELECT_FROM_LIST = "not-node:select_from_list_label",
+        value = $bindable([]),
         variants = [],
         fieldname = "tag",
         readonly = false,
-
+        valid = true,
         beforeAdd = (/*variant, variants*/) => {
             return true;
         },
@@ -43,7 +45,7 @@
         },
         //eslint-disable-next-line no-unused-vars
         getItemType = (variant) => {
-            return "info";
+            return variant?.type ?? "info";
         },
         buildItem = (variant) => {
             return {
@@ -53,11 +55,11 @@
             };
         },
         class: classes = "",
-        onchange = () => true,
+        onchange,
     } = $props();
 
     function variantIdToVariant(id) {
-        return variants.find((variant) => getItemId(variant) === id);
+        return variants.find((variant) => getItemId(variant) == id);
     }
 
     function changeEvent() {
@@ -97,9 +99,7 @@
     }
 
     function clearValueFromDeadVariants() {
-        value = value.filter((id) => {
-            return variantIdToVariant(id);
-        });
+        value = value.filter(variantIdToVariant);
         return value;
     }
 
