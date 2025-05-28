@@ -17,7 +17,13 @@
     } = $props();
 
     let invalid = $derived(!valid);
-    const oninput = UICommon.onInput(fieldname, onchange);
+
+    const optionalProps = {};
+    if (typeof others.onchange === "function") {
+        const oninput = UICommon.onInput(fieldname, others.onchange);
+        optionalProps.onchange = oninput;
+        optionalProps.oninput = oninput;
+    }
 </script>
 
 {#if readonly}
@@ -35,10 +41,9 @@
         {disabled}
         placeholder={$LOCALE[placeholder]}
         autocomplete={fieldname}
-        onchange={oninput}
-        {oninput}
         aria-controls="input-field-helper-{fieldname}"
         aria-describedby="input-field-helper-{fieldname}"
+        {...optionalProps}
         {...others}
     />
 {/if}

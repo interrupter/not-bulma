@@ -46,7 +46,6 @@
         {disabled}
         placeholder={$LOCALE[placeholder]}
         autocomplete={fieldname}
-        onchange={oninput}
         aria-controls="input-field-helper-{fieldname}"
         aria-describedby="input-field-helper-{fieldname}"
         {...optionalProps}
