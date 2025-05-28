@@ -13,6 +13,7 @@
         required = true,
         readonly = false,
         disabled = false,
+        reactOn = ["onblur"],
         valid = true,
         class: classes = "",
         ...others
@@ -23,8 +24,7 @@
     const optionalProps = {};
     if (typeof others.onchange === "function") {
         const oninput = UICommon.onInput(fieldname, others.onchange);
-        optionalProps.onchange = oninput;
-        optionalProps.oninput = oninput;
+        reactOn.forEach((eventName) => (optionalProps[eventName] = oninput));
     }
 </script>
 
@@ -42,7 +42,6 @@
         {disabled}
         {required}
         {readonly}
-        onblur={oninput}
         placeholder={$LOCALE[placeholder]}
         {rows}
         aria-controls="input-field-helper-{fieldname}"

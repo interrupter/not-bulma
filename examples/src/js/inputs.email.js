@@ -9,6 +9,8 @@ const Examples = [
             {
                 placeholder: "some email",
                 value: "",
+
+                onchange: (...args) => console.log("email change", ...args),
             },
         ],
     },

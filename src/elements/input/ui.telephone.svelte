@@ -15,7 +15,6 @@
         size,
         valid = true,
         class: classes = "",
-        onchange = () => true,
         ...others
     } = $props();
 

@@ -9,6 +9,7 @@ const Examples = [
             {
                 fieldname: "some_texfield",
                 value: "",
+                onchange: (...args) => console.log("hidden change", ...args),
             },
         ],
     },

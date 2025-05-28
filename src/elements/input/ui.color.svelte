@@ -7,22 +7,31 @@
         value = $bindable(""),
         placeholder = "",
         fieldname = "color",
+        size,
+        color,
         disabled = false,
         required = true,
         readonly = false,
         valid = true,
         class: classes = "",
-        onchange = () => true,
         ...others
     } = $props();
 
     let invalid = $derived(!valid);
-    const oninput = UICommon.onInput(fieldname, onchange);
+    const optionalProps = {};
+
+    if (typeof others.onchange === "function") {
+        const oninput = UICommon.onInput(fieldname, others.onchange);
+        optionalProps.onchange = oninput;
+        optionalProps.oninput = oninput;
+    }
 </script>
 
 <input
     id="form-field-color-{fieldname}"
-    class="input {classes}"
+    class="input {size ? `is-${size}` : ''} {color
+        ? `is-${color}`
+        : ''} {classes}"
     type="color"
     name={fieldname}
     bind:value
@@ -32,9 +41,8 @@
     {disabled}
     placeholder={$LOCALE[placeholder]}
     autocomplete={fieldname}
-    onchange={oninput}
-    {oninput}
     aria-controls="input-field-helper-{fieldname}"
     aria-describedby="input-field-helper-{fieldname}"
+    {...optionalProps}
     {...others}
 />

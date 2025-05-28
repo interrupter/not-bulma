@@ -1,5 +1,6 @@
 import UIAutocomplete from "./ui.autocomplete.svelte";
 import UIControl from "./ui.control.svelte";
+import UIColor from "./ui.color.svelte";
 import UIDate from "./ui.date.svelte";
 import UIDatetimeInTZ from "./ui.datetime.in.tz.svelte";
 import UIEmail from "./ui.email.svelte";
@@ -26,6 +27,7 @@ import UITextfield from "./ui.textfield.svelte";
 export {
     UIAutocomplete,
     UIControl,
+    UIColor,
     UIDate,
     UIDatetimeInTZ,
     UIEmail,

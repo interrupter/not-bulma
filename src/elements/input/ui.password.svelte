@@ -4,26 +4,34 @@
 
     /** @type {import('./type').UIInputProps} */
     let {
-        inputStarted = $bindable(false),
         value = $bindable(""),
         placeholder = "",
         fieldname = "password",
+        color,
+        size,
         required = true,
         readonly = false,
         disabled = false,
         valid = true,
         class: classes = "",
-        onchange = () => true,
         ...others
     } = $props();
 
     let invalid = $derived(!valid);
-    const oninput = UICommon.onInput(fieldname, onchange);
+    const optionalProps = {};
+
+    if (typeof others.onchange === "function") {
+        const oninput = UICommon.onInput(fieldname, others.onchange);
+        optionalProps.onchange = oninput;
+        optionalProps.oninput = oninput;
+    }
 </script>
 
 <input
     id="form-field-password-{fieldname}"
-    class="input {classes}"
+    class="input {size ? `is-${size}` : ''} {color
+        ? `is-${color}`
+        : ''} {classes}"
     type="password"
     name={fieldname}
     bind:value
@@ -33,9 +41,8 @@
     {disabled}
     placeholder={$LOCALE[placeholder]}
     autocomplete={fieldname}
-    onchange={oninput}
-    {oninput}
     aria-controls="input-field-helper-{fieldname}"
     aria-describedby="input-field-helper-{fieldname}"
+    {...optionalProps}
     {...others}
 />

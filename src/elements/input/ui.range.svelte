@@ -11,17 +11,26 @@
         tickmarks = false,
         placeholder = "",
         fieldname = "range",
+        color,
+        size,
         required = true,
         disabled = false,
         readonly = false,
         valid = true,
         class: classes = "",
-        onchange = () => true,
+
         ...others
     } = $props();
 
     let invalid = $derived(!valid);
-    const oninput = UICommon.onInput(fieldname, onchange);
+
+    const optionalProps = {};
+
+    if (typeof others.onchange === "function") {
+        const oninput = UICommon.onInput(fieldname, others.onchange);
+        optionalProps.onchange = oninput;
+        optionalProps.oninput = oninput;
+    }
 </script>
 
 {#if readonly}
@@ -29,7 +38,9 @@
 {:else}
     <input
         id="form-field-range-{fieldname}"
-        class="input big-number slider has-output is-fullwidth is-success {classes}"
+        class="input big-number slider has-output {size
+            ? `is-${size}`
+            : ''} {color ? `is-${color}` : ''}  {classes}"
         type="range"
         name={fieldname}
         {min}
@@ -45,8 +56,7 @@
         autocomplete={fieldname}
         aria-controls="input-field-helper-{fieldname}"
         aria-describedby="input-field-helper-{fieldname}"
-        onchange={oninput}
-        {oninput}
+        {...optionalProps}
         {...others}
     />
     <output for="form-field-range-{fieldname}">{value}</output>

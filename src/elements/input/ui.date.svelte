@@ -8,13 +8,14 @@
         value = $bindable(new Date()),
         placeholder = "",
         fieldname = "datetime",
+        color,
+        size,
         pattern = "d{4}-d{2}-d{2}",
         required = true,
         disabled = false,
         readonly = false,
         valid = true,
         class: classes = "",
-        onchange = () => true,
         ...others
     } = $props();
 
@@ -27,7 +28,13 @@
     });
 
     let invalid = $derived(!valid);
-    const oninput = UICommon.onInput(fieldname, onchange);
+    const optionalProps = {};
+
+    if (typeof others.onchange === "function") {
+        const oninput = UICommon.onInput(fieldname, others.onchange);
+        optionalProps.onchange = oninput;
+        optionalProps.oninput = oninput;
+    }
 </script>
 
 {#if readonly}
@@ -37,7 +44,9 @@
 {:else}
     <input
         id="form-field-date-{fieldname}"
-        class="input {classes}"
+        class="input {size ? `is-${size}` : ''} {color
+            ? `is-${color}`
+            : ''} {classes}"
         type="date"
         name={fieldname}
         bind:value
@@ -48,10 +57,9 @@
         placeholder={$LOCALE[placeholder]}
         {pattern}
         autocomplete={fieldname}
-        onchange={oninput}
-        {oninput}
         aria-controls="input-field-helper-{fieldname}"
         aria-describedby="input-field-helper-{fieldname}"
+        {...optionalProps}
         {...others}
     />
 {/if}

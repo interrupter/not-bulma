@@ -7,12 +7,13 @@
         value = $bindable(""),
         placeholder = "",
         fieldname = "email",
+        color,
+        size,
         required = true,
         readonly = false,
         disabled = false,
         valid = true,
         class: classes = "",
-        onchange = () => true,
         ...others
     } = $props();
 
@@ -31,7 +32,9 @@
 {:else}
     <input
         id="form-field-email-{fieldname}"
-        class="input {classes}"
+        class="input {size ? `is-${size}` : ''} {color
+            ? `is-${color}`
+            : ''} {classes}"
         type="email"
         name={fieldname}
         bind:value
