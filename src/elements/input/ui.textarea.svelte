@@ -18,8 +18,9 @@
         ...others
     } = $props();
 
-    const optionalProps = {};
     let invalid = $derived(!valid);
+
+    const optionalProps = {};
     if (typeof others.onchange === "function") {
         const oninput = UICommon.onInput(fieldname, others.onchange);
         optionalProps.onchange = oninput;

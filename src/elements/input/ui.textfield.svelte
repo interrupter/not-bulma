@@ -32,7 +32,9 @@
 {:else}
     <input
         id="form-field-textfield-{fieldname}"
-        class="input {classes} is-{size}"
+        class="input {size ? `is-${size}` : ''} {color
+            ? `is-${color}`
+            : ''} {classes}"
         type="text"
         name={fieldname}
         bind:value
