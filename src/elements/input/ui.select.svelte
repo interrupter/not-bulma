@@ -28,6 +28,7 @@
         required = true,
         readonly = false,
         size,
+        color,
         valid = true,
         class: classes = "",
         onchange = () => true,
@@ -95,7 +96,11 @@
         <span class="mr-2">{$LOCALE[emptyValueTitle]}</span>
     {/if}
 {:else}
-    <div class="select {classes}">
+    <div
+        class="select {size ? `is-${size}` : ''} {color
+            ? `is-${color}`
+            : ''} {classes}"
+    >
         <select
             id="form-field-select-{fieldname}"
             name={fieldname}
