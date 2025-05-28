@@ -1,0 +1,19 @@
+section(id="examples" class="section")
+  h1(class="title") Текст большой
+  h2(class="subtitle") Elements.Inputs.UITextarea
+  div( class="box")    
+    div(class="block")
+      pre
+        | any:      [value = '']
+        | string:   [placeholder = '']
+        | string:   [fieldname = 'textarea']
+        | boolean:  [required = true]
+        | boolean:  [readonly = false]
+        | boolean:  [disabled = false]
+        | boolean:  [valid = true]
+        | string:   [size]              ['small', default, 'medium', 'large']
+        | string:   [color]             bulma colors ['link', 'primary', 'info', 'success', 'warning', 'danger'] for border
+        | number:   [rows = 10]
+        | string:   [class = '']
+        | function: [onchange]
+        
