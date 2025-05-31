@@ -1,0 +1,22 @@
+section(id="examples" class="section")
+  h1(class="title") JSONArea
+  h2(class="subtitle") Elements.Inputs.UIJSONArea
+  div( class="box")    
+    div(class="block")
+      pre
+        | object:   [value = {}]        
+        | string:   [fieldname = 'jsonarea']
+        | boolean:  [required = true]
+        | boolean:  [readonly = false]
+        | boolean:  [disabled = false]        
+        | boolean:  [valid = true]
+        | string:   [size]              ['small', default, 'medium', 'large']        
+        | number:   [rows = 10]
+        | array of string:  [reactOn = ["onblur"]]
+        | string:   [colorValid = "success"]
+        | string:   [colorInvalid = "danger"]
+        | number:   [validationDelay = 1000]
+        | string:   [class = '']
+        | function: [onchange]
+        | function: [onerror]
+        
