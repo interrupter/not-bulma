@@ -329,6 +329,11 @@ const menu = {
                         url: "./inputs.select.html",
                     },
                     {
+                        id: "elements.inputs.select.multiple",
+                        title: "Выпадающий список (множественный выбор)",
+                        url: "./inputs.select.multiple.html",
+                    },
+                    {
                         id: "elements.inputs.switch.list",
                         title: "Список переключателей",
                         url: "./inputs.switch.list.html",

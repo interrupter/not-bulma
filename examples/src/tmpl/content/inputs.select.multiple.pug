@@ -1,0 +1,21 @@
+section(id="examples" class="section")
+  h1(class="title") Выпадающий список (выбор нескольких вариантов)
+  h2(class="subtitle") Elements.Inputs.UISelectMultiple
+  div( class="box")    
+    div(class="block")
+      pre
+        | array of string|number:       [value = '']
+        | array of object:              [variants]
+        | string:   [placeholder = '']        
+        | string:   [emptyValueTitle = '']
+        | string:   [emptyValueEnabled = true]
+        | string:   [emptyValueTitle = '']
+        | string:   [fieldname = 'select']        
+        | boolean:  [required = true]
+        | boolean:  [readonly = false]  
+        | string:   [size]              ['small', default, 'medium', 'large']
+        | string:   [color]             bulma colors ['link', 'primary', 'info', 'success', 'warning', 'danger'] for border      
+        | boolean:  [valid = true]
+        | string:   [class = '']        
+        | function: [onchange = ({value:array of string|number, field:string, variants:array of object}): true]
+        

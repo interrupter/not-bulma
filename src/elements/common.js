@@ -62,11 +62,12 @@ class UICommon {
      * @return {import('./events.types').UIEventCallback}
      * @memberof UICommon
      */
-    static onInput(field, onchange, defaultValue = undefined) {
+    static onInput(field, onchange, defaultValue = undefined, additional = {}) {
         if (typeof onchange !== "function") {
             return undefined;
         }
         return (event) => {
+            event.preventDefault();
             const value = UICommon.extractValueFromInput(
                 event.currentTarget,
                 defaultValue
@@ -76,7 +77,8 @@ class UICommon {
                     field,
                     value,
                 },
-                event
+                event,
+                additional
             );
         };
     }

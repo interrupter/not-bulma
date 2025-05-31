@@ -1,0 +1,20 @@
+section(id="examples" class="section")
+  h1(class="title") Дата и времяя в таймзоне
+  h2(class="subtitle") Elements.Inputs.UIDatetimeInTZ
+  div( class="box")    
+    div(class="block")
+      pre
+        | any:      [value = new Date().toISOString()]        
+        | string:   [fieldname = 'datetimeInTZ']
+        | number:   [timezoneOffset = 0]  shift in mins
+        | string:   [min]                 optional min datetime 
+        | string:   [max]                 optional max datetime 
+        | string:   [size]              ['small', default, 'medium', 'large']
+        | string:   [color]             bulma colors ['link', 'primary', 'info', 'success', 'warning', 'danger'] for border
+        | boolean:  [required = true]
+        | boolean:  [readonly = false]
+        | boolean:  [disabled = false]
+        | boolean:  [valid = true]
+        | string:   [class = '']
+        | function: [onchange]
+        

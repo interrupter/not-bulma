@@ -7,160 +7,135 @@
 
     /**
      * @typedef {Object} Props
-     * @property {string} [value]
-     * @property {any}      [variants]
-     * @property {string} [placeholder]
-     * @property {string} [emptyValueTitle]
-     * @property {string} [fieldname]
-     * @property {boolean} [required]
-     * @property {boolean} [readonly]
-     * @property {boolean} [multiple]
-     * @property {number} [size]
-     * @property {boolean} [valid]
+     * @property {string} [value = []]
+     * @property {any}      [variants = []]
+     * @property {string} [placeholder = ""]
+     * @property {boolean}  [emptyValueEnabled = true]
+     * @property {string|number}  [emptyValue]
+     * @property {string} [emptyValueTitle = "no-selection"]
+     * @property {string} [fieldname="select-multiple"]
+     * @property {boolean} [required = true]
+     * @property {boolean} [readonly = false]
+     * @property {number} [rows = 8]
+     * @property {string} [color]
+     * @property {string} [size]
+     * @property {boolean} [valid = true]
+     * @property {string}   [class = ""]
+     * @property {function} [onchange = ({value:array of string|number, field:string, variants:array of object})=>true]
      */
 
     /** @type {Props} */
     let {
-        value = $bindable(""),
+        value = [],
         variants = [],
         placeholder = "",
-        emptyValueTitle = "",
-        fieldname = "select",
+        emptyValueTitle = "no-selection",
+        emptyValueEnabled = true,
+        emptyValue,
+        fieldname = "select-multiple",
         required = true,
         readonly = false,
-        multiple = false,
-        size = 8,
+        rows = 8,
+        color,
+        size,
         valid = true,
         class: classes = "",
         onchange = () => true,
         ...others
     } = $props();
 
-    let selectedVariants = $state([]);
+    let lastValue = $state.snapshot(value);
 
-    function filterSelectedVariants(variant) {
-        if (Array.isArray(value) && multiple) {
-            return value.indexOf(variant.id) > -1;
-        } else if (value) {
-            return value == variant.id;
-        } else {
-            return false;
-        }
+    function isClearValueMacro(plainValue) {
+        return plainValue.includes(UICommon.CLEAR_MACRO);
     }
 
-    function onBlur(ev) {
-        let data = {
-            field: fieldname,
-            value: ev.currentTarget.value,
-        };
-        if (Array.isArray(data.value) && Array.isArray(value)) {
-            if (notCommon.compareTwoArrays(value, data.value)) {
-                return true;
-            }
-        } else {
-            if (data.value === value) {
-                return true;
-            }
-        }
-        if (multiple) {
-            value = Array.from(ev.target.selectedOptions).map((el) => el.value);
-            if (value.indexOf(UICommon.CLEAR_MACRO) > -1) {
-                value = [];
-            }
-            data.value = value;
-        } else {
-            if (data.value === UICommon.CLEAR_MACRO) {
-                value = "";
-            } else {
-                value = data.value;
-            }
-        }
-        onchange(data);
-        return true;
+    function getSelectedOptionsValues(ev) {
+        return Array.from(ev.selectedOptions).map((el) =>
+            typeof el.__value !== "undefined" ? el.__value : el.value
+        );
+    }
+
+    function getEmptyValue() {
+        return typeof emptyValue === "undefined"
+            ? UICommon.CLEAR_MACRO
+            : emptyValue;
+    }
+
+    function idToVariant(id) {
+        return variants.find((variant) => variant.id == id);
+    }
+
+    function valueIdsToVariants() {
+        const ev = getEmptyValue();
+        return value.filter((id) => id !== ev).map(idToVariant);
     }
 
     function onInput(ev) {
-        let data = {
-            field: fieldname,
-            value: ev.currentTarget.value,
-        };
-        if (multiple) {
-            value = Array.from(ev.target.selectedOptions).map((el) => el.value);
-            if (value.indexOf(UICommon.CLEAR_MACRO) > -1) {
-                value = [];
-            }
-            data.value = value;
-        } else {
-            if (data.value === UICommon.CLEAR_MACRO) {
-                value = "";
-            } else {
-                value = data.value;
-            }
+        let selectedIds = getSelectedOptionsValues(ev.currentTarget);
+        if (isClearValueMacro(selectedIds)) {
+            selectedIds = [];
         }
-        onchange(data);
-        return true;
+        const newValue = selectedIds;
+        value = selectedIds;
+        if (notCommon.compareTwoArrays(newValue, lastValue)) {
+            return;
+        }
+        lastValue = newValue;
+        onchange({
+            value: newValue,
+            field: fieldname,
+            variants: valueIdsToVariants(),
+        });
     }
 
-    $effect(() => {
-        selectedVariants = Array.isArray(variants)
-            ? variants.filter(filterSelectedVariants)
-            : [];
-    });
+    let selectedVariants = $derived(
+        value && Array.isArray(value) ? valueIdsToVariants(value) : []
+    );
 
     let invalid = $derived(!valid);
+    let UI_CLASSES = $derived(
+        [size, color]
+            .filter((val) => val)
+            .map((val) => `is-${val}`)
+            .join(" ")
+    );
 </script>
 
 {#if readonly}
-    {#if value}
+    {#if value && Array.isArray(value) && value.length}
         {#each selectedVariants as selectedVariant}
             <span class="mr-2">{$LOCALE[selectedVariant.title]}</span>
         {/each}
-    {:else}
+    {:else if emptyValueEnabled}
         <span class="mr-2">{$LOCALE[emptyValueTitle]}</span>
     {/if}
 {:else}
-    <div class="select {classes}" class:is-multiple={multiple}>
+    <div class="select is-multiple {UI_CLASSES} {classes} ">
         <select
+            multiple="true"
             id="form-field-select-{fieldname}"
             name={fieldname}
             oninput={onInput}
+            onchange={onInput}
+            onblur={onInput}
+            {value}
             {readonly}
             {required}
-            {multiple}
             {invalid}
-            size={multiple ? size : false}
+            size={rows}
             {...others}
         >
-            {#if placeholder.length > 0}
-                {#if value}
-                    <UISelectOption
-                        value={UICommon.CLEAR_MACRO}
-                        title={placeholder}
-                    />
-                {:else}
-                    <UISelectOption
-                        value={UICommon.CLEAR_MACRO}
-                        selected="selected"
-                        title={placeholder}
-                    />
-                {/if}
+            {#if emptyValueEnabled}
+                <UISelectOption
+                    value={typeof emptyValue === "undefined"
+                        ? UICommon.CLEAR_MACRO
+                        : emptyValue}
+                    title={emptyValueTitle}
+                />
             {/if}
             {#each variants as variant (variant.id)}
-                {#if multiple}
-                    <UISelectOption
-                        value={variant.id}
-                        selected={value &&
-                            Array.isArray(value) &&
-                            value.indexOf(variant.id) > -1}
-                        title={variant.title}
-                    />
-                {:else}
-                    <UISelectOption
-                        value={variant.id}
-                        selected={value == variant.id}
-                        title={variant.title}
-                    />
-                {/if}
+                <UISelectOption value={variant.id} title={variant.title} />
             {/each}
         </select>
     </div>

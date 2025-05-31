@@ -1,8 +1,15 @@
 <script>
     import { onMount } from "svelte";
+    import UICommon from "../common.js";
 
     function removeMsFromDate(isoDate, markAsZULU = false) {
         return isoDate.split(".")[0] + (markAsZULU ? "" : "Z");
+    }
+
+    function removeSecFromDate(isoDate, markAsZULU = false) {
+        return (
+            isoDate.slice(0, isoDate.lastIndexOf(":")) + (markAsZULU ? "" : "Z")
+        );
     }
 
     function shiftDatetime(isoDate, shift) {
@@ -12,7 +19,10 @@
             if (dateIsValid(dateUtc + offset)) {
                 const newDate = new Date(dateUtc + offset);
                 const newIsoDate = newDate.toISOString();
-                return removeMsFromDate(newIsoDate, true);
+                return removeSecFromDate(
+                    removeMsFromDate(newIsoDate, true),
+                    true
+                );
             }
         } catch {
             return;
@@ -25,11 +35,20 @@
             : dateString;
     }
 
+    function humanReadable(isoDate) {
+        return UICommon.tryFormatLocaleDateTime(isoDate);
+    }
+
     /** @type {import('./type').UIInputProps} */
     let {
-        fieldname = "datetime",
-        value = $bindable(removeMsFromDate(new Date().toISOString())),
+        fieldname = "datetimeInTZ",
+        value = $bindable(
+            removeSecFromDate(removeMsFromDate(new Date().toISOString()))
+        ),
         timezoneOffset = 0,
+        human = true,
+        color,
+        size,
         required = false,
         disabled = false,
         readonly = false,
@@ -74,7 +93,7 @@
         value = markAsZULU(shiftDatetime(shiftedValue, -timezoneOffset, true));
         onchange({
             field: fieldname,
-            value,
+            value: $state.snapshot(value),
         });
     };
 
@@ -99,11 +118,13 @@
 
 {#if shiftedValue}
     {#if readonly}
-        <p>{shiftedValue}</p>
+        <p>{humanReadable(shiftedValue)}</p>
     {:else}
         <input
             id="form-field-datetime-in-timezone-{fieldname}"
-            class="input {classes}"
+            class="input {size ? `is-${size}` : ''} {color
+                ? `is-${color}`
+                : ''} {classes}"
             type="datetime-local"
             name={fieldname}
             bind:value={shiftedValue}

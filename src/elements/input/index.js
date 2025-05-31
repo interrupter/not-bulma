@@ -1,6 +1,8 @@
 import UIAutocomplete from "./ui.autocomplete.svelte";
 import UIControl from "./ui.control.svelte";
 import UIColor from "./ui.color.svelte";
+import UICheckbox from "./ui.checkbox.svelte";
+import UICheckboxList from "./ui.checkbox.list.svelte";
 import UIDate from "./ui.date.svelte";
 import UIDatetimeInTZ from "./ui.datetime.in.tz.svelte";
 import UIEmail from "./ui.email.svelte";
@@ -15,6 +17,7 @@ import UIPassword from "./ui.password.svelte";
 import UIRadioButtons from "./ui.radio.buttons.svelte";
 import UIRange from "./ui.range.svelte";
 import UISelect from "./ui.select.svelte";
+import UISelectMultiple from "./ui.select.multiple.svelte";
 import UISelectFromModel from "./ui.select.from.model.svelte";
 import UISelectOption from "./ui.select.option.svelte";
 import UISwitch from "./ui.switch.svelte";
@@ -28,6 +31,8 @@ export {
     UIAutocomplete,
     UIControl,
     UIColor,
+    UICheckbox,
+    UICheckboxList,
     UIDate,
     UIDatetimeInTZ,
     UIEmail,
@@ -42,6 +47,7 @@ export {
     UIRadioButtons,
     UIRange,
     UISelect,
+    UISelectMultiple,
     UISelectFromModel,
     UISelectOption,
     UISwitch,

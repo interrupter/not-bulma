@@ -13,22 +13,32 @@
     let {
         value = $bindable(false),
         label = "checkbox",
-        placeholder = "",
         fieldname = "checkbox",
         required = true,
         readonly = false,
         disabled = false,
         valid = true,
         class: classes = "",
-        labelClass = "",
-        onchange = () => true,
+        labelClass = "checkbox",
+        reactOn = ["onchange", "oninput"],
         ...others
     } = $props();
 
     let invalid = $derived(!valid);
     const id = `form-field-checkbox-${fieldname}`;
 
-    const oninput = UICommon.onInput(fieldname, onchange);
+    const optionalProps = {};
+    if (typeof others.onchange === "function") {
+        const oninput = UICommon.onInput(
+            fieldname,
+            others.onchange,
+            undefined,
+            {
+                id: others?.id,
+            }
+        );
+        reactOn.forEach((eventName) => (optionalProps[eventName] = oninput));
+    }
 </script>
 
 <UILabel class={labelClass} {disabled} for={id}>
@@ -37,19 +47,17 @@
     {:else}
         <input
             {id}
-            class="input {classes}"
+            class={classes}
             type="checkbox"
             name={fieldname}
             bind:checked={value}
-            placeholder={$LOCALE[placeholder]}
             {required}
             {readonly}
             {invalid}
             {disabled}
-            onchange={oninput}
-            {oninput}
             aria-controls="input-field-helper-{fieldname}"
             aria-describedby="input-field-helper-{fieldname}"
+            {...optionalProps}
             {...others}
         />
         {$LOCALE[label]}
