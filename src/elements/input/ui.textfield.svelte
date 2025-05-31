@@ -12,6 +12,7 @@
         size = "normal",
         readonly = false,
         valid = true,
+        color,
         class: classes = "",
         ...others
     } = $props();

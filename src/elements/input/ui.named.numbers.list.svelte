@@ -10,27 +10,47 @@
     /** @type {import('./type').UIInputProps} */
     let {
         fieldname = "numbers_list",
-        value = $bindable({}),
+        value = {},
+        defaultItemTitle = "",
+        defaultItemValue = 0,
         label = "named numbers list",
-        placeholder = $bindable("new item"),
+        labelSize = 5,
+        placeholder = "new item",
         readonly = false,
+        disabled = false,
+        required = true,
+        valid = true,
         onchange = () => true,
+        class: classes = "",
+        ...others
     } = $props();
 
-    let list = $derived(
-        Object.keys(value).map((name) => {
+    const createNewVal = () => {
+        return {
+            id: defaultItemTitle,
+            number: defaultItemValue,
+        };
+    };
+
+    let newVal = $state(createNewVal());
+
+    const transformObjectToList = () => {
+        return Object.keys(value).map((name) => {
             return {
                 id: name,
                 title: name,
                 number: value[name],
             };
-        })
-    );
+        });
+    };
+
+    let list = $state(transformObjectToList());
 
     function remove(id) {
         if (notCommon.objHas(value, id)) {
             delete value[id];
             value = value;
+            list = transformObjectToList();
             onchange({ value, field: fieldname });
         }
     }
@@ -41,22 +61,15 @@
         if (id && id !== "" && !isNaN(number) && !notCommon.objHas(value, id)) {
             value[id] = number;
         }
-        onchange({ value, field: fieldname });
+        list = transformObjectToList();
+        onchange({ value: $state.snapshot(value), field: fieldname });
+        newVal = createNewVal();
     }
-
-    const createNewVal = () => {
-        return {
-            id: "",
-            number: 0,
-        };
-    };
-
-    let newVal = $state(createNewVal());
 </script>
 
-<UITitle title={label} size={5} />
+<UITitle title={label} size={labelSize} />
 {#each list as item (item.id)}
-    <UIColumns>
+    <UIColumns class={classes} {disabled}>
         <UIColumn classes="is-6">
             {item.title}
         </UIColumn>
@@ -71,9 +84,13 @@
     </UIColumns>
 {/each}
 {#if !readonly}
-    <UIColumns>
+    <UIColumns class={classes}>
         <UIColumn classes="is-6">
-            <UITextfield bind:value={newVal.id} bind:placeholder />
+            <UITextfield
+                bind:value={newVal.id}
+                {placeholder}
+                required={false}
+            />
         </UIColumn>
         <UIColumn classes="is-4">
             <UINumber bind:value={newVal.number} />

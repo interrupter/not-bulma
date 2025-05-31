@@ -290,7 +290,7 @@ const menu = {
                     },
                     {
                         id: "elements.inputs.named.numbers.list",
-                        title: "Список имнованных значений",
+                        title: "Список именованных значений",
                         url: "./inputs.named.numbers.list.html",
                     },
                     {
