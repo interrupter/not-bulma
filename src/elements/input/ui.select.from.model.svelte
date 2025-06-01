@@ -116,7 +116,6 @@
     {required}
     {readonly}
     {disabled}
-    {multiple}
     {size}
     {valid}
     onchange={onChange}

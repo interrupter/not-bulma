@@ -1,4 +1,5 @@
 <script>
+    import { onMount } from "svelte";
     import { LOCALE } from "../../locale";
     import UISelectOption from "./ui.select.option.svelte";
 
@@ -85,6 +86,19 @@
     });
 
     let invalid = $derived(!valid);
+
+    onMount(() => {
+        if (readonly) return;
+        if (!value) {
+            if (placeholder.length === 0 && variants.length) {
+                value = variants[0].id;
+                onchange({
+                    field: fieldname,
+                    value: variants[0].id,
+                });
+            }
+        }
+    });
 </script>
 
 {#if readonly}

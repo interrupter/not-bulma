@@ -55,7 +55,7 @@
     /** @type {Props} */
     let {
         value,
-        variants = $bindable([]),
+        variants = [],
         loaded = false,
         placeholder = "empty select item",
         fieldname = "selectFromModel",
@@ -117,6 +117,7 @@
     let resolvedValue;
 
     function onModelChanged({ value: selectedValue }) {
+        console.log("onModelChanged", resultsList.length, variants.length);
         if (resultsList.length > variants.length) {
             resolvedValue = resultsList.find(
                 (item) => notPath.get(optionId, item) == selectedValue
@@ -139,7 +140,10 @@
             color: "primary",
             action() {
                 componentState = "hidden";
-                onresolve({ field: fieldname, value: resolvedValue });
+                onresolve({
+                    field: fieldname,
+                    value: $state.snapshot(resolvedValue),
+                });
             },
         },
         reject: {

@@ -37,14 +37,14 @@
 
     /** @type {Props} */
     let {
-        value = $bindable([]),
-        placeholder = $bindable(""),
-        fieldname = $bindable("selectFromModel"),
-        required = $bindable(true),
+        value = [],
+        placeholder = "",
+        fieldname = "selectFromModel",
+        required = true,
         readonly = false,
-        multiple = $bindable(false),
-        size = $bindable(8),
-        valid = $bindable(true),
+        multiple = false,
+        size = 8,
+        valid = true,
         modelName = "",
         actionName = "",
         actionFilter = {},
@@ -60,38 +60,43 @@
         transformValueItemToListItem = (item) => {
             return item
                 ? {
-                    id: item._id,
-                    title: item.title,
-                    description: item.description,
-                    value: item,
-                }
+                      id: item._id,
+                      title: item.title,
+                      description: item.description,
+                      value: item,
+                  }
                 : undefined;
         },
     } = $props();
 
+    let items = $state([]);
+    const transformValueToItems = (val) => {
+        return Array.isArray(val) ? val.map(transformValueItemToListItem) : [];
+    };
+
     function addItem(item) {
-        if (!Array.isArray(value)) {
+        if (!Array.isArray($state.snapshot(value))) {
             value = [];
         }
         value.push(item);
-        value = value;
+
+        console.log("+", $state.snapshot(value));
+        items = transformValueToItems(value);
     }
 
-    let items = $derived(
-        value.map ? value.map(transformValueItemToListItem) : []
-    );
+    const getItemIndexInValue = (listItem) => {
+        return value.findIndex((valueItem) => valueItem.id === listItem.id);
+    };
 
     const ACTIONS = [
         {
             action(listItem) {
-                const val = listItem.value;
-                const itemIndex = value.findIndex(
-                    (valueItem) => valueItem === val
-                );
+                const itemIndex = getItemIndexInValue(listItem);
                 if (itemIndex > -1) {
                     const valCopy = [...value];
                     notCommon.moveItem(valCopy, itemIndex, itemIndex - 1);
                     value = valCopy;
+                    items = transformValueToItems(value);
                 }
             },
             title: "",
@@ -100,14 +105,12 @@
         },
         {
             action: (listItem) => {
-                const val = listItem.value;
-                const itemIndex = value.findIndex(
-                    (valueItem) => valueItem === val
-                );
+                const itemIndex = getItemIndexInValue(listItem);
                 if (itemIndex > -1) {
                     const valCopy = [...value];
                     notCommon.moveItem(valCopy, itemIndex, itemIndex + 1);
                     value = valCopy;
+                    items = transformValueToItems(value);
                 }
             },
             title: "",
@@ -116,13 +119,11 @@
         },
         {
             action: (listItem) => {
-                const val = listItem.value;
-                const itemIndex = value.findIndex(
-                    (valueItem) => valueItem === val
-                );
+                const itemIndex = getItemIndexInValue(listItem);
                 if (itemIndex > -1) {
                     value.splice(itemIndex, 1);
-                    value = value;
+                    console.log("-", $state.snapshot(value));
+                    items = transformValueToItems(value);
                 }
             },
             title: "",
@@ -150,12 +151,11 @@
         {actionSearch}
         {optionId}
         {optionTitle}
-        bind:placeholder
-        bind:fieldname
-        bind:required
-        bind:multiple
-        bind:size
-        bind:valid
-        on:resolve={(e) => addItem(e.detail)}
+        {placeholder}
+        {fieldname}
+        {required}
+        multiple={false}
+        {valid}
+        onresolve={(e) => addItem(e.value)}
     />
 {/if}
