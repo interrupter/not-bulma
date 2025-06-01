@@ -6,26 +6,16 @@
     import UICommon from "../common.js";
 
     /**
+     * More properties at https://github.com/pstanoev/simple-svelte-autocomplete#properties
      * @typedef {Object} Props
-     * @property {string} [idField]
-     * @property {string} [labelField]
-     * @property {number} [minCharactersToSearch]
-     * @property {boolean} [selectFirstIfEmpty]
-     * @property {number} [maxItemsToShowInList]
-     * @property {string} [noResultsText]
-     * @property {boolean} [showClear]
      * @property {any} value
-     * @property {string} [placeholder]
-     * @property {string} [fieldname]
-     * @property {boolean} [disabled]
-     * @property {boolean} [readonly]
-     * @property {boolean} [icon]
-     * @property {boolean} [inputStarted]
-     * @property {boolean} [valid]
-     * @property {boolean} [validated]
-     * @property {boolean} [errors]
-     * @property {boolean} [formErrors]
-     * @property {any} [searchFunction]
+     * @property {string} [placeholder = '']
+     * @property {string} [fieldname = 'autocomplete']
+     * @property {boolean} [disabled = false]
+     * @property {boolean} [readonly = false]
+     * @property {boolean} [required = false]
+     * @property {boolean} [valid = true]
+     * @property {function} [onchange]
      */
 
     /** @type {Props} */
@@ -33,7 +23,7 @@
         //generic input props
         value = $bindable(),
         placeholder = "",
-        fieldname = "checkbox-list",
+        fieldname = "autocomplete",
         disabled = false,
         readonly = false,
         required = false,
@@ -43,7 +33,14 @@
     } = $props();
 
     let invalid = $derived(!valid);
-    const oninput = UICommon.onInput(fieldname, onchange);
+    function onChange(val) {
+        if (onchange) {
+            onchange({
+                value: $state.snapshot(val),
+                field: fieldname,
+            });
+        }
+    }
 </script>
 
 {#if disabled}
@@ -54,15 +51,15 @@
         {...others}
     />
 {:else if readonly}
-    <p>{value ? value.title : ""}</p>
+    <p>{value ? (value?.title ?? "") : ""}</p>
 {:else}
     <AutoComplete
         bind:selectedItem={value}
-        onChange={oninput}
+        {onChange}
+        placeholder={$LOCALE[placeholder]}
         {valid}
         {invalid}
         {required}
-        placeholder={$LOCALE[placeholder]}
         {...others}
     />
 {/if}
