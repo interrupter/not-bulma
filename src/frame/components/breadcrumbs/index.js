@@ -1,5 +1,5 @@
-import UIBreadcrumbs from './ui.breadcrumbs.svelte';
-import notBreadcrumbs from './breadcrumbs.js';
+import UIBreadcrumbs from "./ui.breadcrumbs.svelte";
+import notBreadcrumbs from "./breadcrumbs.svelte.js";
 
 notBreadcrumbs.UIConstructor = UIBreadcrumbs;
 

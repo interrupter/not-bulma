@@ -1,0 +1,38 @@
+section(id="examples" class="section")
+  h1(class="title") Хлебные крошки - notBreadcrumbs
+  h2( class="subtitle") статический класс управления рендерингом хлебных крошек
+  div( class="box")
+    h3( class="title") notBreadcrumbs
+    h4(class="subtitle") как создать
+    div(class="block")
+      pre
+        | notBulma.Frame.notBreadcrumbs.render({
+        |   target: HTMLElement,                        //где рендерим
+        |   root: string = '',                          //корень навигации
+        |   navigate: function = (url: string):void),   // функция смены локации
+        | });        
+    h3( class="title") Методы
+    h4(class="subtitle") что можно вызывать
+    div(class="block content")
+      dl
+        dt
+          strong initUIProps(root: string, navigate: function): void
+        dd инициализирует данные для UI шаблона
+        dt
+          strong render({ target:HTMLElement, root:string = "", navigate:function }): void
+        dd удаляет существующий, создает и отрисовывает новый элемент
+        dt
+          strong setHead(head:array of objects): notBreadcrumbs
+        dd устанавливает новый заголовок из массива переданных элементов {title:string, url:boolean|string}
+        dt
+          strong setTail(tail:array of objects): notBreadcrumbs
+        dd устанавливает новый хвост крошек из массива переданных элементов {title:string, url:boolean|string}
+        dt
+          strong getBreadcrumbs(): array of objects
+        dd возвращает крошлки в виде одного массива [...head, ...tail]
+        dt
+          strong update(): void
+        dd обновляет UI, если он есть
+        dt
+          strong remove(): void
+        dd удаляет UI, если он есть    

@@ -2,7 +2,7 @@ if (!window.EXAMPLES) {
     window.EXAMPLES = {};
 }
 
-const IconExamples = [
+const Examples = [
     {
         title: "Варианты",
         props: [
@@ -39,5 +39,5 @@ const IconExamples = [
 
 window.EXAMPLES.UIFormInputValidatedIcon = {
     constructor: "Elements.Forms.UIFormInputValidatedIcon",
-    list: IconExamples,
+    list: Examples,
 };

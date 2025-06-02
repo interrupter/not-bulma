@@ -1,0 +1,13 @@
+- var title = "not-bulma: Frame.notBreadcrumbs"
+script.
+  window.EXAMPLES_SELECTED = 'notBreadcrumbs';
+include ../parts/header.pug
+include ../parts/menu.pug
+include ../parts/sidemenu.pug
+
+main
+  include ../content/breadcrumbs.pug
+  include ../parts/foot.pug
+
+script(src="/js/breadcrumbs.js" type="module")
+include ../parts/footer.pug

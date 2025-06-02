@@ -56,6 +56,11 @@ const menu = {
                 priority: 100,
             },
             {
+                id: "breadcrumbs",
+                title: "Хлебные крошки",
+                priority: 1,
+            },
+            {
                 id: "elements",
                 title: "Элементы",
                 priority: 1,
@@ -515,6 +520,12 @@ const menu = {
                         url: "./modals.overlay.html",
                     },
                 ],
+            },
+            {
+                id: "breadcrumbs",
+                section: "breadcrumbs",
+                title: "notBreadcrumbs",
+                url: "./breadcrumbs.html",
             },
             {
                 id: "elements.notifications",
