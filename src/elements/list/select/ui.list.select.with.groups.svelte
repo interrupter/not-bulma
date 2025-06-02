@@ -66,7 +66,6 @@
                     atLeastOne,
                 })
         );
-        console.log("selectorGroups", selectorGroups);
     }
 
     onMount(() => {
@@ -96,9 +95,9 @@
             onlyOnePerGroup,
             atLeastOne,
         });
-        console.log("value", value);
+
         updateUI();
-        console.log("selectorGroups", selectorGroups);
+
         triggerChange();
     };
 </script>

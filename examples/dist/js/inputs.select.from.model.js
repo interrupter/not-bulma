@@ -35,15 +35,53 @@ const VARIANTS = [
 
 const Examples = [
     {
-        title: "Input autocomplete",
+        title: "Input select from model",
         props: [
             {
-                valueFieldName: "locationID",
-                labelFieldName: "title",
-                fieldname: "autocomplete",
-                searchFunction: async () => {
-                    return VARIANTS;
+                fieldname: "select-from-model",
+                optionId: ":locationID",
+                optionTitle: ":title",
+                modelName: "fakeModel",
+                actionName: "fakeAction",
+                actionFilter: {},
+                color: "primary",
+                size: "success",
+                apiModelGetter: async () => {
+                    return () => {};
                 },
+                apiRequest: async () => {
+                    return { result: VARIANTS };
+                },
+                value: [],
+
+                onchange: (...args) => console.log(...args),
+            },
+        ],
+    },
+    {
+        title: "Input select from model with loading in 3sec",
+        props: [
+            {
+                fieldname: "select-from-model-1",
+                optionId: ":locationID",
+                optionTitle: ":title",
+                modelName: "fakeModel",
+                actionName: "fakeAction",
+                actionFilter: {},
+                emptyValueEnabled: false,
+                color: "primary",
+                size: "warning",
+                apiModelGetter: async () => {
+                    return () => {};
+                },
+                apiRequest: async () => {
+                    await new Promise((resolve) => {
+                        setTimeout(resolve, 3000);
+                    });
+                    return { result: VARIANTS };
+                },
+                value: [],
+
                 onchange: (...args) => console.log(...args),
             },
         ],

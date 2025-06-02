@@ -10,12 +10,15 @@
      * @typedef {Object} Props
      * @property {string} [value]
      * @property {any}      [variants]
-     * @property {string} [placeholder]
-     * @property {string} [emptyValueTitle]
+     * @property {string} [placeholder = ""]
+     * @property {boolean}  [emptyValueEnabled = true]
+     * @property {string|number}  [emptyValue]
+     * @property {string} [emptyValueTitle = "no-selection"]
      * @property {string} [fieldname]
      * @property {boolean} [required]
      * @property {boolean} [readonly]
-     * @property {number} [size]
+     * @property {string} [size]
+     * @property {string} [color]
      * @property {boolean} [valid]
      */
 
@@ -24,12 +27,15 @@
         value = $bindable(""),
         variants = [],
         placeholder = "",
-        emptyValueTitle = "",
+        emptyValueTitle = "no-selection",
+        emptyValueEnabled = true,
+        emptyValue = "",
         fieldname = "select",
         required = true,
         readonly = false,
         size,
         color,
+        loading,
         valid = true,
         class: classes = "",
         onchange = () => true,
@@ -90,7 +96,7 @@
     onMount(() => {
         if (readonly) return;
         if (!value) {
-            if (placeholder.length === 0 && variants.length) {
+            if (emptyValueEnabled && variants.length) {
                 value = variants[0].id;
                 onchange({
                     field: fieldname,
@@ -106,14 +112,14 @@
         {#each selectedVariants as selectedVariant}
             <span class="mr-2">{$LOCALE[selectedVariant.title]}</span>
         {/each}
-    {:else}
+    {:else if emptyValueEnabled}
         <span class="mr-2">{$LOCALE[emptyValueTitle]}</span>
     {/if}
 {:else}
     <div
-        class="select {size ? `is-${size}` : ''} {color
-            ? `is-${color}`
-            : ''} {classes}"
+        class="select {loading ? `is-loading` : ''} {size
+            ? `is-${size}`
+            : ''} {color ? `is-${color}` : ''} {classes}"
     >
         <select
             id="form-field-select-{fieldname}"
@@ -126,12 +132,8 @@
             {size}
             {...others}
         >
-            {#if placeholder.length > 0}
-                <UISelectOption
-                    value={UICommon.CLEAR_MACRO}
-                    selected={!value}
-                    title={placeholder}
-                />
+            {#if emptyValueEnabled}
+                <UISelectOption value={emptyValue} title={emptyValueTitle} />
             {/if}
             {#each variants as variant (variant.id)}
                 <UISelectOption

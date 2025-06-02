@@ -72,6 +72,7 @@
         required = true,
         readonly = false,
         size,
+        color,
         valid = true,
         onreject = () => false,
         onresolve = () => true,
@@ -117,7 +118,6 @@
     let resolvedValue;
 
     function onModelChanged({ value: selectedValue }) {
-        console.log("onModelChanged", resultsList.length, variants.length);
         if (resultsList.length > variants.length) {
             resolvedValue = resultsList.find(
                 (item) => notPath.get(optionId, item) == selectedValue
@@ -171,6 +171,7 @@
                 {readonly}
                 {disabled}
                 {size}
+                {color}
                 {valid}
                 onchange={onModelChanged}
             />

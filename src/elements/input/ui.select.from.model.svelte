@@ -7,12 +7,33 @@
 
     import { onMount } from "svelte";
 
+    const DEFAULT_API_MODEL_GETTER = (
+        modelName,
+        actionFilter,
+        actionSorter,
+        actionPager,
+        actionSearch
+    ) => {
+        return notCommon
+            .getApp()
+            .getModel(modelName)
+            .setFilter(actionFilter)
+            .setSorter(actionSorter)
+            .setPager(actionPager)
+            .setSearch(actionSearch);
+    };
+
+    const DEFAULT_API_REQUEST = (apiModel, actionName) => {
+        return apiModel[`$` + actionName]();
+    };
+
     /**
      * @typedef {Object} Props
-     * @property {boolean} [inputStarted]
      * @property {any} value
      * @property {string} [placeholder]
      * @property {string} [emptyValueTitle]
+     * @property {string} [emptyValue]
+     * @property {boolean} [emptyValueEnabled]
      * @property {string} [fieldname]
      * @property {string} [modelName]
      * @property {string} [actionName]
@@ -22,25 +43,16 @@
      * @property {any} [actionSearch]
      * @property {string} [optionId]
      * @property {string} [optionTitle]
-     * @property {boolean} [icon]
      * @property {boolean} [required]
      * @property {boolean} [readonly]
-     * @property {boolean} [multiple]
-     * @property {number} [size]
-     * @property {boolean} [valid]
-     * @property {boolean} [validated]
-     * @property {boolean} [errors]
-     * @property {boolean} [formErrors]
-     * @property {boolean} [formLevelError]
      * @property {boolean} [returnVariant]
+     * @property {function} [onchange = ({value:array of string|number, field:string, variants:array of object})=>true]
+     * @property {function} [onerror = (message:string):void]
      */
 
     /** @type {Props} */
     let {
         value,
-        placeholder = "",
-        emptyValueTitle = "",
-        fieldname = "selectFromModel",
         modelName = "",
         actionName = "",
         actionFilter = {},
@@ -49,12 +61,9 @@
         actionSearch = undefined,
         optionId = ":_id",
         optionTitle = ":title",
-        required = true,
-        readonly = false,
-        multiple = false,
-        size = 8,
-        valid = true,
-
+        disabled = false,
+        apiModelGetter = DEFAULT_API_MODEL_GETTER,
+        apiRequest = DEFAULT_API_REQUEST,
         returnVariant = false,
         class: classes = "",
         onchange = () => true,
@@ -66,30 +75,35 @@
         return modelName && actionName && actionFilter;
     }
 
-    let loaded = false;
+    let loaded = $state(false);
     let variants = $state([]);
-    let disabled = $derived(!loaded);
+    let resultsList = [];
+    let uiDisabled = $derived(disabled || !loaded);
 
     onMount(async () => {
         if (argumentsSetProvided()) {
-            const notApp = notCommon.getApp();
-            const Model = notApp
-                .getModel(modelName)
-                .setFilter(actionFilter)
-                .setSorter(actionSorter)
-                .setPager(actionPager)
-                .setSearch(actionSearch);
-            const response = await Model[`$` + actionName]();
-            if (response.status === DEFAULT_STATUS_SUCCESS) {
-                const result = response.result;
-                variants = result.map((item) => {
+            const response = await apiRequest(
+                apiModelGetter(
+                    modelName,
+                    actionFilter,
+                    actionSorter,
+                    actionPager,
+                    actionSearch
+                ),
+                actionName
+            );
+            if (notCommon.isError(response)) {
+                loaded = false;
+                onerror(response.errors || [response.message]);
+            } else {
+                resultsList = response.result;
+                variants = resultsList.map((item) => {
                     return {
                         id: notPath.get(optionId, item),
                         title: notPath.get(optionTitle, item),
                     };
                 });
-            } else {
-                onerror(response.errors || response.message);
+                loaded = true;
             }
         }
     });
@@ -108,16 +122,10 @@
 
 <UISelect
     {value}
-    bind:variants
+    {variants}
     class={classes}
-    {placeholder}
-    {emptyValueTitle}
-    {fieldname}
-    {required}
-    {readonly}
-    {disabled}
-    {size}
-    {valid}
+    disabled={uiDisabled}
     onchange={onChange}
+    loading={!loaded}
     {...others}
 />

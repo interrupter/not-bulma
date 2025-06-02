@@ -44,17 +44,14 @@ class ListGroupsValueDTO {
     }
 
     static selectAll(variants, value, options) {
-        console.log("selectAll");
         this.behaviour(options).selectAll(variants, value, options);
     }
 
     static selectNone(variants, value, options) {
-        console.log("selectNone");
         this.behaviour(options).selectNone(variants, value, options);
     }
 
     static selectAllInGroup(variants, value, groupId, options) {
-        console.log("selectAllInGroup");
         this.behaviour(options).selectAllInGroup(
             variants,
             value,
@@ -64,7 +61,6 @@ class ListGroupsValueDTO {
     }
 
     static selectNoneInGroup(variants, value, groupId, options) {
-        console.log("selectNoneInGroup");
         this.behaviour(options).selectNoneInGroup(
             variants,
             value,

@@ -92,7 +92,6 @@
                     atLeastOne,
                 })
         );
-        console.log("selectorGroups", selectorGroups);
     }
 
     export const valueAsVariants = () =>
@@ -164,7 +163,7 @@
             onlyOnePerGroup,
             atLeastOne,
         });
-        console.log("value", value);
+
         updateUI();
         triggerChange();
     };

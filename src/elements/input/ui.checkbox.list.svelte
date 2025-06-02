@@ -13,7 +13,7 @@
         if (!additional) {
             return;
         }
-        console.log(data, additional.id);
+
         if (data.value) {
             if (!value.includes(additional.id)) {
                 value.push(additional.id);

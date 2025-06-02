@@ -80,7 +80,6 @@
         }
         value.push(item);
 
-        console.log("+", $state.snapshot(value));
         items = transformValueToItems(value);
     }
 
@@ -122,7 +121,7 @@
                 const itemIndex = getItemIndexInValue(listItem);
                 if (itemIndex > -1) {
                     value.splice(itemIndex, 1);
-                    console.log("-", $state.snapshot(value));
+
                     items = transformValueToItems(value);
                 }
             },
