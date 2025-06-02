@@ -38,12 +38,9 @@ const Examples = [
         title: "Input autocomplete",
         props: [
             {
-                valueFieldName: "locationID",
-                labelFieldName: "title",
-                fieldname: "autocomplete",
-                searchFunction: async () => {
-                    return VARIANTS;
-                },
+                title: "radio select",
+                fieldname: "radio-buttons-selector",
+                variants: VARIANTS,
                 onchange: (...args) => console.log(...args),
             },
         ],
