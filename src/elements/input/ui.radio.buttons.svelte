@@ -63,7 +63,7 @@ value: variantId
     let {
         fieldname = "radio-buttons",
         variants = [],
-        value = $bindable(),
+        value,
         title,
         image,
         buttonProps = {},
@@ -75,19 +75,23 @@ value: variantId
         descriptionComponentProps = {},
         listComponent = UIList,
         listComponentProps = {},
+        returnVariant = false,
         getUIItem = (valueId) => {
             return variantsButtons.find((btnVal) => btnVal.value === valueId);
+        },
+        UIItemHasValue = (item, val) => {
+            return item.value == val;
         },
         getDefaultItemSublime = () => {
             return variants[0].value;
         },
         uiOn = (item) => {
             item.color = "success";
-            item.outlined = false;
+            return item;
         },
         uiOff = (item) => {
-            item.color = false;
-            item.outlined = true;
+            item.color = "";
+            return item;
         },
         onchange = () => true,
     } = $props();
@@ -114,6 +118,11 @@ value: variantId
         ];
     }
 
+    const getCurrentVariant = () => {
+        const val = $state.snapshot(value);
+        return variants.find((va) => va.value === value);
+    };
+
     //
     function toggle(selectedValue) {
         let ui = {
@@ -121,8 +130,10 @@ value: variantId
             off: undefined,
         };
         //
-        if (value) {
+        if (typeof value !== "undefined") {
             ui.off = value;
+        }
+        if (typeof selectedValue !== "undefined") {
             ui.on = selectedValue;
         }
         value = selectedValue;
@@ -130,28 +141,36 @@ value: variantId
         //
         onchange({
             field: fieldname,
-            value,
+            value: returnVariant ? getCurrentVariant() : $state.snapshot(value),
         });
     }
+
     //
     function updateUI(changes) {
-        if (changes.off) {
-            uiOff(getUIItem(changes.off));
+        for (let t in variantsButtons) {
+            if (
+                typeof changes.off !== "undefined" &&
+                UIItemHasValue(variantsButtons[t], changes.off)
+            ) {
+                variantsButtons[t] = uiOff(variantsButtons[t]);
+            }
+            if (
+                typeof changes.on !== "undefined" &&
+                UIItemHasValue(variantsButtons[t], changes.on)
+            ) {
+                variantsButtons[t] = uiOn(variantsButtons[t]);
+            }
         }
-        if (changes.on) {
-            uiOn(getUIItem(changes.on));
-        }
-        variantsButtons = variantsButtons;
-        listItems = listItems;
+        listItems[0].description.values = variantsButtons;
     }
     //
     function selectDefault() {
         if (variants.length > 0) {
-            if (typeof value !== "undefined") {
-                updateUI({ on: value });
-            } else {
+            if (typeof value === "undefined") {
                 const defValue = getDefaultItemSublime();
                 toggle(defValue);
+            } else {
+                updateUI({ on: value });
             }
         }
     }
@@ -161,7 +180,7 @@ value: variantId
 
 <SvelteComponent
     {...listComponentProps}
-    bind:items={listItems}
+    items={listItems}
     {titleComponent}
     {titleComponentProps}
     {descriptionComponent}

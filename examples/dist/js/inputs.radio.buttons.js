@@ -4,46 +4,57 @@ if (!window.EXAMPLES) {
 
 const VARIANTS = [
     {
-        locationID: 1,
+        id: 1,
+        value: 1,
         title: "Крым",
     },
     {
-        locationID: 2,
+        id: 2,
+        value: 2,
         title: "Москва",
     },
     {
-        locationID: 3,
+        id: 3,
+        value: 3,
         title: "Красноярск",
     },
     {
-        locationID: 4,
+        id: 4,
+        value: 4,
         title: "Санкт-Петербург",
     },
     {
-        locationID: 5,
+        id: 5,
+        value: 5,
         title: "Омск",
     },
     {
-        locationID: 6,
+        id: 6,
+        value: 6,
         title: "Камчатка",
     },
     {
-        locationID: 7,
+        id: 7,
+        value: 7,
         title: "Владивосток",
     },
 ];
 
 const Examples = [
     {
-        title: "Input autocomplete",
+        title: "Input radio buttons",
         props: [
             {
-                valueFieldName: "locationID",
-                labelFieldName: "title",
-                fieldname: "autocomplete",
-                searchFunction: async () => {
-                    return VARIANTS;
-                },
+                title: "radio select",
+                fieldname: "radio-buttons-selector",
+                variants: VARIANTS,
+                onchange: (...args) => console.log(...args),
+            },
+            {
+                title: "radio select return variant on event",
+                fieldname: "radio-buttons-selector-1",
+                variants: VARIANTS,
+                returnVariant: true,
                 onchange: (...args) => console.log(...args),
             },
         ],
