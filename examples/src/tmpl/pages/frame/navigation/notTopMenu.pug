@@ -1,0 +1,13 @@
+- var title = "not-bulma - навигация - notTopMenu"
+script.
+  window.EXAMPLES_SELECTED = 'notTopMenu';
+include ../../../parts/header.pug
+include ../../../parts/menu.pug
+include ../../../parts/sidemenu.pug
+
+main
+  include ../../../content/frame/navigation/notTopMenu.pug
+  include ../../../parts/foot.pug
+
+script(src="/examples/navigation.notTopMenu.js" type="module")
+include ../../../parts/footer.pug

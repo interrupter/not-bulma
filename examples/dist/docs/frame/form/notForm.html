@@ -1,0 +1,126 @@
+<script>window.EXAMPLES_SELECTED = 'notForm';</script><!DOCTYPE html><html class="no-js" lang="ru"><head><meta charset="utf-8"><meta http-equiv="x-ua-compatible" content="ie=edge"><title>not-bulma - формы - notForm</title><meta name="description" content=""><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="application-name" content=""><meta name="author" content=""><meta name="description"><link rel="shortcut icon" href="/img/icon/logo/icon-32.png"><link rel="apple-touch-icon" href="/img/icon/logo/icon-32.png"><link rel="stylesheet" href="/assets/fontawesome-free-6.7.2-web/css/all.min.css"><link rel="stylesheet" href="/css/bulma.min.css"><link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="/assets/not-bulma/notBulma.css"></head></html><nav class="navbar is-fixed-top is-success" id="top-menu" role="navigation" aria-label="main navigation"></nav><aside class="menu" id="side-menu"></aside><main><section class="section" id="examples"><h1 class="title">Формы - notForm</h1><h2 class="subtitle">класс интегратор связывает UI, приложение и валидацию</h2><div class="box"><h3 class="title">notForm</h3><h4 class="subtitle">как создать</h4><div class="block"><pre>new notBulma.Frame.notForm({
+  name: string = 'Default',       //название формы
+  options: object = {             //опции компонента
+    model: string = undefined,    //название модели данных
+    manifest: object = undefined, //манифест модели
+    action: string,               //название метода интерфейса/модели
+    autoInit: boolean = true,     //инициализировать ресурсы для формы при создании класса
+    autoRender: boolean = true,   //отрисовать форму при создании класса
+    variants: object = undefined, //библиотека вариантов для списков выбора. variants[field.variantsSource] = [{id:string|number, title: string}]
+    target: string = '.form',     //селектор для поиска элемента в который нужно вставить форму
+    validators: object = {},      //библиотека валидаторов
+    ui: object = {},              //опции UIForm
+    fields: array[string] = [],   //построчная схема полей формы
+  },
+  working: object = {},          //рабочее состояние класса, наследие notBase 
+  data: object = {},             //данные для инициализации
+  ui: SvelteComponent = UIFormComponent,  // UI для формы, совместимый по интерфейсу с UIForm
+});</pre>Основным способом работы с этим классом является создание специализированных классов форм на его основе.
+Но он может быть использован и напрямую.</div><h3 class="title">Методы</h3><h4 class="subtitle">что можно вызывать</h4><div class="block content"><dl><dt><strong>initForm(): void</strong></dt><dd>инициализирует форму, её ресурсы и отрисовывает с учетом опций autoInit, autoRender</dd><dt><strong>initLibs(): void</strong></dt><dd>инициализирует ресурсы: поля, варианты, валидаторы</dd><dt><strong>reInit(): void</strong></dt><dd>заново инициализирует ресурсы, обновляет UI, устанавливает статус loading = false</dd><dt><strong>initFields(): void</strong></dt><dd>инициализирует библиотеку полей из манифеста, получаемого getFormManifest</dd><dt><strong>initVariants(): void</strong></dt><dd>инициализирует библиотеку вариантов из опций</dd><dt><strong>initValidator(): void</strong></dt><dd>инициализирует валидатор для формы, использует getFormValidators для получения библиотеки валидаторов</dd><dt><strong>initUI(): void</strong></dt><dd>инициализирует UI, устанавливает обработчики событий</dd><dt><strong>updateUI(): void</strong></dt><dd>обновляет UI props</dd><dt><strong>validateForm(): Promise undefined</strong></dt><dd>валидирует данные формы, передаёт результат в updateFormValidationStatus</dd><dt><strong>submit(data: object): void</strong></dt><dd>вызывет событие submit с указанными данными</dd><dt><strong>reject(): void</strong></dt><dd>вызывет событие reject</dd><dt><strong>setLoading(): void</strong></dt><dd>вызывет событие loading, устанавливает состояние UI loading = true</dd><dt><strong>resetLoading(): void</strong></dt><dd>вызывет событие loaded, устанавливает состояние UI loading = false</dd><dt><strong>destroy(): void</strong></dt><dd>вызывет событие destroy, удаляет ссылки на различные ресурсы</dd><dt><strong>getName(): string</strong></dt><dd>возвращает название формы, ${options.name}Form</dd><dt><strong>getFormAction(): string</strong></dt><dd>возвращает название метода манифеста/модели</dd><dt><strong>processResult(result: object): boolean</strong></dt><dd>обрабатывает ответ от сервера, 
+если result.status === 'ok', то вызывает setFormSuccess, возвращает true,
+если result.status !== 'ok', то вызывает setFormErrors, возвращает false.</dd><dt><strong>setFormSuccess(): void</strong></dt><dd>устанавливает UI в состояние успешного завершения работы с формой, генерирует событие success</dd><dt><strong>setFormErrors(): void</strong></dt><dd>обновляет UI в соотвествии с результатами проверки формы/отчета об ошибках, генерирует событие error</dd><dt><strong>getVariant(name:string, id: string|number): object | null</strong></dt><dd>возвращает элемент из словаря вариантов</dd><dt><strong>getFormTargetEl(): HTMLElement</strong></dt><dd>возвращает элемент страницы для вставки в него формы. Возможно переопределение в потомках.</dd><dt><strong>getFormValidators(): object</strong></dt><dd>возвращает библиотеку валидаторов, подробнее в not-validation. Возможно переопределение в потомках.</dd><dt><strong>getFormManifest(): object</strong></dt><dd>возвращает манифест интерфейса (UI и сетевого для обращения к серверу). Возможно переопределение в потомках.</dd><dt><strong>getFormData(): object</strong></dt><dd>возвращает исходные данные формы или сохранённые после вызова collectData, атомарные изменения не отражаются. Возможно переопределение в потомках.</dd><dt><strong>getFormOptions(): {ui: object, fields: array[string]}</strong></dt><dd>опции UI формы. Возможно переопределение в потомках.</dd><dt><strong>collectData(): object</strong></dt><dd>собирает данные из UI. Возможно переопределение в потомках.</dd></dl></div><h3 class="title">События</h3><h4 class="subtitle">что можно слушать</h4><div class="block content"><dl><dt><strong>change</strong></dt><dd>{detail: {field: string, value: any}} - изменение значения поля</dd><dt><strong>submit</strong></dt><dd>data: object - нажатие кнопки отправить, передаются данные формы</dd><dt><strong>reject</strong></dt><dd>нажатие кнопки отмена, ничего не передаётся в параметрах</dd><dt><strong>loading</strong></dt><dd>статус формы изменился на ожидание данных</dd><dt><strong>loaded</strong></dt><dd>статус формы изменился на активный</dd><dt><strong>success</strong></dt><dd>форма успешно заполнена</dd><dt><strong>error</strong></dt><dd>status: object = {form:Array[string], fields: {[fieldname:string]:Array[string]}} - в форме есть ошибки</dd><dt><strong>destroy</strong></dt><dd>форма уничтожается</dd></dl></div><h3 class="title">Пример валидатора модели</h3><h4 class="subtitle">общий вариант</h4><div class="block content"><pre>//examples/src/js/forms/simple.validators.js
+
+const wait = tm => new Promise(res => setTimeout(res, tm));
+
+export default {
+  fields:{
+    nameFirst: [
+      {
+      //sync or async variants possible
+      validator: (fieldValue, validationEnvironment = {})=>{
+        return fieldValue.length > 2;
+      },
+      //error message. plain text or LOCALE string name
+      message: 'nameFirst should be atleast 2 letters long'
+    }],
+    nameLast: [{
+      validator: (fieldValue, validationEnvironment = {})=>{
+        return fieldValue.length > 1;
+      },
+      message: 'nameLast should be atleast 2 letters long'
+    }],
+    email: [{
+      validator: (fieldValue, validationEnvironment = {})=>{
+        return fieldValue.indexOf('@mail.ru') > -1;
+      },
+      message: 'email should be in @mail.ru'
+    }],
+    telephone: [{
+      validator: (fieldValue, validationEnvironment = {})=>{
+        return fieldValue.length>10;
+      },
+      message: 'wrong telephone'
+    }],
+    country:[{
+      validator: (fieldValue, validationEnvironment = {})=>{
+        return ["1", "2", "3", "4"].includes(fieldValue.toString());
+      },
+      message: '__country_code_error__'
+    }],
+    login:[{
+      validator: (fieldValue, validationEnvironment = {})=>{
+        return !["root", "admin"].includes(fieldValue.toString());
+      },
+      message: '__wrong_user__'
+    },{
+      validator: (fieldValue, validationEnvironment = {})=>{
+        return fieldValue.length>3;
+      },
+      message: '4 letters minimum'
+    }],
+    password:[{
+      validator: (fieldValue, validationEnvironment = {})=>{
+        return fieldValue.length > 3;
+      },
+      message: '4 chars minimum'
+    }]
+  },
+  //forms: Object for multiple forms validators
+  forms:{
+    //form action name
+    create: [
+      //sync or async variants possible
+      async (formData, validationEnvironment = {})=>{
+        await wait(1000); //simulate async request to server for example
+        if(formData.nameFirst === formData.nameLast && formData.nameLast && formData.nameLast.length > 3){
+          //to add errors to validation session result you need
+          //to throw notValidationError compatible error
+          throw new notError.notValidationError('form error', {
+            form: ['fields are equal'],
+            fields: {
+              nameFirst: ['Could not be equal to nameLast'],
+              nameLast: ['Could not be equal to nameFirst'],
+            }
+          });
+        }
+      },
+    ],
+    login: [
+      async (formData, validationEnvironment = {})=>{
+        await wait(1000); //simulate async request to server for example
+      },
+    ],
+    delete:[],
+    update:[],
+    //and so on
+  },
+  //or if you need only one form validation
+  //form: Array<function> for single form only
+  /* like this
+  form:[
+    async (formData, validationEnvironment = {})=>{
+      await wait(1000); //simulate async request to server for example
+      if(formData.nameFirst === formData.nameLast){
+        throw new notError.notValidationError('form error', {
+          form: ['fields are equal'],
+          fields: {
+            nameFirst: ['Could not be equal to nameLast'],
+            nameLast: ['Could not be equal to nameFirst'],
+          }
+        });
+      }
+    },
+  ]
+  */
+};
+</pre></div></div></section></main><script src="/examples/form.notForm.js" type="module"></script><script src="/js/EventEmitter.js"></script><script src="/assets/not-error/bundle.min.js"></script><script src="/js/main.js" type="module"></script><script src="/assets/not-bulma/notBulma.js"></script>

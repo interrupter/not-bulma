@@ -1,0 +1,13 @@
+- var title = "not-bulma - навигация - notSideMenu"
+script.
+  window.EXAMPLES_SELECTED = 'notSideMenu';
+include ../../../parts/header.pug
+include ../../../parts/menu.pug
+include ../../../parts/sidemenu.pug
+
+main
+  include ../../../content/frame/navigation/notSideMenu.pug
+  include ../../../parts/foot.pug
+
+script(src="/examples/navigation.notSideMenu.js" type="module")
+include ../../../parts/footer.pug

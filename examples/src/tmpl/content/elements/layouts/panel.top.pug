@@ -1,0 +1,12 @@
+section(id="examples" class="section")
+  h1(class="title") Боковая панель
+  h2(class="title") Elements.Layouts.UIPanelTop
+  div( class="box")
+    div(class="block")
+      pre
+        | string:             id                    - unique identificator
+        | boolean:            opened = false        - открыта или закрыта
+        | string:             class = ""            - стили
+        | string:             visibleClass = "is-active"
+        | string:             hiddenClass = ""
+        | function:           getActiveClass = ()=(opened ? visibleClass : hiddenClass)

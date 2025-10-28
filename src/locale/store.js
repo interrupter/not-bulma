@@ -13,14 +13,15 @@ function initDict(target = {}) {
 }
 
 function createLocale() {
-    const { subscribe, set, update } = writable(initDict());
+    //const { subscribe, set, update } = writable(initDict());
+    const newLocale = writable(initDict());
     return {
-        subscribe,
-        update,
+        subscribe: newLocale.subscribe,
+        update: newLocale.update,
         set: (val) => {
-            set(initDict(val));
+            newLocale.set(initDict(val));
         },
-        reset: () => set(initDict()),
+        reset: () => newLocale.set(initDict()),
     };
 }
 

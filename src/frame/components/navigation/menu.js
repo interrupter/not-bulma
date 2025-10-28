@@ -1,8 +1,9 @@
-import { COMPONENTS } from "../../LIB.js";
 import UICommon from "../../../elements/common.js";
+import { unmount } from "svelte";
 
 class Menu {
     static MAX_TOUCH_WIDTH = 1023;
+    static INTERVAL_UPDATE_ACTIVE_ITEM = 200;
 
     static DEFAULT = {
         section: "any",
@@ -14,21 +15,21 @@ class Menu {
     };
     /**
      *
-     * @type {import('../../app.js').default | null}
+     * @type {import('./notApp.adapter.js').default | null}
      * @static
      * @memberof Menu
      */
-    static app = null;
+    static optionsAdapter;
     static directNavigation = false;
     static menu;
     static options = {
         directNavigation: false,
         navigate: (urls) => {
             this.hide();
-            if (!this.isDirectNavigation() && this.app) {
-                let func = this.app.getWorking("router");
-                if (func) {
-                    return func.navigate(urls.short);
+            if (!this.isDirectNavigation() && this.optionsAdapter) {
+                const navigate = this.optionsAdapter.getNavigateFunction();
+                if (navigate) {
+                    return navigate(urls.short);
                 }
             }
             document.location.assign(urls.full);
@@ -42,9 +43,9 @@ class Menu {
     static location;
     static interval;
 
-    static setApp(app) {
-        if (!this.app) {
-            this.app = app;
+    static setOptionsAdapter(optionsAdapter) {
+        if (!this.optionsAdapter && optionsAdapter) {
+            this.optionsAdapter = optionsAdapter;
         }
         return this;
     }
@@ -54,61 +55,15 @@ class Menu {
         return this;
     }
 
-    static getOptionsPathTo(what) {
-        return `menu.${this.options.type}.${what}`;
-    }
-
     static isDirectNavigation() {
-        return this.app
-            ? this.app.getOptions(
-                this.getOptionsPathTo("directNavigation"),
-                this.options.directNavigation
-            )
-            : this.options.directNavigation;
+        return this.options.directNavigation;
     }
 
     static getOptions() {
-        if (this.app) {
-            return {
-                brand: this.app.getOptions("brand", this.options.brand),
-                items: this.app.getOptions(
-                    this.getOptionsPathTo("items"),
-                    this.options.items
-                ),
-                sections: this.app.getOptions(
-                    this.getOptionsPathTo("sections"),
-                    this.options.sections
-                ),
-                targetSelector: this.app.getOptions(
-                    this.getOptionsPathTo("targetSelector"),
-                    this.options.targetSelector
-                ),
-                toggleSelector: this.app.getOptions(
-                    this.getOptionsPathTo("toggleSelector"),
-                    this.options.toggleSelector
-                ),
-                open: this.app.getOptions(
-                    this.getOptionsPathTo("open"),
-                    this.options.open
-                ),
-                directNavigation: this.app.getOptions(
-                    this.getOptionsPathTo("directNavigation"),
-                    this.options.directNavigation
-                ),
-                root: this.app.getOptions("router.root", this.options.root),
-                navigate: this.options.navigate.bind(this),
-                getComponent: this.getComponent.bind(this),
-            };
+        if (this.optionsAdapter) {
+            return this.optionsAdapter.getOptions(this.options);
         } else {
             return this.options;
-        }
-    }
-
-    static getComponent(name) {
-        if (COMPONENTS.contains(name)) {
-            return COMPONENTS.get(name);
-        } else {
-            return false;
         }
     }
 
@@ -185,7 +140,7 @@ class Menu {
 
     static remove() {
         if (this.menu) {
-            this.menu.$destroy();
+            unmount(this.menu);
             this.menu = null;
             clearInterval(this.interval);
         }

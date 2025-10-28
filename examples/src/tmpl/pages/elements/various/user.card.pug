@@ -1,0 +1,13 @@
+- var title = "not-bulma: Elements.Various.UIUserCard"
+script.
+  window.EXAMPLES_SELECTED = 'UIUserCard';
+include ../../../parts/header.pug
+include ../../../parts/menu.pug
+include ../../../parts/sidemenu.pug
+
+main
+  include ../../../content/elements/various/user.card.pug
+  include ../../../parts/foot.pug
+  
+script(src="/examples/elements/various/user.card.js" type="module")
+include ../../../parts/footer.pug

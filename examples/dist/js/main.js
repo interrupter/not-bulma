@@ -10,12 +10,13 @@ window.EXAMPLES_COMPONENTS_INSTANCES = {};
 function initMenu() {
     COMPONENTS.add(notBulma.Elements.Various.UIProgress);
     notSideMenu.setOptions({
+        root: "",
         items: menu.side.items ? menu.side.items : [],
         sections: menu.side.sections ? menu.side.sections : [],
     });
     notSideMenu.render();
     notTopMenu.setOptions({
-        root: "http://" + window.location.host,
+        root: "",
         brand: {
             url: "./index.html",
             icon: {

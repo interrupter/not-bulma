@@ -49,7 +49,7 @@ export default {
                             corejs: 3,
                             modules: false,
                             useBuiltIns: "usage",
-                            targets: "> 2.5%, not dead",
+                            targets: "> 5%, not dead",
                         },
                     ],
                 ],
