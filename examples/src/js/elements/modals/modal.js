@@ -1,7 +1,7 @@
 if (!window.EXAMPLES) {
     window.EXAMPLES = {};
 }
-import { demandUnmount } from "./examples.helpers.js";
+import { demandUnmount } from "/js/examples.helpers.js";
 
 const constructorName = "Elements.Modals.UIModal";
 

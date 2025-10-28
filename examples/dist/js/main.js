@@ -18,7 +18,7 @@ function initMenu() {
     notTopMenu.setOptions({
         root: "",
         brand: {
-            url: "./index.html",
+            url: "./docs/index.html",
             icon: {
                 src: "/img/icon/logo/icon-32.png",
                 width: 32,

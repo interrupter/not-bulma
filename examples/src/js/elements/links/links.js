@@ -1,4 +1,4 @@
-import { addIndexField } from "./examples.helpers.js";
+import { addIndexField } from "/js/examples.helpers.js";
 
 if (!window.EXAMPLES) {
     window.EXAMPLES = {};

@@ -6,7 +6,8 @@
   "svelte": "src/index.js",
   "type": "module",
   "scripts": {
-    "html-build": "pug ./examples/src/tmpl/pages --out ./examples/dist/docs",
+    "html-build": "pug ./examples/src/tmpl/pages --out ./examples/dist/docs && npm run copy-docs-index-to-root",
+    "copy-docs-index-to-root": "cp -f ./examples/dist/docs/index.html ./examples/dist/index.html",
     "html-watch": "npm run html-build -- --watch",
     "css-build": "sass ./examples/src/_sass/main.scss ./examples/dist/css/main.css",
     "css-deploy": "npm run css-build && npm run css-postcss",

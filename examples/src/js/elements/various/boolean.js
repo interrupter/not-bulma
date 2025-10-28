@@ -1,4 +1,4 @@
-import { createExamplesSetForMutations } from "./examples.helpers.js";
+import { createExamplesSetForMutations } from "/js/examples.helpers.js";
 
 if (!window.EXAMPLES) {
     window.EXAMPLES = {};

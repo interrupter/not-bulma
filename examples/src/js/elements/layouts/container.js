@@ -1,7 +1,7 @@
 import {
     addIndexField,
     createInnerTextNodeSnippet,
-} from "./examples.helpers.js";
+} from "/js/examples.helpers.js";
 
 if (!window.EXAMPLES) {
     window.EXAMPLES = {};

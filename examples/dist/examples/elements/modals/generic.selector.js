@@ -1,7 +1,7 @@
 if (!window.EXAMPLES) {
     window.EXAMPLES = {};
 }
-import { createList, demandUnmount } from "./examples.helpers.js";
+import { createList, demandUnmount } from "/js/examples.helpers.js";
 const constructorName = "Elements.Modals.UIGenericSelector";
 
 const Examples = [

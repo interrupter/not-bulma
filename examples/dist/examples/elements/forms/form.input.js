@@ -2,7 +2,7 @@
 if (!window.EXAMPLES) {
     window.EXAMPLES = {};
 }
-import { addIndexField } from "./examples.helpers.js";
+import { addIndexField } from "/js/examples.helpers.js";
 
 const Examples = [
     {
