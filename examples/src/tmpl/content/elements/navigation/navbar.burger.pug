@@ -1,0 +1,14 @@
+section(id="examples" class="section")
+  h1(class="title") Верхняя панель навигации - бургер
+  h2(class="subtitle") Elements.Navigations.UINavbarBurger
+  div( class="box")    
+    div(class="block") 
+      p Виден только при ширине страницы менее 1024px
+      pre
+        | role = "button"                         -
+        | classPrefix = "navbar-burger"           - префикс class
+        | ariaLabel = "menu"                      - 
+        | ariaExpanded = "false"                  -
+        | dataTarget = "navbarBasicExample"       - id целевого меню
+        | boolean: active                         - if button in pressed state
+        | string: class = ''                      - CSS classes list

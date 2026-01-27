@@ -5,6 +5,7 @@
      * @typedef {Object} Props
      * @property {string} [title] - attributes
      * @property {string} [url]
+     * @property {string} [href]
      * @property {any} download
      * @property {string} [target]
      * @property {any} rel
@@ -30,6 +31,7 @@
     let {
         title = "",
         url = "",
+        href = "",
         download,
         target = "_blank",
         rel,
@@ -61,7 +63,7 @@
 
 <a
     onclick={action || onclick}
-    href={url}
+    href={url || href}
     {target}
     {download}
     {rel}

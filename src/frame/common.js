@@ -142,6 +142,10 @@ class notCommon {
     /**
      *  @static {Object} [MANAGER=null]  application manager, in some cases used to control initialization routine
      */
+    static EVENTS = {};
+    /**
+     *  @static {Object} [MANAGER=null]  application manager, in some cases used to control initialization routine
+     */
     static MANAGER = null;
     /**
      *  @static {string} [LOG="console"]  logger, window[LOG]

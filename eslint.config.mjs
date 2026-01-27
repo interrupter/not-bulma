@@ -32,11 +32,7 @@ export default [
             "**/*.css",
         ],
     },
-    ...compat.extends(
-        "eslint:recommended",
-        "plugin:storybook/recommended",
-        "plugin:svelte/recommended"
-    ),
+    ...compat.extends("eslint:recommended", "plugin:svelte/recommended"),
     {
         plugins: {},
         languageOptions: {
@@ -72,10 +68,11 @@ export default [
         },
     },
     {
-        files: ["**/*.svelte", "**/*.js"],
+        files: ["**/*.svelte", "**/*.svelte.js", "**/*.js"],
 
         languageOptions: {
             parser: parser,
         },
     },
+    ...storybook.configs["flat/recommended"],
 ];

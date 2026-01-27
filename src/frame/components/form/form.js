@@ -1,7 +1,7 @@
 import { Runner } from "not-validation";
 
 import { VARIANTS } from "../../LIB.js";
-import Lib from "../../lib.js";
+import Lib from "../../lib.mjs";
 import notCommon from "../../common";
 import notBase from "../../base";
 

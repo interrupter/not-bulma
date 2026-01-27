@@ -27,6 +27,7 @@
 </script>
 
 {#if font}
+    {@debug font}
     <UIIconFont {font} {size} {title}></UIIconFont>
 {:else if svg}
     <span class="icon">{@html svg}</span>

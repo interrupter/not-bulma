@@ -28,7 +28,7 @@
         id = "tagId",
         title = "tag",
         color = "info",
-        size = "normal",
+        size = "",
         padding = "normal",
         bold = false,
         right = false,

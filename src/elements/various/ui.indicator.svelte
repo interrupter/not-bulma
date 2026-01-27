@@ -68,7 +68,7 @@
 </script>
 
 <span
-    class="tag is-{size} {padding !== 'normal'
+    class="tag is-{size} {padding && padding !== 'normal'
         ? `is-padded-${padding}`
         : ''} is-{currentState} {classes}"
     class:has-text-weight-bold={bold}

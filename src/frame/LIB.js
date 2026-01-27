@@ -3,7 +3,7 @@
  */
 
 // @ts-ignore
-import Lib from "./lib.js";
+import Lib from "./lib.mjs";
 
 const COMPONENTS = new Lib();
 const FIELDS = new Lib();

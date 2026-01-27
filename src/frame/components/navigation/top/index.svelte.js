@@ -1,5 +1,5 @@
 import Menu from "../menu.js";
-import UINavbarTop from "./ui.top.svelte";
+import UINavbar from "./ui.top.svelte";
 import { mount } from "svelte";
 
 const TYPE = "top";
@@ -59,7 +59,7 @@ class notTopMenu extends Menu {
             if (!target) {
                 return;
             }
-            this.menu = mount(UINavbarTop, {
+            this.menu = mount(UINavbar, {
                 target,
                 props: this.MENU_PROPS,
             });
