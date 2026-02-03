@@ -35,10 +35,13 @@
 
 <UINavbarWrapper class={classes}>
     {#if brand}
-        <UINavbarBrand {brand}
-            ><UINavbarBurger {active} onclick={onBurgerClick}></UINavbarBurger>
+        <UINavbarBrand {brand}>
+            {#if burger}
+                <UINavbarBurger {active} onclick={onBurgerClick}
+                ></UINavbarBurger>
+            {/if}
         </UINavbarBrand>
-    {:else}
+    {:else if burger}
         <UINavbarBurger {active} onclick={onBurgerClick}></UINavbarBurger>
     {/if}
     <UINavbarMenu {active} {items}></UINavbarMenu>

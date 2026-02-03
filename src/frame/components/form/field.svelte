@@ -1,7 +1,8 @@
 <script>
-    import UILabel from "../../../elements/input/ui.label.svelte";
+    import UILabel from "../../../elements/form/ui.label.svelte";
 
     import { COMPONENTS } from "../../LIB.js";
+
     import { onMount } from "svelte";
 
     /**
@@ -11,12 +12,11 @@
      * @property {boolean} [readonly]
      * @property {boolean} [horizontal]
      * @property {any} [controls]
-     * @property {import('../../../elements/events.types').UIEventInputChangeCallback} onchange
      * @property {string} [classes] - field style modification
      * @property {boolean} [addons] - //addons
      * @property {boolean} [addonsCentered]
      * @property {boolean} [addonsRight]
-     * @property {boolean} [grouped] - //group flag
+     * @property {boolean} [grouped] - //gorup
      * @property {boolean} [groupedMultiline]
      * @property {boolean} [groupedRight]
      * @property {boolean} [groupedCentered]
@@ -37,8 +37,7 @@
         groupedMultiline = false,
         groupedRight = false,
         groupedCentered = false,
-        onchange = () => true,
-        formFieldPrefix = "form-field-",
+        onchange = () => {},
     } = $props();
 
     let fieldClasses = $state("");
@@ -55,19 +54,17 @@
         fieldClasses += groupedMultiline ? " is-grouped-multiline " : "";
         fieldClasses += groupedRight ? " is-grouped-right " : "";
         fieldClasses += groupedCentered ? " is-grouped-centered " : "";
-
         if (readonly) {
             controls.forEach((control) => {
                 control.readonly = true;
             });
         }
-
         let notHidden = controls.filter(
             (control) => control.component !== "UIHidden"
         );
         hidden = notHidden.length === 0;
         let tmp = controls.map((itm) => itm.component).join("_");
-        fieldId = `${formFieldPrefix}${tmp}-${name}`;
+        fieldId = `form-field-${tmp}-${name}`;
     });
 </script>
 
@@ -79,7 +76,7 @@
 {:else if horizontal}
     <div class="field is-horizontal {fieldClasses} {fieldId}">
         <div class="field-label is-normal">
-            <UILabel for={fieldId} label={label || controls[0].label} />
+            <UILabel id={fieldId} label={label || controls[0].label} />
         </div>
         <div class="field-body" id={fieldId}>
             {#each controls as control}
@@ -92,7 +89,7 @@
     <div class="field {fieldClasses} {fieldId}">
         {#each controls as control}
             <UILabel
-                for="form-field-{control.component}-{name}"
+                id="form-field-{control.component}-{name}"
                 label={control.label}
             />
             {@const SvelteComponent_2 = COMPONENTS.get(control.component)}

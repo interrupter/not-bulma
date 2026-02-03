@@ -439,12 +439,12 @@ class notCRUD extends notController {
 
     createLoaderUI() {
         return mount(UILoader, {
-            target: this.getContainerInnerElement(),
-            props: {
-                loading: true,
-                title: "",
-            },
-        });
+                    target: this.getContainerInnerElement(),
+                    props: {
+                        loading: true,
+                        title: "",
+                    },
+                });
     }
 }
 

@@ -1,23 +1,23 @@
 <script>
     import { LOCALE } from "../../locale";
-
+    
+    
+    
+    
     /**
      * @typedef {Object} Props
-     * @property {string} [title = ""]
-     * @property {string} [font = ""]
-     * @property {string} [size = ""]
-     * @property {string} [side = ""]
-     * @property {string} [class = ""]
-     * @property {boolean} [pointable = false]
+     * @property {string} [title]
+     * @property {string} [font]
+     * @property {string} [size]
+     * @property {boolean} [pointable]
      */
 
     /** @type {Props} */
     let {
         title = "",
         font = "",
-        side = "",
         size = "",
-        pointable = false,
+        pointable = false
     } = $props();
 </script>
 
@@ -38,7 +38,6 @@
     <span
         class="
         {pointable ? 'is-clickable' : ''}
-        {side ? `is-${side}` : ''}
         icon {size ? `is-${size}` : ''} {size == 'medium' ? 'fa-lg' : ''}
 {size == 'large' ? 'fa-2x' : ''}"
     >

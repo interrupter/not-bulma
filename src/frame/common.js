@@ -142,10 +142,6 @@ class notCommon {
     /**
      *  @static {Object} [MANAGER=null]  application manager, in some cases used to control initialization routine
      */
-    static EVENTS = {};
-    /**
-     *  @static {Object} [MANAGER=null]  application manager, in some cases used to control initialization routine
-     */
     static MANAGER = null;
     /**
      *  @static {string} [LOG="console"]  logger, window[LOG]
@@ -352,7 +348,7 @@ class notCommon {
 
     static logMsg() {
         let now = notCommon.localIsoDate();
-
+        // eslint-disable-next-line no-console
         window[notCommon.LOG].log(`[${now}]: `, ...arguments);
         notCommon.backlogAdd([`[${now}]: `, ...arguments], "log");
     }
@@ -375,7 +371,7 @@ class notCommon {
         return function () {
             //not arrow bc of arguments special var is not available in arrow functions
             let now = notCommon.localIsoDate();
-
+            // eslint-disable-next-line no-console
             window[notCommon.LOG].log(`[${now}]: ${prefix}::`, ...arguments);
             notCommon.backlogAdd(
                 [`[${now}]: ${prefix}::`, ...arguments],
@@ -415,7 +411,7 @@ class notCommon {
     //Функция вывода сообщения об ошибке
     static logError() {
         let now = notCommon.localIsoDate();
-
+        // eslint-disable-next-line no-console
         window[notCommon.LOG].error(`[${now}]: `, ...arguments);
         notCommon.backlogAdd([`[${now}]: `, ...arguments], "error");
     }
@@ -424,7 +420,7 @@ class notCommon {
         return function () {
             //do not change to arrow function, bc of arguments
             let now = notCommon.localIsoDate();
-
+            // eslint-disable-next-line no-console
             window[notCommon.LOG].error(`[${now}]: ${prefix}::`, ...arguments);
             notCommon.backlogAdd(
                 [`[${now}]: ${prefix}::`, ...arguments],

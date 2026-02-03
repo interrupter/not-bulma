@@ -10,7 +10,6 @@ import UIProgress from "./ui.progress.svelte";
 import UIShowOneFromList from "./ui.show.one.from.list.svelte";
 import UITag from "./ui.tag.svelte";
 import UITagValue from "./ui.tag.value.svelte";
-import UITagValueList from "./ui.tag.value.list.svelte";
 import UITitle from "./ui.title.svelte";
 import UIErrorsList from "./ui.errors.list.svelte";
 import UIUserCard from "./ui.user.card.svelte";
@@ -31,7 +30,6 @@ export {
     UISimpleSearchInput,
     UITag,
     UITagValue,
-    UITagValueList,
     UITitle,
     UIUserCard,
 };

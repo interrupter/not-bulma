@@ -1,27 +1,15 @@
 <script>
-    import { UIControl } from "../input";
-    import UIField from "../input/ui.field.svelte";
-    import UITagValue from "./ui.tag.value.svelte";
+    import UITagValue from "not-bulma/src/elements/various/ui.tag.value.svelte";
 
-    /**
-     * @typedef {object}    Props
-     * @property {array}    values = []
-     * @property {boolean}  [grouped = true]
-     * @property {boolean}  [multiline = true]
-     */
-
-    /**
-     * @type   Props
-     */
-    let { values = [], grouped = true, multiline = true } = $props();
+    let { value = [] } = $props();
 </script>
 
-{#if values.length}
-    <UIField {grouped} {multiline}>
-        {#each values as tagValueProps}
-            <UIControl>
+{#if value.length}
+    <div class="field is-grouped is-grouped-multiline">
+        {#each value as tagValueProps}
+            <div class="control">
                 <UITagValue {...tagValueProps} />
-            </UIControl>
+            </div>
         {/each}
-    </UIField>
+    </div>
 {/if}

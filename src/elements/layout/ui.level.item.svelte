@@ -10,5 +10,5 @@
 </script>
 
 <svelte:element this={tag}>
-    {#if children}{@render children?.()}{:else}<!-- optional fallback -->{/if}
+    {#if children}{@render children()}{:else}<!-- optional fallback -->{/if}
 </svelte:element>

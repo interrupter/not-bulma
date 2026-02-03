@@ -16,19 +16,19 @@
 
   /** @type {Props} */
   let {
-      id = '',
-      value = $bindable(false),
-      fieldname = 'switch',
-      disabled = false,
-      readonly = false,
-      styling = " is-rounded is-success "
+    id = '',
+    value = $bindable(false),
+    fieldname = 'switch',
+    disabled = false,
+    readonly = false,
+    styling = " is-rounded is-success "
   } = $props();
 
 function onInput(ev){
     let data = {
-        id,
-        field: fieldname,
-        value: ev.target.type === 'checkbox' ? ev.target.checked:ev.target.value
+      id,
+      field: fieldname,
+      value: ev.target.type === 'checkbox' ? ev.target.checked:ev.target.value
     };
     dispatch('change', data);
     return true;

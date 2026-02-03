@@ -4,30 +4,19 @@
 
     /**
      * @typedef {Object} Props
-     * @property {string}   [idFieldName = "id"]
-     * @property {array}    [items = []]
-     * @property {array}    [actions = []]
-     * @property {array}    [links = []]
-     * @property {string}   [itemClass = ""]
-     * @property {object}   [listItemContentComponent]
-     * @property {object}   [listItemContentComponentProps = {}]
-     * @property {function} [listItemRenderer]
-     * @property {function} [listItemComponent = UIListItem]
-     * @property {object}   [listItemComponentProps = {}]
-     * @property {function} [titleRenderer]
-     * @property {function} [titleComponent = UITitle]
-     * @property {object}   [titleComponentProps = { size: 6 }]
-     * @property {function} [descriptionRenderer]
-     * @property {function} [descriptionComponent]
-     * @property {object}   [descriptionComponentProps = {}]
-     * @property {function} [imageRenderer]
-     * @property {function} imageComponent
-     * @property {object}   [imageComponentProps = {}]
-     * @property {function} [onclick]
-     * @property {function} [onclickContent]
-     * @property {function} [onclickDescription]
-     * @property {function} [onclickImage]
-     * @property {function} [onclickTitle]
+     * @property {string} [idFieldName]
+     * @property {any} [items]
+     * @property {any} [actions]
+     * @property {any} [links]
+     * @property {string} [itemClasses]
+     * @property {any} [listItemComponent]
+     * @property {any} [listItemComponentProps]
+     * @property {any} [titleComponent]
+     * @property {any} [titleComponentProps]
+     * @property {any} descriptionComponent
+     * @property {any} [descriptionComponentProps]
+     * @property {any} imageComponent
+     * @property {any} [imageComponentProps]
      */
 
     /** @type {Props} */
@@ -36,61 +25,42 @@
         items = [],
         actions = [],
         links = [],
-        itemClass = "",
-        listItemContentComponent,
-        listItemContentComponentProps = {},
-        listItemRenderer,
-        listItemComponent: UIListItemComponent = UIListItem,
+        itemClasses = "",
+        listItemComponent = UIListItem,
         listItemComponentProps = {},
-        titleRenderer,
         titleComponent = UITitle,
         titleComponentProps = { size: 6 },
-        descriptionRenderer,
         descriptionComponent,
         descriptionComponentProps = {},
-        imageRenderer,
         imageComponent,
         imageComponentProps = {},
-        onclick,
-        onclickContent,
-        onclickDescription,
-        onclickImage,
-        onclickTitle,
     } = $props();
 </script>
 
 {#if items}
+    {@const SvelteComponent = listItemComponent}
     {#each items as item, index (item[idFieldName])}
-        {#if listItemRenderer}
-            {@render listItemRenderer(item, index)}
-        {:else}
-            <UIListItemComponent
-                {...listItemComponentProps}
-                {listItemContentComponent}
-                {listItemContentComponentProps}
-                {titleRenderer}
-                {titleComponent}
-                {titleComponentProps}
-                {descriptionRenderer}
-                {descriptionComponent}
-                {descriptionComponentProps}
-                {imageRenderer}
-                {imageComponent}
-                {imageComponentProps}
-                {...items[index]}
-                listActions={actions}
-                listLinks={links}
-                value={items[index].value}
-                commonClass={itemClass}
-                {index}
-                first={index === 0}
-                last={index === items.length - 1}
-                {onclick}
-                {onclickContent}
-                {onclickDescription}
-                {onclickImage}
-                {onclickTitle}
-            />
-        {/if}
+        <SvelteComponent
+            {...listItemComponentProps}
+            {titleComponent}
+            {titleComponentProps}
+            {descriptionComponent}
+            {descriptionComponentProps}
+            {imageComponent}
+            {imageComponentProps}
+            {...item}
+            listActions={actions}
+            listLinks={links}
+            commonClasses={itemClasses}
+            bind:value={items[index]}
+            {index}
+            first={index === 0}
+            last={index === items.length - 1}
+            on:click
+            on:clickContent
+            on:clickDescription
+            on:clickImage
+            on:clickTitle
+        />
     {/each}
 {/if}

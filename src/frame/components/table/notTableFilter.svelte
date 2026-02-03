@@ -1,4 +1,4 @@
 <script>
-    // let { filter = {} } = $props();
+    let { filter = {} } = $props();
     //some filter UI and logic
 </script>

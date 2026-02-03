@@ -1,6 +1,14 @@
 <script>
-    import { onMount } from "svelte";
+    import { run } from 'svelte/legacy';
+
     import UIButton from "./ui.button.svelte";
+    import { createEventDispatcher } from "svelte";
+
+    const dispatch = createEventDispatcher();
+
+
+
+
 
     /**
      * @typedef {Object} Props
@@ -16,12 +24,12 @@
      * @property {string} [type]
      * @property {string} [color]
      * @property {string} [size]
-     * @property {string} [class]
+     * @property {string} [classes]
      * @property {boolean} [icon]
      * @property {string} [iconSide]
-     * @property {function} [uiOff]
-     * @property {function} [uiOn]
-     * @property {function} [action]
+     * @property {any} [uiOff]
+     * @property {any} [uiOn]
+     * @property {any} [action]
      * @property {any} value
      * @property {boolean} [selected]
      */
@@ -36,86 +44,69 @@
         inverted = false,
         rounded = false,
         disabled = false,
-        state: activeState = "",
+        state = "",
         type = "",
         color = "",
         size = "",
-        class: classes = "",
+        classes = "",
         icon = false,
         iconSide = "right",
         uiOff = () => {
-            return {
-                color: "",
-            };
-        },
+        return {
+            color: "",
+        };
+    },
         uiOn = () => {
-            return {
-                color: "success",
-            };
-        },
+        return {
+            color: "success",
+        };
+    },
         action = () => {
-            return !selected;
-        },
-        onclick = () => {},
-        onchange = () => {},
+        return !selected;
+    },
         value,
-        selected = $bindable(false),
+        selected = $bindable(false)
     } = $props();
-
-    let childProps = $state({
-        title,
-        light,
-        loading,
-        raised,
-        outlined,
-        inverted,
-        rounded,
-        disabled,
-        type,
-        color,
-        size,
-        class: classes,
-        icon,
-        iconSide,
-        value,
-    });
-
-    let uiElement = $state();
-
-    onMount(() => {
-        updateUI();
-    });
 
     function onClick(event) {
         selected = action(event, value, selected);
-        updateUI();
-        onclick({ value, selected });
-        onchange({
+        dispatch("click", { value, selected });
+        onChange();
+    }
+
+    function onChange() {
+        dispatch("change", {
             value,
             selected,
         });
     }
 
-    export function updateUI() {
-        if (uiElement) {
-            const propsChanges = selected
-                ? uiOn(value, selected)
-                : uiOff(value, selected);
-            Object.keys(propsChanges).forEach((key) => {
-                childProps[key] = propsChanges[key];
-            });
-            childProps = childProps;
-        }
-    }
+    let uiElement = $state();
 
-    $effect(() => {
-        if (typeof selected !== "undefined") updateUI();
+    run(() => {
+        if (uiElement) {
+            selected ? uiElement.$set(uiOn()) : uiElement.$set(uiOff());
+        }
     });
 </script>
 
 <UIButton
     bind:this={uiElement}
-    {...childProps}
-    state={activeState}
-    onclick={onClick}
-/>
+    {title}
+    {light}
+    {loading}
+    {raised}
+    {outlined}
+    {inverted}
+    {rounded}
+    {disabled}
+    {state}
+    {type}
+    {color}
+    {size}
+    {classes}
+    {icon}
+    {iconSide}
+    {value}
+    on:click={onClick}
+></UIButton>

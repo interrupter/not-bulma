@@ -1,7 +1,7 @@
 <script>
     import "bulma-pageloader";
-    import { createEventDispatcher } from "svelte";
-    let dispatch = createEventDispatcher();
+
+    import Lib from "../../lib.js";
 
     import { LOCALE } from "../../../locale";
 
@@ -12,7 +12,6 @@
     let formErrors = $state([]);
     let formHasErrors = $state(false);
     let fieldsHasErrors = $state(false);
-    let success = $state(false);
 
     //input data
     //form structure object
@@ -52,6 +51,7 @@ agreed
         form = $bindable({}),
         loading = $bindable(false),
         loader = "container",
+        success = false,
         fields = [],
         SUCCESS_TEXT = "Операция завершена",
         WAITING_TEXT = "Отправка данных на сервер",
@@ -67,6 +67,9 @@ agreed
             caption: "Назад",
             enabled: true,
         },
+        onchange = () => {},
+        onsubmit = () => {},
+        onreject = () => {},
     } = $props();
 
     let formInvalid = $derived(formHasErrors || fieldsHasErrors);
@@ -82,6 +85,9 @@ agreed
 
     export function setFieldValid(fieldName, value) {
         form = FormHelpers.setFieldValid(form, fieldName, value);
+        if (fieldsHasErrors !== some) {
+            fieldsHasErrors = some;
+        }
     }
 
     export function isFieldValid(fieldName) {
@@ -136,18 +142,6 @@ agreed
         }
     }
 
-    export function showSuccess() {
-        success = true;
-    }
-
-    export function setLoading() {
-        loading = true;
-    }
-
-    export function resetLoading() {
-        loading = false;
-    }
-
     export function setFieldsVisibility(fieldsList, val) {
         if (FormHelpers.setFieldsVisibility(form, fieldsList, val)) {
             form = form;
@@ -173,29 +167,19 @@ agreed
         }
     }
 
-    export function updateField(fieldName, props) {
-        form[fieldName] = {
-            ...form[fieldName],
-            ...props,
-        };
-        form = form;
-    }
-
-    function onFieldChange(ev) {
-        let data = ev.detail;
-        form[data.field].value = data.value;
-        form = form;
-        dispatch("change", data);
+    function onFieldChange(event) {
+        form[event.field].value = event.value;
+        onchange(event);
     }
 
     function submitForm(e) {
         e && e.preventDefault();
-        dispatch("submit", collectData());
+        onsubmit(collectData());
         return false;
     }
 
     function rejectForm() {
-        dispatch("reject");
+        onreject();
     }
 </script>
 
@@ -259,7 +243,7 @@ agreed
                                 >
                                     <UIField
                                         controls={[form[subfield]]}
-                                        on:change={onFieldChange}
+                                        onchange={onFieldChange}
                                         name={subfield}
                                         {horizontal}
                                         label={form[subfield].label}
@@ -277,7 +261,7 @@ agreed
                 {#if form[field].visible}
                     <UIField
                         controls={[form[field]]}
-                        on:change={onFieldChange}
+                        onchange={onFieldChange}
                         name={field}
                         {horizontal}
                         label={form[field].label}

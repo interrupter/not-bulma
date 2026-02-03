@@ -1,15 +1,26 @@
 <script>
-    import UICommon from "../common";
+    import { createBubbler } from 'svelte/legacy';
+
+    const bubble = createBubbler();
+    import { createEventDispatcher } from "svelte";
+    const dispatch = createEventDispatcher();
     /**
      * @typedef {Object} Props
-     * @property {string}   [class]
+     * @property {string} [id]
+     * @property {string} [classes]
      * @property {import('svelte').Snippet} [children]
      */
 
     /** @type {Props} */
-    let { class: classes = "", children, ...others } = $props();
+    let { id = "", classes = "", children } = $props();
 </script>
 
-<div class="block {classes}" {...others}>
+<div
+    {id}
+    class="block {classes}"
+    onclick={bubble('click')}
+    onkeyup={() => dispatch("click")}
+    role="button"
+>
     {@render children?.()}
 </div>

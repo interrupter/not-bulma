@@ -1,87 +1,86 @@
-aside.menu {
-    position: fixed;
+aside.menu{
+  position: fixed;
+  
+  overflow-y: scroll;
+  padding: 1rem;
 
-    overflow-y: scroll;
-    padding: 1rem;
+  & .is-no-follow-subtitle{
+	  //padding: .5em .75em;
+  }
 
-    & .is-no-follow-subtitle {
-        //padding: .5em .75em;
-    }
-
-    & .is-closed {
-        display: none;
-    }
-
-    & .is-toggle-submenu {
-        cursor: pointer;
-    }
-}
-
-aside.menu.is-closed {
-    left: 0px;
-    width: 0px;
+  & .is-closed{
     display: none;
+  }
+
+  & .is-toggle-submenu{
+    cursor: pointer;
+  }
 }
 
-@media screen and (min-width: 1024px) {
-    aside.menu {
-        width: 20em;
+
+aside.menu.is-closed{
+  left: 0px;  
+  width: 0px;
+  display:none;
+}
+
+
+@media screen and (min-width: 1024px){
+  aside.menu{
+    width: 20em;
+  }
+}
+
+@media screen and (max-width: 1023px){
+  aside.menu{
+    transition: width .5s;
+    z-index: 10;
+    width: 0px;
+    left: -100px;
+    &.is-active{
+      width: 100%;
+      left: 0px;
     }
+  }
 }
 
-@media screen and (max-width: 1023px) {
-    aside.menu {
-        transition: width 0.5s;
-        z-index: 10;
-        width: 0px;
-        left: -100px;
-        &.is-active {
-            width: 100%;
-            left: 0px;
-        }
-    }
+.is-wide{
+  min-width: 15em;
 }
 
-.is-wide {
-    min-width: 15em;
+span.is-no-link{
+  border-radius: 5px;
+  //display: block;
+  padding: .5em .75em;
 }
 
-span.is-no-link {
-    border-radius: 5px;
-    //display: block;
-    padding: 0.5em 0.75em;
+a>span.is-no-link{
+  border-radius: 5px;
+  //display: block;
+  padding-left: 0em;
 }
 
-a > span.is-no-link {
-    border-radius: 5px;
-    //display: block;
+a.has-subitems{
+  padding-right: 0em!important;
+}
+
+
+a:not(.is-active) > span.is-no-link:hover{
+  background-color: #f5f5f5;
+  color: #363636;
+}
+
+.is-no-follow-subtitle{
+  padding-left: 0em;
+  &>a{
     padding-left: 0em;
+  }
 }
 
-a.has-subitems {
-    padding-right: 0em !important;
-}
 
-a:not(.is-active) > span.is-no-link:hover {
-    background-color: #f5f5f5;
-    color: #363636;
+.menu-list li ul, .menu-list li ul li ul{
+  margin-right: 0em!important;
 }
-
-.is-no-follow-subtitle {
-    padding-left: 0em;
-    & > a {
-        padding-left: 0em;
-    }
-}
-
-.menu-list li ul,
-.menu-list li ul li ul {
-    margin-right: 0em !important;
-}
-.navbar-item-brand-title {
-    margin-left: 1rem;
-}
-
-nav#top-menu.is-fixed-top ~ main {
-    margin-top: var(--bulma-navbar-height);
+.navbar-item-brand-title{
+  margin-left: 1rem;
 }

@@ -2,16 +2,17 @@
     import UITag from "./ui.tag.svelte";
     import UIButtons from "../button/ui.buttons.svelte";
 
+    
     /**
      * @typedef {Object} Props
-     * @property {string}   [id = "taggedValueId"] - if we want to address this tag
-     * @property {object}   title
-     * @property {object}   value
-     * @property {array}    [actions = []]
-     * @property {string}   [class = '']
-     * @property {any}      [actionsGroupContructor = UIButtons]
-     * @property {any}      [actionsGroupProps = {}]
-     * @property {boolean}  [readonly = false]
+     * @property {string} [id] - if we want to address this tag
+     * @property {any} title
+     * @property {any} value
+     * @property {any} [actions]
+     * @property {string} [classes]
+     * @property {any} [actionsGroupContructor]
+     * @property {any} [actionsGroupProps]
+     * @property {boolean} [readonly]
      */
 
     /** @type {Props} */
@@ -20,17 +21,21 @@
         title,
         value,
         actions = [],
-        class: classes = "",
-        actionsGroupContructor: ActionsGroupContructor = UIButtons,
+        classes = "",
+        actionsGroupContructor = UIButtons,
         actionsGroupProps = {},
-        readonly = false,
+        readonly = false
     } = $props();
 </script>
 
 <div class="tags has-addons {classes}" {id}>
     {#if title}<UITag {...title} />{/if}
     {#if value}<UITag {...value} />{/if}
+    {#if !readonly && actions && actions.length}
+        {@const SvelteComponent = actionsGroupContructor}
+        <SvelteComponent
+            values={actions}
+            {...actionsGroupProps}
+        />
+    {/if}
 </div>
-{#if !readonly && actions && actions.length}
-    <ActionsGroupContructor values={actions} {...actionsGroupProps} />
-{/if}

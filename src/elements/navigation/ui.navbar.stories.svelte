@@ -733,7 +733,7 @@
             title: "Network",
             place: "end",
             indicator: {
-                state: "primary",
+                status: "primary",
                 labels: {
                     primary: "On",
                     danger: "Off",

@@ -1,30 +1,4 @@
-const inputValuesExtractors = Object.freeze({
-    checkbox: (inpEl, defaultValue = undefined) => {
-        if (
-            typeof defaultValue == "object" &&
-            Object.hasOwn(defaultValue, "checked") &&
-            Object.hasOwn(defaultValue, "unchecked")
-        ) {
-            return inpEl.checked
-                ? defaultValue.checked
-                : defaultValue.unchecked;
-        } else if (
-            Object.hasOwn(inpEl, "value") &&
-            typeof inpEl.value !== "undefined"
-        ) {
-            return inpEl.checked ? inpEl.value : false;
-        } else {
-            return inpEl.checked;
-        }
-    },
-});
-
-/**
- * Collection of common to UI functions and properties
- *
- * @class UICommon
- */
-class UICommon {
+export default class UICommon {
     static CLEAR_MACRO = "__CLEAR__";
     static ERROR_DEFAULT = "Что пошло не так.";
     static DEFAULT_REDIRECT_TIMEOUT = 3000;
@@ -37,75 +11,6 @@ class UICommon {
         top: 0,
         behavior: "smooth",
     };
-
-    static get inputValuesExtractors() {
-        return inputValuesExtractors;
-    }
-
-    static extractValueFromInput(inpEl, defaultValue = undefined) {
-        if (!inpEl) return defaultValue;
-        if (Object.hasOwn(UICommon.inputValuesExtractors, inpEl.type)) {
-            return UICommon.inputValuesExtractors[inpEl.type](
-                inpEl,
-                defaultValue
-            );
-        }
-        return inpEl.value;
-    }
-
-    /**
-     *
-     *
-     * @static
-     * @param {string}      field    field name
-     * @param {import('./events.types').UIEventInputChangeCallback}    onchange
-     * @param {any}         [defaultValue=undefined]
-     * @param {object}      [additional = {}]
-     * @return {import('./events.types').UIEventCallback}
-     * @memberof UICommon
-     */
-    static onInput(field, onchange, defaultValue = undefined, additional = {}) {
-        if (typeof onchange !== "function") {
-            return undefined;
-        }
-        return (event) => {
-            typeof event?.preventDefault === "function" &&
-                event?.preventDefault();
-            const value = UICommon.extractValueFromInput(
-                event?.currentTarget,
-                defaultValue
-            );
-            return onchange(
-                {
-                    field,
-                    value,
-                },
-                event,
-                additional
-            );
-        };
-    }
-
-    /**
-     *
-     *
-     * @static
-     * @param {KeyboardEvent} e
-     * @memberof UICommon
-     */
-    static isEnterEvent(e) {
-        return e.key === "Enter" && !e.altKey && !e.ctrlKey && !e.shiftKey;
-    }
-
-    static onlyOnEnter(callback) {
-        return (e) => {
-            if (UICommon.isEnterEvent(e)) {
-                return callback(e);
-            } else {
-                return true;
-            }
-        };
-    }
 
     static MOBILE_WIDTH_BREAK_POINT = 760;
 
@@ -264,24 +169,4 @@ class UICommon {
             return `${hours} ${unit} назад`;
         }
     }
-
-    static stylesObjectToString(styles = {}) {
-        if (typeof styles === "object") {
-            Object.keys(styles)
-                .map((prop) => `${prop}: ${styles.prop};`)
-                .join("");
-        } else {
-            return "";
-        }
-    }
-
-    static stringOrNumber(val) {
-        return ["string", "number"].indexOf(typeof val) > -1;
-    }
-
-    static stringsOfNumbers(list) {
-        return list.every(this.stringOrNumber);
-    }
 }
-
-export default UICommon;

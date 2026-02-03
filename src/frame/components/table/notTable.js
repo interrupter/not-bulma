@@ -398,7 +398,7 @@ class notTable extends EventEmitter {
         try {
             let names = Object.keys(this.getSorter());
             return this.getSorter()[names[0]];
-        } catch {
+        } catch (e) {
             return OPT_DEFAULT_SORT_DIRECTION;
         }
     }

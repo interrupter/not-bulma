@@ -1,52 +1,36 @@
 <script>
-    import UITextfield from "../input/ui.textfield.svelte";
-    import { UIColumn, UIColumns } from "../layout";
-    import UIIconFont from "../icon/ui.icon.font.svelte";
-    import UIControl from "../input/ui.control.svelte";
-    import UIField from "../input/ui.field.svelte";
+    import { createEventDispatcher } from "svelte";
+    const dispatch = createEventDispatcher();
+
+    import UITextfield from "../form/ui.textfield.svelte";
+
+    import {LOCALE} from '../../locale';
 
     /**
      * @typedef {Object} Props
-     * @property {string}   [placeholder = 'not-node:field_search_placeholder']
-     * @property {string}   [term = '']
-     * @property {string}   [fieldname = 'searchTermInput']
-     * @property {string}   [icon = 'search']
-     * @property {function} [onchange]
+     * @property {any} [placeholder]
+     * @property {string} [term]
      */
 
     /** @type {Props} */
-    let {
-        placeholder = "not-node:field_search_placeholder",
-        term = $bindable(""),
-        fieldname = "searchTermInput",
-        icon = "search",
-        iconSide = "left",
-        size = "normal",
-        required = false,
-        ...others
-    } = $props();
+    let { placeholder = $LOCALE['not-node:field_search_placeholder'], term = $bindable('') } = $props();
 
-    let hasIconsLeft = $derived(icon && iconSide === "left");
-    let hasIconsRight = $derived(icon && iconSide === "right");
+    function onChange({detail}){
+        dispatch('termChange', detail); 
+    }
+
 </script>
 
-<UIColumns role="none">
-    <UIColumn role="none">
-        <UIField>
-            <UIControl {hasIconsLeft} {hasIconsRight}>
-                <UITextfield
-                    bind:value={term}
-                    {placeholder}
-                    {fieldname}
-                    {required}
-                    {size}
-                    role={"searchbox"}
-                    {...others}
-                />
-                {#if icon}
-                    <UIIconFont font={icon} side={iconSide} />
-                {/if}
-            </UIControl>
-        </UIField>
-    </UIColumn>
-</UIColumns>
+<div class="columns">
+    <div class="column">
+        <div class="field">
+            <UITextfield 
+                bind:value={term}
+                {placeholder}
+                fieldname='searchTermInput'
+                icon='magnifying-glass'
+                on:change={onChange}
+            />
+        </div>
+    </div>
+</div>

@@ -1,14 +1,17 @@
 <script>
+    import { createBubbler } from 'svelte/legacy';
+
+    const bubble = createBubbler();
     /**
      * @typedef {Object} Props
-     * @property {string} [class]
+     * @property {string} [classes]
      * @property {import('svelte').Snippet} [children]
      */
 
     /** @type {Props} */
-    let { class: classes = "", children, ...others } = $props();
+    let { classes = "", children } = $props();
 </script>
 
-<div class="columns {classes}" {...others}>
+<div class="columns {classes}" onclick={bubble('click')} onkeyup={bubble('keyup')} role="button" tabindex="0">
     {@render children?.()}
 </div>

@@ -1,11 +1,16 @@
 <script>
+    import { run } from 'svelte/legacy';
+
     import { LOCALE } from "../../locale";
+    
+    
+
+    
 
     /**
      * @typedef {Object} Props
      * @property {string} [title] - attributes
      * @property {string} [url]
-     * @property {string} [href]
      * @property {any} download
      * @property {string} [target]
      * @property {any} rel
@@ -20,7 +25,7 @@
      * @property {string} [type]
      * @property {string} [color]
      * @property {string} [size]
-     * @property {string} [class]
+     * @property {string} [classes]
      * @property {boolean} [icon] - icons
      * @property {string} [iconSide]
      * @property {any} [action]
@@ -31,7 +36,6 @@
     let {
         title = "",
         url = "",
-        href = "",
         download,
         target = "_blank",
         rel,
@@ -42,46 +46,62 @@
         inverted = false,
         rounded = false,
         button = true,
-        state: activeState = "",
+        state = "",
         type = "",
         color = "",
         size = "",
-        class: classes = "",
-        icon,
+        classes = $bindable(""),
+        icon = false,
         iconSide = "right",
-        action,
-        onclick,
-        children,
+        action = () => {
+        return true;
+    },
+        children
     } = $props();
+
+    run(() => {
+        classes =
+            (button ? "button " : "") +
+            (state && state.length > 0 ? ` is-${state} ` : "") +
+            (light ? ` is-light ` : "") +
+            (type && type.length > 0 ? ` is-${type} ` : "") +
+            (size && size.length > 0 ? ` is-${size} ` : "");
+    });
 </script>
 
-{#snippet sideIcon()}
-    <span class="icon"
-        ><i class="fas fa-{icon} {size ? `is-${size}` : ''}"></i></span
-    >
-{/snippet}
-
 <a
-    onclick={action || onclick}
-    href={url || href}
+    onclick={action}
     {target}
+    href={url}
     {download}
     {rel}
-    class="{classes} {activeState ? `is-${activeState}` : ''} {color
-        ? `is-${color}`
-        : ''} {type ? `is-${type}` : ''} {size ? `is-${size}` : ''}"
-    class:button
-    class:is-light={light}
-    class:is-inverted={inverted}
-    class:is-outlined={outlined}
-    class:is-raised={raised}
-    class:is-rounded={rounded}
-    class:is-loading={loading}
+    class="{classes} {state ? `is-${state}` : ''} {inverted
+        ? `is-inverted`
+        : ''} {outlined ? `is-outlined` : ''} {raised
+        ? `is-raised`
+        : ''} {rounded ? `is-rounded` : ''} {light ? `is-light` : ''} {loading
+        ? `is-loading`
+        : ''} {color ? `is-${color}` : ''} {type ? `is-${type}` : ''} {size
+        ? `is-${size}`
+        : ''}"
 >
     {#if icon}
-        {#if iconSide === "left"}{@render sideIcon()}{/if}
-        {#if title}<span>{$LOCALE[title]}</span>{/if}
+        {#if iconSide === "left"}
+            <span class="icon"
+                ><i class="fas fa-{icon} {size ? `is-${size}` : ''}"></i></span
+            >
+        {/if}
+        {#if title}
+            <span>{$LOCALE[title]}</span>
+        {/if}
         {@render children?.()}
-        {#if iconSide === "right"}{@render sideIcon()}{/if}
-    {:else}{$LOCALE[title]}{@render children?.()}{/if}
+        {#if iconSide === "right"}
+            <span class="icon"
+                ><i class="fas fa-{icon} {size ? `is-${size}` : ''}"></i></span
+            >
+        {/if}
+    {:else}
+        {$LOCALE[title]}
+        {@render children?.()}
+    {/if}
 </a>

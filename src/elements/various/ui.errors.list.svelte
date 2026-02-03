@@ -2,28 +2,26 @@
     import { LOCALE } from "../../locale";
     /**
      * @typedef {Object} Props
-     * @property {array<string>}  [errors = []]
-     * @property {boolean} [show = false]
-     * @property {string} [class = '']
-     * @property {string} [id = 'errors-list']
+     * @property {any} [errors]
+     * @property {boolean} [show]
+     * @property {string} [classes]
+     * @property {string} [id]
      */
 
     /** @type {Props} */
     let {
         errors = [],
         show = false,
-        class: classes = "",
-        id = "errors-list",
+        classes = "",
+        id = "errors-list"
     } = $props();
 </script>
 
 {#if Array.isArray(errors) && errors.length}
     <p class="help {classes}" {id}>
         {#if show}
-            {#each errors as error, index}
-                <span>{$LOCALE[error]}</span>{index < errors.length - 1
-                    ? ", "
-                    : ""}
+            {#each errors as error}
+                <span>{$LOCALE[error]}</span>
             {/each}
         {:else}&nbsp;{/if}
     </p>

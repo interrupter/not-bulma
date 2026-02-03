@@ -24,7 +24,7 @@
         hidden = "",
         hoverable = true,
         arrowless = false,
-        right = false,
+        right = false
     } = $props();
 
     function onClick(event) {
@@ -65,8 +65,6 @@
         class="navbar-item {hidden ? `is-hidden-${hidden}` : ''} "
         onclick={onClick}
         onkeyup={onClick}
-        role="button"
-        tabindex="0"
     >
         <UIItemContent item={section} />
     </div>

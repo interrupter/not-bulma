@@ -126,7 +126,7 @@ function setFieldValid(form, fieldName, value) {
     form[fieldName].validated = true;
     form[fieldName].valid = true;
     form[fieldName].value = value;
-
+    let some = false;
     for (let fname in form) {
         if (fname !== fieldName) {
             if (
@@ -136,6 +136,7 @@ function setFieldValid(form, fieldName, value) {
                 form[fname].errors = false;
             }
             if (form[fname].errors !== false) {
+                some = true;
                 break;
             }
         }
@@ -191,14 +192,20 @@ function updateFormValidationStatus(
     {
         form,
         formErrors,
+        formHasErrors,
+        fieldsHasErrors,
         validationStatus,
     } /* FormValidationSession.getCompleteResult() */
 ) {
+    formHasErrors = false;
+    fieldsHasErrors = false;
     if (Array.isArray(validationStatus.form) && validationStatus.form.length) {
         formErrors.splice(0, formErrors.length, ...validationStatus.form);
+        formHasErrors = true;
     } else {
         formErrors.splice(0, formErrors.length);
     }
+    formErrors = formErrors;
     if (validationStatus.fields) {
         for (let fieldName in validationStatus.fields) {
             if (
@@ -210,6 +217,7 @@ function updateFormValidationStatus(
                     fieldName,
                     validationStatus.fields[fieldName]
                 );
+                fieldsHasErrors = true;
             } else {
                 setFormFieldValid(form, fieldName);
             }

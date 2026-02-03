@@ -143,7 +143,7 @@ class notRouter extends notBase {
         for (
             var i = 0, r;
             i < this.getWorking("routes").length,
-            (r = this.getWorking("routes")[i]);
+                (r = this.getWorking("routes")[i]);
             i++
         ) {
             if (r.handler === param || r.re === param) {

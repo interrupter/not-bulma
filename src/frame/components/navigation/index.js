@@ -1,4 +1,4 @@
-import notTopMenu from "./top/index.svelte.js";
-import notSideMenu from "./side/index.svelte.js";
+import notTopMenu from './top';
+import notSideMenu from './side';
 
-export { notTopMenu, notSideMenu };
+export {notTopMenu, notSideMenu};

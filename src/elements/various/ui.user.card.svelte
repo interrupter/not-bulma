@@ -1,44 +1,47 @@
 <script>
     import { onMount } from "svelte";
     import notCommon from "../../frame/common";
-    import { UIContent } from "../block";
 
+
+    
+    
     /**
      * @typedef {Object} Props
-     * @property {string}       [id = "userCard"]
-     * @property {string}       [image = "https://bulma.io/images/placeholders/32x32.png"]
-     * @property {string}       [username = "John Doe"]
-     * @property {string}       [role = "admin"]
-     * @property {object}       [events = {}]
-     * @property {function}     [register = notCommon.registerWidgetEvents] - register event handlers
-     * @property {function}     [onUpdate = (data)=> {username=data.username; role = data.role;}]
+     * @property {string} [id]
+     * @property {string} [image]
+     * @property {string} [username]
+     * @property {string} [role]
+     * @property {any} [events]
+     * @property {any} [register] - register event handlers
+     * @property {any} [onUpdate]
      */
 
     /** @type {Props} */
     let {
         id = "userCard",
         image = "https://bulma.io/images/placeholders/32x32.png",
-        username = "John Doe",
-        role = "admin",
-        events = {},
-        register = notCommon.registerWidgetEvents.bind(notCommon),
+        username = $bindable("John Doe"),
+        role = $bindable("admin"),
+        events = $bindable({}),
+        register = notCommon.registerWidgetEvents,
         onUpdate = (data) => {
-            if (Object.hasOwn(data, "username")) {
-                username = data.username;
-            }
+        if (Object.hasOwn(data, "username")) {
+            username = data.username;
+        }
 
-            if (Object.hasOwn(data, "role")) {
-                role = data.role;
-            }
-        },
+        if (Object.hasOwn(data, "role")) {
+            role = data.role;
+        }
+    }
     } = $props();
 
-    export function getCompId() {
+    function getCompId() {
         return `usercard-${id}`;
     }
 
-    export function getStandartUpdateEventName() {
-        return `${getCompId()}:update`;
+    function getStandartUpdateEventName() {
+        let compId = getCompId();
+        return `${compId}:update`;
     }
 
     onMount(() => {
@@ -56,12 +59,12 @@
         </p>
     </figure>
     <div class="media-content">
-        <UIContent>
+        <div class="content">
             <p>
                 <strong>{username}</strong>
                 <small>@</small>
                 <strong>{role}</strong>
             </p>
-        </UIContent>
+        </div>
     </div>
 </article>

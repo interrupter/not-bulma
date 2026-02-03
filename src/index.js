@@ -1,7 +1,5 @@
 import "./scss/style.scss";
 
-import * as svelte from "svelte";
-
 import * as Elements from "./elements";
 
 import * as Frame from "./frame";
@@ -23,7 +21,6 @@ Object.keys(Elements).forEach((componentsSetName) => {
 });
 
 export {
-    svelte,
     //UI
     Elements,
     UICommon,

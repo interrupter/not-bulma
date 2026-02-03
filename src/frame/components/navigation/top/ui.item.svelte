@@ -12,7 +12,12 @@
      */
 
     /** @type {Props} */
-    let { root = "", item = {}, hidden = "", classes = "" } = $props();
+    let {
+        root = "",
+        item = {},
+        hidden = "",
+        classes = ""
+    } = $props();
 
     function onClick(event) {
         dispatch("click", { event, element: item });
@@ -41,8 +46,6 @@
         class="navbar-item {hidden
             ? `is-hidden-${hidden}`
             : ''} {item.classes} {classes}"
-        role="button"
-        tabindex="0"
     >
         <UIItemContent {item} />
     </div>

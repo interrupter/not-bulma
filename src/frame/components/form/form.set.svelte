@@ -1,63 +1,58 @@
 <script>
+    import UIButtons from "../../../elements/button/ui.buttons.svelte";
 
-  import UIButtons from '../../../elements/button/ui.buttons.svelte';
+    import { onMount } from "svelte";
 
-  import {
-      createEventDispatcher,
-      onMount
-  } from 'svelte';
+    /**
+     * @typedef {Object} Props
+     * @property {string} [name]
+     * @property {boolean} [showModes]
+     * @property {string} [mode]
+     * @property {any} [forms]
+     */
 
-  let dispatch = createEventDispatcher();
+    /** @type {Props} */
+    let {
+        name = "default-form",
+        showModes = false,
+        mode = $bindable("default"),
+        forms = [],
+        onmode = () => {},
+    } = $props();
 
+    function setMode(val) {
+        mode = val;
+        onmode(val);
+        updateModesButtons();
+    }
 
-  /**
-   * @typedef {Object} Props
-   * @property {string} [name]
-   * @property {boolean} [showModes]
-   * @property {string} [mode]
-   * @property {any} [forms]
-   */
+    let FORMS_BUTTONS = $state([]);
 
-  /** @type {Props} */
-  let {
-      name = 'default-form',
-      showModes = false,
-      mode = $bindable('default'),
-      forms = []
-  } = $props();
+    function updateModesButtons() {
+        FORMS_BUTTONS = forms
+            .filter((form) => {
+                return mode !== form.mode;
+            })
+            .map((form) => {
+                return {
+                    title: form.title,
+                    outlined: true,
+                    type: "link",
+                    action() {
+                        setMode(form.mode);
+                    },
+                };
+            });
+    }
 
-  function setMode(val) {
-      mode = val;
-      dispatch('mode', val);
-      updateModesButtons();
-  }
-
-  let FORMS_BUTTONS = $state([]);
-
-  function updateModesButtons() {
-      FORMS_BUTTONS = forms.filter(form => {
-          return (mode !== form.mode);
-      }).map(form => {
-          return {
-              title: form.title,
-              outlined: true,
-              type: 'link',
-              action() {
-                  setMode(form.mode);
-              }
-          };
-      });
-  }
-
-  onMount(() => {
-      updateModesButtons();
-  });
-
+    onMount(() => {
+        updateModesButtons();
+    });
 </script>
 
 <div class="block-container" id="{name}-form-set">
-  <div class="form-paper"  id="{name}-form-set-container"></div>
-  {#if showModes}
-  <UIButtons centered={true} bind:values={FORMS_BUTTONS} classes='mt-4' />
-  {/if}
+    <div class="form-paper" id="{name}-form-set-container"></div>
+    {#if showModes}
+        <UIButtons centered={true} bind:values={FORMS_BUTTONS} classes="mt-4" />
+    {/if}
 </div>

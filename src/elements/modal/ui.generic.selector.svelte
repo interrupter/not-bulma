@@ -1,80 +1,117 @@
 <script>
-    import { LOCALE } from "../../locale";
-    import UIButtons from "../button/ui.buttons.svelte";
-    import UIOverlay from "./ui.overlay.svelte";
+    import {LOCALE} from '../../locale';
+    import UIButtons from '../button/ui.buttons.svelte';
+    import UIOverlay from './ui.overlay.svelte';
+  
+    import {UIEndlessList} from '../list/endless';
+    import UISimpleSearchInput from '../various/ui.simple.search.input.svelte';
+       
+    import {
+      onMount,
+      createEventDispatcher
+    } from 'svelte';
+  
+    let dispatch = createEventDispatcher();
+      
+  
+  /**
+   * @typedef {Object} Props
+   * @property {boolean} [show]
+   * @property {string} [term]
+   * @property {string} [size]
+   * @property {any} [inputComponent]
+   * @property {any} [inputComponentProps]
+   * @property {any} [outputComponent]
+   * @property {any} [outputComponentProps]
+   * @property {any} [results]
+   */
 
-    import { UIEndlessList } from "../list/endless";
-    import UISimpleSearchInput from "../various/ui.simple.search.input.svelte";
-    import { UIBox, UIBlock } from "../block";
-
-    /**
-     * @typedef     {Object} Props
-     * @property    {boolean}   [show]
-     * @property    {boolean}   [showSearch = true]
-     * @property    {string}    [term]
-     * @property    {(fullscreen|wide|normal|narrow)} [size]   100vw, 75vw, 50vw, 25vw
-     * @property    {any}       [inputComponent]
-     * @property    {object}    [inputComponentProps]
-     * @property    {any}       [outputComponent]
-     * @property    {object}    [outputComponentProps]
-     * @property    {object}    [buttonsProps = { centered: true, class: "mt-5",}]
-     * @property    {object}    [results]
-     * @property    {function}  [onprev]
-     * @property    {function}  [onnext]
-     * @property    {function}  [onchange]
-     * @property    {function}  [onreject]
-     * @property    {function}  [onresolve]
-     */
-
-    /** @type {Props} */
-    let {
-        show = true,
-        showSearch = true,
-        term = $bindable(""),
-        size = "narrow",
-        inputComponent: UIInputComponent = UISimpleSearchInput,
-        inputComponentProps = {},
-        outputComponent: UIOutputComponent = UIEndlessList,
-        outputComponentProps = {},
-        buttonsProps = {
-            centered: true,
-            class: "mt-5",
-        },
-        rejectButtonProps = {},
-        results = $bindable({ list: [], page: 0, pages: 0, skip: 0, count: 0 }),
-        onchange,
-        onprev,
-        onnext,
-        onresolve,
-        onreject,
-        itemRenderer,
-    } = $props();
-
+  /** @type {Props} */
+  let {
+    show = true,
+    term = $bindable(''),
+    size = 'narrow',
+    inputComponent = UISimpleSearchInput,
+    inputComponentProps = {},
+    outputComponent = UIEndlessList,
+    outputComponentProps = {},
+    results = $bindable({list:[], page:0, pages:0,skip:0,count:0})
+  } = $props();
+  
+     
+    onMount(() => {
+      
+    });
+  
     const buttons = [
-        {
-            title: $LOCALE["not-node:button_cancel_label"],
-            action: onreject,
-            ...rejectButtonProps,
-        },
+      {
+        title: $LOCALE['not-node:button_cancel_label'],
+        action: () => reject(),
+      }
     ];
-</script>
-
-<UIOverlay {onreject} {show} closeOnClick={true} closeButton={false}>
-    <UIBox class="modal-selector {size}">
-        {#if showSearch}
-            <UIInputComponent {onchange} bind:term {...inputComponentProps} />
-        {/if}
-
-        <UIOutputComponent
-            bind:data={results}
-            {onprev}
-            {onnext}
-            onselect={onresolve}
-            class="has-height-up-to-60 overflow-scroll"
-            {...outputComponentProps}
-            {itemRenderer}
-        />
-
-        <UIButtons {...buttonsProps} values={buttons} />
-    </UIBox>
-</UIOverlay>
+  
+    function overlayClosed() {
+      dispatch('reject');
+    }
+  
+    function select({
+      detail
+    }) {
+      console.log('selected user', detail);
+      dispatch('resolve', detail);
+    }
+  
+    function reject(){
+      dispatch('reject');
+    }
+  
+   
+  </script>
+  
+  
+  <UIOverlay on:reject="{overlayClosed}" {show} closeOnClick={true} closeButton={false}>
+    {@const SvelteComponent = inputComponent}
+    {@const SvelteComponent_1 = outputComponent}
+    <div class="paper box block {size}">
+      <SvelteComponent on:termChange bind:term={term} {...inputComponentProps}></SvelteComponent>
+      <SvelteComponent_1 
+        bind:data={results} 
+          on:prev
+          on:next
+          on:select={select}
+          {...outputComponentProps}
+        ></SvelteComponent_1>
+        <UIButtons values={buttons} centered={true} classes="mt-5"/>
+    </div>
+  </UIOverlay>
+  
+  <style>
+    .paper.box {
+      margin: 10vh auto auto auto;
+    }
+  
+    .paper.box.fullscreen{
+      width: 100vw;
+    }
+  
+    .paper.box.wide{
+      width: 75vw;
+    }
+  
+    .paper.box.normal{
+      width: 50vw;
+    }
+  
+    .paper.box.narrow{
+      width: 25vw;
+    }  
+  
+    @media (max-width: 700px) {
+      .paper.box {
+        width: 100vw;
+        height: 100vh;
+        margin: 0vh auto auto auto;
+      }
+    }
+  </style>
+  

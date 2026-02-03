@@ -1,19 +1,38 @@
 <script>
-    import UIBox from "../../block/ui.box.svelte";
+    import { preventDefault } from 'svelte/legacy';
 
-    let { title, id, _id, onclick } = $props();
+    import { createEventDispatcher } from "svelte";
+    const dispatch = createEventDispatcher();
 
-    function click(e) {
-        e.preventDefault();
-        onclick({
+    let { title, id, _id } = $props();
+
+    function click() {
+        dispatch("click", {
             _id,
             id,
             title,
         });
-        return false;
     }
 </script>
 
-<UIBox onclick={click} onkeyup={click} class="list-item-selectable">
+<div
+    onclick={preventDefault(click)}
+    class="box list-item-selectable"
+    onkeyup={click}
+    role="button"
+    tabindex="0"
+>
     <span>{title}</span>
-</UIBox>
+</div>
+
+<style>
+    .list-item-selectable {
+        cursor: pointer;
+        padding: 1em;
+    }
+
+    .list-item-selectable:hover {
+        background-color: #48c78e;
+        color: white;
+    }
+</style>

@@ -1,114 +1,113 @@
-@use "../../node_modules/bulma/sass/utilities";
-@use "../../node_modules/bulma/sass/utilities/mixins";
+@import "bulma/sass/utilities/mixins.scss";
 
-$list-color: utilities.$text !default;
-$list-item-description-color: utilities.$text-weak !default;
-$list-item-divider-color: utilities.$border !default;
-$list-item-hover-color: utilities.$scheme-main-bis !default;
+$list-color: $text !default;
+$list-item-description-color: $text-weak !default;
+$list-item-divider-color: $border !default;
+$list-item-hover-color: $scheme-main-bis !default;
 $list-item-image-margin: 0.75em !default;
 $list-item-padding: 0.75em !default;
-$list-item-title-color: utilities.$text-strong !default;
-$list-item-title-weight: utilities.$weight-semibold !default;
+$list-item-title-color: $text-strong !default;
+$list-item-title-weight: $weight-semibold !default;
 
 @mixin has-mouse-pointer {
-    @media (hover: hover) {
-        @content;
-    }
+  @media (hover: hover) {
+    @content;
+  }
 }
 
 .list {
-    color: $list-color;
-    display: flex;
-    flex-direction: column;
-    &.has-hidden-images .list-item-image {
-        display: none;
+  color: $list-color;
+  display: flex;
+  flex-direction: column;
+  &.has-hidden-images .list-item-image {
+    display: none;
+  }
+  &.has-hoverable-list-items .list-item:hover {
+    background-color: $list-item-hover-color;
+  }
+  &.has-overflow-ellipsis .list-item-content {
+    min-width: 0;
+    max-width: calc(var(length) * 1ch);
+    & > * {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
-    &.has-hoverable-list-items .list-item:hover {
-        background-color: $list-item-hover-color;
+  }
+  &:not(.has-visible-pointer-controls) .list-item-controls {
+    @include has-mouse-pointer {
+      opacity: 0;
+      visibility: hidden;
     }
-    &.has-overflow-ellipsis .list-item-content {
-        min-width: 0;
-        max-width: calc(var(length) * 1ch);
-        & > * {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-    }
-    &:not(.has-visible-pointer-controls) .list-item-controls {
-        @include has-mouse-pointer {
-            opacity: 0;
-            visibility: hidden;
-        }
-    }
-    &.selectable-items .list-item:hover,
-    &.selectable-items .list-item.is-active {
-        background-color: utilities.$info;
-    }
+  }
+  &.selectable-items .list-item:hover,
+  &.selectable-items .list-item.is-active{
+    background-color: $info;
+  }
 }
 
 .list-item {
-    align-items: center;
-    display: flex;
-    position: relative;
-    transition: background-color ease-out 0.125s;
-    &:hover .list-item-controls,
-    &:focus-within .list-item-controls {
-        @include has-mouse-pointer {
-            opacity: initial;
-            visibility: initial;
-        }
+  align-items: center;
+  display: flex;
+  position: relative;
+  transition: background-color ease-out 0.125s;
+  &:hover .list-item-controls,
+  &:focus-within .list-item-controls {
+    @include has-mouse-pointer {
+      opacity: initial;
+      visibility: initial;
     }
-    &:not(.box) {
-        padding: $list-item-padding;
+  }  
+  &:not(.box) {
+    padding: $list-item-padding;
+  }
+  &:not(:last-child):not(.box) {
+    border-bottom: 1px solid $list-item-divider-color;
+  }
+  @include mobile {
+    .list:not(.has-overflow-ellipsis) &{
+      flex-wrap: wrap;
     }
-    &:not(:last-child):not(.box) {
-        border-bottom: 1px solid $list-item-divider-color;
-    }
-    @include mixins.mobile {
-        .list:not(.has-overflow-ellipsis) & {
-            flex-wrap: wrap;
-        }
-    }
+  }
 }
 .list-item-image {
-    flex-shrink: 0;
-    margin-right: $list-item-image-margin;
-    @include mixins.mobile {
-        padding: 0.5rem 0;
-    }
+  flex-shrink: 0;
+  margin-right: $list-item-image-margin;
+  @include mobile {
+    padding: 0.5rem 0;
+  }
 }
 .list-item-content {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    @include mixins.mobile {
-        padding: 0.5rem 0;
-    }
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  @include mobile {
+    padding: 0.5rem 0;
+  }
 }
 .list-item-title {
-    color: $list-item-title-color;
-    font-weight: $list-item-title-weight;
+  color: $list-item-title-color;
+  font-weight: $list-item-title-weight;
 }
 .list-item-description {
-    color: $list-item-description-color;
+  color: $list-item-description-color;
 }
 .list-item-controls {
-    flex-shrink: 0;
-    transition: opacity ease-out 0.125s;
-    @include mixins.mobile {
-        padding: 0.5rem 0;
-        flex-wrap: wrap;
+  flex-shrink: 0;
+  transition: opacity ease-out 0.125s;
+  @include mobile {
+    padding: 0.5rem 0;
+    flex-wrap: wrap;
+  }
+  @include tablet {
+    padding-left: $list-item-padding;
+    .list:not(.has-visible-pointer-controls) & {
+      align-items: center;
+      display: flex;
+      height: 100%;
+      padding-right: $list-item-padding;
+      position: absolute;
+      right: 0;
     }
-    @include mixins.tablet {
-        padding-left: $list-item-padding;
-        .list:not(.has-visible-pointer-controls) & {
-            align-items: center;
-            display: flex;
-            height: 100%;
-            padding-right: $list-item-padding;
-            position: absolute;
-            right: 0;
-        }
-    }
+  }
 }

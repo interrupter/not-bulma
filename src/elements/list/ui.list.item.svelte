@@ -1,38 +1,41 @@
 <script>
-    import { onMount } from "svelte";
+    import { run, preventDefault } from 'svelte/legacy';
+
+    import { createEventDispatcher, onMount } from "svelte";
+    const dispatch = createEventDispatcher();
 
     import UITitle from "../various/ui.title.svelte";
     import UIButtons from "../button/ui.buttons.svelte";
     import UILinks from "../link/ui.links.svelte";
-    import UIClickableDiv from "../block/ui.clickable.div.svelte";
 
+    
+    
+    
+    
+    
+    
+    
     /**
      * @typedef {Object} Props
-     * @property {number}   index
-     * @property {string|object} title
-     * @property {string|object} description
-     * @property {array} [actions = []]
-     * @property {array} [links = []]
-     * @property {array} [listActions = []]
-     * @property {array} [listLinks = []]
-     * @property {string} [class = '']
-     * @property {string} [commonClass = '']
-     * @property {string|object} [image = '']
-     * @property {object} value - value of item, will be passed to event handlers
-     * @property {string|number} [index = -1] - index in array 0-length
-     * @property {boolean} [first = false] - if first
-     * @property {boolean} [last = false] - if last
-     * @property {function} [titleComponent = UITitle] - customization
-     * @property {object} [titleComponentProps]
-     * @property {function} [descriptionComponent]
-     * @property {object} [descriptionComponentProps = {}]
-     * @property {function} [imageComponent]
-     * @property {object} [imageComponentProps = {}]
-     * @property {function} [onclick]
-     * @property {function} [onclickTitle]
-     * @property {function} [onclickDescription]
-     * @property {function} [onclickImage]
-     * @property {function} [onclickContent]
+     * @property {any} title
+     * @property {any} description
+     * @property {any} [actions]
+     * @property {any} [links]
+     * @property {any} [listActions]
+     * @property {any} [listLinks]
+     * @property {string} [classes]
+     * @property {string} [commonClasses]
+     * @property {string} [image]
+     * @property {any} value - value of item, will be passed to event handlers
+     * @property {any} [index] - index in array 0-length
+     * @property {boolean} [first] - if first
+     * @property {boolean} [last] - if last
+     * @property {any} [titleComponent] - customization
+     * @property {any} [titleComponentProps]
+     * @property {any} descriptionComponent
+     * @property {any} [descriptionComponentProps]
+     * @property {any} imageComponent
+     * @property {any} [imageComponentProps]
      */
 
     /** @type {Props} */
@@ -43,189 +46,183 @@
         links = [],
         listActions = [],
         listLinks = [],
-        class: classes = "",
-        commonClass = "",
+        classes = "",
+        commonClasses = "",
         image = "",
         value,
         index = -1,
         first = false,
         last = false,
-        listItemContentComponent: UIListItemContentComponent,
-        listItemContentComponentProps = {},
-        titleRenderer,
-        titleComponent: UITitleComponent = UITitle,
+        titleComponent = UITitle,
         titleComponentProps = { size: 6 },
-        descriptionRenderer,
-        descriptionComponent: UIDescriptionComponent,
+        descriptionComponent,
         descriptionComponentProps = {},
-        imageRenderer,
-        imageComponent: UIImageComponent,
-        imageComponentProps = {},
-        onclick,
-        onclickImage,
-        onclickContent,
-        onclickTitle,
-        onclickDescription,
+        imageComponent,
+        imageComponentProps = {}
     } = $props();
 
     function onClick() {
-        onclick && onclick(value);
+        dispatch("click", value);
     }
 
     let allActions = $state([]);
+    run(() => {
+        allActions = [...actions, ...listActions].map((btn) => {
+            return { ...btn, action: () => btn.action(value) };
+        });
+    });
+
     let allLinks = $state([]);
-
-    const callbackTemplate = (callback) => {
-        return () => {
-            if (callback) {
-                onClick();
-                callback && callback(value);
-            }
-        };
-    };
-
-    $effect(() => {
-        allActions = [...actions, ...listActions].map((btn, index) => {
-            return {
-                ...btn,
-                id: index,
-                action: btn.action ? () => btn.action(value) : undefined,
-            };
-        });
-
-        allLinks = [...links, ...listLinks].map((link, index) => {
-            link.id = index;
-            return link;
-        });
-    });
-
-    const paramsSet = { title, description, image, value, index };
-
-    const clickableItemElementAttributes = {
-        role: "button",
-        tabindex: "0",
-        onclick: onClick,
-        onkeyup: (e) => {
-            if (e && e.key == "Enter") {
-                onClick();
-            }
-        },
-    };
-
-    const additionalElementAttributes = onclick
-        ? clickableItemElementAttributes
-        : {};
-
-    let imageProps = $state({});
-    let titleProps = $state({});
-    let descriptionProps = $state({});
-
-    $effect(() => {
-        if (typeof image === "object") {
-            imageProps = { ...image };
-        } else {
-            imageProps = { image };
-        }
-    });
-
-    $effect(() => {
-        if (typeof title === "object") {
-            titleProps = { ...title };
-        } else {
-            titleProps = { title };
-        }
-    });
-
-    $effect(() => {
-        if (typeof description === "object") {
-            descriptionProps = { ...description };
-        } else {
-            descriptionProps = { description };
-        }
+    run(() => {
+        allLinks = [...links, ...listLinks];
     });
 </script>
 
-{#snippet itemContent()}
-    {#if titleRenderer}
-        {@render titleRenderer(paramsSet)}
-    {:else if title}
-        <UIClickableDiv
-            class="list-item-title"
-            callback={callbackTemplate(onclickTitle)}
-        >
-            {#if UITitleComponent}
-                <UITitleComponent
-                    {...titleProps}
-                    {...titleComponentProps}
-                    {onchange}
-                />
-            {:else}{title}{/if}
-        </UIClickableDiv>
-    {/if}
-
-    {#if descriptionRenderer}
-        {@render descriptionRenderer(paramsSet)}
-    {:else if description}
-        <UIClickableDiv
-            class="list-item-description"
-            callback={callbackTemplate(onclickDescription)}
-        >
-            {#if UIDescriptionComponent}
-                <UIDescriptionComponent
-                    {...descriptionProps}
-                    {...descriptionComponentProps}
-                    {onchange}
-                    {onclick}
-                />
-            {:else}{description}{/if}
-        </UIClickableDiv>
-    {/if}
-{/snippet}
-
 <div
-    {...additionalElementAttributes}
-    class:is-clickable={onclick}
-    class:list-item-last={last}
-    class:list-item-first={first}
-    class:list-item-odd={index % 2 === 1}
-    class:list-item-even={index % 2 === 0}
-    class="list-item {classes} {commonClass} {`list-item-at-${index}`}"
+    role="button"
+    tabindex="0"
+    class="list-item {classes} {commonClasses} {last
+        ? 'list-item-last'
+        : ''} {first
+        ? 'list-item-first'
+        : ''}  {`list-item-at-${index}`} {`list-item-` +
+        (index % 2 ? 'odd' : 'even')}"
+    onclick={onClick}
+    onkeyup={(e) => {
+        if (e && e.key == "Enter") {
+            onClick();
+        }
+    }}
 >
     {#if image}
-        {#if imageRenderer}
-            {@render imageRenderer(paramsSet)}
-        {:else}
-            <UIClickableDiv
-                class="list-item-image"
-                callback={callbackTemplate(onclickImage)}
-            >
-                {#if UIImageComponent}
-                    <UIImageComponent {...imageProps} />
+        <div
+            role="button"
+            tabindex="0"
+            class="list-item-image"
+            onkeyup={preventDefault((e) => {
+                if (e && e.key == "Enter") {
+                    onClick();
+                    dispatch("clickImage", value);
+                }
+            })}
+            onclick={preventDefault(() => {
+                onClick();
+                dispatch("clickImage", value);
+            })}
+        >
+            {#if imageComponent}
+                {#if typeof image === "string"}
+                    {@const SvelteComponent = imageComponent}
+                    <SvelteComponent
+                        value={image}
+                        {...imageComponentProps}
+                    />
                 {:else}
-                    <figure class="image is-64x64">
-                        <img
-                            class="is-rounded"
-                            src={image}
-                            alt={title ? title?.title || title : image}
-                        />
-                    </figure>
+                    {@const SvelteComponent_1 = imageComponent}
+                    <SvelteComponent_1
+                        {...image}
+                        {...imageComponentProps}
+                    />
                 {/if}
-            </UIClickableDiv>
+            {:else}
+                <figure class="image is-64x64">
+                    <img class="is-rounded" src={image} alt={title} />
+                </figure>
+            {/if}
+        </div>
+    {/if}
+    <div
+        role="button"
+        tabindex="0"
+        class="list-item-content"
+        onclick={preventDefault(() => {
+            onClick();
+            dispatch("clickContent", value);
+        })}
+        onkeyup={preventDefault((e) => {
+            if (e && e.key == "Enter") {
+                onClick();
+                dispatch("clickContent", value);
+            }
+        })}
+    >
+        {#if title}
+            <div
+                class="list-item-title"
+                role="button"
+                tabindex="0"
+                onkeyup={preventDefault((e) => {
+                    if (e && e.key == "Enter") {
+                        onClick();
+                        dispatch("clickTitle", value);
+                    }
+                })}
+                onclick={preventDefault(() => {
+                    onClick();
+                    dispatch("clickTitle", value);
+                })}
+            >
+                {#if titleComponent}
+                    {#if typeof title === "string"}
+                        {@const SvelteComponent_2 = titleComponent}
+                        <SvelteComponent_2
+                            {title}
+                            {...titleComponentProps}
+                            on:change
+                        />
+                    {:else}
+                        {@const SvelteComponent_3 = titleComponent}
+                        <SvelteComponent_3
+                            {...title}
+                            {...titleComponentProps}
+                            on:change
+                        />
+                    {/if}
+                {:else}
+                    {title}
+                {/if}
+            </div>
         {/if}
-    {/if}
-
-    {#if UIListItemContentComponent}
-        <UIListItemContentComponent {...listItemContentComponentProps}>
-            {@render itemContent()}
-        </UIListItemContentComponent>
-    {:else}
-        <UIClickableDiv
-            class="list-item-content"
-            callback={callbackTemplate(onclickContent)}
-        >
-            {@render itemContent()}</UIClickableDiv
-        >
-    {/if}
+        {#if description}
+            <div
+                role="button"
+                tabindex="0"
+                onkeyup={preventDefault((e) => {
+                    if (e && e.key == "Enter") {
+                        onClick();
+                        dispatch("clickDescription", value);
+                    }
+                })}
+                class="list-item-description"
+                onclick={preventDefault(() => {
+                    onClick();
+                    dispatch("clickDescription", value);
+                })}
+            >
+                {#if descriptionComponent}
+                    {#if typeof description === "string"}
+                        {@const SvelteComponent_4 = descriptionComponent}
+                        <SvelteComponent_4
+                            value={description}
+                            {...descriptionComponentProps}
+                            on:change
+                            on:click
+                        />
+                    {:else}
+                        {@const SvelteComponent_5 = descriptionComponent}
+                        <SvelteComponent_5
+                            {...description}
+                            {...descriptionComponentProps}
+                            on:change
+                            on:click
+                        />
+                    {/if}
+                {:else}
+                    {description}
+                {/if}
+            </div>
+        {/if}
+    </div>
 
     {#if (allActions && allActions.length) || (allLinks && allLinks.length)}
         <div class="list-item-controls">

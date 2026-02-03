@@ -1,46 +1,49 @@
 <script>
-    import { LOCALE } from "../../../../locale";
-    import UIIndicator from "../../../../elements/various/ui.indicator.svelte";
+  import { createEventDispatcher } from 'svelte';
+  const dispatch = createEventDispatcher();
 
-    /**
-     * @typedef {Object} Props
-     * @property {string} [root]
-     * @property {any} [item]
-     */
+  import {LOCALE} from '../../../../locale';
+  import UIIndicator from '../../../../elements/various/ui.indicator.svelte';
 
-    /** @type {Props} */
-    let { root = "", item = {}, onnavigate = () => {} } = $props();
+  /**
+   * @typedef {Object} Props
+   * @property {string} [root]
+   * @property {any} [item]
+   */
 
-    function onClick(ev) {
-        ev.preventDefault();
-        onnavigate({
-            full: ev.target.getAttribute("href"),
-            short: ev.target.dataset.href,
-        });
-        return false;
-    }
+  /** @type {Props} */
+  let { root = '', item = {} } = $props();
+
+  function onClick(ev){
+    ev.preventDefault();
+    dispatch('navigate', {
+      full: ev.target.getAttribute('href'),
+      short: ev.target.dataset.href
+    });
+    return false;
+}
+
 </script>
 
-{#if typeof item.url !== "undefined" && item.url !== false}
-    <li class={item.classes}>
-        <a href="{root}{item.url}" data-href={item.url} onclick={onClick}>
-            {$LOCALE[item.title]}
-            {#if item.tag}
-                <UIIndicator id={item.id} {...item.tag} />
-            {/if}
-            {#if item.indicator}
-                <UIIndicator id={item.id} {...item.indicator} />
-            {/if}
-        </a>
-    </li>
-{:else}
-    <li class="is-no-follow-subtitle {item.classes}">
-        {$LOCALE[item.title]}
-        {#if item.tag}
-            <UIIndicator id={item.id} {...item.tag} />
-        {/if}
-        {#if item.indicator}
-            <UIIndicator id={item.id} {...item.indicator} />
-        {/if}
-    </li>
+{#if (typeof item.url !== 'undefined' && item.url!==false) }
+<li class="{item.classes}">
+  <a href="{root}{item.url}" data-href="{item.url}" onclick={onClick}>
+  {$LOCALE[item.title]}
+  {#if item.tag }
+    <UIIndicator id={item.id} {...item.tag} />
+  {/if}
+  {#if item.indicator }
+    <UIIndicator id={item.id} {...item.indicator } />
+  {/if}
+</a></li>
+{:else }
+<li class="is-no-follow-subtitle {item.classes}">
+  {$LOCALE[item.title]}
+  {#if item.tag }
+    <UIIndicator id={item.id} {...item.tag} />
+  {/if}
+  {#if item.indicator }
+    <UIIndicator id={item.id} {...item.indicator } />
+  {/if}
+</li>
 {/if}

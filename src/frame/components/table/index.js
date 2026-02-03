@@ -1,3 +1,4 @@
-import notTable from "./notTable.js";
+import notTable from './notTable.js';
 
-export { notTable };
+
+export {notTable};

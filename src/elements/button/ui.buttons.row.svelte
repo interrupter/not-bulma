@@ -3,14 +3,19 @@
 
     /**
      * @typedef {Object} Props
-     * @property {string} [class]
+     * @property {string} [classes]
      * @property {any} [left]
      * @property {any} [center]
      * @property {any} [right]
      */
 
     /** @type {Props} */
-    let { class: classes = "", left = [], center = [], right = [] } = $props();
+    let {
+        classes = "",
+        left = [],
+        center = [],
+        right = []
+    } = $props();
 </script>
 
 <div class="columns {classes}">

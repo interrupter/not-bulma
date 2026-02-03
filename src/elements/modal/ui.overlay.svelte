@@ -1,45 +1,45 @@
 <script>
-    import { fade } from "svelte/transition";
-    import { onMount, onDestroy } from "svelte";
-
-    import { UIButtonClose } from "../button";
+    import { run } from 'svelte/legacy';
 
     let overflowSave = $state("");
 
-    const defaultCloseButtonProps = {
-        class: "is-absolute is-sided-right is-sided-top",
-        style: "--siding-right-size: 2rem; --siding-top-size: 2rem",
-        size: "normal",
-    };
+    import { fade } from "svelte/transition";
+
+    import { createEventDispatcher, onMount, onDestroy } from "svelte";
+
+    const zIndexStep = 1000;
+
+    const dispatch = createEventDispatcher();
 
     /**
      * @typedef {Object} Props
-     * @property {boolean}  [closeButton = false]
-     * @property {object}   [closeButtonProps = defaultCloseButtonProps]
-     * @property {boolean}  [show = true]
-     * @property {boolean}  [closeOnClick = true]
-     * @property {number}   [layer = 1]
-     * @property {string}   [class = ""]
-     * @property {number}   [zIndexStep = 1000]
-     * @property {string}   [role = 'button']
-     * @property {string}   [tabIndex = 'button']
+     * @property {boolean} [closeButton]
+     * @property {boolean} [show]
+     * @property {boolean} [closeOnClick]
+     * @property {string} [closeSize]
+     * @property {number} [layer]
+     * @property {string} [classes]
      * @property {import('svelte').Snippet} [children]
      */
 
     /** @type {Props} */
     let {
         closeButton = false,
-        closeButtonProps = defaultCloseButtonProps,
         show = true,
         closeOnClick = true,
+        closeSize = "normal",
         layer = 1,
-        class: classes = "",
-        children,
-        onreject = () => false,
-        zIndexStep = 1000,
-        role = "button",
-        tabIndex = "0",
+        classes = "",
+        children
     } = $props();
+
+    run(() => {
+        if (show) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = overflowSave;
+        }
+    });
 
     function overlayClick(e) {
         if (closeOnClick) {
@@ -62,22 +62,19 @@
                     rejectOverlay();
                 }
             }
-            //eslint-disable-next-line no-empty
-        } catch {}
+        } catch (_) {}
     }
 
     function rejectOverlay(data = {}) {
-        show = false;
-        onreject(data);
+        dispatch("reject", data);
     }
-
+    /*
+	function resolveOverlay(data = {}) {
+	  dispatch('resolve', data);
+	}
+*/
     onMount(() => {
         overflowSave = document.body.style.overflow;
-        if (show) {
-            document.body.style.overflow = "hidden";
-        } else {
-            document.body.style.overflow = overflowSave;
-        }
     });
 
     onDestroy(() => {
@@ -87,16 +84,16 @@
 
 {#if show}
     <div
-        transition:fade
         class="is-overlay not-overlay {classes}"
+        transition:fade
         onclick={overlayClick}
         onkeyup={overlayClick}
-        {role}
-        {tabIndex}
+        role="button"
+        tabindex="0"
         style="z-index: {zIndexStep * layer};"
     >
         {#if closeButton}
-            <UIButtonClose {...closeButtonProps} onclick={closeButtonClick} />
+            <button onclick={closeButtonClick} class="delete is-{closeSize}"></button>
         {/if}
         {@render children?.()}
     </div>

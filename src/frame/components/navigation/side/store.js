@@ -1,7 +1,7 @@
 import { writable } from "svelte/store";
 
 const SideMenuState = writable({
-    open: true,
+    open: true
 });
 
 export default SideMenuState;

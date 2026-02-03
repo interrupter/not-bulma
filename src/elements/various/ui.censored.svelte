@@ -1,22 +1,22 @@
 <script>
     import "bulma-tooltip/dist/css/bulma-tooltip.min.css";
 
+
     /**
      * @typedef {Object} Props
-     * @property {boolean}  [hidden = true]
-     * @property {boolean}  [showable = true]
-     * @property {boolean}  [copiable = true]
-     * @property {string}   [copyIcon = 'copy']
-     * @property {string}   [showIcon = 'eye']
-     * @property {string}   [hideIcon = 'eye-slash']
-     * @property {number}   [maxLength = 20]
-     * @property {string}   [shadowClass = "has-background-primary-90"]
-     * @property {boolean}  [tooltip = true]
-     * @property {number}   [tooltipTTL = 2000]
-     * @property {string}   [tooltipText = "Скопировано в буфер"]
-     * @property {string}   [tooltipClass = "has-tooltip-info"]
-     * @property {string}   [value = ""]
-     * @property {function} [onerror]
+     * @property {boolean} [hidden]
+     * @property {boolean} [showable]
+     * @property {boolean} [copiable]
+     * @property {string} [copyIcon]
+     * @property {string} [showIcon]
+     * @property {string} [hideIcon]
+     * @property {number} [maxLength]
+     * @property {string} [shadowClass]
+     * @property {boolean} [tooltip]
+     * @property {number} [tooltipTTL]
+     * @property {string} [tooltipText]
+     * @property {string} [tooltipClass]
+     * @property {string} [value]
      */
 
     /** @type {Props} */
@@ -33,8 +33,7 @@
         tooltipTTL = 2000,
         tooltipText = "Скопировано в буфер",
         tooltipClass = "has-tooltip-info",
-        value = "",
-        onerror,
+        value = ""
     } = $props();
 
     function toggleView() {
@@ -57,9 +56,11 @@
                 }, tooltipTTL);
             }
         } catch (err) {
-            onerror && onerror(err);
+            console.error("Failed to copy: ", err);
         }
     }
+
+    
 </script>
 
 <span
@@ -72,9 +73,6 @@
     <span
         bind:this={tooltipTarget}
         onclick={copyContent}
-        onkeydown={copyContent}
-        role="button"
-        tabindex="0"
         class={"icon is-small is-right is-clickable " +
             (tooltipActive ? ` ${tooltipClass} ` : "") +
             " is-vertical-middle"}><i class="fas fa-{copyIcon}"></i></span
@@ -84,8 +82,6 @@
     <span
         class="icon is-small is-right is-clickable is-vertical-middle"
         onclick={toggleView}
-        onkeydown={toggleView}
-        role="button"
-        tabindex="0"><i class="fas fa-{hidden ? showIcon : hideIcon}"></i></span
+        ><i class="fas fa-{hidden ? showIcon : hideIcon}"></i></span
     >
 {/if}

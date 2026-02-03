@@ -1,15 +1,17 @@
 <script>
+    import { createEventDispatcher } from "svelte";
+    const dispatch = createEventDispatcher();
     import UIButton from "./ui.button.svelte";
+
 
     /**
      * @typedef {Object} Props
-     * @property {Array<object>} [values = []]
-     * @property {boolean} [centered = false]
-     * @property {boolean} [right = false]
-     * @property {string} [class = '']
-     * @property {import('svelte').Component} [buttonComponent = UIButton]
-     * @property {import('../events.types').UIEventInputChangeCallback} [action = ()=>true]
-     * @property {import('../events.types').UIEventCallback} [onclick = ()=>true]
+     * @property {any} [values]
+     * @property {boolean} [centered]
+     * @property {boolean} [right]
+     * @property {string} [classes]
+     * @property {any} [buttonComponent]
+     * @property {any} [action]
      */
 
     /** @type {Props} */
@@ -17,34 +19,26 @@
         values = [],
         centered = false,
         right = false,
-        class: classes = "",
-        buttonComponent: SvelteComponent = UIButton,
-        action = () => {
-            return true;
-        },
-        onclick = () => {
-            return true;
-        },
+        classes = "",
+        buttonComponent = UIButton,
+        action = (e) => {
+        dispatch("click", e);
+    }
     } = $props();
-
-    let _values = $state([]);
-
-    $effect(() => {
-        _values = values.map((itm) => {
-            if (isNaN(itm.id)) {
-                itm.id = Math.round(Math.random() * 100);
-            }
-            return itm;
-        });
-    });
 </script>
 
 <div
-    class="buttons has-addons {classes}"
-    class:is-right={right}
-    class:is-centered={centered}
+    class="buttons has-addons {centered ? 'is-centered' : ''} {right
+        ? 'is-right'
+        : ''} {classes}"
 >
-    {#each _values as item (item.id)}
-        <SvelteComponent {action} {onclick} {...item} bind:value={item.value} />
+    {#each values as item (item.id)}
+        {@const SvelteComponent = buttonComponent}
+        <SvelteComponent
+            {...item}
+            bind:value={item.value}
+            action={item.action ? item.action : action}
+            on:click
+        />
     {/each}
 </div>

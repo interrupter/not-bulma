@@ -1,62 +1,45 @@
 <script>
     import notPath from "not-path";
-    import UISelect from "../input/ui.select.svelte";
+    import UISelect from "../form/ui.select.svelte";
     import { UIButtons, UIButton } from "../button";
     import notCommon from "../../frame/common";
+    import { DEFAULT_STATUS_SUCCESS } from "../../frame/const";
 
-    import { onMount } from "svelte";
-    import UIField from "../input/ui.field.svelte";
-    import UIControl from "../input/ui.control.svelte";
-
-    const DEFAULT_API_MODEL_GETTER = (
-        modelName,
-        actionFilter,
-        actionSorter,
-        actionPager,
-        actionSearch
-    ) => {
-        return notCommon
-            .getApp()
-            .getModel(modelName)
-            .setFilter(actionFilter)
-            .setSorter(actionSorter)
-            .setPager(actionPager)
-            .setSearch(actionSearch);
-    };
-
-    const DEFAULT_API_REQUEST = (apiModel, actionName) => {
-        return apiModel[`$` + actionName]();
-    };
+    import { onMount, createEventDispatcher } from "svelte";
+    const dispatch = createEventDispatcher();
 
     /**
      * @typedef {Object} Props
-     * @property {string}   value                                       id of selected variant
-     * @property {array}    [variants = []]                             list of variants
-     * @property {boolean}  [loaded = false]                            true if we already loaded variants from server via API
-     * @property {string}   [placeholder = "empty select item"]         placeholder title
-     * @property {string}   [fieldname = "selectFromModel"]             this input fieldname
-     * @property {string}   [modelName = ""]                            API modelName
-     * @property {string}   [actionName = ""]                           API actionName
-     * @property {object}   [actionFilter = {}]                         API filtering rules
-     * @property {object}   [actionSorter = {}]                         API sorting rules
-     * @property {object}   [actionPager = {}]                          API pager state
-     * @property {object}   [actionSearch = undefined]                  API search string
-     * @property {string}   [optionId = ":_id"]                         variant object id field name
-     * @property {string}   [optionTitle = ":title"]                    variant object title field name
-     * @property {boolean}  [required = false]                          field is required
-     * @property {boolean}  [readonly = false]                          field is reaonly
-     * @property {number}   [size]                                      how many variants would be visible at once, default: 1
-     * @property {boolean}  [valid = true]                              field is valid
-     * @property {function} [onreject = () => false]                    callback on reject of selection process
-     * @property {function} [onresolve = () => true]                    callback on resolve of selection process
-     * @property {function} [onerror = () => true]                      callback on error
+     * @property {boolean} [inputStarted]
+     * @property {any} value
+     * @property {any} [variants]
+     * @property {string} [placeholder]
+     * @property {string} [fieldname]
+     * @property {string} [modelName]
+     * @property {string} [actionName]
+     * @property {any} [actionFilter]
+     * @property {any} [actionSorter]
+     * @property {any} [actionPager]
+     * @property {any} [actionSearch]
+     * @property {string} [optionId]
+     * @property {string} [optionTitle]
+     * @property {boolean} [icon]
+     * @property {boolean} [required]
+     * @property {boolean} [readonly]
+     * @property {boolean} [multiple]
+     * @property {number} [size]
+     * @property {boolean} [valid]
+     * @property {boolean} [validated]
+     * @property {boolean} [errors]
+     * @property {boolean} [formErrors]
+     * @property {boolean} [formLevelError]
      */
 
     /** @type {Props} */
     let {
+        inputStarted = false,
         value,
-        variants = [],
-        loaded = false,
+        variants = $bindable([]),
         placeholder = "empty select item",
         fieldname = "selectFromModel",
         modelName = "",
@@ -65,44 +48,41 @@
         actionSorter = {},
         actionPager = {},
         actionSearch = undefined,
-        apiModelGetter = DEFAULT_API_MODEL_GETTER,
-        apiRequest = DEFAULT_API_REQUEST,
         optionId = ":_id",
         optionTitle = ":title",
+        icon = false,
         required = true,
         readonly = false,
-        size,
-        color,
+        multiple = false,
+        size = 8,
         valid = true,
-        onreject = () => false,
-        onresolve = () => true,
-        onerror = () => true,
+        validated = false,
+        errors = $bindable(false),
+        formErrors = false,
+        formLevelError = false
     } = $props();
 
     function argumentsSetProvided() {
         return modelName && actionName && actionFilter;
     }
 
+    let loaded = false;
+
     let disabled = $derived(!loaded);
-    let componentState = $state("hidden");
+    let state = $state("hidden");
     let resultsList = [];
 
     onMount(async () => {
         if (argumentsSetProvided()) {
-            const response = await apiRequest(
-                apiModelGetter(
-                    modelName,
-                    actionFilter,
-                    actionSorter,
-                    actionPager,
-                    actionSearch
-                ),
-                actionName
-            );
-            if (notCommon.isError(response)) {
-                loaded = false;
-                onerror(response.errors || [response.message]);
-            } else {
+            const notApp = notCommon.getApp();
+            const Model = notApp
+                .getModel(modelName)
+                .setFilter(actionFilter)
+                .setSorter(actionSorter)
+                .setPager(actionPager)
+                .setSearch(actionSearch);
+            const response = await Model[`$` + actionName]();
+            if (response.status === DEFAULT_STATUS_SUCCESS) {
                 resultsList = response.result;
                 variants = resultsList.map((item) => {
                     return {
@@ -110,21 +90,18 @@
                         title: notPath.get(optionTitle, item),
                     };
                 });
-                loaded = true;
+            } else {
+                errors = result.errors || [result.message];
             }
         }
     });
 
     let resolvedValue;
 
-    function onModelChanged({ value: selectedValue }) {
-        if (resultsList.length > variants.length) {
-            resolvedValue = resultsList.find(
-                (item) => notPath.get(optionId, item) == selectedValue
-            );
-        } else {
-            resolvedValue = variants.find((item) => item.id == selectedValue);
-        }
+    function onModelChanged({ detail }) {
+        resolvedValue = resultsList.find(
+            (item) => notPath.get(optionId, item) === detail.value
+        );
     }
 
     const ACTIONS = {
@@ -132,52 +109,53 @@
             color: "primary",
             icon: "plus",
             action() {
-                componentState = "show";
+                state = "show";
             },
         },
         resolve: {
             icon: "check",
             color: "primary",
             action() {
-                componentState = "hidden";
-                onresolve({
-                    field: fieldname,
-                    value: $state.snapshot(resolvedValue),
-                });
+                state = "hidden";
+                dispatch("resolve", resolvedValue);
             },
         },
         reject: {
-            icon: "xmark",
+            icon: "close",
             color: "danger",
             action() {
-                componentState = "hidden";
-                onreject();
+                state = "hidden";
+                dispatch("reject");
             },
         },
     };
 </script>
 
-{#if componentState === "hidden"}
+{#if state === "hidden"}
     <UIButton {...ACTIONS.add}></UIButton>
-{:else if componentState == "show"}
-    <UIField addons={true}>
-        <UIControl>
-            <UISelect
-                {value}
-                {variants}
-                {placeholder}
-                {fieldname}
-                {required}
-                {readonly}
-                {disabled}
-                {size}
-                {color}
-                {valid}
-                onchange={onModelChanged}
-            />
-        </UIControl>
-        <UIControl>
-            <UIButtons values={[ACTIONS.resolve, ACTIONS.reject]}></UIButtons>
-        </UIControl>
-    </UIField>
+{:else if state == "show"}
+    <div class="field has-addons">
+        <UISelect
+            {inputStarted}
+            {value}
+            {variants}
+            {placeholder}
+            {fieldname}
+            {icon}
+            {required}
+            {readonly}
+            {disabled}
+            {multiple}
+            {size}
+            {valid}
+            {validated}
+            {errors}
+            {formErrors}
+            {formLevelError}
+            on:change={onModelChanged}
+        />
+    </div>
+    <div class="control">
+        <UIButtons values={[ACTIONS.resolve, ACTIONS.reject]}></UIButtons>
+    </div>
 {/if}

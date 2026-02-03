@@ -1,9 +1,15 @@
 <!-- @migration-task Error while migrating Svelte code: Can't migrate code with beforeUpdate. Please migrate by hand. -->
 <script>
+    import { createEventDispatcher } from "svelte";
+    const dispatch = createEventDispatcher();
+
+    import SideMenu from "../side";
+
     import UIBrand from "./ui.brand.svelte";
     import UINavbarItem from "./ui.item.svelte";
     import UINavbarSection from "./ui.section.svelte";
     import UINavbarBurger from "./ui.burger.svelte";
+    
 
     /**
      * @typedef {Object} Props
@@ -24,7 +30,7 @@
         navigate = null,
         brand = false,
         showBurger = true,
-        burgerControlsSidemenu = true,
+        burgerControlsSidemenu = true
     } = $props();
 
     let menuClosed = $state(true);
@@ -84,7 +90,7 @@
     {/each}
     {#each items as item (item.id)}
         {#if item.showOnTouch}
-            <UINavbarItem hidden="desktop" {item} {root} onclick={onClick} />
+            <UINavbarItem hidden="desktop" {item} {root} on:click={onClick} />
         {/if}
     {/each}
     {#if showBurger}
@@ -95,7 +101,7 @@
     <div class="navbar-start">
         {#each items as item}
             {#if item.place === "start"}
-                <UINavbarItem hidden="touch" {item} onclick={onClick} />
+                <UINavbarItem hidden="touch" {item} on:click={onClick} />
             {/if}
         {/each}
     </div>
@@ -108,7 +114,7 @@
                     {root}
                     {section}
                     items={sectionsItems[section.id]}
-                    onclick={onClick}
+                    on:click={onClick}
                 />
             {/if}
         {/each}

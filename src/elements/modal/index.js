@@ -3,7 +3,7 @@ import UIOverlay from './ui.overlay.svelte';
 import UIGenericSelector from './ui.generic.selector.svelte';
 
 export {
-    UIModal,
-    UIOverlay,
-    UIGenericSelector
+  UIModal,
+  UIOverlay,
+  UIGenericSelector
 };

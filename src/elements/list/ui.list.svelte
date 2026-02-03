@@ -4,118 +4,100 @@
     import UIListBlock from "./ui.list.block.svelte";
     import UITitle from "../various/ui.title.svelte";
 
-    //customization
 
+
+
+    //customization
+    
+    
+    
     /**
      * @typedef {Object} Props
-     * @property {string} [class = ""]
-     * @property {array} [items = []]
-     * @property {array} [actions = []]
-     * @property {array} [links = []]
-     * @property {boolean} [actionsVisible = false]
-     * @property {boolean} [itemsHoverable = false]
-     * @property {boolean} [overflowEllipsis = false]
-     * @property {boolean} [hiddenImages = false]
-     * @property {string} [itemClass = '']
-     * @property {number} itemLength
-     * @property {string} [idFieldName = 'id']
-     * @property {function} [emptyListPlaceholderComponent = UIListEmptyPlaceholder] - empty
-     * @property {object} [emptyListPlaceholderComponentProps = {}]
-     * @property {function} [listItemComponent = UIListItem] - item
-     * @property {object} [listItemComponentProps = {}]
-     * @property {function} [titleComponent = UITitle] - item parts
-     * @property {object} [titleComponentProps = {size: 6}]
-     * @property {function} [descriptionComponent]
-     * @property {object} [descriptionComponentProps = {}]
-     * @property {function} [imageComponent]
-     * @property {object} [imageComponentProps = {}]
-     * @property {function} [onchange]                  callback
-     * @property {function} [onclick]                   callback
-     * @property {function} [onclickContent]            callback
-     * @property {function} [onclickDescription]        callback
-     * @property {function} [onclickImage]              callback
-     * @property {function} [onclickTitle]              callback
+     * @property {string} [classes]
+     * @property {any} [items]
+     * @property {any} [actions]
+     * @property {any} [links]
+     * @property {boolean} [actionsVisible]
+     * @property {boolean} [itemsHoverable]
+     * @property {boolean} [overflowEllipsis]
+     * @property {boolean} [hiddenImages]
+     * @property {string} [itemClasses]
+     * @property {any} itemLength
+     * @property {string} [idFieldName]
+     * @property {any} [emptyListPlaceholderComponent] - empty
+     * @property {any} [emptyListPlaceholderComponentProps]
+     * @property {any} [listItemComponent] - item
+     * @property {any} [listItemComponentProps]
+     * @property {any} [titleComponent] - item parts
+     * @property {any} [titleComponentProps]
+     * @property {any} descriptionComponent
+     * @property {any} [descriptionComponentProps]
+     * @property {any} imageComponent
+     * @property {any} [imageComponentProps]
      */
 
     /** @type {Props} */
     let {
-        class: classes = "",
-        items = [],
+        classes = "",
+        items = $bindable([]),
         actions = [],
         links = [],
         actionsVisible = false,
         itemsHoverable = false,
         overflowEllipsis = false,
         hiddenImages = false,
-        itemClass = "",
+        itemClasses = "",
         itemLength,
         idFieldName = "id",
-        emptyListRenderer,
-        emptyListPlaceholderComponent:
-            UIEmptyListPlaceholderComponent = UIListEmptyPlaceholder,
+        emptyListPlaceholderComponent = UIListEmptyPlaceholder,
         emptyListPlaceholderComponentProps = {},
-        listItemContentComponent,
-        listItemContentComponentProps = {},
-        listItemRenderer,
         listItemComponent = UIListItem,
         listItemComponentProps = {},
-        titleRenderer,
         titleComponent = UITitle,
         titleComponentProps = { size: 6 },
-        descriptionRenderer,
         descriptionComponent,
         descriptionComponentProps = {},
-        imageRenderer,
         imageComponent,
-        imageComponentProps = {},
-        onchange,
-        onclick,
-        onclickContent,
-        onclickDescription,
-        onclickImage,
-        onclickTitle,
+        imageComponentProps = {}
     } = $props();
 </script>
 
 {#if items.length}
     <div
         style={itemLength ? `--length: ${itemLength};` : ""}
-        class="list {classes}"
-        class:has-visible-pointer-controls={actionsVisible}
-        class:has-hoverable-list-items={itemsHoverable}
-        class:has-overflow-ellipsis={overflowEllipsis}
-        class:has-hidden-images={hiddenImages}
+        class="list {classes} {actionsVisible
+            ? 'has-visible-pointer-controls'
+            : ''} {itemsHoverable
+            ? 'has-hoverable-list-items'
+            : ''} {overflowEllipsis
+            ? 'has-overflow-ellipsis'
+            : ''} {hiddenImages ? 'has-hidden-images' : ''}"
     >
         <UIListBlock
-            {items}
-            {itemClass}
-            {listItemContentComponent}
-            {listItemContentComponentProps}
-            {listItemRenderer}
+            bind:items
+            {itemClasses}
             {listItemComponent}
             {listItemComponentProps}
             {idFieldName}
-            {titleRenderer}
             {titleComponent}
             {titleComponentProps}
-            {descriptionRenderer}
             {descriptionComponent}
             {descriptionComponentProps}
-            {imageRenderer}
             {imageComponent}
             {imageComponentProps}
             {actions}
             {links}
-            {onchange}
-            {onclick}
-            {onclickContent}
-            {onclickDescription}
-            {onclickImage}
-            {onclickTitle}
+            on:change
+            on:click
+            on:clickContent
+            on:clickDescription
+            on:clickImage
+            on:clickTitle
         />
     </div>
-{:else if emptyListRenderer}
-    {@render emptyListRenderer(emptyListPlaceholderComponentProps)}
 {:else}
-    <UIEmptyListPlaceholderComponent {...emptyListPlaceholderComponentProps} />
+    {@const SvelteComponent = emptyListPlaceholderComponent}
+    <SvelteComponent
+        {...emptyListPlaceholderComponentProps}
+    />
 {/if}

@@ -37,8 +37,8 @@
         register = notCommon.registerWidgetEvents.bind(notCommon),
         closed = $bindable(true),
         onUpdate = (data) => {
-            closed = data.closed;
-        }
+        closed = data.closed;
+    }
     } = $props();
 
     onMount(() => {

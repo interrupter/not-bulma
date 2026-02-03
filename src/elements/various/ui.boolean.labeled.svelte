@@ -4,9 +4,9 @@
 
     /**
      * @typedef {Object} Props
-     * @property {boolean} value
-     * @property {boolean} [inverted = false]
-     * @property {string} label
+     * @property {any} value
+     * @property {any} label
+     * @property {boolean} [inverted]
      */
 
     /** @type {Props} */

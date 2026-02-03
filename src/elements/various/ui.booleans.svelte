@@ -4,19 +4,13 @@
 
     /**
      * @typedef {Object} Props
-     * @property {array}    values
-     * @property {boolean}  [inverted = false]
-     * @property {function}      [componentConstructor = UIBoolean]
-     * @property {function} [itemRenderer]                          if supplied will be used instead of componentConstructor
+     * @property {any} [values]
+     * @property {boolean} [inverted]
+     * @property {any} [componentConstructor]
      */
 
     /** @type {Props} */
-    let {
-        values = [],
-        inverted = false,
-        componentConstructor: ItemConstructor = UIBoolean,
-        itemRenderer,
-    } = $props();
+    let { values = [], inverted = false, componentConstructor = UIBoolean } = $props();
 
     let _values = $state([]);
 
@@ -36,11 +30,11 @@
 </script>
 
 {#if _values.length}
-    {#each _values as item, index}
-        {#if itemRenderer}
-            {@render itemRenderer(item, index)}
-        {:else}
-            <ItemConstructor {...item} inverted={inverted || item.inverted} />
-        {/if}
+    {#each _values as item}
+        {@const SvelteComponent = componentConstructor}
+        <SvelteComponent
+            {...item}
+            inverted={inverted || item.inverted}
+        />
     {/each}
 {/if}

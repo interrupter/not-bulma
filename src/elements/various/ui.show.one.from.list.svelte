@@ -1,35 +1,30 @@
 <script>
-    const defaultFilter = (value) => value[idFieldName] === id;
+    import { run } from 'svelte/legacy';
 
+    const defaultFilter = (value) => value[idFieldName] === id;
     /**
      * @typedef {Object} Props
-     * @property {string|number}    id                          id of active item
-     * @property {array}            [values = []]               list of items
-     * @property {function}         UIComponent                 component to show active item
-     * @property {function}         component                   snippet to show active item
-     * @property {function}         UIPlaceholder               placeholder if active is unset
-     * @property {function}         placeholder                 snippet to show placeholder
-     * @property {object}           [placeholderProps = {}]     placeholder props
-     * @property {object}           [active = {}]               current active element
-     * @property {string}           [idFieldName = "_id"]       name of item property used as identificator
-     * @property {function}         [filter = (value) => value[idFieldName] === id] filtering function to select active item. default is to search for item with selected id
+     * @property {any} [values]
+     * @property {any} id
+     * @property {any} UIComponent
+     * @property {any} UIPlaceholder
+     * @property {any} active
+     * @property {string} [idFieldName]
+     * @property {any} [filter]
      */
 
     /** @type {Props} */
     let {
-        id,
         values = [],
-        active = $bindable({}),
-        idFieldName = "_id",
-        filter = defaultFilter,
+        id,
         UIComponent,
-        component,
         UIPlaceholder,
-        placeholder,
-        placeholderProps,
+        active = $bindable(),
+        idFieldName = "_id",
+        filter = defaultFilter
     } = $props();
 
-    $effect(() => {
+    run(() => {
         active =
             Array.isArray(values) && values.length && typeof id !== "undefined"
                 ? values.find(filter || defaultFilter)
@@ -38,15 +33,7 @@
 </script>
 
 {#if active}
-    {#if component}
-        {@render component(active)}
-    {:else if UIComponent}
-        <UIComponent {...active} />
-    {/if}
+    <UIComponent {...active} />
 {:else if UIPlaceholder}
-    {#if placeholder}
-        {@render placeholder(placeholderProps)}
-    {:else if UIPlaceholder}
-        <UIPlaceholder {...placeholderProps} />
-    {/if}
+    <UIPlaceholder />
 {/if}

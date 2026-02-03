@@ -1,10 +1,25 @@
 import Menu from "../menu.js";
-import UINavbar from "./ui.top.svelte";
+import UINavbar from "../../../../elements/navigation/ui.navbar.svelte";
 import { mount } from "svelte";
 
 const TYPE = "top";
 
-let MENU_PROPS = $state({});
+/** @typedef MenuProperties
+ *  @prop   {string}    id
+ *  @prop   {boolean}   active
+ *  @prop   {Array<object>}    items
+ *  @prop   {string}    root
+ *  @prop   {function}  navigate
+ *  @prop   {object}    brand
+ *  @prop   {boolean}   burger
+ *  @prop   {boolean}   burgerControlsSidemenu
+ *  @prop   {string}    class
+ *  @prop   {function}  onclick
+ *  
+*/
+
+/** @type {MenuProperties} */
+const MENU_PROPS = $state({});
 
 class notTopMenu extends Menu {
     static DEFAULT = {
@@ -37,13 +52,16 @@ class notTopMenu extends Menu {
     };
 
     static initMenuProps() {
-        MENU_PROPS = {
-            brand: this.getOptions().brand,
-            items: this.items,
-            sections: this.sections,
-            root: this.getOptions().root,
-            navigate: this.getOptions().navigate,
-        };
+        MENU_PROPS.id = this.getOptions()?.id; 
+        MENU_PROPS.active = this.getOptions()?.active; 
+        MENU_PROPS.items = this.items;        
+        MENU_PROPS.root = this.getOptions()?.root;
+        MENU_PROPS.navigate: this.getOptions()?.navigate;
+        MENU_PROPS.brand = this.getOptions()?.brand; 
+        MENU_PROPS.burger = this.getOptions()?.burger;        
+        MENU_PROPS.burgerControlsSidemenu = this.getOptions()?.burgerControlsSidemenu;
+        MENU_PROPS.class = this.getOptions()?.class;
+        MENU_PROPS.onclick = this.getOptions()?.onclick;
     }
 
     static render(app) {
@@ -53,16 +71,18 @@ class notTopMenu extends Menu {
         this.prepareData();
         if (!this.menu) {
             this.initMenuProps();
-            let target = document.querySelector(
+            const target = document.querySelector(
                 this.getOptions().targetSelector
             );
             if (!target) {
                 return;
             }
+            const frag = document.createDocumentFragment();
             this.menu = mount(UINavbar, {
-                target,
-                props: this.MENU_PROPS,
+                target: frag,
+                props: MENU_PROPS,
             });
+            target.replaceWith(frag);
             this.interval = setInterval(
                 this.updateMenuActiveItem.bind(this),
                 notTopMenu.INTERVAL_UPDATE_ACTIVE_ITEM
