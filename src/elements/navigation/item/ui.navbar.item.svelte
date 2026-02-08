@@ -4,7 +4,7 @@
     import UINavbarItemContent from "./primitives/ui.navbar.item.content.svelte";
     import UINavbarItemDevider from "./primitives/ui.navbar.item.devider.svelte";
 
-    let { class: classes = "", item, children, ...other } = $props();
+    let { class: classes = "", item, children, url, ...other } = $props();
 </script>
 
 {#if item.break}

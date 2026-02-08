@@ -100,11 +100,11 @@
     function onChange(e) {
         if (returnVariant) {
             onchange({
-                ...e.detail,
-                value: variants.find((itm) => itm.id === e.detail.value),
+                ...e,
+                value: variants.find((itm) => itm.id === e.value),
             });
         } else {
-            onchange(e.detail);
+            onchange(e);
         }
     }
 </script>

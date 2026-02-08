@@ -67,7 +67,7 @@
     }
 
     function onChange(ev) {
-        validateValueAndChange(ev.detail.value);
+        validateValueAndChange(ev.value);
         return true;
     }
 </script>

@@ -5,8 +5,7 @@
     import notCommon from "../../frame/common";
     import { DEFAULT_STATUS_SUCCESS } from "../../frame/const";
 
-    import { onMount, createEventDispatcher } from "svelte";
-    const dispatch = createEventDispatcher();
+    import { onMount } from "svelte";
 
     /**
      * @typedef {Object} Props
@@ -59,7 +58,9 @@
         validated = false,
         errors = $bindable(false),
         formErrors = false,
-        formLevelError = false
+        formLevelError = false,
+        onreject = () => {},
+        onresolve = () => {},
     } = $props();
 
     function argumentsSetProvided() {
@@ -117,7 +118,7 @@
             color: "primary",
             action() {
                 state = "hidden";
-                dispatch("resolve", resolvedValue);
+                onresolve(resolvedValue);
             },
         },
         reject: {
@@ -125,7 +126,7 @@
             color: "danger",
             action() {
                 state = "hidden";
-                dispatch("reject");
+                onreject();
             },
         },
     };
@@ -152,7 +153,7 @@
             {errors}
             {formErrors}
             {formLevelError}
-            on:change={onModelChanged}
+            onchange={onModelChanged}
         />
     </div>
     <div class="control">

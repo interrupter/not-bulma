@@ -15,6 +15,7 @@
         onclick,
         class: classes = "",
         children,
+        url,
         ...other
     } = $props();
 
@@ -50,7 +51,12 @@
     <UINavbarMenuStart>
         {#each items as item (item.id)}
             {#if placeIs(item.place, "start")}
-                <UINavbarItemGeneric hidden="touch" {root} {item} {onclick}
+                <UINavbarItemGeneric
+                    hidden="touch"
+                    {root}
+                    {item}
+                    {onclick}
+                    {url}
                 ></UINavbarItemGeneric>
             {/if}
         {/each}
@@ -61,6 +67,7 @@
                 <UINavbarItemGeneric
                     hidden="touch"
                     {root}
+                    {url}
                     {item}
                     {onclick}
                     right={true}

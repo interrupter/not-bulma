@@ -120,7 +120,7 @@ class notController extends notBase {
                 this.make[t] = interfaces[t];
             }
         }
-        this.on("destroy", () => {
+        this.on("ondestroy", () => {
             this.app = null;
             for (let uiName in this.ui) {
                 this.ui[uiName].destroy && this.ui[uiName].destroy();
@@ -219,7 +219,7 @@ class notController extends notBase {
      */
     setReady(val = true) {
         this.setWorking("ready", val);
-        val ? this.emit("ready") : this.emit("busy");
+        val ? this.emit("onready") : this.emit("onbusy");
     }
 
     /**
@@ -385,7 +385,7 @@ class notController extends notBase {
      * emits afterRender event
      */
     onAfterRender() {
-        this.emit("afterRender");
+        this.emit("onAfterRender");
     }
 
     /**

@@ -35,7 +35,7 @@
         getItemId = (item) => item._id,
         field = {},
         item = {},
-        helpers = {}
+        helpers = {},
     } = $props();
 </script>
 
@@ -58,7 +58,7 @@
         <TableSwitch
             id={getItemId(item)}
             fieldname={field.path}
-            on:change={field.onChange}
+            onchange={field.onChange}
             value={notPath.get(field.path, item, helpers)}
             disabled={field.disabled}
             readonly={field.readonly}
@@ -66,7 +66,7 @@
     {:else if field.component}
         <field.component
             id={getItemId(item)}
-            on:change={field.onChange}
+            onchange={field.onChange}
             fieldname={field.path}
             disabled={field.disabled}
             readonly={field.readonly}

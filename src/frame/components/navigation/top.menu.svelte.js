@@ -1,6 +1,6 @@
-import Menu from "../menu.svelte.js";
-import UINavbar from "../../../../elements/navigation/ui.navbar.svelte";
-import { mount, unmount } from "svelte";
+import Menu from "not-bulma/src/frame/components/navigation/menu.svelte.js";
+import UINavbar from "../../../elements/navigation/ui.navbar.svelte";
+import UIAdapterSvelte from "not-bulma/src/frame/ui.adapter.svelte.js";
 
 const TYPE = "top";
 
@@ -18,11 +18,8 @@ const TYPE = "top";
  *  
  **/
 
-
-const MENU_PROPS = $state({});
-
 class notTopMenu extends Menu {
-    static menuProps = MENU_PROPS;
+
     static DEFAULT = {
         section: "any",
         sectionTitle: "Меню",
@@ -53,17 +50,20 @@ class notTopMenu extends Menu {
     };
 
     static initMenuProps() {
-        this.menuProps.id = this.getOptions()?.id; 
-        this.menuProps.active = this.getOptions()?.active; 
-        this.menuProps.items = this.menuStructure;
-        this.menuProps.root = this.getOptions()?.root;
-        this.menuProps.navigate = this.getOptions()?.navigate;
-        this.menuProps.brand = this.getOptions()?.brand; 
-        this.menuProps.burger = this.getOptions()?.burger;        
-        this.menuProps.burgerControlsSidemenu = this.getOptions()?.burgerControlsSidemenu;
-        this.menuProps.class = this.getOptions()?.class;
-        this.menuProps.onclick = this.getOptions()?.onclick;
-        this.menuProps.url = this.getCurrentUrl();
+        return {
+            id: this.getOptions()?.id,
+            active: this.getOptions()?.active,
+            items: this.menuStructure,
+            root: this.getOptions()?.root,
+            navigate: this.getOptions()?.navigate,
+            brand: this.getOptions()?.brand,
+            burger: this.getOptions()?.burger,
+            burgerControlsSidemenu: this.getOptions()?.burgerControlsSidemenu,
+            class: this.getOptions()?.class,
+            onclick: this.getOptions()?.onclick,
+            url: this.getCurrentUrl(),
+        };
+        
     }
 
     static render(app) {
@@ -72,19 +72,14 @@ class notTopMenu extends Menu {
         }        
         if (!this.menu) {
             this.prepareData();
-            this.initMenuProps();
+            let props = this.initMenuProps();
             const target = document.querySelector(
                 this.getOptions().targetSelector
-            );
+            );        
             if (!target) {
                 return;
             }
-            const frag = document.createDocumentFragment();
-            this.menu = mount(UINavbar, {
-                target: frag,
-                props: this.menuProps,
-            });
-            target.replaceWith(frag);
+            this.menu = new UIAdapterSvelte(UINavbar, target, props, true);            
             this.interval = setInterval(
                 this.updateMenuActiveItem.bind(this),
                 notTopMenu.INTERVAL_UPDATE_ACTIVE_ITEM
@@ -92,28 +87,24 @@ class notTopMenu extends Menu {
         }
     }
 
-    static getCurrentUrl(){
-        return window.location.toString();
-    }
-
     static updateMenuActiveItem() {        
-        this.menuProps.url = this.getCurrentUrl();
+        this.menu.set('url', this.getCurrentUrl()) ;
     }
 
     static toggle() {
-        this.menuProps.active = !this.menuProps.active;
+        this.menu.set('active', !this.menu.get('active'));        
     }
 
     static hide() {        
-        this.menuProps.active = false;
+        this.menu.set('active', false);
     }
 
     static show() {        
-        this.menuProps.active = true;
+        this.menu.set('active', true);
     }
 
     static setBurgerState(menuClosed) {
-        this.menuProps.menuClosed = menuClosed;
+        this.menu.set('menuClosed', menuClosed);
     }
 }
 

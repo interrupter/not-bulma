@@ -63,8 +63,8 @@ class notFormSet extends notBase {
             target,
             props: this.#getFrameProps(),
         });
-        this.#frame.$on("mode", (ev) => {
-            this.setFormMode(ev.detail);
+        this.#frame.$on("onmode", (ev) => {
+            this.setFormMode(ev);
             this.updateForm();
         });
         this.updateForm();
@@ -81,7 +81,7 @@ class notFormSet extends notBase {
 
     updateFormModeInUI() {
         if (this.#frame && this.getWorking("mode") !== null) {
-            this.#frame.$set({ mode: this.getWorking("mode") });
+            this.#frame.set('mode', this.getWorking("mode") );
         }
     }
 

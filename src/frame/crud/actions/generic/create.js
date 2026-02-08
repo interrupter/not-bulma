@@ -74,15 +74,15 @@ class CRUDGenericActionCreate extends CRUDGenericAction {
      */
     static bindUIEvents(controller, params, response) {
         if (notCommon.isFunc(controller.goBack)) {
-            this.bindUIEvent(controller, "reject", () =>
+            this.bindUIEvent(controller, "onreject", () =>
                 this.goBack(controller)
             );
         }
         if (notCommon.isFunc(controller.onActionSubmit)) {
-            this.bindUIEvent(controller, "submit", async (ev) => {
+            this.bindUIEvent(controller, "onsubmit", async (ev) => {
                 const success = await controller.onActionSubmit(this.ACTION, {
                     ...this.loadDataQuery(controller, params),
-                    ...ev.detail,
+                    ...ev,
                 });
                 if (success) {
                     this.goBackAfterDelay(controller);

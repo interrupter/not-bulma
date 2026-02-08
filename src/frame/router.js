@@ -242,14 +242,14 @@ class notRouter extends notBase {
                         this.host || {},
                         match
                     );
-                    this.emit("afterRoute", this.getWorking("routes")[i]);
+                    this.emit("onAfterRoute", this.getWorking("routes")[i]);
                     return this;
                 }
             }
         }
         if (failBack) {
             failBack.route.handler.apply(this.host || {}, failBack.match);
-            this.emit("afterRoute", failBack.route);
+            this.emit("onAfterRoute", failBack.route);
         }
         return this;
     }

@@ -1,4 +1,4 @@
-import Menu from "../menu.js";
+import Menu from "../menu.svelte.js";
 import UINavbarTop from "./ui.top.svelte";
 import { mount } from "svelte";
 
@@ -81,7 +81,7 @@ class notTopMenu extends Menu {
     }
 
     static updateMenuActiveItem() {
-        let url = window.location.toString(),
+        const url = window.location.toString(),
             lastLocation = this.location;
         if (lastLocation) {
             if (url !== lastLocation) {
@@ -95,12 +95,12 @@ class notTopMenu extends Menu {
     }
 
     static toggle() {
-        let el = document.querySelector(this.getOptions().targetSelector);
+        const el = document.querySelector(this.getOptions().targetSelector);
         el.classList.toggle("is-active");
     }
 
     static hide() {
-        let el = document.querySelector(this.getOptions().targetSelector);
+        const el = document.querySelector(this.getOptions().targetSelector);
         el.classList.remove("is-active");
     }
 

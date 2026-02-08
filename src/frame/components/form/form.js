@@ -133,14 +133,14 @@ class notForm extends notBase {
     }
 
     #bindUIEvents() {
-        this.#form.$on("change", () => this.validateForm());
-        this.#form.$on("change", (ev) => {
-            this.emit("change", ev.detail);
-            this.emit(`change.${ev.detail.field}`, ev.detail.value);
+        this.#form.$on("onchange", () => this.validateForm());
+        this.#form.$on("onchange", (ev) => {
+            this.emit("onchange", ev);
+            this.emit(`onchange.${ev.field}`, ev.value);
         });
-        this.#form.$on("submit", (ev) => this.submit(ev.detail));
-        this.#form.$on("reject", () => this.reject());
-        this.#form.$on("error", ({ detail }) => this.emit("error", detail));
+        this.#form.$on("onsubmit", (ev) => this.submit(ev));
+        this.#form.$on("onreject", () => this.reject());
+        this.#form.$on("onerror", (detail ) => this.emit("onerror", detail));
         this.#bindMasterSlaveEvents();
     }
 
@@ -183,24 +183,24 @@ class notForm extends notBase {
             );
             this.#form.updateFormValidationStatus(validationResult.getReport());
             if (!validationResult.clean) {
-                this.emit("error", validationResult.getReport());
+                this.emit("onerror", validationResult.getReport());
             }
         } catch (e) {
             const report = {
                 form: [UICommon.ERROR_DEFAULT, e.message],
             };
             this.#form && this.#form.updateFormValidationStatus(report);
-            this.emit("error", report);
+            this.emit("onerror", report);
             notCommon.report(e);
         }
     }
 
     submit(data) {
-        this.emit("submit", data);
+        this.emit("onsubmit", data);
     }
 
     reject() {
-        this.emit("reject");
+        this.emit("onreject");
     }
 
     //binding event to actual UI
@@ -211,17 +211,17 @@ class notForm extends notBase {
     }
 
     setLoading() {
-        this.emit("loading");
+        this.emit("onloading");
         this.#form.setLoading();
     }
 
     resetLoading() {
-        this.emit("loaded");
+        this.emit("onloaded");
         this.#form.resetLoading();
     }
 
     destroy() {
-        this.emit("destroy");
+        this.emit("ondestroy");
         if (this.#form) {
             this.#form.$destroy && this.#form.$destroy();
             this.#form.destroy && this.#form.destroy();
@@ -318,7 +318,7 @@ class notForm extends notBase {
      **/
     setFormSuccess() {
         this.#form.showSuccess();
-        this.emit("success");
+        this.emit("onsuccess");
     }
 
     setFormErrors(result) {
@@ -336,7 +336,7 @@ class notForm extends notBase {
             status.fields = { ...result.errors };
         }
         this.#form.updateFormValidationStatus(status);
-        this.emit("error", status);
+        this.emit("onerror", status);
     }
 
     /**

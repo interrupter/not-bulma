@@ -1,20 +1,11 @@
 <script>
-    import { run } from 'svelte/legacy';
+    import { run } from "svelte/legacy";
 
     import notCommon from "../../frame/common";
 
     import { UIButtons } from "../button";
 
-    import { createEventDispatcher, onMount } from "svelte";
-    let dispatch = createEventDispatcher();
-
-
-    
-
-    
-    
-    
-    
+    import { onMount } from "svelte";
 
     /**
      * @typedef {Object} Props
@@ -47,7 +38,8 @@
         loading = $bindable(false),
         selectedModelTitleFormatter = (data) => `${data._id}`,
         loadingLabel = "not-node:loading_label",
-        isEmptyLabel = "not-node:field_value_is_empty_placeholder"
+        isEmptyLabel = "not-node:field_value_is_empty_placeholder",
+        onchange = () => {},
     } = $props();
 
     function getService() {
@@ -68,7 +60,7 @@
             })
             .then((value) => {
                 inputStarted = true;
-                dispatch("change", {
+                onchange({
                     field: fieldname,
                     value,
                 });
@@ -81,7 +73,7 @@
     function resetSelectedModel() {
         value = undefined;
         modelData = null;
-        dispatch("change", {
+        onchange({
             field: fieldname,
             value,
         });

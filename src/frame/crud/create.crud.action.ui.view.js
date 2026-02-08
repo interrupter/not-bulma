@@ -1,5 +1,7 @@
+import UIAdapterSvelte from "../ui.adapter.svelte";
 import notCommon from "../common";
 import { DEFAULT_TRASFORMER } from "./const";
+
 export default ({ ACTION, TITLE, UIConstructor, dataProvider, goBack }) => {
     return class {
         static async run(controller, params) {
@@ -10,7 +12,7 @@ export default ({ ACTION, TITLE, UIConstructor, dataProvider, goBack }) => {
                     },
                 ]);
                 await controller.preloadVariants(ACTION);
-                if (controller.ui[ACTION]) {
+                if (controller.getUI(ACTION)) {
                     return;
                 } else {
                     controller.$destroyUI();
@@ -31,14 +33,19 @@ export default ({ ACTION, TITLE, UIConstructor, dataProvider, goBack }) => {
                     `${ACTION}.transformer`,
                     DEFAULT_TRASFORMER
                 );
-                controller.ui[ACTION] = new UIConstructor({
-                    target: controller.getContainerInnerElement(),
-                    props: { params, ...resultTransformer(data) },
-                });
-                controller.emit(`after:render:${ACTION}`);
+                const props = { 
+                    params, ...resultTransformer(data), 
+                };
+                const UI = new UIAdapterSvelte(
+                    UIConstructor,
+                    controller.getContainerInnerElement(),
+                    props,
+                );
                 if (goBack && notCommon.isFunc(goBack)) {
-                    controller.ui[ACTION].on("reject", () => goBack());
+                    UI.on('onreject', goBack);
                 }
+                controller.setUI(ACTION, UI);                
+                controller.emit(`after:render:${ACTION}`);               
             } catch (e) {
                 controller.report(e);
                 controller.showErrorMessage(e);

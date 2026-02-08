@@ -168,7 +168,7 @@
         bind:errors
         bind:formErrors
         bind:formLevelError
-        on:resolve={(e) => addItem(e.detail)}
+        on:resolve={(e) => addItem(e)}
         {onchange}
     />
 {/if}

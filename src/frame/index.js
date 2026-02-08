@@ -20,6 +20,9 @@ import * as notStores from "./stores";
 import notBase from "./base.js";
 
 import { COMPONENTS, FIELDS, VARIANTS } from "./LIB.js";
+
+
+import UIAdapterSvelte from "./ui.adapter.svelte.js";
 /*
   application main infrastructure setter
 */
@@ -45,7 +48,7 @@ import {
 } from "./components";
 
 import createCRUDActionUIView from "./crud/create.crud.action.ui.view.js";
-import notCRUD from "./crud/controller.crud.js";
+import notCRUD from "./crud/controller.crud.svelte.js";
 import notCRUDRouter from "./crud/router.js";
 import notCRUDRouterPlain from "./crud/router.plain.js";
 import notCRUDRouterSwitch from "./crud/router.switch.js";
@@ -84,4 +87,5 @@ export {
     notStores,
     notTable,
     notTopMenu,
+    UIAdapterSvelte
 };

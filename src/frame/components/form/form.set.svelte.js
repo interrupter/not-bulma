@@ -2,13 +2,14 @@ import Lib from "not-bulma/src/frame/lib.js";
 import notCommon from "not-bulma/src/frame/common.js";
 import notBase from "not-bulma/src/frame/base.js";
 
+import UIAdapterSvelte from "../../ui.adapter.svelte";
+
 import UIFormSetComponent from "not-bulma/src/frame/components/form/form.set.svelte";
 import UIFormComponent from "./form.svelte";
 
 const DEFAULT_CONTAINER_SELECTOR = ".form-set";
 const DEFAULT_FORM_SET_NAME = "form-set";
 
-import {mount, unmount} from 'svelte';
 
 class notFormSet extends notBase {
     #formSetComponent = null;
@@ -17,7 +18,6 @@ class notFormSet extends notBase {
     #form = null;
     #frame = null;
 
-    #frameProps = $state({});
 
     /*
   new notFormSet({
@@ -64,12 +64,12 @@ class notFormSet extends notBase {
      **/
     initUI() {
         const target = this.getFrameTargetEl();
-        while (target.children.length) target.removeChild(target.firstChild);
-        this.#frameProps = this.#getFrameProps();
-        this.#frame = mount(this.#formSetComponent, {
+        while (target.children.length) target.removeChild(target.firstChild);        
+        this.#frame = new UIAdapterSvelte(
+            this.#formSetComponent, 
             target,
-            props: this.#frameProps,
-        });
+            this.#getFrameProps(),
+        );
         this.updateForm();
     }
 
@@ -83,8 +83,8 @@ class notFormSet extends notBase {
     }
 
     updateFormModeInUI() {
-        if (this.#frame && this.getWorking("mode") !== null && this.#frameProps) {
-            this.#frameProps.mode = this.getWorking("mode");
+        if (this.#frame && this.getWorking("mode") !== null ) {
+            this.#frame.set('mode', this.getWorking("mode"));
         }
     }
 

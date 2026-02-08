@@ -50,17 +50,17 @@ class notActionUI extends notBase {
     }
 
     setLoading() {
-        this.emit("loading");
+        this.emit("onloading");
         this.#ui.setLoading();
     }
 
     resetLoading() {
-        this.emit("loaded");
+        this.emit("onloaded");
         this.#ui.resetLoading();
     }
 
     destroy() {
-        this.emit("destroy");
+        this.emit("ondestroy");
         if (this.#ui) {
             this.#ui.$destroy && this.#ui.$destroy();
             this.#ui.destroy && this.#ui.destroy();
@@ -86,7 +86,7 @@ class notActionUI extends notBase {
      **/
     setFormSuccess() {
         this.#ui.showSuccess();
-        this.emit("success");
+        this.emit("onsuccess");
     }
 
     setFormErrors(result) {
@@ -101,7 +101,7 @@ class notActionUI extends notBase {
             status.fields = { ...result.errors };
         }
         this.#ui.showError(status);
-        this.emit("error", status);
+        this.emit("onerror", status);
     }
 
     /***

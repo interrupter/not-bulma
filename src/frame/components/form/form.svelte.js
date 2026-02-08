@@ -1,5 +1,5 @@
 import { Runner } from "not-validation";
-import {mount, unmount} from 'svelte';
+import UIAdapterSvelte from "../../ui.adapter.svelte";
 
 import { VARIANTS } from "not-bulma/src/frame/LIB.js";
 import Lib from "not-bulma/src/frame/lib.js";
@@ -20,7 +20,6 @@ const DEFAULT_VARIANT_NAME = "noname";
 class notForm extends notBase {
     //UI renderer component class constructor
     #uiComponent = null;
-    #uiProps = $state({});
     //form validation
     #validationRunner = null;
     //ui component
@@ -100,7 +99,7 @@ class notForm extends notBase {
 
     initUI() {
         try {
-            this.#updateFormUIProps({
+            const props = this.#getInitFormProps({
                 manifest: this.getFormManifest(),
                 formOptions: this.getFormOptions(),
                 data: this.getFormData(),
@@ -110,10 +109,8 @@ class notForm extends notBase {
             while (target.children.length){
                 target.removeChild(target.firstChild);
             }
-            this.#form = mount(this.#uiComponent, {
-                target,
-                props: this.#uiProps,
-            });
+            this.#form = new UIAdapterSvelte(this.#uiComponent, target, props);
+            
             this.#bindUIEvents();
             this.validateForm();
         } catch (e) {
@@ -123,13 +120,13 @@ class notForm extends notBase {
 
     updateUI() {
         try {
-            this.#updateFormUIProps({
+            const props = this.#getInitFormProps({
                 manifest: this.getFormManifest(),
                 formOptions: this.getFormOptions(),
                 data: this.getFormData(),
                 injectedProps: this.getFormInjectedProps(),
-
             });            
+
             this.validateForm();
         } catch (e) {
             this.error(e);
@@ -137,14 +134,14 @@ class notForm extends notBase {
     }
 
     #bindUIEvents() {
-        this.#uiProps.onchange = (event) =>{             
+        this.#form.on('onchange', (event) =>{             
             this.validateForm();
-            this.emit("change", event);
-            this.emit(`change.${event.field}`, event.value);
-        };        
-        this.#uiProps.onsubmit = (event) => this.submit(event);
-        this.#uiProps.onreject = () => this.reject();
-        this.#uiProps.onerror = (event) => this.emit("error", event);
+            this.emit("onchange", event);
+            this.emit(`onchange.${event.field}`, event.value);
+        });
+        this.#form.on('onsubmit', (event) => this.submit(event));
+        this.#form.on('onreject',  () => this.reject());
+        this.#form.on('onerror',  (event) => this.emit("onerror", event));
         this.#bindMasterSlaveEvents();
     }
 
@@ -163,10 +160,10 @@ class notForm extends notBase {
     }
 
     #addMasterSlaveEvents(rule, master, slaves = []) {
-        this.on(`change.${master}`, (value) => {
+        this.on(`onchange.${master}`, (value) => {
             this.#execSlaveRule(rule, master, slaves, value);
         });
-        this.emit(`change.${master}`, this.getFormData()[master]);
+        this.emit(`onchange.${master}`, this.getFormData()[master]);
     }
 
     #execSlaveRule(rule, master, slaves, value) {
@@ -187,47 +184,47 @@ class notForm extends notBase {
                 this.collectData(),
                 this.getFormAction()
             );
-            this.#form.updateFormValidationStatus(validationResult.getReport());
+            this.#form.exec('updateFormValidationStatus', [validationResult.getReport()]);
             if (!validationResult.clean) {
-                this.emit("error", validationResult.getReport());
+                this.emit("onerror", validationResult.getReport());
             }
         } catch (e) {
             const report = {
                 form: [UICommon.ERROR_DEFAULT, e.message],
             };
-            this.#form && this.#form.updateFormValidationStatus(report);
-            this.emit("error", report);
+            this.#form && this.#form.exec('updateFormValidationStatus',[report]);
+            this.emit("onerror", report);
             notCommon.report(e);
         }
     }
 
     submit(data) {
-        this.emit("submit", data);
+        this.emit("onsubmit", data);
     }
 
     reject() {
-        this.emit("reject");
+        this.emit("onreject");
     }
 
     //binding event to actual UI
     $on() {
-        if (this.#form && this.#uiProps) {
-            this.#uiProps[arguments[0]] = arguments[1];            
+        if (this.#form) {
+            this.#form.on(...arguments);            
         }
     }
 
     setLoading() {
-        this.emit("loading");
-        this.#uiProps.loading = true;
+        this.emit("onloading");
+        this.#form.set('loading', true);
     }
 
     resetLoading() {
-        this.emit("loaded");
-        this.#uiProps.loading = false;
+        this.emit("onloaded");
+        this.#form.set('loading', false);
     }
 
     destroy() {
-        this.emit("destroy");
+        this.emit("ondestroy");
         if (this.#form) {
             this.#form.$destroy && this.#form.$destroy();
             this.#form.destroy && this.#form.destroy();
@@ -242,7 +239,7 @@ class notForm extends notBase {
         this.setData(null);
     }
 
-    #updateFormUIProps({
+    #getInitFormProps({
         manifest, //model manifest
         formOptions = {
             ui: {},
@@ -280,7 +277,7 @@ class notForm extends notBase {
             data
         );
 
-        this.#uiProps = {
+        return {
             //if no auto init of form structure, set to loading state
             loading: !this.getOptions("autoInit", true),
             title: manifest.actions[action].title,
@@ -304,9 +301,8 @@ class notForm extends notBase {
     setFormAction(val) {
         if (val && val !== this.#action) {
             this.#action = val;
-            this.#form && this.#form.$destroy && this.#form.$destroy();
             try{
-                unmount(this.#form);
+                this.#form && this.#form.$destroy && this.#form.$destroy();                
             }catch{}
             this.initForm();
         }
@@ -326,8 +322,8 @@ class notForm extends notBase {
      *   Form validation result
      **/
     setFormSuccess() {
-        this.#uiProps.success = true;
-        this.emit("success");
+        this.#form.set('success', true);
+        this.emit("onsuccess");
     }
 
     setFormErrors(result) {
@@ -344,8 +340,8 @@ class notForm extends notBase {
         if (result.errors && Object.keys(result.errors).length > 0) {
             status.fields = { ...result.errors };
         }
-        this.#form.updateFormValidationStatus(status);
-        this.emit("error", status);
+        this.#form.exec('updateFormValidationStatus', [status]);
+        this.emit("onerror", status);
     }
 
     /**
@@ -447,20 +443,20 @@ class notForm extends notBase {
         if (this.getOptions("readonly", false)) {
             return this.getData();
         }
-        const data = FormHelpers.collectData(this.#uiProps.fields, this.#uiProps.form);
+        const data = FormHelpers.collectData(this.#form.props.fields, this.#form.props.form);
         this.setData({ ...data }); //update in inner store
         return data;
     }
 
     updateField(fieldName, props) {
-        if (this.#uiProps && this.#uiProps.form){
-            if( this.#uiProps.form[fieldName]){
-                this.#uiProps.form[fieldName] = {
-                    ...this.#uiProps.form[fieldName],
+        if (this.#form.props && this.#form.props.form){
+            if( this.#form.props.form[fieldName]){
+                this.#form.props.form[fieldName] = {
+                    ...this.#form.props.form[fieldName],
                     ...props,
                 };
             }else{
-                this.#uiProps.form[fieldName] = {                  
+                this.#form.props.form[fieldName] = {                  
                     ...props,
                 };   
             }

@@ -77,7 +77,7 @@ class notLocale extends EventEmitter {
         LOCALE.set(dict);
         this.saveToStorage(dict);
         this.dict = Object.assign({}, { ...dict });
-        this.emit("change");
+        this.emit("onchange");
     }
 
     saveToStorage(dict) {

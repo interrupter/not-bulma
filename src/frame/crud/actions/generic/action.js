@@ -3,6 +3,9 @@ import notCommon from "../../../common";
 import { notForm } from "../../../components";
 import { DEFAULT_TRASFORMER } from "../../const";
 import { NAVIGATION_DELAY_DEFAULT } from "../../../const";
+import UIAdapterSvelte from "../../../ui.adapter.svelte";
+
+import notBase from "../../../base";
 
 const DEFAULT_BREADCRUMB_TAIL = "Просмотр";
 
@@ -225,7 +228,7 @@ class CRUDGenericAction {
      * @memberof CRUDGenericAction
      */
     static setUILoading(controller) {
-        this.getUI(controller).$set({ loading: true });
+        this.getUI(controller).set('loading', true);
     }
 
     /**
@@ -236,7 +239,7 @@ class CRUDGenericAction {
      * @memberof CRUDGenericAction
      */
     static setUILoaded(controller) {
-        this.getUI(controller).$set({ loading: false });
+        this.getUI(controller).set('loading', false );
     }
 
     /**
@@ -248,7 +251,7 @@ class CRUDGenericAction {
      * @memberof CRUDGenericAction
      */
     static setUIError(controller, message) {
-        this.getUI(controller).$set({ error: message });
+        this.getUI(controller).set('error', message );
     }
 
     /**
@@ -260,7 +263,7 @@ class CRUDGenericAction {
     // eslint-disable-next-line no-unused-vars
     static bindUIEvents(controller, params, response) {
         if (notCommon.isFunc(controller.goBack)) {
-            this.bindUIEvent(controller, "reject", () => controller.goBack());
+            this.bindUIEvent(controller, "onreject", () => controller.goBack());
         }
     }
 
@@ -275,8 +278,7 @@ class CRUDGenericAction {
         const ui = this.getUI(controller);
         if (ui.$on) {
             return ui.$on(event, callback);
-        }
-        if (ui.on) {
+        }else if (ui.on) {
             return ui.on(event, callback);
         }
     }
@@ -298,6 +300,15 @@ class CRUDGenericAction {
 
     static tweakUIOptions(options) {
         return options;
+    }
+
+    static buildUI(controller, options){
+        if (this.UIConstructor.prototype instanceof notBase){
+            this.setUI(controller, new this.UIConstructor(options));
+        }else{
+            this.setUI(controller, new UIAdapterSvelte(this.UIConstructor, controller.getContainerInnerElement() , options));
+            
+        }        
     }
 
     /**
@@ -329,13 +340,10 @@ class CRUDGenericAction {
             //updating breadcrumbs tail with more details from response
             this.setBreadcrumbs(controller, params, response);
             //creating action UI component
-            const uiComponent = this.UIConstructor;
-            this.setUI(
+            this.buildUI(
                 controller,
-                new uiComponent(
-                    this.tweakUIOptions(
-                        this.prepareUIOptions(controller, response)
-                    )
+                this.tweakUIOptions(
+                    this.prepareUIOptions(controller, response)
                 )
             );
             //bind events to UI

@@ -4,6 +4,7 @@ import notCommon from "../../common.js";
 
 import * as Stores from "./stores.js";
 import UITable from "./notTable.svelte";
+import UIAdapterSvelte from "../../ui.adapter.svelte.js";
 
 const CONST_ID_DUBLICATE_POSTFIX = "__dublicate__";
 
@@ -236,9 +237,10 @@ class notTable extends EventEmitter {
 
     render() {
         if (!this.ui.table) {
-            this.ui.table = new this.options.ui({
-                target: this.options.targetEl,
-                props: {
+            this.ui.table = new UIAdapterSvelte(
+                this.options.ui,
+                this.options.targetEl,
+                {
                     filterUI: this.getOptions("filterUI", undefined),
                     id: this.id,
                     helpers: Object.assign({}, this.getHelpers()),
@@ -252,15 +254,15 @@ class notTable extends EventEmitter {
                     idField: this.getOptions("idField"),
                     getItemId: this.getOptions("getItemId"),
                     filter: this.getFilter(),
-                },
-            });
+                }
+            );            
         }
-        this.ui.table.$on("searchChange", (e) => this.onSearchChange(e.detail));
-        this.ui.table.$on("sorterChange", (e) => this.onSorterChange(e.detail));
-        this.ui.table.$on("filterChange", (e) => this.onFilterChange(e.detail));
-        this.ui.table.$on("goToPage", (e) => this.goToPage(e.detail));
-        this.ui.table.$on("goToNextPage", () => this.goToNext());
-        this.ui.table.$on("goToPrevPage", () => this.goToPrev());
+        this.ui.table.$on("onSearchChange", (e) => this.onSearchChange(e));
+        this.ui.table.$on("onSorterChange", (e) => this.onSorterChange(e));
+        this.ui.table.$on("onFilterChange", (e) => this.onFilterChange(e));
+        this.ui.table.$on("onGoToPage", (e) => this.goToPage(e));
+        this.ui.table.$on("onGoToNextPage", () => this.goToNext());
+        this.ui.table.$on("onGoToPrevPage", () => this.goToPrev());
     }
 
     getActions() {
@@ -566,9 +568,9 @@ class notTable extends EventEmitter {
     }
 
     testDataItem(item) {
-        var strValue = this.getSearch().toLowerCase();
-        for (var k in item) {
-            var toComp = item[k].toString().toLowerCase();
+        let strValue = this.getSearch().toLowerCase();
+        for (let k in item) {
+            let toComp = item[k].toString().toLowerCase();
             if (toComp.indexOf(strValue) > -1) {
                 return true;
             }
@@ -658,8 +660,8 @@ class notTable extends EventEmitter {
                             if (!this.getOptions("endless", false)) {
                                 this.clearFilteredData();
                             }
-                            if (full) {
-                                val.push(...data.result.list);
+                            if (full && data?.result.list) {
+                                val.push(...(data.result.list || []));
                             } else {
                                 if (
                                     notCommon.objHas(data, "list") &&

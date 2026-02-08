@@ -60,7 +60,7 @@ export default ({
 
                 const transformedData = resultTransformer(data);
 
-                controller.ui[ACTION] = new notForm({
+                controller.setUI(ACTION, new notForm({
                     options: {
                         target: controller.getContainerInnerElement(),
                         model: MODEL_NAME,
@@ -75,14 +75,14 @@ export default ({
                         fields: controller.getOptions(`${ACTION}.fields`, {}),
                     },
                     data: transformedData,
-                });
+                }));
                 controller.emit(
                     `after:render:${ACTION}`,
                     params,
                     transformedData
                 );
                 if (goBack && notCommon.isFunc(goBack)) {
-                    controller.ui[ACTION].on("reject", () => goBack());
+                    controller.getUI(ACTION).on("onreject", () => goBack());
                 }
             } catch (e) {
                 controller.report(e);

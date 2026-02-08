@@ -12,9 +12,26 @@ const emptyResult = () => {
 };
 
 export default class notServiceModelSearch {
+    #props = $state({});
+    #el;
     constructor(app, modelName) {
+        
         this.modelName = modelName;
         this.app = app;
+        this.bindEventsToProps();
+    }
+
+    bindEventsToProps(){
+        this.#props.onTermChange = async ({ detail }) => {
+            this.#props.results =  await this.searchByTerm(detail);
+        };
+        this.#props.onnext = () => {
+            console.log("next selector results");
+        };
+        this.#props.onprev = ()=>{
+            console.log("prev selector results");
+        };
+        
     }
 
     destroy() {
@@ -69,32 +86,19 @@ export default class notServiceModelSearch {
 
     openSelector() {
         return new Promise((resolve, reject) => {
-            try {
-                const el = mount(UIGenericSelector, {
+            try {                               
+                this.#el = mount(UIGenericSelector, {
                     target: document.body,
-                    props: {},
+                    props: this.#props,
                 });
-                el.$on("termChange", async ({ detail }) => {
-                    const results = await this.searchByTerm(detail);
-                    el.$set({ results });
-                });
-
-                el.$on("next", () => {
-                    console.log("next selector results");
-                });
-
-                el.$on("prev", () => {
-                    console.log("prev selector results");
-                });
-
-                el.$on("reject", () => {
-                    unmount(el);
+                this.#props.onreject = () => {
+                    unmount(this.#el);
                     reject();
-                });
-                el.$on("resolve", ({ detail }) => {
-                    unmount(el);
+                };
+                this.#props.onresolve = ({ detail }) => {
+                    unmount(this.#el);
                     resolve(this.transformSelectedResult(detail));
-                });
+                };
             } catch (e) {
                 this.app.error(e);
                 reject(e);

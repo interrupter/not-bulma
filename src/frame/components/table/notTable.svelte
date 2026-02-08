@@ -9,11 +9,7 @@
     import { UIButtons } from "../../../elements/button";
     import UIIcon from "../../../elements/icon/ui.icon.font.svelte";
 
-    import { onMount, createEventDispatcher } from "svelte";
-    let dispatch = createEventDispatcher();
-
-
-
+    import { onMount } from "svelte";
 
     /**
      * @typedef {Object} Props
@@ -52,7 +48,13 @@
         showSearch = true,
         showSelect = true,
         selectAll = $bindable(false),
-        getItemId = (item) => item._id
+        getItemId = (item) => item._id,
+        onRowSelectChange = () => {},
+        onSearchChange = () => {},
+        onFilterChange = () => {},
+        onGoToPage = () => {},
+        onGoToPrevPage = () => {},
+        onGoToNextPage = () => {},
     } = $props();
 
     onMount(() => {
@@ -81,47 +83,39 @@
         });
     });
 
-    function onSearchInput(ev) {
+    function _onSearchInput(ev) {
         try {
             let data = ev.currentTarget.value.trim();
-            dispatch("searchChange", data);
+            onSearchChange(data);
         } catch (e) {
             return;
         }
     }
 
-    function onSearchChange({ detail }) {
+    function _onSearchChange({ detail }) {
         try {
-            dispatch("searchChange", detail);
+            onSearchChange(detail);
         } catch (e) {
             return;
         }
     }
 
-    function onFilterChange({ detail }) {
+    function _onFilterChange({ detail }) {
         try {
-            dispatch("filterChange", detail);
+            onFilterChange(detail);
         } catch (e) {
             return;
         }
     }
 
-    function goPrev() {
-        dispatch("goToPrevPage");
-    }
-
-    function goNext() {
-        dispatch("goToNextPage");
-    }
-
-    function goTo(e) {
+    function _goTo(e) {
         e.preventDefault();
         let el = e.target;
-        dispatch("goToPage", parseInt(el.dataset.page));
+        onGoToPage(parseInt(el.dataset.page));
         return false;
     }
 
-    function onSelectAll() {
+    function _onSelectAll() {
         Stores.get(id).selected.update((value) => {
             items.forEach((item) => {
                 value[getItemId(item)] = selectAll;
@@ -130,7 +124,7 @@
         });
     }
 
-    function onFieldHeadClick(field) {
+    function _onFieldHeadClick(field) {
         const propPath = field.path.substring(1);
         if (Object.hasOwn(sorter, propPath)) {
             sorter[propPath] = parseInt(sorter[propPath]) * -1;
@@ -139,7 +133,7 @@
                 [propPath]: 1,
             };
         }
-        dispatch("sorterChange", sorter);
+        _onSorterChange(sorter);
     }
 </script>
 
@@ -158,8 +152,8 @@
         {@const SvelteComponent = filterUI}
         <SvelteComponent
             bind:filter
-            on:change={onFilterChange}
-            on:searchChange={onSearchChange}
+            onchange={_onFilterChange}
+            onSearchChange={_onSearchChange}
         />
     {:else}
         <div class="field">
@@ -169,7 +163,7 @@
                     type="text"
                     placeholder="Поиск"
                     bind:value={search}
-                    oninput={onSearchInput}
+                    oninput={_onSearchInput}
                 />
             </div>
         </div>
@@ -185,7 +179,7 @@
                     bind:checked={selectAll}
                     placeholder=""
                     name="row_selected_all"
-                    onchange={onSelectAll}
+                    onchange={_onSelectAll}
                 /></th
             >
         {/if}
@@ -194,7 +188,7 @@
             <th
                 class={(field.hideOnMobile ? " is-hidden-touch" : "") +
                     (field.sortable ? " is-clickable" : "")}
-                onclick={onFieldHeadClick(field)}
+                onclick={() => _onFieldHeadClick(field)}
             >
                 {#if field.sortable && Object.hasOwn(sorter, propPath)}
                     <UIIcon
@@ -217,15 +211,15 @@
                 {helpers}
                 {showSelect}
                 {getItemId}
-                on:rowSelectChange
+                {onRowSelectChange}
             />
         {/each}
     </tbody>
 </table>
 {#if state?.pagination?.pages?.list.length > 1}
     <nav class="pagination is-centered" aria-label="pagination">
-        <a href class="pagination-previous" onclick={goPrev}>Назад</a>
-        <a href class="pagination-next" onclick={goNext}>Вперед</a>
+        <a href class="pagination-previous" onclick={onGoToPrevPage}>Назад</a>
+        <a href class="pagination-next" onclick={onGoToNextPage}>Вперед</a>
         <ul class="pagination-list">
             {#if state.pagination && state.pagination.pages && state.pagination.pages.list}
                 {#each state.pagination.pages.list as page}
@@ -243,7 +237,7 @@
                                 class="pagination-link"
                                 aria-label="Страница {page.index}"
                                 data-page={page.index}
-                                onclick={goTo}>{page.index + 1}</a
+                                onclick={_goTo}>{page.index + 1}</a
                             >
                         {/if}
                     </li>

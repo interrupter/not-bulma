@@ -101,7 +101,7 @@ export default class notBase extends EventEmitter {
         } else {
             this.setCommon(this.getData(), arguments);
         }
-        this.emit("change");
+        this.emit("onchange");
         return this;
     }
 
@@ -150,6 +150,6 @@ export default class notBase extends EventEmitter {
         this.setOptions(null);
         this.setWorking(null);
         this.setData(null);
-        this.emit("destroy");
+        this.emit("ondestroy");
     }
 }

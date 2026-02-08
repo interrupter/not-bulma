@@ -79,15 +79,15 @@ class CRUDGenericActionUpdate extends CRUDGenericAction {
     // eslint-disable-next-line no-unused-vars
     static bindUIEvents(controller, params, response) {
         if (notCommon.isFunc(controller.goBack)) {
-            this.bindUIEvent(controller, "reject", () =>
+            this.bindUIEvent(controller, "onreject", () =>
                 this.goBack(controller)
             );
         }
         if (notCommon.isFunc(controller.onActionSubmit)) {
-            this.bindUIEvent(controller, "submit", async (ev) => {
+            this.bindUIEvent(controller, "onsubmit", async (ev) => {
                 const success = await controller.onActionSubmit(this.ACTION, {
                     ...this.loadDataQuery(controller, params),
-                    ...ev.detail,
+                    ...ev,
                 });
                 if (success) {
                     this.goBackAfterDelay(controller);
@@ -140,13 +140,10 @@ class CRUDGenericActionUpdate extends CRUDGenericAction {
             //updating breadcrumbs tail with more details from response
             this.setBreadcrumbs(controller, params, response);
             //creating action UI component
-            const uiComponent = this.UIConstructor;
-            this.setUI(
+            this.buildUI(
                 controller,
-                new uiComponent(
-                    this.tweakUIOptions(
-                        this.prepareUIOptions(controller, response)
-                    )
+                this.tweakUIOptions(
+                    this.prepareUIOptions(controller, response)
                 )
             );
             //bind events to UI

@@ -1,15 +1,13 @@
 <script>
-    import { run } from 'svelte/legacy';
+    import { run } from "svelte/legacy";
 
     let overflowSave = $state("");
 
     import { fade } from "svelte/transition";
 
-    import { createEventDispatcher, onMount, onDestroy } from "svelte";
+    import { onMount, onDestroy } from "svelte";
 
     const zIndexStep = 1000;
-
-    const dispatch = createEventDispatcher();
 
     /**
      * @typedef {Object} Props
@@ -30,7 +28,8 @@
         closeSize = "normal",
         layer = 1,
         classes = "",
-        children
+        children,
+        onreject = () => {},
     } = $props();
 
     run(() => {
@@ -62,11 +61,11 @@
                     rejectOverlay();
                 }
             }
-        } catch (_) {}
+        } catch {}
     }
 
     function rejectOverlay(data = {}) {
-        dispatch("reject", data);
+        onreject(data);
     }
     /*
 	function resolveOverlay(data = {}) {
@@ -93,7 +92,8 @@
         style="z-index: {zIndexStep * layer};"
     >
         {#if closeButton}
-            <button onclick={closeButtonClick} class="delete is-{closeSize}"></button>
+            <button onclick={closeButtonClick} class="delete is-{closeSize}"
+            ></button>
         {/if}
         {@render children?.()}
     </div>

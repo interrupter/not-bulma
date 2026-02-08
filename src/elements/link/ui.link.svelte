@@ -1,16 +1,10 @@
 <script>
-    import { run } from 'svelte/legacy';
-
+    import { getContext, hasContext, onMount } from "svelte";
     import { LOCALE } from "../../locale";
-    
-    
-
-    
-
     /**
      * @typedef {Object} Props
      * @property {string} [title] - attributes
-     * @property {string} [url]
+     * @property {string} [href]
      * @property {any} download
      * @property {string} [target]
      * @property {any} rel
@@ -35,7 +29,7 @@
     /** @type {Props} */
     let {
         title = "",
-        url = "",
+        href = "",
         download,
         target = "_blank",
         rel,
@@ -50,40 +44,38 @@
         type = "",
         color = "",
         size = "",
-        classes = $bindable(""),
+        class: classes = "",
         icon = false,
         iconSide = "right",
-        action = () => {
-        return true;
-    },
-        children
+        action: onclick = () => {
+            return true;
+        },
+        children,
     } = $props();
 
-    run(() => {
-        classes =
-            (button ? "button " : "") +
-            (state && state.length > 0 ? ` is-${state} ` : "") +
-            (light ? ` is-light ` : "") +
-            (type && type.length > 0 ? ` is-${type} ` : "") +
-            (size && size.length > 0 ? ` is-${size} ` : "");
-    });
+    const root = hasContext("root") ? getContext("root") || "" : "";
 </script>
 
 <a
-    onclick={action}
+    {onclick}
     {target}
-    href={url}
+    href={root + href}
     {download}
     {rel}
-    class="{classes} {state ? `is-${state}` : ''} {inverted
-        ? `is-inverted`
-        : ''} {outlined ? `is-outlined` : ''} {raised
-        ? `is-raised`
-        : ''} {rounded ? `is-rounded` : ''} {light ? `is-light` : ''} {loading
-        ? `is-loading`
-        : ''} {color ? `is-${color}` : ''} {type ? `is-${type}` : ''} {size
-        ? `is-${size}`
-        : ''}"
+    class={[
+        classes,
+        button && "button",
+        inverted && "is-inverted",
+        outlined && "is-outlined",
+        raised && "is-raised",
+        rounded && "is-rounded",
+        loading && "is-loading",
+        light && `is-light`,
+        color && `is-${color}`,
+        state && `is-${state}`,
+        type && `is-${type}`,
+        size && `is-${size}`,
+    ]}
 >
     {#if icon}
         {#if iconSide === "left"}

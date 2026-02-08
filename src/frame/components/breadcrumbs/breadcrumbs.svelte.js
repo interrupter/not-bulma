@@ -1,6 +1,6 @@
 import { mount, unmount } from "svelte";
 
-let local_ui_props = $state({});
+const  local_ui_props = $state({});
 
 class notBreadcrumbs {
     static UIConstructor = null;
@@ -9,11 +9,9 @@ class notBreadcrumbs {
     static tail = [];
 
     static initUIProps(root, navigate) {
-        local_ui_props = {
-            items: this.getBreadcrumbs(),
-            root: root,
-            go: navigate,
-        };
+        local_ui_props.items = this.getBreadcrumbs();
+        local_ui_props.root = root;
+        local_ui_props.go = navigate;
     }
 
     static render({ target, root = "", navigate }) {
@@ -53,7 +51,7 @@ class notBreadcrumbs {
 
     static remove() {
         if (this.ui) {
-            umount(this.ui);
+            unmount(this.ui);
             this.ui = null;
         }
         return this;

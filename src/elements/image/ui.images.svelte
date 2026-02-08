@@ -3,6 +3,6 @@
     let { values = [] } = $props();
 </script>
 
-{#each values as item (item.url)}
+{#each values as item (item.href)}
     <UIImage {...item} on:click />
 {/each}

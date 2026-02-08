@@ -43,13 +43,10 @@ class CRUDGenericActionRead extends CRUDGenericAction {
             //updating breadcrumbs tail with more details from response
             this.setBreadcrumbs(controller, params, response);
             //creating action UI component
-            const uiComponent = this.UIConstructor;
-            this.setUI(
+            this.buildUI(
                 controller,
-                new uiComponent(
-                    this.tweakUIOptions(
-                        this.prepareUIOptions(controller, response)
-                    )
+                this.tweakUIOptions(
+                    this.prepareUIOptions(controller, response)
                 )
             );
             //bind events to UI

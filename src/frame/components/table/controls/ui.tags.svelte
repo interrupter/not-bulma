@@ -1,11 +1,5 @@
 <script>
-    /*
-  import { createEventDispatcher } from 'svelte';
-  let dispatch = createEventDispatcher();
-*/
-    
-
-  /**
+    /**
    * @typedef {Object} Props
    * @property {any} [values] - item = {
 id,        //unique
@@ -15,8 +9,8 @@ color       //coloring
 }
    */
 
-  /** @type {Props} */
-  let { values = [] } = $props();
+    /** @type {Props} */
+    let { values = [] } = $props();
 </script>
 
 {#each values as item (item.id)}
@@ -24,8 +18,8 @@ color       //coloring
         <div class="mx-1 tags has-addons">
             <span class="tag">{item.title}</span>
             <span class="tag is-{item.color} {item.customClasses}">
-                {#if item.url}
-                    <a href={item.url} class={item.urlCustomClasses}
+                {#if item.href}
+                    <a href={item.href} class={item.urlCustomClasses}
                         >{item.value}</a
                     >
                 {:else}
@@ -35,8 +29,9 @@ color       //coloring
         </div>
     {:else}
         <span class="mx-1 tag is-{item.color} {item.customClasses}">
-            {#if item.url}
-                <a href={item.url} class={item.urlCustomClasses}>{item.title}</a
+            {#if item.href}
+                <a href={item.href} class={item.urlCustomClasses}
+                    >{item.title}</a
                 >
             {:else}
                 {item.title}

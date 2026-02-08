@@ -1,4 +1,4 @@
-import Menu from "../menu.js";
+import Menu from "../menu.svelte.js";
 import UISideMenu from "./ui.side.menu.svelte";
 
 import SideMenuState from "./store.js";

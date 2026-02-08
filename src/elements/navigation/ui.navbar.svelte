@@ -18,15 +18,16 @@
         burgerControlsSidemenu = true,
         class: classes = "",
         onclick = () => {},
+        url,
     } = $props();
 
-    onMount(() => {
-        setContext("root", root);
-        setContext("navigate", navigate);
-        setContext("burgerControlsSidemenu", burgerControlsSidemenu);
-        setContext("navbarId", id);
-        setContext("onclick", onclick);
-    });
+    setContext("root", root);
+    setContext("navigate", navigate);
+    setContext("burgerControlsSidemenu", burgerControlsSidemenu);
+    setContext("navbarId", id);
+    setContext("onclick", onclick);
+
+    onMount(() => {});
 
     function onBurgerClick() {
         active = !active;
@@ -44,5 +45,5 @@
     {:else if burger}
         <UINavbarBurger {active} onclick={onBurgerClick}></UINavbarBurger>
     {/if}
-    <UINavbarMenu {active} {items}></UINavbarMenu>
+    <UINavbarMenu {active} {items} {url}></UINavbarMenu>
 </UINavbarWrapper>
