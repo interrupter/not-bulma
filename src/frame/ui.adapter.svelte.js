@@ -87,8 +87,10 @@ export default class UIAdapterSvelte {
     }
 
     destroy(){
-        unmount(this.#instance);    
-        this.#instance = undefined;
+        if (this.#instance){
+            unmount(this.#instance);    
+            this.#instance = undefined;
+        }        
         this.#props = undefined;
         this.#uiConstructor = undefined;
         return this;

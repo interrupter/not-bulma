@@ -1,8 +1,8 @@
 <script>
-    import { createEventDispatcher } from "svelte";
-    const dispatch = createEventDispatcher();
-    import UIButton from "./ui.button.svelte";
+    import { onMount } from "svelte";
+    import UICommon from "../common";
 
+    import UIButton from "./ui.button.svelte";
 
     /**
      * @typedef {Object} Props
@@ -21,10 +21,15 @@
         right = false,
         classes = "",
         buttonComponent = UIButton,
+        onclick = () => {},
         action = (e) => {
-        dispatch("click", e);
-    }
+            onclick(e);
+        },
     } = $props();
+
+    if (!values.every((itm) => Object.hasOwn(itm, "id"))) {
+        values = UICommon.addIds(values);
+    }
 </script>
 
 <div
@@ -32,13 +37,15 @@
         ? 'is-right'
         : ''} {classes}"
 >
-    {#each values as item (item.id)}
-        {@const SvelteComponent = buttonComponent}
-        <SvelteComponent
-            {...item}
-            bind:value={item.value}
-            action={item.action ? item.action : action}
-            on:click
-        />
-    {/each}
+    {#if Array.isArray(values)}
+        {#each values as item (item.id)}
+            {@const SvelteComponent = buttonComponent}
+            <SvelteComponent
+                {...item}
+                bind:value={item.value}
+                action={item.action ? item.action : action}
+                {onclick}
+            />
+        {/each}
+    {/if}
 </div>

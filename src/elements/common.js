@@ -169,4 +169,11 @@ export default class UICommon {
             return `${hours} ${unit} назад`;
         }
     }
+
+    static addIds(arr, fieldName = 'id'){
+        return arr.map((itm, index)=>{
+            itm[fieldName] = index;
+            return itm;
+        });
+    }
 }

@@ -33,8 +33,9 @@
             .filter((form) => {
                 return mode !== form.mode;
             })
-            .map((form) => {
+            .map((form, index) => {
                 return {
+                    id: index,
                     title: form.title,
                     outlined: true,
                     type: "link",
@@ -53,6 +54,6 @@
 <div class="block-container" id="{name}-form-set">
     <div class="form-paper" id="{name}-form-set-container"></div>
     {#if showModes}
-        <UIButtons centered={true} bind:values={FORMS_BUTTONS} classes="mt-4" />
+        <UIButtons centered={true} values={FORMS_BUTTONS} classes="mt-4" />
     {/if}
 </div>
