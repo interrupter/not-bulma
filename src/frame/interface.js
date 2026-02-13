@@ -420,7 +420,7 @@ class notInterface extends notBase {
             (arguments.length < 2 ||
                 isNaN(arguments[0]) ||
                 isNaN(arguments[1])) &&
-            arguments[0].constructor === Object &&
+                (arguments[0] && typeof arguments[0] === 'object') &&
             notCommon.objHas(arguments[0], "page") &&
             notCommon.objHas(arguments[0], "size")
         ) {

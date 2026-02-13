@@ -29,8 +29,8 @@
 
     /** @type {Props} */
     let {
-        inputStarted = $bindable(false),
-        value = $bindable(false),
+        inputStarted = false,
+        value = false,
         label = "",
         hideLabel = false,
         placeholder = "",
@@ -113,7 +113,7 @@
             type="checkbox"
             class="switch {styling}"
             id="form-field-switch-{fieldname}"
-            bind:checked={value}
+            checked={value}
             placeholder={$LOCALE[placeholder]}
             name={fieldname}
             {disabled}

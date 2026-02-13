@@ -1,5 +1,7 @@
 <script>
     import UILink from "./ui.link.svelte";
+    import UICommon from "../common";
+
     /**
      * @typedef {Object} Props
      * @property {any} [values]
@@ -15,8 +17,12 @@
         classes = "",
         centered = false,
         right = false,
-        joined = true
+        joined = true,
     } = $props();
+
+    if (!values.every((itm) => Object.hasOwn(itm, "id"))) {
+        values = UICommon.addIds(values);
+    }
 </script>
 
 {#if joined}

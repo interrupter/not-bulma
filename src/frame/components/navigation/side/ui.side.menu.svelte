@@ -28,7 +28,7 @@
 <aside
     class="menu main-menu"
     id="side-menu"
-    style={`height: 100%; ${marginTop};`}
+    style={`${height}; ${marginTop};`}
     class:is-active={open}
 >
     {#each items as section (section.id)}

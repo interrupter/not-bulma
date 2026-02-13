@@ -1,15 +1,11 @@
 <script>
     import { LOCALE } from "../../../locale";
 
-    import * as Stores from "./stores.js";
-
     import UITableRow from "./notTableRow.svelte";
 
     import { UILinks } from "../../../elements/link";
     import { UIButtons } from "../../../elements/button";
     import UIIcon from "../../../elements/icon/ui.icon.font.svelte";
-
-    import { onMount } from "svelte";
 
     /**
      * @typedef {Object} Props
@@ -36,52 +32,35 @@
         id,
         filterUI,
         helpers = {},
-        state = $bindable({}),
-        filter = $bindable({}),
-        sorter = $bindable({}),
+        //navigation
+        filter = {},
+        sorter = {},
         fields = [],
-        selected = $bindable({}),
-        items = $bindable([]),
+        //table data
+        selected = {},
+        items = [],
+        state = {},
+        //buttons & links
         actions = [],
         links = [],
-        search = $bindable(""),
+        //
+        search = "",
         showSearch = true,
         showSelect = true,
-        selectAll = $bindable(false),
+        selectAll = false,
         getItemId = (item) => item._id,
+        //event handlers
         onRowSelectChange = () => {},
+        onRowCellChange = () => {},
+        onSelectAll = () => {},
+        onSelectNone = () => {},
         onSearchChange = () => {},
         onFilterChange = () => {},
+        onSorterChange = () => {},
         onGoToPage = () => {},
         onGoToPrevPage = () => {},
         onGoToNextPage = () => {},
     } = $props();
-
-    onMount(() => {
-        if (showSelect) {
-            Stores.get(id).selected.subscribe((value) => {
-                selected = value;
-            });
-        }
-        Stores.get(id).refined.subscribe((value) => {
-            items = value;
-            if (showSelect) {
-                for (let itemId in selected) {
-                    if (!items.some((item) => getItemId(item) === itemId)) {
-                        delete selected[itemId];
-                    } else {
-                        if (!Object.hasOwn(selected, itemId)) {
-                            selected[itemId] = false;
-                        }
-                    }
-                }
-                selected = selected;
-            }
-        });
-        Stores.get(id).state.subscribe((value) => {
-            state = value;
-        });
-    });
 
     function _onSearchInput(ev) {
         try {
@@ -115,13 +94,15 @@
         return false;
     }
 
-    function _onSelectAll() {
-        Stores.get(id).selected.update((value) => {
-            items.forEach((item) => {
-                value[getItemId(item)] = selectAll;
-            });
-            return value;
+    function _onSelectAllToggle() {
+        items.forEach((item) => {
+            selected[getItemId(item)] = selectAll;
         });
+        if (selectAll) {
+            onSelectAll(selected);
+        } else {
+            onSelectNone(selected);
+        }
     }
 
     function _onFieldHeadClick(field) {
@@ -133,7 +114,12 @@
                 [propPath]: 1,
             };
         }
-        _onSorterChange(sorter);
+        onSorterChange(sorter);
+    }
+
+    function _onRowSelectChange(event) {
+        selected[event.id] = event.selected;
+        onRowSelectChange(event);
     }
 </script>
 
@@ -151,7 +137,7 @@
     {#if filterUI}
         {@const SvelteComponent = filterUI}
         <SvelteComponent
-            bind:filter
+            {filter}
             onchange={_onFilterChange}
             onSearchChange={_onSearchChange}
         />
@@ -162,7 +148,7 @@
                     class="input"
                     type="text"
                     placeholder="Поиск"
-                    bind:value={search}
+                    value={search}
                     oninput={_onSearchInput}
                 />
             </div>
@@ -179,7 +165,7 @@
                     bind:checked={selectAll}
                     placeholder=""
                     name="row_selected_all"
-                    onchange={_onSelectAll}
+                    onchange={_onSelectAllToggle}
                 /></th
             >
         {/if}
@@ -210,19 +196,27 @@
                 {fields}
                 {helpers}
                 {showSelect}
+                isSelected={selected[getItemId(item)]}
                 {getItemId}
-                {onRowSelectChange}
+                onRowSelectChange={_onRowSelectChange}
+                onchange={onRowCellChange}
             />
         {/each}
     </tbody>
 </table>
-{#if state?.pagination?.pages?.list.length > 1}
+{#if state?.pagination?.pages?.list.length >= 1}
     <nav class="pagination is-centered" aria-label="pagination">
-        <a href class="pagination-previous" onclick={onGoToPrevPage}>Назад</a>
-        <a href class="pagination-next" onclick={onGoToNextPage}>Вперед</a>
+        {#if state?.pagination?.pages?.current > 0}
+            <a href class="pagination-previous" onclick={onGoToPrevPage}
+                >Назад</a
+            >
+        {/if}
+        {#if state?.pagination?.pages?.current < state?.pagination?.pages.to}
+            <a href class="pagination-next" onclick={onGoToNextPage}>Вперед</a>
+        {/if}
         <ul class="pagination-list">
-            {#if state.pagination && state.pagination.pages && state.pagination.pages.list}
-                {#each state.pagination.pages.list as page}
+            {#if state && state?.pagination && state?.pagination.pages && state?.pagination.pages.list}
+                {#each state?.pagination.pages.list as page}
                     <li>
                         {#if page.active}
                             <a

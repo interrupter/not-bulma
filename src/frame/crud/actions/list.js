@@ -41,7 +41,7 @@ export default class CRUDActionList {
         onlyIcons = true
     ) {
         const ACTIONS = {
-            details: {
+            details: {                
                 action: () => controller.goDetails(value, delay),
                 ...(onlyIcons
                     ? { icon: "circle-info" }
@@ -49,6 +49,7 @@ export default class CRUDActionList {
                 size: "small",
             },
             update: {
+                
                 action: () => controller.goUpdate(value, delay),
                 ...(onlyIcons ? { icon: "edit" } : { title: "Изменить" }),
                 color: "warning",

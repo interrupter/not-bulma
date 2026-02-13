@@ -1,15 +1,12 @@
 <script>
     import UITableCell from "./notTableCell.svelte";
-    import * as Stores from "./stores.js";
 
     import { onMount } from "svelte";
 
-    let itemId = $state(),
-        selectedList;
+    let itemId = $state();
 
     onMount(() => {
         itemId = getItemId(item);
-        selectedList = Stores.get(id).selected;
     });
 
     /**
@@ -29,6 +26,7 @@
         helpers = {},
         fields = [],
         showSelect = false,
+        isSelected = false,
         getItemId = () => {},
         onRowSelectChange = () => {},
     } = $props();
@@ -37,20 +35,20 @@
         e.preventDefault();
         onRowSelectChange({
             id: itemId,
-            selected: $selectedList[itemId],
+            selected: e.currentTraget.checked,
         });
         return false;
     }
 </script>
 
 <tr>
-    {#if showSelect && $selectedList}
+    {#if showSelect}
         <td>
             <input
                 id="table-row-select-{getItemId(item)}"
                 type="checkbox"
                 data-id={getItemId(item)}
-                bind:checked={$selectedList[itemId]}
+                checked={isSelected}
                 placeholder=""
                 name="row_selected_{getItemId(item)}"
                 onchange={onRowSelect}

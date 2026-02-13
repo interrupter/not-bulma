@@ -1,5 +1,4 @@
 <script>
-    import { onMount } from "svelte";
     import UICommon from "../common";
 
     import UIButton from "./ui.button.svelte";

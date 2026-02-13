@@ -10,6 +10,7 @@
 @import "./_padding.scss";
 @import "./_images.scss";
 @import "./_pagination.scss";
+@import "./_navbar.scss";
 @import "./_overlay.scss";
 @import "./_breadcrumbs.scss";
 
@@ -17,6 +18,4 @@
 
 @import "./_list-select.scss";
 
-.navbar-menu.is-active {
-    display: flex;
-}
+

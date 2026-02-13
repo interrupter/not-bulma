@@ -1,9 +1,12 @@
 aside.menu.main-menu {
     height: 100%;
 }
-
 @media screen and (max-width: 1024px) {
     nav.navbar .navbar-menu .navbar-link::after {
         display: none;
     }
+}
+
+.navbar-menu.is-active {
+    display: flex;
 }

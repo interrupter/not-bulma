@@ -1,4 +1,5 @@
 import {mount, unmount} from 'svelte';
+import notPath from "not-path";
 
 export default class UIAdapterSvelte {
     #props = $state({});
@@ -66,7 +67,12 @@ export default class UIAdapterSvelte {
     }
 
     set(propKey, value){
-        this.#props[propKey] = value;
+        notPath.set(propKey, this.#props, {}, value);
+        return this;
+    }
+
+    changeProp(propKey, changer){
+        this.set(propKey, changer(this.get(propKey)));
         return this;
     }
 
@@ -75,7 +81,7 @@ export default class UIAdapterSvelte {
     }
 
     get(propKey){
-        return this.#props[propKey];
+        return notPath.get(propKey, this.#props);
     }
 
     get props(){

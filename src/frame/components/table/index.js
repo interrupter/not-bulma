@@ -1,4 +1,4 @@
-import notTable from './notTable.js';
+import notTable from './notTable.svelte.js';
 
 
 export {notTable};

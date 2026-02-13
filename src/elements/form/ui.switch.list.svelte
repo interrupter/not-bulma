@@ -31,8 +31,8 @@
 
     /** @type {Props} */
     let {
-        inputStarted = $bindable(false),
-        value = $bindable([]),
+        inputStarted = false,
+        value = [],
         variants = [],
         label = "",
         hideLabel = false,
