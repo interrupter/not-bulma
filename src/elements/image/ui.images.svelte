@@ -1,8 +1,8 @@
 <script>
     import UIImage from "./ui.image.svelte";
-    let { values = [] } = $props();
+    let { values = [], onclick = () => {} } = $props();
 </script>
 
-{#each values as item (item.href)}
-    <UIImage {...item} on:click />
+{#each values as item (item.src)}
+    <UIImage {...item} {onclick} />
 {/each}
