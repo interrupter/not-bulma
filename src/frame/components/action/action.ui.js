@@ -4,6 +4,8 @@ import notBase from "../../base";
 import UICommon from "../../../elements/common.js";
 
 import UIActionContainer from "./ui.action.container.svelte";
+import UIAdapterSvelte from "../../ui.adapter.svelte";
+
 const DEFAULT_CONTAINER_SELECTOR = ".container";
 import { DEFAULT_STATUS_SUCCESS, DEFAULT_STATUS_ERROR } from "../../const";
 
@@ -40,10 +42,10 @@ class notActionUI extends notBase {
             const target = this.getTargetEl();
             while (target.children.length)
                 target.removeChild(target.firstChild);
-            this.#ui = new this.#uiComponent({
+            this.#ui = new UIAdapterSvelte(this.#uiComponent,
                 target,
-                props: this.getOptions(),
-            });
+                this.getOptions(),
+            );
         } catch (e) {
             this.error(e);
         }
@@ -51,12 +53,20 @@ class notActionUI extends notBase {
 
     setLoading() {
         this.emit("onloading");
-        this.#ui.setLoading();
+        this.#ui.set('loaderActive', true);
+        this.#ui.set('success', false);
+        this.#ui.set('error', false);         
     }
 
     resetLoading() {
         this.emit("onloaded");
-        this.#ui.resetLoading();
+        this.#ui.set('loaderActive', false)
+    }
+
+    hideAll(){        
+        this.#ui.set('loaderActive', false);
+        this.#ui.set('success', false);
+        this.#ui.set('error', false);   
     }
 
     destroy() {
@@ -81,11 +91,33 @@ class notActionUI extends notBase {
         }
     }
 
+    showSuccess(title, message) {        
+        this.#ui.set('success', true);
+        this.#ui.set('error', false);           
+        if (message != undefined) {
+            this.#ui.set('successMessage', message);
+        }
+        if (title != undefined) {
+            this.#ui.set('successTitle', title);            
+        }
+    }
+
+    showError(title, message) {
+        this.#ui.set('success', false);
+        this.#ui.set('error', true);           
+        if (message != undefined) {
+            this.#ui.set('errorMessage', message);
+        }
+        if (title != undefined) {
+            this.#ui.set('errorTitle', title);            
+        }       
+    }
+
     /**
      *   Form validation result
      **/
     setFormSuccess() {
-        this.#ui.showSuccess();
+        this.showSuccess();
         this.emit("onsuccess");
     }
 
@@ -100,7 +132,7 @@ class notActionUI extends notBase {
         if (result.errors && Object.keys(result.errors).length > 0) {
             status.fields = { ...result.errors };
         }
-        this.#ui.showError(status);
+        this.showError(result.message, JSON.stringify(status, null, 4));
         this.emit("onerror", status);
     }
 

@@ -28,10 +28,10 @@
     /** @type {Props} */
     let {
         fieldname = "numbers_list",
-        value = $bindable({}),
+        value = {},
         label = "named numbers list",
         inputStarted = false,
-        placeholder = $bindable("new item"),
+        placeholder = "new item",
         readonly = false,
         valid = true,
         validated = false,
@@ -40,15 +40,19 @@
         onchange = () => {},
     } = $props();
 
-    let list = $derived(
-        Object.keys(value).map((name) => {
+    let list = $state([]);
+
+    function updateList() {
+        list = Object.keys(value).map((name) => {
             return {
                 id: name,
                 title: name,
                 number: value[name],
             };
-        })
-    );
+        });
+    }
+
+    updateList();
 
     let allErrors;
     run(() => {
@@ -73,8 +77,9 @@
         if (notCommon.objHas(value, id)) {
             delete value[id];
             value = value;
-            onchange({ value, field: fieldname });
+            onchange({ value: $state.snapshot(value), field: fieldname });
         }
+        updateList();
     }
 
     function add() {
@@ -83,7 +88,9 @@
         if (id && id !== "" && !isNaN(number) && !notCommon.objHas(value, id)) {
             value[id] = number;
         }
-        onchange({ value, field: fieldname });
+        value = value;
+        onchange({ value: $state.snapshot(value), field: fieldname });
+        updateList();
     }
 
     const createNewVal = () => {
@@ -97,7 +104,7 @@
 </script>
 
 <UITitle title={label} size={5} />
-{#each list as item (item.id)}
+{#each list as item, index (item.id)}
     <UIColumns>
         <UIColumn classes="is-6">
             {item.title}
@@ -115,7 +122,7 @@
 {#if !readonly}
     <UIColumns>
         <UIColumn classes="is-6">
-            <UITextfield bind:value={newVal.id} bind:placeholder />
+            <UITextfield bind:value={newVal.id} {placeholder} />
         </UIColumn>
         <UIColumn classes="is-4">
             <UINumber bind:value={newVal.number} />

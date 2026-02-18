@@ -16,7 +16,7 @@
         srcFull,
         src,
         title,
-        cors = "anonymous",
+        cors,
         size = 64,
         contained = true,
         covered = true,
@@ -28,6 +28,8 @@
     let sizeStyle = $derived(isNaN(size) ? `is-${size}` : `is-${size}x${size}`);
     let containedStyle = $derived(contained ? "is-contained" : "");
     let coveredStyle = $derived(covered ? "is-covered" : "");
+
+    let crossOrigin = $derived(cors);
 </script>
 
 {#if srcFull}
@@ -35,7 +37,7 @@
         <figure
             class="image {sizeStyle} {containedStyle} {coveredStyle} {classes}"
         >
-            <img class="" alt={title} {src} crossOrigin={cors} />
+            <img class="" alt={title} {src} {crossOrigin} />
         </figure>
     </a>
 {:else}
@@ -46,6 +48,6 @@
         role="button"
         tabindex="0"
     >
-        <img class="" alt={title} {src} crossOrigin={cors} />
+        <img class="" alt={title} {src} {crossOrigin} />
     </figure>
 {/if}

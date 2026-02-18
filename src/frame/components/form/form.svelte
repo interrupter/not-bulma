@@ -70,6 +70,8 @@ agreed
         onchange = () => {},
         onsubmit = () => {},
         onreject = () => {},
+        onFieldInvalid = () => {},
+        onFieldValid = () => {},
     } = $props();
 
     let formInvalid = $derived(formHasErrors || fieldsHasErrors);
@@ -96,14 +98,14 @@ agreed
 
     export function setFormFieldInvalid(fieldName, errors) {
         form = FormHelpers.setFormFieldInvalid(form, fieldName, errors);
-        dispatch(`field.invalid`, {
+        onFieldInvalid({
             fieldName,
         });
     }
 
     export function setFormFieldValid(fieldName) {
         form = FormHelpers.setFormFieldValid(form, fieldName);
-        dispatch(`field.valid`, {
+        onFieldValid({
             fieldName,
         });
     }
@@ -159,10 +161,8 @@ agreed
     export function setFieldValue(fieldName, value) {
         if (FormHelpers.setFieldValue(form, fieldName, value)) {
             onFieldChange({
-                detail: {
-                    field: fieldName,
-                    value,
-                },
+                field: fieldName,
+                value,
             });
         }
     }

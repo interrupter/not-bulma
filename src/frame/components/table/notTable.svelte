@@ -6,6 +6,7 @@
     import { UILinks } from "../../../elements/link";
     import { UIButtons } from "../../../elements/button";
     import UIIcon from "../../../elements/icon/ui.icon.font.svelte";
+    import { UILoader } from "../../../elements/various";
 
     /**
      * @typedef {Object} Props
@@ -71,17 +72,17 @@
         }
     }
 
-    function _onSearchChange({ detail }) {
+    function _onSearchChange(event) {
         try {
-            onSearchChange(detail);
+            onSearchChange(event);
         } catch (e) {
             return;
         }
     }
 
-    function _onFilterChange({ detail }) {
+    function _onFilterChange(event) {
         try {
-            onFilterChange(detail);
+            onFilterChange(event);
         } catch (e) {
             return;
         }
@@ -121,6 +122,13 @@
         selected[event.id] = event.selected;
         onRowSelectChange(event);
     }
+
+    function preventDefault(call) {
+        return (e) => {
+            e.preventDefault();
+            return call(e);
+        };
+    }
 </script>
 
 {#if links.length}
@@ -155,88 +163,100 @@
         </div>
     {/if}
 {/if}
-<table class="table">
-    <thead>
-        {#if showSelect}
-            <th
-                ><input
-                    type="checkbox"
-                    id="table-row-select-page"
-                    bind:checked={selectAll}
-                    placeholder=""
-                    name="row_selected_all"
-                    onchange={_onSelectAllToggle}
-                /></th
-            >
-        {/if}
-        {#each fields as field}
-            {@const propPath = field.path.substring(1)}
-            <th
-                class={(field.hideOnMobile ? " is-hidden-touch" : "") +
-                    (field.sortable ? " is-clickable" : "")}
-                onclick={() => _onFieldHeadClick(field)}
-            >
-                {#if field.sortable && Object.hasOwn(sorter, propPath)}
-                    <UIIcon
-                        font={sorter[propPath] > 0 ? "sort-up" : "sort-down"}
-                        title={field.title}
-                        pointable={true}
-                    />
-                {:else}
-                    {$LOCALE[field.title]}
-                {/if}
-            </th>
-        {/each}
-    </thead>
-    <tbody>
-        {#each items as item (item._id)}
-            <UITableRow
-                {id}
-                {item}
-                {fields}
-                {helpers}
-                {showSelect}
-                isSelected={selected[getItemId(item)]}
-                {getItemId}
-                onRowSelectChange={_onRowSelectChange}
-                onchange={onRowCellChange}
-            />
-        {/each}
-    </tbody>
-</table>
-{#if state?.pagination?.pages?.list.length >= 1}
-    <nav class="pagination is-centered" aria-label="pagination">
-        {#if state?.pagination?.pages?.current > 0}
-            <a href class="pagination-previous" onclick={onGoToPrevPage}
-                >Назад</a
-            >
-        {/if}
-        {#if state?.pagination?.pages?.current < state?.pagination?.pages.to}
-            <a href class="pagination-next" onclick={onGoToNextPage}>Вперед</a>
-        {/if}
-        <ul class="pagination-list">
-            {#if state && state?.pagination && state?.pagination.pages && state?.pagination.pages.list}
-                {#each state?.pagination.pages.list as page}
-                    <li>
-                        {#if page.active}
-                            <a
-                                href
-                                class="pagination-link is-current"
-                                aria-label="Страница {page.index}"
-                                aria-current="page">{page.index + 1}</a
-                            >
-                        {:else}
-                            <a
-                                href
-                                class="pagination-link"
-                                aria-label="Страница {page.index}"
-                                data-page={page.index}
-                                onclick={_goTo}>{page.index + 1}</a
-                            >
-                        {/if}
-                    </li>
-                {/each}
+{#if state.updating}
+    <UILoader loading={true} title="Загрузка..." size="container"></UILoader>
+{:else}
+    <table class="table">
+        <thead>
+            {#if showSelect}
+                <th
+                    ><input
+                        type="checkbox"
+                        id="table-row-select-page"
+                        bind:checked={selectAll}
+                        placeholder=""
+                        name="row_selected_all"
+                        onchange={_onSelectAllToggle}
+                    /></th
+                >
             {/if}
-        </ul>
-    </nav>
+            {#each fields as field}
+                {@const propPath = field.path.substring(1)}
+                <th
+                    class={(field.hideOnMobile ? " is-hidden-touch" : "") +
+                        (field.sortable ? " is-clickable" : "")}
+                    onclick={() => _onFieldHeadClick(field)}
+                >
+                    {#if field.sortable && Object.hasOwn(sorter, propPath)}
+                        <UIIcon
+                            font={sorter[propPath] > 0
+                                ? "sort-up"
+                                : "sort-down"}
+                            title={field.title}
+                            pointable={true}
+                        />
+                    {:else}
+                        {$LOCALE[field.title]}
+                    {/if}
+                </th>
+            {/each}
+        </thead>
+        <tbody>
+            {#each items as item (item._id)}
+                <UITableRow
+                    {id}
+                    {item}
+                    {fields}
+                    {helpers}
+                    {showSelect}
+                    isSelected={selected[getItemId(item)]}
+                    {getItemId}
+                    onRowSelectChange={_onRowSelectChange}
+                    onchange={onRowCellChange}
+                />
+            {/each}
+        </tbody>
+    </table>
+    {#if state?.pagination?.pages?.list.length >= 1}
+        <nav class="pagination is-centered" aria-label="pagination">
+            {#if state?.pagination?.pages?.current > 0}
+                <a
+                    href
+                    class="pagination-previous"
+                    onclick={preventDefault(onGoToPrevPage)}>Назад</a
+                >
+            {/if}
+            {#if state?.pagination?.pages?.current < state?.pagination?.pages.to}
+                <a
+                    href
+                    class="pagination-next"
+                    onclick={preventDefault(onGoToNextPage)}>Вперед</a
+                >
+            {/if}
+            <ul class="pagination-list">
+                {#if state && state?.pagination && state?.pagination.pages && state?.pagination.pages.list}
+                    {#each state?.pagination.pages.list as page (page.index)}
+                        <li>
+                            {#if page.active}
+                                <a
+                                    href
+                                    class="pagination-link is-current"
+                                    aria-label="Страница {page.index}"
+                                    aria-current="page">{page.index + 1}</a
+                                >
+                            {:else}
+                                <a
+                                    href
+                                    class="pagination-link"
+                                    aria-label="Страница {page.index}"
+                                    data-page={page.index}
+                                    onclick={_goTo}>{page.index + 1}</a
+                                >
+                            {/if}
+                        </li>
+                    {/each}
+                {/if}
+            </ul>
+        </nav>
+    {/if}
 {/if}

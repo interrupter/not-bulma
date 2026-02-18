@@ -1,10 +1,9 @@
 <script>
     import "bulma-pageloader";
     import { LOCALE } from "../../locale";
-    
+
     //hidden - no loader
     //container - parent container of form
-    
 
     /**
      * @typedef {Object} Props
@@ -14,7 +13,11 @@
      */
 
     /** @type {Props} */
-    let { loading = false, size = "container", title = "Waiting..." } = $props();
+    let {
+        loading = false,
+        size = "container",
+        title = "Waiting...",
+    } = $props();
 </script>
 
 {#if size !== "hidden"}

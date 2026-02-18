@@ -1,4 +1,5 @@
 import { notTable } from "../../components";
+import UICommon from "../../../elements/common";
 
 const ACTION = "list";
 
@@ -65,12 +66,14 @@ export default class CRUDActionList {
         };
         const actionsButtons = [...prepend];
         if (Array.isArray(actions)) {
-            actions.forEach((actionName) =>
-                actionsButtons.push(ACTIONS[actionName])
+            actions.forEach((actionName, index) =>
+                actionsButtons.push({                    
+                    ...ACTIONS[actionName]
+                })
             );
         }
         actionsButtons.push(...append);
-        return actionsButtons;
+        return UICommon.addIds(actionsButtons);
     }
 
     static async run(controller, params) {

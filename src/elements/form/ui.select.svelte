@@ -29,8 +29,8 @@
 
     /** @type {Props} */
     let {
-        inputStarted = $bindable(false),
-        value = $bindable(""),
+        inputStarted = false,
+        value = "",
         variants = [],
         placeholder = "",
         emptyValueTitle = "",
@@ -46,6 +46,7 @@
         formErrors = false,
         formLevelError = false,
         onchange = () => {},
+        class: classes = "",
     } = $props();
 
     let selectedVariants = $state([]);

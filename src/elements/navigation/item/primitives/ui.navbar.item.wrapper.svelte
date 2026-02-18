@@ -27,9 +27,6 @@
         onkeyup,
         ...other
     } = $props();
-
-    const onKeyUp =
-        onkeyup ?? (onclick ? UICommon.onlyOnEnter(onclick) : undefined);
 </script>
 
 <div
@@ -38,7 +35,7 @@
         " "
     )}
     {onclick}
-    onkeyup={onKeyUp}
+    onkeyup={onkeyup ?? (onclick ? UICommon.onlyOnEnter(onclick) : undefined)}
     {role}
     {tabIndex}
 >

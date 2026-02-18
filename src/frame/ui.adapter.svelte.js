@@ -76,6 +76,25 @@ export default class UIAdapterSvelte {
         return this;
     }
 
+    replaceProps(props){
+        const replaced = [];
+        Object.keys(this.#props).forEach(
+            (key)=>{
+                if (Object.hasOwn(props)) { 
+                    this.#props[key] = props[key];
+                }else{
+                    delete this.#props[key];
+                }
+            });
+        Object.keys(props).forEach(
+            (key)=>{
+               if (!replaced.includes(key)) { 
+                    this.#props[key] = props[key];
+                }
+            });
+        return this;
+    }
+
     $get(propKey){
         return this.get(propKey);
     }
@@ -85,7 +104,7 @@ export default class UIAdapterSvelte {
     }
 
     get props(){
-        return this.#props;
+        return $state.snapshot(this.#props);
     }
 
     $destroy(){

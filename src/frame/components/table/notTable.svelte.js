@@ -680,7 +680,7 @@ class notTable extends EventEmitter {
                             notCommon.objHas(data, "result");
                         this.updateStore('filtered', (val) => {
                             if (!this.getOptions("endless", false)) {
-                                this.clearFilteredData();
+                                val.splice(0);
                             }
                             if (full && data?.result.list) {
                                 val.push(...(data.result.list || []));

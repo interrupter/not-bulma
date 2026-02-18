@@ -126,7 +126,7 @@ class notForm extends notBase {
                 data: this.getFormData(),
                 injectedProps: this.getFormInjectedProps(),
             });            
-
+            this.#form.replaceProps(props);
             this.validateForm();
         } catch (e) {
             this.error(e);
@@ -451,14 +451,13 @@ class notForm extends notBase {
     updateField(fieldName, props) {
         if (this.#form.props && this.#form.props.form){
             if( this.#form.props.form[fieldName]){
-                this.#form.props.form[fieldName] = {
-                    ...this.#form.props.form[fieldName],
-                    ...props,
-                };
+                this.#form.changeProp(`form.${fieldName}`, (val)=>{
+                    return {...val, ...props}
+                });                
             }else{
-                this.#form.props.form[fieldName] = {                  
+                this.#form.set(`form.${fieldName}`, {
                     ...props,
-                };   
+                });
             }
         }
     }
