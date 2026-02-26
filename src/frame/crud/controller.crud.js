@@ -219,6 +219,7 @@ class notCRUD extends notController {
 
     async preloadVariants(type = "list") {
         await this.#preloader.preload(this, type);
+        this.emit('onVariantsPreloaded', {type});
     }
 
     getTitleFromLib(propName, id) {

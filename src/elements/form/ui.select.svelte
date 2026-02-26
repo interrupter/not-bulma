@@ -125,33 +125,28 @@
         onchange(data);
         return true;
     }
-
     let iconClasses = $derived(
         (icon ? " has-icons-left " : "") + " has-icons-right "
     );
-
-    let allErrors = $state([]);
+    let allErrors;
     run(() => {
         allErrors = [].concat(
             errors ? errors : [],
             formErrors ? formErrors : []
         );
     });
-
-    let showErrors = $state(false);
+    let showErrors;
     run(() => {
         showErrors = !(validated && valid) && inputStarted;
     });
     let invalid = $derived(valid === false || formLevelError);
-
-    let validationClasses = $state("");
+    let validationClasses;
     run(() => {
         validationClasses =
             valid === true || !inputStarted
                 ? UICommon.CLASS_OK
                 : UICommon.CLASS_ERR;
     });
-
     let multipleClass = $derived(multiple ? " is-multiple " : "");
     run(() => {
         value;
