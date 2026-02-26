@@ -2,7 +2,7 @@ const DEFAULT_ACTION = "list";
 
 class notCRUDRouter {
     static extractActionName(controller, params) {
-        let actionName = DEFAULT_ACTION;
+        let actionName = controller.getOptions("defaultAction", DEFAULT_ACTION);
         if (params.length === 1) {
             if (params[0] === "create") {
                 actionName = "create";

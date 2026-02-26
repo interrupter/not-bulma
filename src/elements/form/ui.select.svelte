@@ -1,5 +1,6 @@
 <script>
     import { run } from "svelte/legacy";
+    import { onMount } from "svelte";
 
     import { LOCALE } from "../../locale";
     import UISelectOption from "./ui.select.option.svelte";
@@ -46,27 +47,58 @@
         formErrors = false,
         formLevelError = false,
         onchange = () => {},
+        onInputStarted = () => {},
         class: classes = "",
+        idField = "id",
+        titleField = "title",
     } = $props();
 
     let selectedVariants = $state([]);
 
     function filterSelectedVariants(variant) {
         if (Array.isArray(value) && multiple) {
-            return value.indexOf(variant.id) > -1;
+            return value.indexOf(variant[idField]) > -1;
         } else if (value) {
-            return value == variant.id;
+            return value == variant[idField];
         } else {
             return false;
         }
     }
 
-    let lastChange;
+    let lastChange, selectElement;
+
+    onMount(() => {
+        onInput({ currentTarget: selectElement });
+    });
+
+    function getSelectedValues() {
+        if (multiple) {
+            const _values = Array.from(selectElement.selectedOptions).map(
+                (el) => el.value
+            );
+            if (_values.indexOf(UICommon.CLEAR_MACRO) > -1) {
+                return [];
+            } else {
+                return _values;
+            }
+        } else {
+            if (selectElement.value === UICommon.CLEAR_MACRO) {
+                return "";
+            } else {
+                return selectElement.value;
+            }
+        }
+    }
+
+    function triggerInputStarted() {
+        onInputStarted();
+        inputStarted = true;
+    }
 
     function onBlur(ev) {
         let data = {
             field: fieldname,
-            value: ev.currentTarget.value,
+            value: getSelectedValues(),
         };
         if (lastChange === data.value) {
             return true;
@@ -78,20 +110,7 @@
                 return true;
             }
         }
-        if (multiple) {
-            value = Array.from(ev.target.selectedOptions).map((el) => el.value);
-            if (value.indexOf(UICommon.CLEAR_MACRO) > -1) {
-                value = [];
-            }
-            data.value = value;
-        } else {
-            if (data.value === UICommon.CLEAR_MACRO) {
-                value = "";
-            } else {
-                value = data.value;
-            }
-        }
-        inputStarted = true;
+        triggerInputStarted();
         onchange(data);
         return true;
     }
@@ -99,48 +118,40 @@
     function onInput(ev) {
         let data = {
             field: fieldname,
-            value: ev.currentTarget.value,
+            value: getSelectedValues(),
         };
-        if (multiple) {
-            value = Array.from(ev.target.selectedOptions).map((el) => el.value);
-            if (value.indexOf(UICommon.CLEAR_MACRO) > -1) {
-                value = [];
-            }
-            data.value = value;
-        } else {
-            if (data.value === UICommon.CLEAR_MACRO) {
-                value = "";
-            } else {
-                value = data.value;
-            }
-        }
-        inputStarted = true;
+        triggerInputStarted();
         lastChange = data.value;
         onchange(data);
         return true;
     }
+
     let iconClasses = $derived(
         (icon ? " has-icons-left " : "") + " has-icons-right "
     );
-    let allErrors;
+
+    let allErrors = $state([]);
     run(() => {
         allErrors = [].concat(
             errors ? errors : [],
             formErrors ? formErrors : []
         );
     });
-    let showErrors;
+
+    let showErrors = $state(false);
     run(() => {
         showErrors = !(validated && valid) && inputStarted;
     });
     let invalid = $derived(valid === false || formLevelError);
-    let validationClasses;
+
+    let validationClasses = $state("");
     run(() => {
         validationClasses =
             valid === true || !inputStarted
                 ? UICommon.CLASS_OK
                 : UICommon.CLASS_ERR;
     });
+
     let multipleClass = $derived(multiple ? " is-multiple " : "");
     run(() => {
         value;
@@ -154,7 +165,7 @@
     {#if readonly}
         {#if value}
             {#each selectedVariants as selectedVariant}
-                <span class="mr-2">{$LOCALE[selectedVariant.title]}</span>
+                <span class="mr-2">{$LOCALE[selectedVariant[titleField]]}</span>
             {/each}
         {:else}
             <span class="mr-2">{$LOCALE[emptyValueTitle]}</span>
@@ -162,10 +173,12 @@
     {:else}
         <div class="select {validationClasses} {multipleClass}">
             <select
+                bind:this={selectElement}
                 id="form-field-select-{fieldname}"
                 name={fieldname}
                 onblur={onBlur}
                 oninput={onInput}
+                onchange={onInput}
                 {readonly}
                 {required}
                 {multiple}
@@ -188,15 +201,16 @@
                 {#each variants as variant}
                     {#if multiple}
                         <UISelectOption
-                            value={variant.id}
-                            selected={value && value.indexOf(variant.id) > -1}
-                            title={variant.title}
+                            value={variant[idField]}
+                            selected={value &&
+                                value.indexOf(variant[idField]) > -1}
+                            title={variant[titleField]}
                         />
                     {:else}
                         <UISelectOption
-                            value={variant.id}
-                            selected={value == variant.id}
-                            title={variant.title}
+                            value={variant[idField]}
+                            selected={value == variant[idField]}
+                            title={variant[titleField]}
                         />
                     {/if}
                 {/each}
