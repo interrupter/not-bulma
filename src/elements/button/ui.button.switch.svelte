@@ -1,14 +1,7 @@
 <script>
-    import { run } from 'svelte/legacy';
+    import { run } from "svelte/legacy";
 
     import UIButton from "./ui.button.svelte";
-    import { createEventDispatcher } from "svelte";
-
-    const dispatch = createEventDispatcher();
-
-
-
-
 
     /**
      * @typedef {Object} Props
@@ -44,7 +37,7 @@
         inverted = false,
         rounded = false,
         disabled = false,
-        state = "",
+        state: notState = "",
         type = "",
         color = "",
         size = "",
@@ -52,30 +45,32 @@
         icon = false,
         iconSide = "right",
         uiOff = () => {
-        return {
-            color: "",
-        };
-    },
+            return {
+                color: "",
+            };
+        },
+        onchange = () => {},
+        onclick = () => {},
         uiOn = () => {
-        return {
-            color: "success",
-        };
-    },
+            return {
+                color: "success",
+            };
+        },
         action = () => {
-        return !selected;
-    },
+            return !selected;
+        },
         value,
-        selected = $bindable(false)
+        selected = $bindable(false),
     } = $props();
 
     function onClick(event) {
         selected = action(event, value, selected);
-        dispatch("click", { value, selected });
+        onclick({ value, selected });
         onChange();
     }
 
     function onChange() {
-        dispatch("change", {
+        onchange({
             value,
             selected,
         });
@@ -100,7 +95,7 @@
     {inverted}
     {rounded}
     {disabled}
-    {state}
+    state={notState}
     {type}
     {color}
     {size}
@@ -108,5 +103,5 @@
     {icon}
     {iconSide}
     {value}
-    on:click={onClick}
+    onclick={onClick}
 ></UIButton>

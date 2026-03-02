@@ -14,18 +14,19 @@
         classes = "",
         left = [],
         center = [],
-        right = []
+        right = [],
+        disabled = false,
     } = $props();
 </script>
 
 <div class="columns {classes}">
     <div class="column">
-        <UIButtons values={left}></UIButtons>
+        <UIButtons values={left} {disabled}></UIButtons>
     </div>
     <div class="column">
-        <UIButtons values={center} centered={true}></UIButtons>
+        <UIButtons values={center} centered={true} {disabled}></UIButtons>
     </div>
     <div class="column">
-        <UIButtons values={right} right={true}></UIButtons>
+        <UIButtons values={right} right={true} {disabled}></UIButtons>
     </div>
 </div>

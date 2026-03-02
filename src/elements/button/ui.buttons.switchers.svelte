@@ -3,7 +3,6 @@
     const dispatch = createEventDispatcher();
     import UIButtonSwitch from "./ui.button.switch.svelte";
 
-
     const selectHistory = [];
 
     export function selectAll() {
@@ -84,7 +83,6 @@
         }
     }
 
-
     /**
      * @typedef {Object} Props
      * @property {any} [values]
@@ -105,29 +103,31 @@
         classes = "",
         buttonComponent = UIButtonSwitch,
         action = (ev, value, selected) => {
-        let newSelected = !selected;
-        const indexOfCurrent = values.indexOf((itm) => itm.value === value);
-        const cnt = countSelected() + (newSelected ? 1 : -1);
+            let newSelected = !selected;
+            const indexOfCurrent = values.indexOf((itm) => itm.value === value);
+            const cnt = countSelected() + (newSelected ? 1 : -1);
 
-        if (min) {
-            if (cnt < min) {
-                selectUpToMin(cnt, indexOfCurrent);
-                values = values;
+            if (min) {
+                if (cnt < min) {
+                    selectUpToMin(cnt, indexOfCurrent);
+                    values = values;
+                }
             }
-        }
-        if (max) {
-            if (max < cnt) {
-                deselectDownToMin(cnt, indexOfCurrent);
-                values = values;
+            if (max) {
+                if (max < cnt) {
+                    deselectDownToMin(cnt, indexOfCurrent);
+                    values = values;
+                }
             }
-        }
-        if (newSelected) {
-            addToHistory(indexOfCurrent);
-        }
-        return newSelected;
-    },
+            if (newSelected) {
+                addToHistory(indexOfCurrent);
+            }
+            return newSelected;
+        },
         min = 0,
-        max = 100
+        max = 100,
+        onclick = () => {},
+        onchange = () => {},
     } = $props();
 </script>
 
@@ -143,8 +143,8 @@
             bind:value={item.value}
             bind:selected={item.selected}
             action={item.action ? item.action : action}
-            on:click
-            on:change
+            {onclick}
+            {onchange}
         />
     {/each}
 </div>

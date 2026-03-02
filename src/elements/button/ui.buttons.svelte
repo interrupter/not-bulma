@@ -17,6 +17,7 @@
     let {
         values = [],
         centered = false,
+        disabled = false,
         right = false,
         classes = "",
         buttonComponent = UIButton,
@@ -41,6 +42,9 @@
             {@const SvelteComponent = buttonComponent}
             <SvelteComponent
                 {...item}
+                disabled={Object.hasOwn(item, "disabled")
+                    ? item.disabled
+                    : disabled}
                 bind:value={item.value}
                 action={item.action ? item.action : action}
                 {onclick}
