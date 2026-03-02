@@ -1,6 +1,6 @@
-import Menu from "not-bulma/src/frame/components/navigation/menu.svelte.js";
+import Menu from "./menu.svelte.js";
 import UINavbar from "../../../elements/navigation/ui.navbar.svelte";
-import UIAdapterSvelte from "not-bulma/src/frame/ui.adapter.svelte.js";
+import UIAdapterSvelte from "../../ui.adapter.svelte.js";
 
 const TYPE = "top";
 
@@ -15,11 +15,10 @@ const TYPE = "top";
  *  @prop   {boolean}   burgerControlsSidemenu
  *  @prop   {string}    class
  *  @prop   {function}  onclick
- *  
+ *
  **/
 
 class notTopMenu extends Menu {
-
     static DEFAULT = {
         section: "any",
         sectionTitle: "Меню",
@@ -63,23 +62,22 @@ class notTopMenu extends Menu {
             onclick: this.getOptions()?.onclick,
             url: this.getCurrentUrl(),
         };
-        
     }
 
     static render(app) {
         if (app) {
             this.setApp(app);
-        }        
+        }
         if (!this.menu) {
             this.prepareData();
             let props = this.initMenuProps();
             const target = document.querySelector(
                 this.getOptions().targetSelector
-            );        
+            );
             if (!target) {
                 return;
             }
-            this.menu = new UIAdapterSvelte(UINavbar, target, props, true);            
+            this.menu = new UIAdapterSvelte(UINavbar, target, props, true);
             this.interval = setInterval(
                 this.updateMenuActiveItem.bind(this),
                 notTopMenu.INTERVAL_UPDATE_ACTIVE_ITEM
@@ -87,24 +85,24 @@ class notTopMenu extends Menu {
         }
     }
 
-    static updateMenuActiveItem() {        
-        this.menu.set('url', this.getCurrentUrl()) ;
+    static updateMenuActiveItem() {
+        this.menu.set("url", this.getCurrentUrl());
     }
 
     static toggle() {
-        this.menu.set('active', !this.menu.get('active'));        
+        this.menu.set("active", !this.menu.get("active"));
     }
 
-    static hide() {        
-        this.menu.set('active', false);
+    static hide() {
+        this.menu.set("active", false);
     }
 
-    static show() {        
-        this.menu.set('active', true);
+    static show() {
+        this.menu.set("active", true);
     }
 
     static setBurgerState(menuClosed) {
-        this.menu.set('menuClosed', menuClosed);
+        this.menu.set("menuClosed", menuClosed);
     }
 }
 

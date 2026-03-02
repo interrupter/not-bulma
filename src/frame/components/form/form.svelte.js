@@ -1,17 +1,17 @@
 import { Runner } from "not-validation";
 import UIAdapterSvelte from "../../ui.adapter.svelte";
 
-import { VARIANTS } from "not-bulma/src/frame/LIB.js";
-import Lib from "not-bulma/src/frame/lib.js";
-import notCommon from "not-bulma/src/frame/common.js";
-import notBase from "not-bulma/src/frame/base.js";
+import { VARIANTS } from "../../LIB.js";
+import Lib from "../../lib.js";
+import notCommon from "../../common.js";
+import notBase from "../../base.js";
 
-import UICommon from "not-bulma/src/elements/common.js";
-import FormHelpers from "not-bulma/src/frame/components/form/form.helpers.js";
-import UIFormComponent from "not-bulma/src/frame/components/form/form.svelte";
-import notFormRules from "not-bulma/src/frame/components/form/form.rules.js";
+import UICommon from "../../../elements/common.js";
+import FormHelpers from "./form.helpers.js";
+import UIFormComponent from "./form.svelte";
+import notFormRules from "./form.rules.js";
 
-import { DEFAULT_STATUS_SUCCESS, DEFAULT_STATUS_ERROR } from "not-bulma/src/frame/const.js";
+import { DEFAULT_STATUS_SUCCESS, DEFAULT_STATUS_ERROR } from "../../const.js";
 
 const DEFAULT_CONTAINER_SELECTOR = ".form";
 const DEFAULT_ACTION_NAME = "default";
@@ -104,13 +104,13 @@ class notForm extends notBase {
                 formOptions: this.getFormOptions(),
                 data: this.getFormData(),
                 injectedProps: this.getFormInjectedProps(),
-            });           
+            });
             const target = this.getFormTargetEl();
-            while (target.children.length){
+            while (target.children.length) {
                 target.removeChild(target.firstChild);
             }
             this.#form = new UIAdapterSvelte(this.#uiComponent, target, props);
-            
+
             this.#bindUIEvents();
             this.validateForm();
         } catch (e) {
@@ -125,7 +125,7 @@ class notForm extends notBase {
                 formOptions: this.getFormOptions(),
                 data: this.getFormData(),
                 injectedProps: this.getFormInjectedProps(),
-            });            
+            });
             this.#form.replaceProps(props);
             this.validateForm();
         } catch (e) {
@@ -134,14 +134,14 @@ class notForm extends notBase {
     }
 
     #bindUIEvents() {
-        this.#form.on('onchange', (event) =>{             
+        this.#form.on("onchange", (event) => {
             this.validateForm();
             this.emit("onchange", event);
             this.emit(`onchange.${event.field}`, event.value);
         });
-        this.#form.on('onsubmit', (event) => this.submit(event));
-        this.#form.on('onreject',  () => this.reject());
-        this.#form.on('onerror',  (event) => this.emit("onerror", event));
+        this.#form.on("onsubmit", (event) => this.submit(event));
+        this.#form.on("onreject", () => this.reject());
+        this.#form.on("onerror", (event) => this.emit("onerror", event));
         this.#bindMasterSlaveEvents();
     }
 
@@ -173,8 +173,6 @@ class notForm extends notBase {
         });
     }
 
-   
-
     async validateForm() {
         if (this.getOptions("readonly", false)) {
             return;
@@ -184,7 +182,9 @@ class notForm extends notBase {
                 this.collectData(),
                 this.getFormAction()
             );
-            this.#form.exec('updateFormValidationStatus', [validationResult.getReport()]);
+            this.#form.exec("updateFormValidationStatus", [
+                validationResult.getReport(),
+            ]);
             if (!validationResult.clean) {
                 this.emit("onerror", validationResult.getReport());
             }
@@ -192,7 +192,8 @@ class notForm extends notBase {
             const report = {
                 form: [UICommon.ERROR_DEFAULT, e.message],
             };
-            this.#form && this.#form.exec('updateFormValidationStatus',[report]);
+            this.#form &&
+                this.#form.exec("updateFormValidationStatus", [report]);
             this.emit("onerror", report);
             notCommon.report(e);
         }
@@ -209,18 +210,18 @@ class notForm extends notBase {
     //binding event to actual UI
     $on() {
         if (this.#form) {
-            this.#form.on(...arguments);            
+            this.#form.on(...arguments);
         }
     }
 
     setLoading() {
         this.emit("onloading");
-        this.#form.set('loading', true);
+        this.#form.set("loading", true);
     }
 
     resetLoading() {
         this.emit("onloaded");
-        this.#form.set('loading', false);
+        this.#form.set("loading", false);
     }
 
     destroy() {
@@ -301,9 +302,9 @@ class notForm extends notBase {
     setFormAction(val) {
         if (val && val !== this.#action) {
             this.#action = val;
-            try{
-                this.#form && this.#form.$destroy && this.#form.$destroy();                
-            }catch{}
+            try {
+                this.#form && this.#form.$destroy && this.#form.$destroy();
+            } catch {}
             this.initForm();
         }
     }
@@ -322,7 +323,7 @@ class notForm extends notBase {
      *   Form validation result
      **/
     setFormSuccess() {
-        this.#form.set('success', true);
+        this.#form.set("success", true);
         this.emit("onsuccess");
     }
 
@@ -340,7 +341,7 @@ class notForm extends notBase {
         if (result.errors && Object.keys(result.errors).length > 0) {
             status.fields = { ...result.errors };
         }
-        this.#form.exec('updateFormValidationStatus', [status]);
+        this.#form.exec("updateFormValidationStatus", [status]);
         this.emit("onerror", status);
     }
 
@@ -443,18 +444,21 @@ class notForm extends notBase {
         if (this.getOptions("readonly", false)) {
             return this.getData();
         }
-        const data = FormHelpers.collectData(this.#form.props.fields, this.#form.props.form);
+        const data = FormHelpers.collectData(
+            this.#form.props.fields,
+            this.#form.props.form
+        );
         this.setData({ ...data }); //update in inner store
         return data;
     }
 
     updateField(fieldName, props) {
-        if (this.#form.props && this.#form.props.form){
-            if( this.#form.props.form[fieldName]){
-                this.#form.changeProp(`form.${fieldName}`, (val)=>{
-                    return {...val, ...props}
-                });                
-            }else{
+        if (this.#form.props && this.#form.props.form) {
+            if (this.#form.props.form[fieldName]) {
+                this.#form.changeProp(`form.${fieldName}`, (val) => {
+                    return { ...val, ...props };
+                });
+            } else {
                 this.#form.set(`form.${fieldName}`, {
                     ...props,
                 });

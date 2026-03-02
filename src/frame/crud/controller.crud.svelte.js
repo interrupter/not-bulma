@@ -1,17 +1,17 @@
-import UICommon from "not-bulma/src/elements/common.js";
+import UICommon from "../../elements/common.js";
 
-import notBreadcrumbs from "not-bulma/src/frame/components/breadcrumbs/index.js";
+import notBreadcrumbs from "../components/breadcrumbs/index.js";
 
 import UILoader from "../../elements/various/ui.loader.svelte";
 import UIAdapterSvelte from "../ui.adapter.svelte";
 
-import notController from "not-bulma/src/frame/controller.js";
-import notCommon from "not-bulma/src/frame/common.js";
+import notController from "../controller.js";
+import notCommon from "../common.js";
 
-import CRUDVariantsPreloader from "not-bulma/src/frame/crud/variants.preloader.js";
-import CRUDRouter from "not-bulma/src/frame/crud/router.js";
-import CRUDMessage from "not-bulma/src/frame/crud/message.js";
-import CRUDActions from "not-bulma/src/frame/crud/actions/index.js";
+import CRUDVariantsPreloader from "./variants.preloader.js";
+import CRUDRouter from "./router.js";
+import CRUDMessage from "./message.js";
+import CRUDActions from "./actions/index.js";
 
 const BREADCRUMBS = [];
 const TITLE_FIELDS_PRIORITY = ["title", "label", "id", "name"];
@@ -57,7 +57,6 @@ class notCRUD extends notController {
             },
         ];
     }
-       
 
     constructor(
         app,
@@ -69,7 +68,7 @@ class notCRUD extends notController {
         }
     ) {
         super(app, `CRUD.${name}`);
-        
+
         if (actions) {
             // @ts-ignore
             this.#actions = { ...this.#actions, ...actions };
@@ -80,7 +79,7 @@ class notCRUD extends notController {
         if (preloader) {
             this.#preloader = preloader;
         }
-        this.ui = {};        
+        this.ui = {};
         this.els = {};
         this.setOptions("names", {
             module: "",
@@ -226,8 +225,7 @@ class notCRUD extends notController {
 
     async preloadVariants(type = "list") {
         await this.#preloader.preload(this, type);
-        this.emit('onVariantsPreloaded', {type});
-
+        this.emit("onVariantsPreloaded", { type });
     }
 
     getTitleFromLib(propName, id) {
@@ -400,7 +398,7 @@ class notCRUD extends notController {
         if (Object.hasOwn(this.ui, name)) {
             this.ui[name].$destroy && this.ui[name].$destroy();
             this.ui[name].destroy && this.ui[name].destroy();
-            delete this.ui[name];            
+            delete this.ui[name];
         }
     }
 
@@ -447,20 +445,24 @@ class notCRUD extends notController {
     }
 
     createLoaderUI() {
-        return new UIAdapterSvelte(UILoader, this.getContainerInnerElement(), this.#loaderProps);
+        return new UIAdapterSvelte(
+            UILoader,
+            this.getContainerInnerElement(),
+            this.#loaderProps
+        );
     }
 
-    setUIProp(uiName, propKey, propValue){
-        if (this.ui && this.ui[uiName]){
+    setUIProp(uiName, propKey, propValue) {
+        if (this.ui && this.ui[uiName]) {
             this.ui[uiName].set(propKey, propValue);
         }
     }
 
-    getActionProps(){
+    getActionProps() {
         return this.ui[this.getCurrentAction()].props;
     }
 
-    setLoaderProp(key, val){
+    setLoaderProp(key, val) {
         this.getUI(LOADING_SCREEN_UI_NAME).set(key, val);
     }
 }

@@ -1,7 +1,5 @@
-import { COMPONENTS } from "not-bulma/src/frame/LIB.js";
-import UICommon from "not-bulma/src/elements/common.js";
-
-
+import { COMPONENTS } from "../../LIB.js";
+import UICommon from "../../../elements/common.js";
 
 class Menu {
     static MAX_TOUCH_WIDTH = 1023;
@@ -35,7 +33,7 @@ class Menu {
     static items = [];
     static sections = [];
     static menuStructure = [];
-    
+
     static location;
     static interval;
 
@@ -55,7 +53,7 @@ class Menu {
         return `menu.${this.options.type}.${what}`;
     }
 
-    static getCurrentUrl(){
+    static getCurrentUrl() {
         return window.location.toString();
     }
 
@@ -70,8 +68,11 @@ class Menu {
 
     static getOptions() {
         if (this.app) {
-            return {                
-                class: this.app.getOptions(this.getOptionsPathTo("class"), this.options.class),
+            return {
+                class: this.app.getOptions(
+                    this.getOptionsPathTo("class"),
+                    this.options.class
+                ),
                 brand: this.app.getOptions("brand", this.options.brand),
                 items: this.app.getOptions(
                     this.getOptionsPathTo("items"),
@@ -100,7 +101,6 @@ class Menu {
                 root: this.app.getOptions("router.root", this.options.root),
                 navigate: this.options.navigate.bind(this),
                 getComponent: this.getComponent.bind(this),
-                
             };
         } else {
             return this.options;
@@ -166,7 +166,7 @@ class Menu {
     }
 
     static prepareData() {
-        const items = [...this.getOptions().items];        
+        const items = [...this.getOptions().items];
         const sections = [...this.getOptions().sections];
 
         this.initField(sections, ["priority"]);
@@ -186,12 +186,14 @@ class Menu {
         this.menuStructure = this.createStructure();
     }
 
-    static createStructure(){        
+    static createStructure() {
         const menuStructure = [];
-        this.sections.forEach((section)=>{
+        this.sections.forEach((section) => {
             const menuItem = structuredClone(section);
-            const subItems = this.items.filter(item => item.section === section.id).map(subitem => structuredClone(subitem));
-            if(subItems && subItems.length){
+            const subItems = this.items
+                .filter((item) => item.section === section.id)
+                .map((subitem) => structuredClone(subitem));
+            if (subItems && subItems.length) {
                 menuItem.items = subItems;
             }
             menuStructure.push(menuItem);
@@ -244,7 +246,7 @@ class Menu {
     }
 
     static updateSection(sectionId, proc) {
-        if (this.menu.props.items && typeof sectionId !== 'undefined') {
+        if (this.menu.props.items && typeof sectionId !== "undefined") {
             for (let id in this.menu.props.items) {
                 if (this.menu.props.items[id].id !== sectionId) continue;
                 this.menu.props.items[id] = proc(this.menu.props.items[id]);
@@ -254,33 +256,48 @@ class Menu {
 
     static updateSectionItems(sectionId, proc) {
         if (!this.menu) return;
-        if (this.menu.props.items && typeof sectionId !== 'undefined') {
-            const index = this.menu.props.items.findIndex(sec => sec.id === sectionId);
-            if(index > -1){
-                this.menu.props.items[index].items = proc(this.menu.props.items[index].items);    
-            }            
+        if (this.menu.props.items && typeof sectionId !== "undefined") {
+            const index = this.menu.props.items.findIndex(
+                (sec) => sec.id === sectionId
+            );
+            if (index > -1) {
+                this.menu.props.items[index].items = proc(
+                    this.menu.props.items[index].items
+                );
+            }
         }
     }
 
-    static getSectionIndexByItemId(itemId){
+    static getSectionIndexByItemId(itemId) {
         if (!this.menu) return;
-        for(let sectionIndex in this.menu.props.items){
-            if (this.menu.props.items[sectionIndex] && Array.isArray(this.menu.props.items[sectionIndex].items)){
-                const itemIndex = this.menu.props.items[sectionIndex].items.findIndex(item => item.id === itemId);
-                if (itemIndex > -1){
-                    return {sectionIndex, itemIndex};
+        for (let sectionIndex in this.menu.props.items) {
+            if (
+                this.menu.props.items[sectionIndex] &&
+                Array.isArray(this.menu.props.items[sectionIndex].items)
+            ) {
+                const itemIndex = this.menu.props.items[
+                    sectionIndex
+                ].items.findIndex((item) => item.id === itemId);
+                if (itemIndex > -1) {
+                    return { sectionIndex, itemIndex };
                 }
             }
-        }        
+        }
         return undefined;
     }
 
     static updateItem(itemId, proc) {
         if (!this.menu) return;
-        if (typeof itemId !== 'undefined' && this.items) {
+        if (typeof itemId !== "undefined" && this.items) {
             const place = this.getSectionIndexByItemId(itemId);
-            if (place){
-                this.menu.props.items[place.sectionIndex].items[place.itemIndex] = proc(this.menu.props.items[place.sectionIndex].items[place.itemIndex]);
+            if (place) {
+                this.menu.props.items[place.sectionIndex].items[
+                    place.itemIndex
+                ] = proc(
+                    this.menu.props.items[place.sectionIndex].items[
+                        place.itemIndex
+                    ]
+                );
             }
         }
     }

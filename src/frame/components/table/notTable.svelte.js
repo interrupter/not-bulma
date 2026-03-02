@@ -1,11 +1,9 @@
 import EventEmitter from "wolfy87-eventemitter";
 import notPath from "not-path";
-import notCommon from "not-bulma/src/frame/common.js";
+import notCommon from "../../common.js";
 
-
-
-import UITable from "not-bulma/src/frame/components/table/notTable.svelte";
-import UIAdapterSvelte from "not-bulma/src/frame/ui.adapter.svelte.js";
+import UITable from "./notTable.svelte";
+import UIAdapterSvelte from "../../ui.adapter.svelte.js";
 
 const CONST_ID_DUBLICATE_POSTFIX = "__dublicate__";
 
@@ -33,11 +31,9 @@ const DEFAULT_OPTIONS = {
     },
 };
 
-function defaultState(){
+function defaultState() {
     return {
-        pager:{
-
-        },
+        pager: {},
         pagination: {
             items: {
                 count: 0,
@@ -55,7 +51,7 @@ function defaultState(){
     };
 }
 
-function defaultStores(){
+function defaultStores() {
     return {
         raw: [],
         filtered: [],
@@ -66,9 +62,7 @@ function defaultStores(){
     };
 }
 
-
 class notTable extends EventEmitter {
-
     #stores = defaultStores();
 
     #data = {
@@ -76,8 +70,8 @@ class notTable extends EventEmitter {
         filtered: [],
         refined: [],
         selected: {},
-        working: {}
-    }; 
+        working: {},
+    };
 
     #ui = {};
 
@@ -88,10 +82,9 @@ class notTable extends EventEmitter {
             ...DEFAULT_OPTIONS,
             ...(input.options ? input.options : {}),
         };
-        
-     
+
         if (notCommon.objHas(input, "data") && Array.isArray(input.data)) {
-            this.setStoreContent('raw', input.data);
+            this.setStoreContent("raw", input.data);
         }
 
         this.setCombinedActionName(
@@ -127,27 +120,26 @@ class notTable extends EventEmitter {
             this.setSearch();
         }
 
-        this.on('onStateUpdate', this.onStateUpdate.bind(this));
+        this.on("onStateUpdate", this.onStateUpdate.bind(this));
         this.render();
         this.updateData();
         return this;
     }
 
-    setStoreContent(storeName, value){
+    setStoreContent(storeName, value) {
         this.#stores[storeName] = value;
         this.callStoreUpdateEvent(storeName, value);
     }
 
-
-    updateStore(storeName, valueHandler){        
+    updateStore(storeName, valueHandler) {
         this.#stores[storeName] = valueHandler(this.#stores[storeName]);
         this.callStoreUpdateEvent(storeName, this.#stores[storeName]);
     }
 
-    callStoreUpdateEvent(storeName, value){
-        const StoreName =notCommon.capitalizeFirstLetter(storeName);
+    callStoreUpdateEvent(storeName, value) {
+        const StoreName = notCommon.capitalizeFirstLetter(storeName);
         const EventHandlerName = `on${StoreName}Update`;
-        if(this[EventHandlerName]){
+        if (this[EventHandlerName]) {
             this[EventHandlerName](value);
         }
     }
@@ -171,11 +163,11 @@ class notTable extends EventEmitter {
     onRefinedUpdate(val) {
         this.#data.refined = val;
         this.clearSelected();
-        if (this.#ui && this.#ui.table){
-            this.#ui.table.set('items', this.#data.refined);
+        if (this.#ui && this.#ui.table) {
+            this.#ui.table.set("items", this.#data.refined);
         }
         return val;
-    }    
+    }
 
     onSearchChange(line) {
         if (line.length > 3) {
@@ -235,10 +227,10 @@ class notTable extends EventEmitter {
         return this.getOptions("getItemId", DEFAULT_OPTIONS.getItemId)(item);
     }
 
-    selectAll() {                
+    selectAll() {
         this.#data.filtered.forEach((item) => {
             this.#ui.table.set(`selected.${this.getItemId(item)}`, true);
-        });        
+        });
     }
 
     selectNone() {
@@ -254,10 +246,10 @@ class notTable extends EventEmitter {
                 this.options.targetEl,
                 {
                     id: this.id,
-                    filterUI: this.getOptions("filterUI", undefined),                    
+                    filterUI: this.getOptions("filterUI", undefined),
                     helpers: Object.assign({}, this.getHelpers()),
                     fields: this.getOptions("fields"),
-                    
+
                     actions: this.getActions(),
                     links: this.getLinks(),
                     search: "",
@@ -268,16 +260,15 @@ class notTable extends EventEmitter {
                     idField: this.getOptions("idField"),
                     getItemId: this.getOptions("getItemId"),
                     filter: this.getFilter(),
-                    
+
                     items: this.#stores.refined,
                     selected: this.#stores.selected,
 
-                    state: this.#stores.state
-
+                    state: this.#stores.state,
                 }
-            );            
+            );
         }
-        
+
         this.#ui.table.$on("onSearchChange", (e) => this.onSearchChange(e));
         this.#ui.table.$on("onSorterChange", (e) => this.onSorterChange(e));
         this.#ui.table.$on("onFilterChange", (e) => this.onFilterChange(e));
@@ -300,7 +291,7 @@ class notTable extends EventEmitter {
 
     setWorking(key, value) {
         notPath.set(key, this.#stores.working, this.getHelpers(), value);
-        this.onWorkingUpdate(this.#stores.working);            
+        this.onWorkingUpdate(this.#stores.working);
         return this;
     }
 
@@ -313,20 +304,20 @@ class notTable extends EventEmitter {
         }
     }
 
-    onStateUpdate(){
-        if(this.#ui.table){
-            this.#ui.table.set(':state', this.#stores.state);
+    onStateUpdate() {
+        if (this.#ui.table) {
+            this.#ui.table.set(":state", this.#stores.state);
         }
     }
 
     setState(key, value) {
         notPath.set(key, this.#stores.state, this.getHelpers(), value);
-        this.emit('onStateUpdate');
+        this.emit("onStateUpdate");
         return this;
     }
 
     getState(key, def) {
-        let res = notPath.get(`:${key}`,  this.#stores.state);
+        let res = notPath.get(`:${key}`, this.#stores.state);
         if (res === undefined) {
             return def;
         } else {
@@ -334,15 +325,20 @@ class notTable extends EventEmitter {
         }
     }
 
-    updateState(updater){
+    updateState(updater) {
         this.#stores.state = updater(this.#stores.state);
-        this.emit('onStateUpdate');
+        this.emit("onStateUpdate");
         return this;
     }
 
-    updateStateProp(key, updater){
-        notPath.set(key, this.#stores.state, this.getHelpers(), updater(notPath.get(key,  this.#stores.state)));        
-        this.emit('onStateUpdate');
+    updateStateProp(key, updater) {
+        notPath.set(
+            key,
+            this.#stores.state,
+            this.getHelpers(),
+            updater(notPath.get(key, this.#stores.state))
+        );
+        this.emit("onStateUpdate");
         return this;
     }
 
@@ -407,7 +403,7 @@ class notTable extends EventEmitter {
         });
     }
 
-    getPager() {        
+    getPager() {
         return this.getState("pager");
     }
 
@@ -467,15 +463,15 @@ class notTable extends EventEmitter {
     }
 
     clearFilteredData() {
-        this.setStoreContent('filtered', []);
+        this.setStoreContent("filtered", []);
     }
 
     clearRawData() {
-        this.setStoreContent('raw', []);
+        this.setStoreContent("raw", []);
     }
 
     clearRefinedData() {
-        this.setStoreContent('refined', []);
+        this.setStoreContent("refined", []);
     }
 
     invalidateData() {
@@ -617,10 +613,10 @@ class notTable extends EventEmitter {
 
     updatePagination(itemsCount) {
         this.log("update pagination", itemsCount);
-        this.updateStateProp('pagination.pages.list', (listVal)=>{
+        this.updateStateProp("pagination.pages.list", (listVal) => {
             listVal.splice(0, listVal.length);
             return listVal;
-        });   
+        });
         let itemsFrom =
                 (this.getPager().page - OPT_DEFAULT_PAGE_NUMBER) *
                     this.getPager().size +
@@ -649,18 +645,18 @@ class notTable extends EventEmitter {
             });
         }
 
-        this.log("update pagination", this.getState(':'));
-        this.setState('count', itemsCount);
-        this.setState('pagination.items.from', itemsFrom);
-        this.setState('pagination.items.to',itemsTo);
-        this.setState('pagination.pages.count',pagesCount);        
-        this.setState('pagination.pages.from',pagesFrom);        
-        this.setState('pagination.pages.to',pagesTo);        
-        this.setState('pagination.pages.current', this.getPager().page);        
-        this.updateStateProp('pagination.pages.list', (listVal)=>{
-            listVal.splice(0, listVal.length, ...list );
+        this.log("update pagination", this.getState(":"));
+        this.setState("count", itemsCount);
+        this.setState("pagination.items.from", itemsFrom);
+        this.setState("pagination.items.to", itemsTo);
+        this.setState("pagination.pages.count", pagesCount);
+        this.setState("pagination.pages.from", pagesFrom);
+        this.setState("pagination.pages.to", pagesTo);
+        this.setState("pagination.pages.current", this.getPager().page);
+        this.updateStateProp("pagination.pages.list", (listVal) => {
+            listVal.splice(0, listVal.length, ...list);
             return listVal;
-        });        
+        });
     }
 
     updateData() {
@@ -678,7 +674,7 @@ class notTable extends EventEmitter {
                         const full =
                             notCommon.objHas(data, "status") &&
                             notCommon.objHas(data, "result");
-                        this.updateStore('filtered', (val) => {
+                        this.updateStore("filtered", (val) => {
                             if (!this.getOptions("endless", false)) {
                                 val.splice(0);
                             }
@@ -709,10 +705,10 @@ class notTable extends EventEmitter {
             } else {
                 this.loadData()
                     .then((data) => {
-                        this.updateStore('filtered', (val) => {
+                        this.updateStore("filtered", (val) => {
                             val.push(...data);
                             return val;
-                        });                        
+                        });
                     })
                     .then(this.getRowsCount.bind(this))
                     .catch(this.error.bind(this))
@@ -741,7 +737,7 @@ class notTable extends EventEmitter {
             thatFilter.filterSearch !== null &&
             thatFilter.filterSearch.length > 0
         ) {
-            this.updateStore('filtered', (val) => {
+            this.updateStore("filtered", (val) => {
                 val.splice(
                     0,
                     val.length,
@@ -750,7 +746,7 @@ class notTable extends EventEmitter {
                 return val;
             });
         } else {
-            this.updateStore('filtered',(val) => {
+            this.updateStore("filtered", (val) => {
                 val.splice(0, val.length, ...this.#data.raw);
                 return val;
             });
@@ -758,7 +754,7 @@ class notTable extends EventEmitter {
         ////sorter
         let thatSorter = this.getSorter();
         if (typeof thatSorter !== "undefined" && thatSorter !== null) {
-            this.updateStore('filtered', (val) => {
+            this.updateStore("filtered", (val) => {
                 val.sort((item1, item2) => {
                     let t1 = notPath.get(thatSorter.sortByField, item1, {}),
                         t2 = notPath.get(thatSorter.sortByField, item2, {});
@@ -855,7 +851,7 @@ class notTable extends EventEmitter {
             });
             result.push(refined);
         });
-        this.updateStore('refined',(val) => {
+        this.updateStore("refined", (val) => {
             val.splice(0, val.length, ...result);
             return val;
         });
