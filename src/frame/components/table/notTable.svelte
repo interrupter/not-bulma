@@ -49,6 +49,7 @@
         showSearch = true,
         showSelect = true,
         selectAll = false,
+        showTotals = false,
         getItemId = (item) => item._id,
         //event handlers
         onRowSelectChange = () => {},
@@ -61,6 +62,8 @@
         onGoToPage = () => {},
         onGoToPrevPage = () => {},
         onGoToNextPage = () => {},
+        onGoToFirstPage = () => {},
+        onGoToLastPage = () => {},
     } = $props();
 
     function _onSearchInput(ev) {
@@ -129,6 +132,19 @@
             return call(e);
         };
     }
+
+    let enableButtonFirst = $derived(state?.pagination?.pages?.current > 0);
+
+    let enableButtonPrev = $derived(state?.pagination?.pages?.current > 0);
+
+    let enableButtonNext = $derived(
+        state?.pagination?.pages?.current < state?.pagination?.pages.to
+    );
+
+    let enableButtonLast = $derived(
+        state?.pagination?.pages?.current < state?.pagination?.pages.to &&
+            state?.pagination?.pages.count > 1
+    );
 </script>
 
 {#if links.length}
@@ -166,6 +182,12 @@
 {#if state.updating}
     <UILoader loading={true} title="Загрузка..." size="container"></UILoader>
 {:else}
+    {#if showTotals}
+        <ul class="pagination-list">
+            <li>Страниц: {state?.pagination?.pages?.count ?? 0}</li>
+            <li>Записей: {state?.count ?? 0}</li>
+        </ul>
+    {/if}
     <table class="table">
         <thead>
             {#if showSelect}
@@ -219,18 +241,33 @@
     </table>
     {#if state?.pagination?.pages?.list.length >= 1}
         <nav class="pagination is-centered" aria-label="pagination">
-            {#if state?.pagination?.pages?.current > 0}
+            {#if enableButtonFirst}
+                <a
+                    href
+                    class="pagination-first"
+                    onclick={preventDefault(onGoToFirstPage)}>Первая</a
+                >
+            {/if}
+            {#if enableButtonPrev}
                 <a
                     href
                     class="pagination-previous"
                     onclick={preventDefault(onGoToPrevPage)}>Назад</a
                 >
             {/if}
-            {#if state?.pagination?.pages?.current < state?.pagination?.pages.to}
+            {#if enableButtonNext}
                 <a
                     href
                     class="pagination-next"
                     onclick={preventDefault(onGoToNextPage)}>Вперед</a
+                >
+            {/if}
+            {#if enableButtonLast}
+                <a
+                    href
+                    class="pagination-last"
+                    onclick={preventDefault(onGoToLastPage)}
+                    >Последняя {state?.pagination.pages.count + 1}</a
                 >
             {/if}
             <ul class="pagination-list">

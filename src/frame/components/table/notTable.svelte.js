@@ -257,6 +257,7 @@ class notTable extends EventEmitter {
                     showSelect: this.getOptions("showSelect"),
                     showSearch: this.getOptions("showSearch"),
                     showSort: this.getOptions("showSort"),
+                    showTotals: this.getOptions("showTotals"),
                     idField: this.getOptions("idField"),
                     getItemId: this.getOptions("getItemId"),
                     filter: this.getFilter(),
@@ -275,6 +276,8 @@ class notTable extends EventEmitter {
         this.#ui.table.$on("onGoToPage", (e) => this.goToPage(e));
         this.#ui.table.$on("onGoToNextPage", () => this.goToNext());
         this.#ui.table.$on("onGoToPrevPage", () => this.goToPrev());
+        this.#ui.table.$on("onGoToFirstPage", () => this.goToFirst());
+        this.#ui.table.$on("onGoToLastPage", () => this.goToLast());
     }
 
     getActions() {
