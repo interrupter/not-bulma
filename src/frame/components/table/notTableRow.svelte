@@ -35,7 +35,7 @@
         e.preventDefault();
         onRowSelectChange({
             id: itemId,
-            selected: e.currentTraget.checked,
+            selected: e.currentTarget.checked,
         });
         return false;
     }

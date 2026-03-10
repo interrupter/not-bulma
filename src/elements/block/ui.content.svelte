@@ -1,9 +1,4 @@
 <script>
-    import { createBubbler } from 'svelte/legacy';
-
-    const bubble = createBubbler();
-    import { createEventDispatcher } from "svelte";
-    const dispatch = createEventDispatcher();
     /**
      * @typedef {Object} Props
      * @property {string} [id]
@@ -12,16 +7,17 @@
      */
 
     /** @type {Props} */
-    let { id = "", classes = "", children } = $props();
+    let {
+        id = "",
+        class: classes = "",
+        role = "button",
+        onclick,
+        onkeyup,
+        onkeydown,
+        children,
+    } = $props();
 </script>
 
-<div
-    role="button"
-    tabindex="0"
-    {id}
-    class="content {classes}"
-    onclick={bubble('click')}
-    onkeyup={() => dispatch("click")}
->
+<div {id} class="content {classes} " {onclick} {onkeyup} {onkeydown} {role}>
     {@render children?.()}
 </div>

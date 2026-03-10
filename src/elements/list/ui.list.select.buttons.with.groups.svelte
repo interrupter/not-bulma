@@ -1,6 +1,6 @@
 <script>
-    import { onMount, createEventDispatcher } from "svelte";
-    const dispatch = createEventDispatcher();
+    import { onMount } from "svelte";
+
     //
     import UIList from "./ui.list.svelte";
     import UITitle from "../various/ui.title.svelte";
@@ -8,16 +8,6 @@
     import UIButtons from "../button/ui.buttons.svelte";
     import UIButtonsSwitchers from "../button/ui.buttons.switchers.svelte";
 
-
-    
-    
-    
-    
-    
-    
-    
-
-    
     /**
      * @typedef {Object} Props
      * @property {string} [fieldname]
@@ -82,11 +72,12 @@ value: variantId
         listComponentProps = {},
         actionsList = ["selectAll", "deselectAll"],
         sublimeValue = (value) => {
-        return {
-            groupId: value.group,
-            valueId: value.id,
-        };
-    }
+            return {
+                groupId: value.group,
+                valueId: value.id,
+            };
+        },
+        onchange = () => {},
     } = $props();
     //
 
@@ -187,7 +178,7 @@ value: variantId
 
     function triggerChange() {
         value = getSelectedItems();
-        dispatch("change", {
+        onchange({
             fieldname,
             value,
         });
@@ -200,7 +191,7 @@ value: variantId
 
 <SvelteComponent
     {...listComponentProps}
-    bind:items={variants}
+    items={variants}
     {titleComponent}
     {titleComponentProps}
     {descriptionComponent}

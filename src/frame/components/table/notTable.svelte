@@ -99,9 +99,9 @@
     }
 
     function _onSelectAllToggle() {
-        items.forEach((item) => {
+        /*items.forEach((item) => {
             selected[getItemId(item)] = selectAll;
-        });
+        });*/
         if (selectAll) {
             onSelectAll(selected);
         } else {
@@ -157,6 +157,7 @@
         <UIButtons values={actions} />
     </div>
 {/if}
+
 {#if showSearch}
     {#if filterUI}
         {@const SvelteComponent = filterUI}
@@ -179,15 +180,25 @@
         </div>
     {/if}
 {/if}
-{#if state.updating}
-    <UILoader loading={true} title="Загрузка..." size="container"></UILoader>
-{:else}
-    {#if showTotals}
-        <ul class="pagination-list">
-            <li>Страниц: {state?.pagination?.pages?.count ?? 0}</li>
-            <li>Записей: {state?.count ?? 0}</li>
-        </ul>
-    {/if}
+
+{#if showTotals}
+    <UIButtons
+        disabled={true}
+        centered={true}
+        values={[
+            {
+                id: 1,
+                title: `Страниц: ${state?.pagination?.pages?.count ?? 0}`,
+            },
+            {
+                id: 2,
+                title: `Записей: ${state?.count ?? 0}`,
+            },
+        ]}
+    />
+{/if}
+
+<UILoader loading={state.updating} title="Загрузка..." size="container">
     <table class="table">
         <thead>
             {#if showSelect}
@@ -239,61 +250,62 @@
             {/each}
         </tbody>
     </table>
-    {#if state?.pagination?.pages?.list.length >= 1}
-        <nav class="pagination is-centered" aria-label="pagination">
-            {#if enableButtonFirst}
-                <a
-                    href
-                    class="pagination-first"
-                    onclick={preventDefault(onGoToFirstPage)}>Первая</a
-                >
+</UILoader>
+
+{#if state?.pagination?.pages?.list.length >= 1}
+    <nav class="pagination is-centered" aria-label="pagination">
+        {#if enableButtonFirst}
+            <a
+                href
+                class="pagination-previous"
+                onclick={preventDefault(onGoToFirstPage)}>1</a
+            >
+        {/if}
+        {#if enableButtonPrev}
+            <a
+                href
+                class="pagination-previous"
+                onclick={preventDefault(onGoToPrevPage)}>Назад</a
+            >
+        {/if}
+        {#if enableButtonNext}
+            <a
+                href
+                class="pagination-next"
+                onclick={preventDefault(onGoToNextPage)}>Вперед</a
+            >
+        {/if}
+        {#if enableButtonLast}
+            <a
+                href
+                class="pagination-next"
+                onclick={preventDefault(onGoToLastPage)}
+                >{state?.pagination.pages.count}</a
+            >
+        {/if}
+        <ul class="pagination-list">
+            {#if state && state?.pagination && state?.pagination.pages && state?.pagination.pages.list}
+                {#each state?.pagination.pages.list as page (page.index)}
+                    <li>
+                        {#if page.active}
+                            <a
+                                href
+                                class="pagination-link is-current"
+                                aria-label="Страница {page.index}"
+                                aria-current="page">{page.index + 1}</a
+                            >
+                        {:else}
+                            <a
+                                href
+                                class="pagination-link"
+                                aria-label="Страница {page.index}"
+                                data-page={page.index}
+                                onclick={_goTo}>{page.index + 1}</a
+                            >
+                        {/if}
+                    </li>
+                {/each}
             {/if}
-            {#if enableButtonPrev}
-                <a
-                    href
-                    class="pagination-previous"
-                    onclick={preventDefault(onGoToPrevPage)}>Назад</a
-                >
-            {/if}
-            {#if enableButtonNext}
-                <a
-                    href
-                    class="pagination-next"
-                    onclick={preventDefault(onGoToNextPage)}>Вперед</a
-                >
-            {/if}
-            {#if enableButtonLast}
-                <a
-                    href
-                    class="pagination-last"
-                    onclick={preventDefault(onGoToLastPage)}
-                    >Последняя {state?.pagination.pages.count + 1}</a
-                >
-            {/if}
-            <ul class="pagination-list">
-                {#if state && state?.pagination && state?.pagination.pages && state?.pagination.pages.list}
-                    {#each state?.pagination.pages.list as page (page.index)}
-                        <li>
-                            {#if page.active}
-                                <a
-                                    href
-                                    class="pagination-link is-current"
-                                    aria-label="Страница {page.index}"
-                                    aria-current="page">{page.index + 1}</a
-                                >
-                            {:else}
-                                <a
-                                    href
-                                    class="pagination-link"
-                                    aria-label="Страница {page.index}"
-                                    data-page={page.index}
-                                    onclick={_goTo}>{page.index + 1}</a
-                                >
-                            {/if}
-                        </li>
-                    {/each}
-                {/if}
-            </ul>
-        </nav>
-    {/if}
+        </ul>
+    </nav>
 {/if}

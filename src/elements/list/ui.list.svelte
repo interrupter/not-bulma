@@ -4,13 +4,8 @@
     import UIListBlock from "./ui.list.block.svelte";
     import UITitle from "../various/ui.title.svelte";
 
-
-
-
     //customization
-    
-    
-    
+
     /**
      * @typedef {Object} Props
      * @property {string} [classes]
@@ -58,7 +53,13 @@
         descriptionComponent,
         descriptionComponentProps = {},
         imageComponent,
-        imageComponentProps = {}
+        imageComponentProps = {},
+        onchange = () => {},
+        onclick = () => {},
+        onclickContent = () => {},
+        onclickDescription = () => {},
+        onclickImage = () => {},
+        onclickTitle = () => {},
     } = $props();
 </script>
 
@@ -87,17 +88,15 @@
             {imageComponentProps}
             {actions}
             {links}
-            on:change
-            on:click
-            on:clickContent
-            on:clickDescription
-            on:clickImage
-            on:clickTitle
+            {onchange}
+            {onclick}
+            {onclickContent}
+            {onclickDescription}
+            {onclickImage}
+            {onclickTitle}
         />
     </div>
 {:else}
     {@const SvelteComponent = emptyListPlaceholderComponent}
-    <SvelteComponent
-        {...emptyListPlaceholderComponentProps}
-    />
+    <SvelteComponent {...emptyListPlaceholderComponentProps} />
 {/if}

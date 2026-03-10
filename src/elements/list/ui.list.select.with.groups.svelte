@@ -1,23 +1,12 @@
 <script>
-    import { onMount, createEventDispatcher } from "svelte";
-    const dispatch = createEventDispatcher();
+    import { onMount } from "svelte";
+
     //
     import UIList from "./ui.list.svelte";
     import UITitle from "../various/ui.title.svelte";
     import UIImage from "../image/ui.image.svelte";
     import UIButtons from "../button/ui.buttons.svelte";
 
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     /**
      * @typedef {Object} Props
      * @property {string} [fieldname]
@@ -91,33 +80,36 @@ value: variantId
         listComponent = UIList,
         listComponentProps = {},
         sublimeValue = (value) => {
-        return {
-            groupId: value.group,
-            valueId: value.id,
-        };
-    },
+            return {
+                groupId: value.group,
+                valueId: value.id,
+            };
+        },
         getItem = ({ groupId, valueId }) => {
-        return variants
-            .find((group) => group.id === groupId)
-            .description.values.find((btnVal) => btnVal.value.id === valueId);
-    },
+            return variants
+                .find((group) => group.id === groupId)
+                .description.values.find(
+                    (btnVal) => btnVal.value.id === valueId
+                );
+        },
         getItemValue = ({ groupId, valueId }) => {
-        return getItem({ groupId, valueId }).value;
-    },
+            return getItem({ groupId, valueId }).value;
+        },
         getDefaultItemSublime = () => {
-        return {
-            groupId: variants[0].id,
-            valueId: variants[0].description.values[0].value.id,
-        };
-    },
+            return {
+                groupId: variants[0].id,
+                valueId: variants[0].description.values[0].value.id,
+            };
+        },
         uiOn = (item) => {
-        item.color = "success";
-        item.outlined = false;
-    },
+            item.color = "success";
+            item.outlined = false;
+        },
         uiOff = (item) => {
-        item.color = false;
-        item.outlined = false;
-    }
+            item.color = false;
+            item.outlined = false;
+        },
+        onchange = () => {},
     } = $props();
 
     onMount(() => {
@@ -236,12 +228,12 @@ value: variantId
     //
     function toggle(detail) {
         let ui = updateSelected(detail);
-        console.log("image value", value, ui);
+
         updateUI(ui);
         //
         updateValue();
         //
-        dispatch("change", {
+        onchange({
             field: fieldname,
             value,
         });
@@ -313,7 +305,7 @@ value: variantId
 
 <SvelteComponent
     {...listComponentProps}
-    bind:items={variants}
+    items={variants}
     {titleComponent}
     {titleComponentProps}
     {descriptionComponent}

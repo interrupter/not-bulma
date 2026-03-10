@@ -115,45 +115,40 @@ export default class CRUDActionList {
         }
     }
 
-    static prepareOptions(controller) {
-        const DEFAULT_OPTIONS_TABLE = {
+    static defaultTableOptions(controller){
+        return {
             interface: controller.getOptions(`${ACTION}.interface`, {
                 combined: true,
                 factory: controller.getInterface(),
-            }),
-            fields: undefined,
-            showSelect: undefined,
-            getItemId: undefined,
-            idField: undefined,
-            preload: {},
+            }),            
+            preload: {},            
             filterUI: controller.getOptions(`${ACTION}.filterUI`),
             pager: { size: 50, page: 0 },
             sorter: {
                 id: -1,
-            },
-            filter: undefined,
-            ui: undefined,
+            },           
         };
+    }
+
+    static prepareOptions(controller) {        
         //forming actions buttons list
         let ACTIONS_LIST = [...controller.getOptions(`${ACTION}.actions`, [])];
         ACTIONS_LIST = this.tweakActionsList(controller, ACTIONS_LIST);
         //
+        const controllerOptions =  {...controller.getOptions(ACTION)};
+        for (const key in controllerOptions){
+            if(typeof controllerOptions[key] === 'undefined'){
+                delete controllerOptions[key];
+            }
+        }
         const TABLE_OPTIONS = {
             options: {
-                targetEl: controller.getContainerInnerElement(),
-                endless: false,
+                ...this.defaultTableOptions(controller),
+                ...controllerOptions,
+                targetEl: controller.getContainerInnerElement(),                
                 actions: ACTIONS_LIST,
             },
         };
-        Object.keys(DEFAULT_OPTIONS_TABLE).forEach((key) => {
-            let optVal = controller.getOptions(
-                `${ACTION}.${key}`,
-                DEFAULT_OPTIONS_TABLE[key]
-            );
-            if (typeof optVal !== "undefined") {
-                TABLE_OPTIONS.options[key] = optVal;
-            }
-        });
         return TABLE_OPTIONS;
     }
 }

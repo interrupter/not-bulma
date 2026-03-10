@@ -34,6 +34,11 @@
         descriptionComponentProps = {},
         imageComponent,
         imageComponentProps = {},
+        onclick = () => {},
+        onclickContent = () => {},
+        onclickDescription = () => {},
+        onclickImage = () => {},
+        onclickTitle = () => {},
     } = $props();
 </script>
 
@@ -52,15 +57,15 @@
             listActions={actions}
             listLinks={links}
             commonClasses={itemClasses}
-            bind:value={items[index]}
+            bindvalue={items[index]}
             {index}
             first={index === 0}
             last={index === items.length - 1}
-            on:click
-            on:clickContent
-            on:clickDescription
-            on:clickImage
-            on:clickTitle
+            {onclick}
+            {onclickContent}
+            {onclickDescription}
+            {onclickImage}
+            {onclickTitle}
         />
     {/each}
 {/if}

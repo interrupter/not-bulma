@@ -144,6 +144,10 @@ class notTable extends EventEmitter {
         }
     }
 
+    refresh(){
+        this.updateData();
+    }
+
     onWorkingUpdate(val) {
         this.#data.working = val;
         return val;
@@ -163,6 +167,7 @@ class notTable extends EventEmitter {
     onRefinedUpdate(val) {
         this.#data.refined = val;
         this.clearSelected();
+        this.afterSelectedUpdated();
         if (this.#ui && this.#ui.table) {
             this.#ui.table.set("items", this.#data.refined);
         }
@@ -195,9 +200,40 @@ class notTable extends EventEmitter {
             this.resetFilter();
         }
     }
+    
+    onRowSelectChange({id, selected}){
+        if(selected){
+            this.#data.selected[id] = true
+        }else if(Object.hasOwn(this.#data.selected, id)){
+            delete this.#data.selected[id];
+        }
+        this.afterSelectedUpdated();
+    }
 
-    onSelectedUpdate(val) {
-        this.#data.selected = val;
+
+    allFilteredSelected(){
+        return Object.keys(this.#data.selected).length === this.#data.filtered.length;
+    }
+
+    afterSelectedUpdated() {        
+        if(this.#ui.table){
+            this.#ui.table.set("selected", this.#data.selected);
+            this.#ui.table.set(`selectAll`, this.allFilteredSelected());
+        }
+    }
+
+    selectAll() {
+        this.#data.filtered.forEach((item) => {
+            this.#data.selected[this.getItemId(item)] = true;
+        });
+        this.afterSelectedUpdated();
+        this.#ui.table.set(`selectAll`, true);
+    }
+
+    selectNone() {        
+        this.clearSelected();
+        this.afterSelectedUpdated();
+        this.#ui.table.set(`selectAll`, false);
     }
 
     clearSelected() {
@@ -227,18 +263,7 @@ class notTable extends EventEmitter {
         return this.getOptions("getItemId", DEFAULT_OPTIONS.getItemId)(item);
     }
 
-    selectAll() {
-        this.#data.filtered.forEach((item) => {
-            this.#ui.table.set(`selected.${this.getItemId(item)}`, true);
-        });
-    }
-
-    selectNone() {
-        this.#data.filtered.forEach((item) => {
-            this.#ui.table.set(`selected.${this.getItemId(item)}`, false);
-        });
-    }
-
+    
     render() {
         if (!this.#ui.table) {
             this.#ui.table = new UIAdapterSvelte(
@@ -249,11 +274,9 @@ class notTable extends EventEmitter {
                     filterUI: this.getOptions("filterUI", undefined),
                     helpers: Object.assign({}, this.getHelpers()),
                     fields: this.getOptions("fields"),
-
                     actions: this.getActions(),
                     links: this.getLinks(),
                     search: "",
-
                     showSelect: this.getOptions("showSelect"),
                     showSearch: this.getOptions("showSearch"),
                     showSort: this.getOptions("showSort"),
@@ -270,14 +293,17 @@ class notTable extends EventEmitter {
             );
         }
 
-        this.#ui.table.$on("onSearchChange", (e) => this.onSearchChange(e));
-        this.#ui.table.$on("onSorterChange", (e) => this.onSorterChange(e));
-        this.#ui.table.$on("onFilterChange", (e) => this.onFilterChange(e));
-        this.#ui.table.$on("onGoToPage", (e) => this.goToPage(e));
-        this.#ui.table.$on("onGoToNextPage", () => this.goToNext());
-        this.#ui.table.$on("onGoToPrevPage", () => this.goToPrev());
-        this.#ui.table.$on("onGoToFirstPage", () => this.goToFirst());
-        this.#ui.table.$on("onGoToLastPage", () => this.goToLast());
+        this.#ui.table.$on("onSelectAll", this.selectAll.bind(this));
+        this.#ui.table.$on("onSelectNone", this.selectNone.bind(this));
+        this.#ui.table.$on("onSearchChange", this.onSearchChange.bind(this));
+        this.#ui.table.$on("onSorterChange", this.onSorterChange.bind(this));
+        this.#ui.table.$on("onFilterChange", this.onFilterChange.bind(this));
+        this.#ui.table.$on("onRowSelectChange", this.onRowSelectChange.bind(this));
+        this.#ui.table.$on("onGoToPage", this.goToPage.bind(this));
+        this.#ui.table.$on("onGoToNextPage", this.goToNext.bind(this));
+        this.#ui.table.$on("onGoToPrevPage", this.goToPrev.bind(this));
+        this.#ui.table.$on("onGoToFirstPage", this.goToFirst.bind(this));
+        this.#ui.table.$on("onGoToLastPage", this.goToLast.bind(this));
     }
 
     getActions() {
@@ -578,12 +604,12 @@ class notTable extends EventEmitter {
     }
 
     goToFirst() {
-        this.setState("pager.page", this.getState("pagination.pages.from"));
+        this.setState("pager.page", 0);
         this.updateData();
     }
 
     goToLast() {
-        this.setState("pager.page", this.getState("pagination.pages.to"));
+        this.setState("pager.page", parseInt(this.getState("pagination.pages.count")) - 1);
         this.updateData();
     }
 

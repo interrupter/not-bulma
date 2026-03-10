@@ -71,6 +71,11 @@ export default class UIAdapterSvelte {
         return this;
     }
 
+    delete(propKey){
+        notPath.delete(propKey, this.#props, {});
+        return this;
+    }
+
     changeProp(propKey, changer){
         this.set(propKey, changer(this.get(propKey)));
         return this;

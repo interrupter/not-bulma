@@ -1,26 +1,12 @@
 <script>
-    import { onMount, createEventDispatcher } from "svelte";
-    const dispatch = createEventDispatcher();
+    import { onMount } from "svelte";
+
     //
     import UIList from "./ui.list.svelte";
     import UITitle from "../various/ui.title.svelte";
     import UIImage from "../image/ui.image.svelte";
     import UIButtons from "../button/ui.buttons.svelte";
 
-
-    
-    
-    
-    
-    
-    
-    
-    
-
-    
-
-
-    
     /**
      * @typedef {Object} Props
      * @property {string} [fieldname]
@@ -72,22 +58,23 @@ value:object
         listComponentProps = {},
         sublimeValue = (value) => value.id,
         getItem = ({ valueId }) => {
-        return variants.find((btnVal) => btnVal.value.id === valueId);
-    },
+            return variants.find((btnVal) => btnVal.value.id === valueId);
+        },
         getItemValue = ({ valueId }) => {
-        return getItem({ valueId }).value;
-    },
+            return getItem({ valueId }).value;
+        },
         getDefaultItemSublime = () => {
-        return variants[0].id;
-    },
+            return variants[0].id;
+        },
         uiOn = (item) => {
-        item.color = "success";
-        item.outlined = false;
-    },
+            item.color = "success";
+            item.outlined = false;
+        },
         uiOff = (item) => {
-        item.color = false;
-        item.outlined = true;
-    }
+            item.color = false;
+            item.outlined = true;
+        },
+        onchange = () => {},
     } = $props();
 
     onMount(() => {
@@ -172,7 +159,7 @@ value:object
         //
         updateValue();
         //
-        dispatch("change", {
+        onchange({
             field: fieldname,
             value,
         });
@@ -217,7 +204,7 @@ value:object
 
 <SvelteComponent
     {...listComponentProps}
-    bind:items={variants}
+    items={variants}
     {titleComponent}
     {titleComponentProps}
     {descriptionComponent}

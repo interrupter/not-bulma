@@ -57,3 +57,12 @@
  transform:translateX(-50%);
  white-space:nowrap
 }
+
+.loader-wrapper{
+  position: relative;   
+}
+
+.loader-size-40-100{
+  min-height: 40vh;
+  min-width: 100%; 
+}
