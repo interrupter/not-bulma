@@ -18,6 +18,7 @@
         centered = false,
         right = false,
         joined = true,
+        size = "",
     } = $props();
 
     if (!values.every((itm) => Object.hasOwn(itm, "id"))) {
@@ -41,7 +42,7 @@
     <div
         class="buttons {centered ? 'is-centered' : ''} {right
             ? 'is-right'
-            : ''} {classes}"
+            : ''} {classes} {size ? 'are-' + size : ''}"
     >
         {#each values as item (item.id)}
             <UILink {...item} />
