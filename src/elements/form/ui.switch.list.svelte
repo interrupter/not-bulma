@@ -47,6 +47,8 @@
         styling = " is-rounded is-success ",
         validated = false,
         errors = false,
+        itemClass = "",
+        contentWrapper,
         formErrors = false,
         formLevelError = false,
         onchange = () => {},
@@ -118,7 +120,7 @@
     }
 </script>
 
-<div class="control">
+{#snippet content()}
     {#if readonly}
         {#if value}
             {variants
@@ -128,7 +130,7 @@
         {/if}
     {:else}
         {#each variants as variant (variant.id)}
-            <div class="switch-list-item">
+            <div class="switch-list-item {itemClass}">
                 <input
                     type="checkbox"
                     class="switch {styling}"
@@ -152,6 +154,14 @@
                 </label>
             </div>
         {/each}
+    {/if}
+{/snippet}
+
+<div class="control">
+    {#if contentWrapper}
+        {@render contentWrapper?.(content)}
+    {:else}
+        {@render content?.()}
     {/if}
 </div>
 <ErrorsList
