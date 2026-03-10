@@ -9,8 +9,6 @@
     import UITitle from "../various/ui.title.svelte";
     import UIButtonsRow from "../button/ui.buttons.row.svelte";
 
-
-
     /**
      * @typedef {Object} Props
      * @property {string} [buttonsPosition]
@@ -39,10 +37,10 @@
         title = "Modal window",
         subtitle = "",
         classes = "",
-        overlayClasses = "",
+        overlayClasses = "modal-selector",
         buttonsClasses = "",
         WAITING_TEXT = "Обработка",
-        children
+        children,
     } = $props();
 </script>
 

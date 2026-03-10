@@ -30,7 +30,7 @@
 {/snippet}
 
 <div class="loader-wrapper">
-    {@render children()}
+    {@render children?.()}
     {#if showWhenSizeIs.includes(size) && loading}
         <div class={`${size}loader is-active ${classes}`}>
             {#if loaderContent}
